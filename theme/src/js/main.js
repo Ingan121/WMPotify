@@ -226,7 +226,6 @@ async function init() {
 function isReady() {
     if (window.Spicetify?.Platform?.PlayerAPI &&
         window.Spicetify.AppTitle &&
-        window.Spicetify.Player?.origin?._state &&
         window.Spicetify.Menu &&
         window.Spicetify.Platform.History?.listen &&
         window.Spicetify.Platform.LocalStorageAPI &&
@@ -288,7 +287,6 @@ function waitForReady() {
                 console.error('WMPotify: Missing API objects:', Object.entries({
                     'Spicetify.Platform.PlayerAPI': window.Spicetify?.Platform?.PlayerAPI,
                     'Spicetify.AppTitle': window.Spicetify.AppTitle,
-                    'Spicetify.Player.origin._state': window.Spicetify.Player?.origin?._state,
                     'Spicetify.Menu': window.Spicetify.Menu,
                     'Spicetify.Platform.History.listen': window.Spicetify.Platform.History?.listen,
                     'Spicetify.Platform.LocalStorageAPI': window.Spicetify.Platform.LocalStorageAPI,
