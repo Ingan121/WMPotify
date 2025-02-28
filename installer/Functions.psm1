@@ -681,7 +681,11 @@ function Get-WMPotify {
                 $fileContent = (Invoke-WebRequest -Uri $fileUrl -UseBasicParsing -ErrorAction Stop).Content
                 $fileName = Split-Path -Path $fileUrl -Leaf
                 $filePath = Join-Path -Path $Temp -ChildPath $fileName
-                Set-Content -Path $filePath -Value $fileContent -Encoding Byte
+                if ($PSVersionTable.PSVersion.Major -ge 6) {
+                    Set-Content -Path $filePath -Value $fileContent -AsByteStream
+                } else {
+                    Set-Content -Path $filePath -Value $fileContent -Encoding Byte
+                }
                 $downloadedFiles += $filePath
             } catch {
                 Write-Error -Message "Failed to download '$fileUrl': $($_.Exception.Message)"
