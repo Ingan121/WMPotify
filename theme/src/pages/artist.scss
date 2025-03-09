@@ -55,7 +55,7 @@ section[data-testid="artist-page"] {
     }
 }
 
-.Root__main-view:has(section[data-testid="artist-page"]) {
+:root[data-page^="/artist/"] {
     header:not(:has(.artist-artistDiscography-topBar)) {
         width: calc(100% - var(--scrollbar-size)) !important;
 

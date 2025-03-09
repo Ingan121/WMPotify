@@ -342,19 +342,19 @@
     }
 }
 
-#main:has(.Root__right-sidebar aside) #wmpotify-search-container {
+body.sidebar-open #wmpotify-search-container {
     width: calc(100vw - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
 }
 
 :root[data-wmpotify-style="xp"] {
     width: calc(100vw - var(--panel-gap) * 2 - 1px);
 
-    #main:has(.Root__right-sidebar aside) #wmpotify-search-container {
+    body.sidebar-open #wmpotify-search-container {
         width: calc(100vw - var(--panel-gap) * 2 - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
     }
 }
 
-#main:has(#searchPage) {
+:root[data-page^="/search"] {
     #wmpotify-search-container {
         display: block;
     }
@@ -376,7 +376,7 @@
     }
 }
 
-#main:has(#wmpvis) {
+:root[data-page^="/wmpvis"] {
     #wmpotify-tabs-container button[data-identifier="now-playing"] {
         border-image-source: url('resources/topbar/tab_active.png');
 

@@ -44,7 +44,7 @@
     }
 }
 
-#main:has(.Root__right-sidebar aside) .Root__main-view {
+body.sidebar-open .Root__main-view {
     width: calc(100% + var(--panel-gap) - 3px);
 }
 
@@ -59,7 +59,7 @@ body[data-hide-libx],
         width: calc(100% + var(--panel-gap) * 3);
     }
 
-    #main:has(.Root__right-sidebar aside) .Root__main-view {
+    body.sidebar-open .Root__main-view {
         width: calc(100% + var(--panel-gap) * 3 - 3px);
     }
 }
@@ -164,9 +164,13 @@ body[data-hide-libx],
 
 .Root {
     --main-area-right: 0px;
-    &:has(.Root__right-sidebar aside) {
+    body.sidebar-open & {
         --main-area-right: calc(var(--panel-width, var(--right-sidebar-width)) * 1px + 3px);
     }
+}
+
+body.sidebar-open .Root {
+    --main-area-right: calc(var(--panel-width, var(--right-sidebar-width)) * 1px + 3px);
 }
 
 .main-loadingIndicator-loadingIcon {
@@ -189,7 +193,7 @@ body[data-hide-libx],
 
     .Root {
         --main-area-right: var(--panel-gap);
-        &:has(.Root__right-sidebar aside) {
+        body.sidebar-open & {
             --main-area-right: calc(var(--panel-width, var(--right-sidebar-width)) * 1px + var(--panel-gap) + 3px);
 
             .Root__main-view {
@@ -217,7 +221,7 @@ body[data-hide-libx],
             width: calc(100% + var(--panel-gap) * 1);
         }
 
-        #main:has(.Root__right-sidebar aside) .Root__main-view {
+        &.sidebar-open .Root__main-view {
             width: calc(100% + var(--panel-gap) * 2 - 3px);
         }
     }
@@ -228,7 +232,7 @@ body[data-hide-libx],
             width: calc(100% + var(--panel-gap) * 3) !important;
         }
 
-        #main:has(.Root__right-sidebar aside) .Root__main-view {
+        &.sidebar-open .Root__main-view {
             width: calc(100% + var(--panel-gap) * 3 - 3px) !important;
         }
     }

@@ -119,7 +119,7 @@
         }
 
         /* Nothing in queue message */
-        > div:first-child:has(> svg:first-child) {
+        > div:first-child[data-nothing-in-queue] {
             height: 170px;
 
             svg {

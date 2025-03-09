@@ -61,14 +61,6 @@ section[data-testid="album-page"] {
         color: var(--gray-text);
     }
 
-    &:has(.main-rootlist-wrapper[style*="row-height: 32"]) {
-        .playlist-playlist-searchBoxContainer {
-            button.x-sortBox-sortDropdown::before {
-                background-image: url('resources/icon/compact.png');
-            }
-        }
-    }
-
     .main-actionBar-ActionBarRow {
         > div:first-child button {
             width: 42px;
@@ -108,7 +100,7 @@ section[data-testid="album-page"] {
     }
 }
 
-.Root__main-view:has(section[data-testid="album-page"]) {
+:root[data-page^="/album/"] {
     header {
         width: calc(100% - var(--scrollbar-size)) !important;
 
@@ -140,23 +132,23 @@ section[data-testid="album-page"] {
             span {
                 opacity: 0;
             }
+
+            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+                background-image: url('resources/playerbar/pause.png') !important;
+
+                &:hover {
+                    background-image: url('resources/playerbar/pause_hover.png') !important;
+                }
+
+                &:active {
+                    background-image: url('resources/playerbar/pause_pressed.png') !important;
+                }
+            }
         }
 
         .main-entityHeader-topbarTitle {
             font-size: 12px;
             font-family: var(--ui-font);
-        }
-    }
-
-    &:has(.playlist-playlist-playlist.playing) header button {
-        background-image: url('resources/playerbar/pause_31.png') !important;
-
-        &:hover {
-            background-image: url('resources/playerbar/pause_31_hover.png') !important;
-        }
-
-        &:active {
-            background-image: url('resources/playerbar/pause_31_pressed.png') !important;
         }
     }
 }
