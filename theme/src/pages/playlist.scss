@@ -38,8 +38,8 @@ section[data-testid="playlist-page"],
                 border-image: var(--listview-header) 0 2 1 2 fill stretch;
                 border-image-width: 0 2px 1px 2px;
                 padding-left: 5px;
-/* TODO: figure out why these are causing slight slowdowns and fix it
-                &:has(.Svg-img-icon-small-textBrightAccent) {
+
+                &.selected {
                     border-image-source: url('resources/ui/listview_header_selected.png');
                     [class*=encore-text] {
                         color: black !important;
@@ -49,7 +49,7 @@ section[data-testid="playlist-page"],
                     }
                 }
 
-                &:has(button) {
+                &.has-button {
                     &:hover {
                         border-image-source: url('resources/ui/listview_header_hover.png');
                         [class*=encore-text] {
@@ -69,7 +69,7 @@ section[data-testid="playlist-page"],
                             fill: black !important;
                         }
                     }
-                }*/
+                }
 
                 > div {
                     width: 100%;

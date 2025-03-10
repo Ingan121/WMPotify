@@ -60,9 +60,25 @@ export function setupTopbar() {
     addTab(libraryButton);
     tabs = [nowPlayingButton, homeButton, searchButton, libraryButton];
     const customAppButtons = document.querySelectorAll('.custom-navlinks-scrollable_container div[role="presentation"] > button');
-    for (const btn of customAppButtons) {
-        addTab(btn);
-        tabs.push(btn);
+    if (customAppButtons.length > 0) {
+        for (const btn of customAppButtons) {
+            addTab(btn);
+            tabs.push(btn);
+        }
+    } else {
+        const customAppsButtonsParent = document.querySelector('.main-globalNav-historyButtonsContainer');
+        const observer = new MutationObserver(() => {
+            const customAppsButtons = document.querySelectorAll('.custom-navlinks-scrollable_container div[role="presentation"] > button');
+            if (customAppsButtons.length > 0) {
+                for (const btn of customAppsButtons) {
+                    addTab(btn);
+                    tabs.push(btn);
+                }
+                observer.disconnect();
+                loadOrder();
+            }
+        });
+        observer.observe(customAppsButtonsParent, { childList: true });
     }
     const rightButtons = document.querySelectorAll('.main-topBar-topbarContentRight > .main-actionButtons > button');
     for (const btn of rightButtons) {
@@ -75,18 +91,7 @@ export function setupTopbar() {
         tabs.push(btn);
     }
 
-    if (localStorage.wmpotifyTabOrder) {
-        const order = localStorage.wmpotifyTabOrder.split(',');
-        for (const tab of order) {
-            const foundTab = tabs.find((t) => {
-                return t.dataset.identifier === tab || t.getAttribute('aria-label') === tab;
-            });
-            if (foundTab) {
-                tabsContainer.appendChild(foundTab);
-            }
-        }
-        tabs = Array.from(tabsContainer.querySelectorAll('button'));
-    }
+    loadOrder();
 
     const menuItems = [];
     for (const tab of tabs) {
@@ -208,6 +213,21 @@ function getTabOrder() {
     return tabs.map((tab) => {
         return tab.dataset.identifier || tab.getAttribute('aria-label');
     });
+}
+
+function loadOrder() {
+    if (localStorage.wmpotifyTabOrder) {
+        const order = localStorage.wmpotifyTabOrder.split(',');
+        for (const tab of order) {
+            const foundTab = tabs.find((t) => {
+                return t.dataset.identifier === tab || t.getAttribute('aria-label') === tab;
+            });
+            if (foundTab) {
+                tabsContainer.appendChild(foundTab);
+            }
+        }
+        tabs = Array.from(tabsContainer.querySelectorAll('button'));
+    }
 }
 
 function handleTabOverflow() {

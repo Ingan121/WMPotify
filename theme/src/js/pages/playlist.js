@@ -39,6 +39,30 @@ export async function initPlaylistPage(wait) {
         }
     });
     observer.observe(topbarContent, { attributes: true, attributeFilter: ['class'] });
+
+    const listHeader = section.querySelector('.main-trackList-trackListHeaderRow');
+    if (listHeader) {
+        for (const button of listHeader.querySelectorAll(':scope > div')) {
+            if (button.querySelector('button')) {
+                button.classList.add('has-button');
+
+                if (button.querySelector('.Svg-img-icon-small-textBrightAccent')) {
+                    button.classList.add('selected');
+                }
+    
+                const observer = new MutationObserver(() => {
+                    observer.disconnect();
+                    if (button.querySelector('.Svg-img-icon-small-textBrightAccent')) {
+                        button.classList.add('selected');
+                    } else {
+                        button.classList.remove('selected');
+                    }
+                    observer.observe(button, { childList: true, subtree: true });
+                });
+                observer.observe(button, { childList: true, subtree: true });
+            }
+        }
+    }
 }
 
 function waitForPageRender() {
