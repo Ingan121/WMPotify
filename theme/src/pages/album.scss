@@ -100,7 +100,7 @@ section[data-testid="album-page"] {
     }
 }
 
-:root[data-page^="/album/"] {
+:root[data-page^="/album/"] .Root__main-view {
     header {
         width: calc(100% - var(--scrollbar-size)) !important;
 

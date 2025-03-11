@@ -68,9 +68,14 @@ export function setupTopbar() {
     } else {
         const customAppsButtonsParent = document.querySelector('.main-globalNav-historyButtonsContainer');
         const observer = new MutationObserver(() => {
+            console.log('WMPotify: Handling late custom apps buttons mount');
             const customAppsButtons = document.querySelectorAll('.custom-navlinks-scrollable_container div[role="presentation"] > button');
             if (customAppsButtons.length > 0) {
                 for (const btn of customAppsButtons) {
+                    if (btn.querySelector('#wmpotify-nowplaying-icon')) {
+                        delete nowPlayingButton.dataset.hidden;
+                        continue;
+                    }
                     addTab(btn);
                     tabs.push(btn);
                 }
@@ -227,6 +232,9 @@ function loadOrder() {
             }
         }
         tabs = Array.from(tabsContainer.querySelectorAll('button'));
+        if (overflowButton) {
+            tabsContainer.appendChild(overflowButton);
+        }
     }
 }
 

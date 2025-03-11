@@ -51,6 +51,10 @@ process {
         )
     }
 
+    if ([System.Environment]::OSVersion.Version -lt [Version]'10.0') {
+        Write-Win78Warning
+    }
+
     $isSpicetifyInstalled = Test-Spicetify
     
     $currentPrincipal = New-Object -TypeName System.Security.Principal.WindowsPrincipal -ArgumentList ([System.Security.Principal.WindowsIdentity]::GetCurrent())

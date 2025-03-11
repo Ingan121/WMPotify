@@ -1,7 +1,7 @@
 # <img src="https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/theme/src/resources/icon/wmpotify_48.png"> WMPotify
 * A Windows Media Player 11 inspired Spicetify theme for Spotify
 * Supported versions: 1.2.45 - 1.2.57
-    * **1.2.58 is NOT YET supported!**
+    * **1.2.58 and 1.2.59 are NOT YET supported!**
     * Primarily tested on 1.2.52
     * 1.2.45: `Show Global nav bar with home button, search input and user avatar` must be set to `home-next-to-search` in the experimental features
     * 1.2.44 and below are not supported
@@ -35,8 +35,6 @@ iex "& { $(iwr -useb 'https://raw.githubusercontent.com/Ingan121/WMPotify/master
 
 #### **Linux/macOS (Bash)**
 
-* Note: Not tested on macOS yet
-
 * WMPotify + WMPotify NowPlaying
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/install.sh | sh
@@ -67,6 +65,11 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 1. Install the `spicetify-marketplace` extension following its instructions: [https://github.com/spicetify/marketplace/wiki/Installation](https://github.com/spicetify/marketplace/wiki/Installation).
 2. Search for "WMPotify" in the Spicetify Marketplace and click "Install."
 * Warning: The Spicetify Marketplace version may load slowly due to the large number of images in the theme.
+
+### Notes for Windows 7, 8, and 8.1 users:
+* The installation script requires PowerShell 5.1 or later. If you are using an older version, you can update it from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).
+* Before running the installation script, you will need to install WMPotify-compatible versions of Spotify and Spicetify manually and apply appropriate workarounds (e.g. [VxKex](https://github.com/i486/VxKex)) for them to work on your system.
+* You may need to run the Spotify executable with the `--no-sandbox` flag to get the Windhawk mod working properly with Aero Glass, etc. Add the flag to the Spotify shortcut, `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Spotify` (for autostart), and `spotify_launch_flags` key in `%appdata%\spicetify\config-xpui.ini` (for Spicetify).
 
 ## **Uninstallation**
 

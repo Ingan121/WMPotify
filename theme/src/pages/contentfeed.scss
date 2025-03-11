@@ -1,4 +1,4 @@
-:root[data-page^="/content-feed"] {
+:root[data-page^="/content-feed"] .Root__main-view {
     div[data-testid="infinite-scroll-list"] {
         hr {
             display: none;
