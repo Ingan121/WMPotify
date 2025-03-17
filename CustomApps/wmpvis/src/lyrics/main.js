@@ -11,6 +11,7 @@ import madIdb from "./MadIdb";
 import lrcCache from "./caching";
 import { getSpotifyNowPlaying } from "./spotify";
 import { openSearchDialog } from "./search";
+import { ver } from "../UpdateCheck";
 
 let lyricsView = null;
 
@@ -39,7 +40,7 @@ const forceProcessTimeline = () => {
 };
 
 export const headers = {
-    'Lrclib-Client': 'WMPotify/1.0 ModernActiveDesktop/3.4.0'
+    'Lrclib-Client': `WMPotify/${ver} ModernActiveDesktop/3.4.0`
 };
 
 async function reloadLyrics() {

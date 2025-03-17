@@ -41,7 +41,12 @@ const PageManager = {
             // Use Spicetify.LocalStorageAPI for immediate effect, then revert the underlying localStorage values to prevent persistence
             const origSidebarState = DirectUserStorage.getItem("ylx-sidebar-state");
             const origSidebarWidth = DirectUserStorage.getItem("ylx-expanded-state-nav-bar-width");
-            Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 2);
+            if (Spicetify.Platform.version?.split('.').map(Number)[2] >= 58) {
+                // Spotify 1.2.58+ lost its immediate effect on LocalStorageAPI, so we need to click buttons manually
+                CustomLibX.expand();
+            } else {
+                Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 2);
+            }
             Spicetify.Platform.LocalStorageAPI.setItem("ylx-expanded-state-nav-bar-width", 0);
             DirectUserStorage.setItem("ylx-sidebar-state", origSidebarState); // make the previous setItem temporary
             DirectUserStorage.setItem("ylx-expanded-state-nav-bar-width", origSidebarWidth);
@@ -60,13 +65,21 @@ const PageManager = {
 
             if (localStorage.wmpotifyShowLibX) {
                 const origSidebarState = DirectUserStorage.getItem("ylx-sidebar-state");
-                DirectUserStorage.removeItem("ylx-sidebar-state"); // Spicetify LocalStorageAPI does nothing if setting to same value, so remove it first
-                const origSidebarWidth = DirectUserStorage.getItem("ylx-expanded-state-nav-bar-width");
-                DirectUserStorage.removeItem("ylx-expanded-state-nav-bar-width");
-                Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", parseInt(origSidebarState));
-                Spicetify.Platform.LocalStorageAPI.setItem("ylx-expanded-state-nav-bar-width", parseInt(origSidebarWidth));
+                if (Spicetify.Platform.version?.split('.').map(Number)[2] >= 58) {
+                    CustomLibX.collapse(origSidebarState);
+                } else {
+                    DirectUserStorage.removeItem("ylx-sidebar-state"); // Spicetify LocalStorageAPI does nothing if setting to same value, so remove it first
+                    const origSidebarWidth = DirectUserStorage.getItem("ylx-expanded-state-nav-bar-width");
+                    DirectUserStorage.removeItem("ylx-expanded-state-nav-bar-width");
+                    Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", origSidebarState);
+                    Spicetify.Platform.LocalStorageAPI.setItem("ylx-expanded-state-nav-bar-width", origSidebarWidth);
+                }
             } else {
-                Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 1); // collapsed
+                if (Spicetify.Platform.version?.split('.').map(Number)[2] >= 58) {
+                    CustomLibX.collapse();
+                } else {
+                    Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 1); // collapsed
+                }
             }
         }
 
