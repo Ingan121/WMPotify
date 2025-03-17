@@ -2,11 +2,13 @@
 
 const widthObserver = new MutationObserver(updateSidebarWidth);
 const widthObserver2 = new ResizeObserver(updateSidebarWidth.bind(null, true));
+const leftWidthObserver = new MutationObserver(updateLeftSidebarWidth);
 
 const SidebarManager = {
     init() {
         widthObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
         widthObserver2.observe(document.querySelector('.Root__right-sidebar'));
+        leftWidthObserver.observe(document.querySelector('#Desktop_LeftSidebar_Id'), { attributes: true, attributeFilter: ['style'] });
         window.addEventListener('resize', updateSidebarWidth);
         window.addEventListener('load', updateSidebarWidth);
         updateSidebarWidth(true);
@@ -43,6 +45,17 @@ function updateSidebarWidth(force) {
         document.body.classList.remove('sidebar-open');
     }
     widthObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+}
+
+function updateLeftSidebarWidth() {
+    // Somehow this variable is not in root in 1.2.59, unlike 1.2.52
+    // And has a fixed initial value of 232px which doesn't care about what's set in the document root
+    // So use a custom variable instead
+    const leftSidebar = document.querySelector('#Desktop_LeftSidebar_Id');
+    const leftSidebarWidth = leftSidebar.style.getPropertyValue('--left-sidebar-width');
+    if (leftSidebarWidth) {
+        document.documentElement.style.setProperty("--wmpotify-left-sidebar-width", leftSidebarWidth);
+    }
 }
 
 export default SidebarManager;

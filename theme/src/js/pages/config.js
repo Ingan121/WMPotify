@@ -8,6 +8,7 @@ import WindhawkComm from "../WindhawkComm";
 import WindowManager from "../managers/WindowManager";
 import { checkUpdates } from "../utils/UpdateCheck";
 import ThemeManager from "../managers/ThemeManager";
+import { ylxKeyPrefix } from "./libx";
 
 const configWindow = document.createElement('div');
 let tabs = null;
@@ -259,7 +260,7 @@ function init() {
         } else {
             delete localStorage.wmpotifyShowLibX;
             document.body.dataset.hideLibx = true;
-            Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 1);
+            Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 1);
         }
     });
     configWindow.querySelector('#wmpotify-config-close').addEventListener('click', close);

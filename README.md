@@ -1,7 +1,6 @@
 # <img src="https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/theme/src/resources/icon/wmpotify_48.png"> WMPotify
 * A Windows Media Player 11 inspired Spicetify theme for Spotify
-* Supported versions: 1.2.45 - 1.2.57
-    * **1.2.58 and 1.2.59 are NOT YET supported!**
+* Supported versions: 1.2.45 - 1.2.59
     * Primarily tested on 1.2.52
     * 1.2.45: `Show Global nav bar with home button, search input and user avatar` must be set to `home-next-to-search` in the experimental features
     * 1.2.44 and below are not supported
@@ -115,6 +114,10 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 * XP with native title bar
 ![home_xp_native](screenshots/home_xp_nativeframe.png)
 
+* Classic
+![home_classic](screenshots/home_classic.png)
+* Either enable the transparency option in the CEF/Spotify Tweaks mod settings and use the `Aero` style, or use the `Basic (Custom)` style and set the colors manually.
+
 ### Mini Mode
 
 * Aero
@@ -128,6 +131,10 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 * XP
 
     ![minimode_xp](screenshots/minimode_xp.png)
+
+* Classic
+
+    ![minimode_classic](screenshots/minimode_classic.png)
 
 ### Now Playing
 
@@ -209,6 +216,20 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 4. **Q:** This theme is too slow!
     * **A1:** Make sure hardware acceleration is enabled in Spotify settings. 
     * **A2:** Remove the Beautiful Lyrics extension if you have it installed. This extension is known to slow down Spotify. This theme doesn't really support the extension either. Use WMPotify NowPlaying instead.
+
+## Switching Between Custom and Native Title Bar
+* This only applies to Windows users with the CEF/Spotify Tweaks mod installed.
+* To use the native Windows title bar:
+    * Open the Windhawk UI and go to the details page of the CEF/Spotify Tweaks mod.
+    * Go to the Settings tab and enable the `Enable native frames and title bars on the main window*` option.
+    * Restart Spotify.
+    * In the WMPotify Properties, set the `Title style` to either `Auto` or `Native` and apply the changes.
+* To use the custom title bar (WMP11 XP styled):
+    * Open the Windhawk UI and go to the details page of the CEF/Spotify Tweaks mod.
+    * Go to the Settings tab and disable the `Enable native frames and title bars on the main window*` option.
+    * Restart Spotify.
+    * In the WMPotify Properties, set the `Title style` to `Custom` and apply the changes.
+    * It is also recommended to set the `Style` to either `Auto` or `XP` for the best experience with the custom title bar.
 
 ## Credits
 * [Spicetify](https://spicetify.app/)

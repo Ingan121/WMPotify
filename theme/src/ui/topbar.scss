@@ -19,6 +19,24 @@
         background: url('resources/topbar/bgstrip.png') repeat-x;
         border-image: url('resources/topbar/bg.png') 2 / 2px 1px 2px 1px;
     }
+
+    /* 1.2.59 compatibility */
+    .main-globalNav-searchSection + div {
+        margin-inline-end: var(--panel-gap) !important;
+
+        > div:last-child:empty {
+            display: none;
+        }
+    }
+
+    .main-globalNav-historyButtonsContainer > div {
+        padding-inline-start: unset;
+        margin-inline-start: unset;
+
+        > div:first-child:empty {
+            display: none;
+        }
+    }
 }
 
 .main-globalNav-historyButtons {
@@ -280,8 +298,8 @@
 #wmpotify-search-container {
     position: absolute;
     top: 36px;
-    left: 0;
-    width: 100%;
+    left: calc(var(--wmpotify-left-sidebar-width, var(--left-sidebar-width)) * 1px + var(--panel-gap) * 2);
+    width: calc(100% - var(--wmpotify-left-sidebar-width, var(--left-sidebar-width)) * 1px - var(--panel-gap) * 2);
     height: 30px;
     border-bottom: solid 1px var(--wmp11-separator-light);
     box-shadow: var(--wmp11-separator-shadow) -1px -1px inset;
@@ -343,14 +361,17 @@
 }
 
 body.sidebar-open #wmpotify-search-container {
-    width: calc(100vw - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
+    width: calc(100% - var(--wmpotify-left-sidebar-width, var(--left-sidebar-width)) * 1px - var(--panel-gap) * 2 - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
 }
 
-:root[data-wmpotify-style="xp"] {
-    width: calc(100vw - var(--panel-gap) * 2 - 1px);
+body[data-hide-libx] {
+    #wmpotify-search-container {
+        left: 0;
+        width: 100%;
+    }
 
-    body.sidebar-open #wmpotify-search-container {
-        width: calc(100vw - var(--panel-gap) * 2 - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
+    &.sidebar-open #wmpotify-search-container {
+        width: calc(100% - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
     }
 }
 

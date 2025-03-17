@@ -19,6 +19,8 @@ let exittingFolder = false;
 let lastCategories = [];
 let lastCategoriesIdentifier = [];
 
+export const ylxKeyPrefix = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number)[2] >= 58 ? 'left' : 'ylx';
+
 const CustomLibX = {
     async init() {
         if (document.querySelector('#wmpotify-libx-sidebar')) {
@@ -90,10 +92,7 @@ const CustomLibX = {
             return;
         }
         go(identifiers);
-    },
-
-    expand: expandLibX,
-    collapse: collapseLibX
+    }
 };
 
 function renderHeader() {
@@ -449,9 +448,9 @@ function renderSidebar() {
 }
 
 function handleResize() {
-    const origSidebarState = DirectUserStorage.getItem("ylx-sidebar-state");
-    Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 2);
-    DirectUserStorage.setItem("ylx-sidebar-state", origSidebarState); // make the previous setItem temporary
+    const origSidebarState = DirectUserStorage.getItem(`${ylxKeyPrefix}-sidebar-state`);
+    Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 2);
+    DirectUserStorage.setItem(`${ylxKeyPrefix}-sidebar-state`, origSidebarState); // make the previous setItem temporary
 }
 
 function waitForLibXLoad() {
@@ -502,50 +501,6 @@ function waitForListRender() {
             });
             observer.observe(document.querySelector('.main-yourLibraryX-libraryRootlist'), { childList: true, subtree: true });
         });
-    }
-}
-
-function expandLibX() {
-    if (document.querySelector('.main-yourLibraryX-filterArea + div')) { // fully expanded (level 2)
-        return;
-    }
-
-    if (window.innerWidth < 1024) {
-        window.resizeTo(1024 + window.outerWidth - window.innerWidth, window.outerHeight);
-    }
-
-    if (!document.querySelector('.main-yourLibraryX-filterArea')) { // collapsed (level 1)
-        document.querySelector('.main-yourLibraryX-collapseButton button')?.click();
-    }
-    if (document.querySelector('.main-yourLibraryX-filterArea + div')) { // fully expanded (level 2)
-        return;
-    }
-
-    let fullExpand = document.querySelector('.main-yourLibraryX-headerContent > button:last-child') || document.querySelector('.main-yourLibraryX-headerContent > div:last-child > button:last-child');
-    if (fullExpand) {
-        fullExpand.click();
-    } else {
-        const observer = new MutationObserver(() => {
-            fullExpand = document.querySelector('.main-yourLibraryX-headerContent > button:last-child') || document.querySelector('.main-yourLibraryX-headerContent > div:last-child > button:last-child');
-            if (fullExpand) {
-                fullExpand.click();
-                observer.disconnect();
-            }
-        });
-        observer.observe(document.querySelector('.main-yourLibraryX-headerContent'), { childList: true, subtree: true });
-    }
-}
-
-// Intended only for calling when the sidebar is fully expanded
-function collapseLibX(level = 1) {
-    if (![0, 1].includes(level)){
-        return;
-    }
-
-    if (level === 1) {
-        document.querySelector('.main-yourLibraryX-collapseButton button')?.click();
-    } else if (level === 0) {
-        (document.querySelector('.main-yourLibraryX-headerContent > button:first-child') || document.querySelector('.main-yourLibraryX-headerContent > div:last-child > button:last-child'))?.click();
     }
 }
 

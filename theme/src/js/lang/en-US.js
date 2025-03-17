@@ -12,7 +12,7 @@ const lang = {
     'MAIN_MSG_ERROR_OLD_SPOTIFY': 'Your Spotify version is too old for WMPotify! Please update to Spotify 1.2.45 or newer.',
     'MAIN_MSG_ERROR_LOAD_FAIL': 'Theme loading failed. Please check the console for more information. Click OK to reload and try again.',
     'MAIN_MSG_ERROR_LOAD_FAIL_GLOBALNAV': 'Theme loading failed. Please check the console for more information. Make sure that the "Show Global nav bar with home button, search input and user avatar" option in the experimental features is set to "home-next-to-search". Click OK to reload and try again.',
-    'MAIN_MSG_ERROR_INIT': 'An error occurred during initialization. Please check the console for more information.',
+    'MAIN_MSG_ERROR_INIT': 'An error occurred during initialization. Please check the console for more information. Click OK to reload and try again.',
     'MAIN_MSG_ERROR_INCOMPAT_EXT': 'Incompatible extension %s detected! Some features of WMPotify will be disabled.',
 
     'TAB_NOW_PLAYING': 'Now Playing',

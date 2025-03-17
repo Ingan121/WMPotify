@@ -28,6 +28,7 @@
         padding: 0;
         opacity: 1 !important;
         transform: none !important;
+        grid-gap: 0; /* fix for 1.2.59 */
 
         [class*=encore-text] {
             order: 1;
@@ -37,9 +38,10 @@
         span:nth-child(2) {
             width: 16px;
             height: 16px;
-            margin-top: 1px;
-            margin-left: 2px;
-            margin-right: 3px;
+            margin-top: 1px !important;
+            margin-left: 2px !important;
+            margin-right: 3px !important;
+            position: static; /* fix for 1.2.59 */
             background: url('resources/icon/list.png') no-repeat;
 
             svg {
@@ -533,7 +535,7 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
 }
 
 :root[data-wmpotify-dark-mode] {
-    .main-yourLibraryX-library {
+    .main-yourLibraryX-library, .main-yourLibraryX-libraryContainer {
         background: #222222;
     }
     #wmpotify-libx-sidebar {

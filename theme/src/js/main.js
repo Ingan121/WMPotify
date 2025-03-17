@@ -15,6 +15,7 @@ import WindowManager from './managers/WindowManager';
 import { ver, checkUpdates, compareVersions, compareSpotifyVersion } from './utils/UpdateCheck';
 import { openUpdateDialog } from './ui/dialogs';
 import ThemeManager from './managers/ThemeManager';
+import { ylxKeyPrefix } from "./pages/libx";
 
 const elementsRequired = [
     '.Root__globalNav',
@@ -90,6 +91,11 @@ function earlyInit() {
         CustomTitlebar.earlyInit();
     }
 
+    // Set default style if the style is set to auto (not set)
+    // If the Windhawk mod is available, and the title style is native:
+    //   Use Aero style if transparency is enabled and DWM is enabled
+    //   Use Basic style if transparency is disabled and DWM is disabled
+    // XP otherwise (No WH, macOS/Linux, Windows Classic theme, title style is not native, etc.)
     if (whStatus && !localStorage.wmpotifyStyle && titleStyle === 'native' && whStatus.isThemingEnabled) {
         if (WindhawkComm.getModule()?.initialOptions.transparentrendering && whStatus.isDwmEnabled) {
             style = 'aero';
@@ -183,7 +189,7 @@ async function init() {
     }
 
     if (!localStorage.wmpotifyShowLibX) {
-        Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 1);
+        Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 1);
     }
 
     const isWin11 = Spicetify.Platform.PlatformData.os_version?.split('.')[2] >= 22000;
@@ -261,7 +267,9 @@ function waitForReady() {
                 console.log('WMPotify: Theme loaded');
                 document.documentElement.dataset.wmpotifyInitComplete = true;
             } catch (e) {
-                (window.Spicetify?.showNotification || window.alert)('[WMPotify] ' + Strings['MAIN_MSG_ERROR_INIT']);
+                if (window.confirm('[WMPotify] ' + Strings['MAIN_MSG_ERROR_INIT'])) {
+                    window.location.reload();
+                }
                 console.error('WMPotify: Error during init:', e);
                 document.documentElement.dataset.wmpotifyJsFail = true;
             }

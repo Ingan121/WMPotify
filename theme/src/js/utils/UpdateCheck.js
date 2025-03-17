@@ -12,7 +12,7 @@ export async function checkUpdates() {
         const cteAvailable = WindhawkComm.available();
         const cteVer = WindhawkComm.getModule()?.version;
 
-        const res = await fetch('https://www.ingan121.com/wmpotify/latest-dev.txt');
+        const res = await fetch('https://www.ingan121.com/wmpotify/latest.txt');
         const latest = await res.text();
         const wmpotifyLatest = latest.match('wmpotify=(.*)')[1];
         const cteLatest = latest.match('cte=(.*)')[1];
