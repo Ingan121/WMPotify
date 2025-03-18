@@ -118,17 +118,27 @@ function earlyInit() {
             break;
         case 'basic':
             WindhawkComm.extendFrame(0, 0, 0, 0);
-            document.body.style.setProperty('--basic-pb-text', localStorage.wmpotifyBasicTextColor || '#002963');
+
+            if (localStorage.wmpotifyBasicTextColor) {
+                document.body.style.setProperty('--basic-pb-text', localStorage.wmpotifyBasicTextColor);
+            }
+            if (localStorage.wmpotifyBasicActiveColor) {
+                document.body.style.setProperty('--basic-pb-active-bg', localStorage.wmpotifyBasicActiveColor);
+            }
+            if (localStorage.wmpotifyBasicInactiveColor) {
+                document.body.style.setProperty('--basic-pb-inactive-bg', localStorage.wmpotifyBasicInactiveColor);
+            }
+
             if (document.hasFocus()) {
-                document.body.style.backgroundColor = localStorage.wmpotifyBasicActiveColor || '#b9d1ea';
+                document.body.style.backgroundColor = 'var(--basic-pb-active-bg, #b9d1ea)';
             } else {
-                document.body.style.backgroundColor = localStorage.wmpotifyBasicInactiveColor || '#d7e4f2';
+                document.body.style.backgroundColor = 'var(--basic-pb-inactive-bg, #d7e4f2)';
             }
             window.addEventListener('focus', () => {
-                document.body.style.backgroundColor = localStorage.wmpotifyBasicActiveColor || '#b9d1ea';
+                document.body.style.backgroundColor = 'var(--basic-pb-active-bg, #b9d1ea)';
             });
             window.addEventListener('blur', () => {
-                document.body.style.backgroundColor = localStorage.wmpotifyBasicInactiveColor || '#d7e4f2';
+                document.body.style.backgroundColor = 'var(--basic-pb-inactive-bg, #d7e4f2)';
             });
             break;
     }
@@ -198,8 +208,8 @@ async function init() {
     }
 
     if (localStorage.wmpotifyTintColor) {
-        const [hue, sat, tintPb] = localStorage.wmpotifyTintColor.split(',');
-        setTintColor(hue, sat, tintPb);
+        const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+        setTintColor(hue, sat, tintPb, tintMore);
     }
 
     ControlManager.init();

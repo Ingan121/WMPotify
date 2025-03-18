@@ -21,6 +21,33 @@
     filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
 }
 
+:root[data-wmpotify-tint-more] {
+    /* Play/Pause buttons */
+    .view-homeShortcutsGrid-PlayButtonContainer button,
+    div[class*="PromotionDefaultNative-module_footer-area"] > span[data-encore-id="overlayTrigger"]:first-child button,
+    .main-card-PlayButtonContainer button,
+    .main-actionBar-ActionBarRow > div:first-child > button,
+    .main-actionBar-ActionBarRow > span:first-child > div:first-child button
+    &[data-page^="/content-feed"] .Button-buttonPrimary-useBrowserDefaultFocusStyle-data-is-icon-only,
+    .artist-artistDiscography-cardGrid > div button,
+    div[data-testid="top-result-card"] > div > div button,
+    .main-yourLibraryX-libraryContainer div[data-encore-id="card"] > div:nth-child(3) > div > div button,
+
+    .x-filterBox-searchIconContainer,
+    .x-filterBox-clearButton,
+    #wmpotify-search-clear-button,
+    div[data-testid="PanelHeader_CloseButton"] > button,
+
+    /* Toolbar buttons */
+    .wmpotify-toolbar-button:not(#wmpotify-queue-clear-button),
+    .artist-artistDiscography-button,
+    [role="combobox"],
+    header nav li,
+    [class*="LegacyChipComponent-checkbox-chip-sm-"] {
+        filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
+    }
+}
+
 #wmpotify-config-sat {
     filter: hue-rotate(var(--wmpotify-tint-hue));
 }

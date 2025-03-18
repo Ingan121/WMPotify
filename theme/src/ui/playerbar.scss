@@ -757,10 +757,17 @@ div[data-testid='now-playing-widget'] {
 }
 
 :root[data-wmpotify-style="aero"],
-:root[data-wmpotify-style="basic"]:fullscreen {
+:root[data-wmpotify-style="basic"] {
     .wmpotify-track-info,
     .wmpotify-time-text {
         color: var(--basic-pb-text, #002963);
+    }
+}
+
+:root[data-wmpotify-style="aero"],
+:root[data-wmpotify-style="basic"]:fullscreen {
+    .wmpotify-track-info,
+    .wmpotify-time-text {
         text-shadow: var(--aero-text-glow);
     }
 }

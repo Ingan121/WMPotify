@@ -3,7 +3,6 @@
 import DirectUserStorage from "../utils/DirectUserStorage";
 import SidebarManager from "../managers/SidebarManager";
 import CustomLibX from "../pages/libx";
-import { updatePlayPauseButton } from "../ui/playerbar";
 import { initDiscographyPage } from "../pages/discography";
 import { initPlaylistPage } from "../pages/playlist";
 import { ylxKeyPrefix } from "../pages/libx";
@@ -79,7 +78,6 @@ const PageManager = {
             if (!document.querySelector('.playlist-playlist-playlist')) {
                 await PageManager.waitForPageRender();
             }
-            updatePlayPauseButton();
         }
 
         initPlaylistPage(true);

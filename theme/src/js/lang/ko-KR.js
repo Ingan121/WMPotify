@@ -32,6 +32,7 @@ const lang = {
     'CONF_COLOR_HUE': '색상',
     'CONF_COLOR_SAT': '채도',
     'CONF_COLOR_TINTPB': '지금 재생 막대의 버튼에 색상 적용',
+    'CONF_COLOR_TINTMORE': '더 많은 UI 요소에 색상 적용',
     'CONF_GENERAL_TITLE': '일반',
     'CONF_GENERAL_STYLE': '스타일',
     'CONF_GENERAL_BASIC_CUSTOM_DLG_TITLE': '사용자 정의 Basic 스타일 색 설정',

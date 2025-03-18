@@ -32,6 +32,7 @@ const lang = {
     'CONF_COLOR_HUE': 'Hue',
     'CONF_COLOR_SAT': 'Saturation',
     'CONF_COLOR_TINTPB': 'Apply color to the now playing bar buttons',
+    'CONF_COLOR_TINTMORE': 'Apply color to more UI elements',
     'CONF_GENERAL_TITLE': 'General',
     'CONF_GENERAL_STYLE': 'Style',
     'CONF_GENERAL_BASIC_CUSTOM_DLG_TITLE': 'Set custom Basic colors',

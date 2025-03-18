@@ -99,6 +99,8 @@ function init() {
                 <a href="#" id="wmpotify-config-color-reset">${Strings['UI_RESET']}</a>
                 <input type="checkbox" id="wmpotify-config-tint-playerbar" class="wmpotify-aero">
                 <label for="wmpotify-config-tint-playerbar">${Strings['CONF_COLOR_TINTPB']}</label>
+                <input type="checkbox" id="wmpotify-config-tint-more" class="wmpotify-aero">
+                <label for="wmpotify-config-tint-more">${Strings['CONF_COLOR_TINTMORE']}</label>
             </section>
             <label>${Strings['CONF_COLOR_HUE']}</label><br>
             <input type="range" id="wmpotify-config-hue" class="wmpotify-aero no-track" min="0" max="360" step="1" value="180"><br>
@@ -154,6 +156,7 @@ function init() {
     elements.hue = configWindow.querySelector('#wmpotify-config-hue');
     elements.sat = configWindow.querySelector('#wmpotify-config-sat');
     elements.tintPb = configWindow.querySelector('#wmpotify-config-tint-playerbar');
+    elements.tintMore = configWindow.querySelector('#wmpotify-config-tint-more');
     elements.style = configWindow.querySelector('#wmpotify-config-style');
     elements.titleStyle = configWindow.querySelector('#wmpotify-config-title-style');
     elements.controlStyle = configWindow.querySelector('#wmpotify-config-control-style');
@@ -196,6 +199,11 @@ function init() {
     elements.controlStyle.addEventListener('change', () => {
         localStorage.wmpotifyControlStyle = elements.controlStyle.value;
         document.documentElement.dataset.wmpotifyControlStyle = elements.controlStyle.value;
+
+        if (localStorage.wmpotifyTintColor) {
+            const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+            setTintColor(hue, sat, tintPb, tintMore);
+        }
     });
     elements.darkMode.addEventListener('change', async () => {
         const darkMode = elements.darkMode.value;
@@ -227,6 +235,11 @@ function init() {
             ThemeManager.addMarketplaceSchemeObserver();
         } else {
             ThemeManager.removeMarketplaceSchemeObserver();
+        }
+
+        if (localStorage.wmpotifyTintColor) {
+            const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+            setTintColor(hue, sat, tintPb, tintMore);
         }
     });
     elements.fontSelector.addEventListener('change', async () => {
@@ -348,6 +361,7 @@ function init() {
     elements.hue.addEventListener('input', onColorChange);
     elements.sat.addEventListener('input', onColorChange);
     elements.tintPb.addEventListener('change', onColorChange);
+    elements.tintMore.addEventListener('change', onColorChange);
     configWindow.querySelector('#wmpotify-config-color-reset').addEventListener('click', resetColor);
 
     configWindow.querySelector('#wmpotify-config-prev').addEventListener('click', prevTab);
@@ -445,11 +459,14 @@ function open() {
     }
     configWindow.style.display = 'block';
     if (localStorage.wmpotifyTintColor) {
-        const [hue, sat, tintPb] = localStorage.wmpotifyTintColor.split(',');
+        const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
         elements.hue.value = parseInt(hue) + 180;
         elements.sat.value = parseInt(sat) * 121 / 100;
         if (tintPb) {
             elements.tintPb.checked = true;
+        }
+        if (tintMore) {
+            elements.tintMore.checked = true;
         }
     }
 }
@@ -481,8 +498,8 @@ function nextTab() {
 function onColorChange() {
     const hue = elements.hue.value - 180;
     const sat = elements.sat.value * 100 / 121;
-    setTintColor(hue, sat, elements.tintPb.checked);
-    localStorage.wmpotifyTintColor = hue + ',' + sat + ',' + (elements.tintPb.checked ? '1' : '');
+    setTintColor(hue, sat, elements.tintPb.checked, elements.tintMore.checked);
+    localStorage.wmpotifyTintColor = hue + ',' + sat + ',' + (elements.tintPb.checked ? '1' : '') + ',' + (elements.tintMore.checked ? '1' : '');
 }
 
 function resetColor() {
