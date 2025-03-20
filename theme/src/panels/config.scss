@@ -206,7 +206,7 @@
     }
 
     a {
-        color: #abd5fd !important;
+        color: var(--wmp11-config-link-color) !important;
         text-decoration: underline;
     }
 }

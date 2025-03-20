@@ -33,17 +33,20 @@
     div[data-testid="top-result-card"] > div > div button,
     .main-yourLibraryX-libraryContainer div[data-encore-id="card"] > div:nth-child(3) > div > div button,
 
-    .x-filterBox-searchIconContainer,
-    .x-filterBox-clearButton,
-    #wmpotify-search-clear-button,
-    div[data-testid="PanelHeader_CloseButton"] > button,
-
     /* Toolbar buttons */
     .wmpotify-toolbar-button:not(#wmpotify-queue-clear-button),
     .artist-artistDiscography-button,
     [role="combobox"],
     header nav li,
-    [class*="LegacyChipComponent-checkbox-chip-sm-"] {
+    [class*="LegacyChipComponent-checkbox-chip-sm-"],
+    
+    /* Misc */
+    .x-filterBox-searchIconContainer,
+    .x-filterBox-clearButton,
+    #wmpotify-search-clear-button,
+    div[data-testid="PanelHeader_CloseButton"] > button,
+    #wmpotify-config-prev,
+    #wmpotify-config-next {
         filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
     }
 }

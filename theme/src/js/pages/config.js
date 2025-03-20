@@ -439,6 +439,13 @@ function init() {
     }, true);
 
     mainView.appendChild(configWindow);
+
+    const interval = setInterval(() => {
+        try {
+            new Spicetify.Menu.Item(Strings['MENU_CONF'], false, Config.open).register();
+            clearInterval(interval);
+        } catch (e) {}
+    }, 100);
 }
 
 function open() {

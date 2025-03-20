@@ -17,39 +17,10 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
         document.documentElement.style.setProperty('--spice-main', '#EEF3FA');
         document.documentElement.style.removeProperty('--wmpotify-tint-hue');
         document.documentElement.style.removeProperty('--wmpotify-tint-sat');
-        document.documentElement.style.removeProperty('--spice-button');
-        document.documentElement.style.removeProperty('--spice-button-active');
-        document.documentElement.style.removeProperty('--spice-accent');
-        document.documentElement.style.removeProperty('--wmp11-text-hilight');
-        document.documentElement.style.removeProperty('--hilight');
-        document.documentElement.style.removeProperty('--hot-tracking-color');
-        document.documentElement.style.removeProperty('--menu-hilight');
-        document.documentElement.style.removeProperty('--item-hover-background');
-        document.documentElement.style.removeProperty('--item-hover-border');
-        document.documentElement.style.removeProperty('--menu-item-hover-background');
-        document.documentElement.style.removeProperty('--menu-item-hover-border-color');
-        document.documentElement.style.removeProperty('--button-border-color-inner-focus');
-        document.documentElement.style.removeProperty('--menu-item-hover-color');
-        document.documentElement.style.removeProperty('--button-face-hover');
-        document.documentElement.style.removeProperty('--button-face-active');
-        document.documentElement.style.removeProperty('--button-shade-light-hovered');
-        document.documentElement.style.removeProperty('--button-shade-light-active');
-        document.documentElement.style.removeProperty('--button-shade-dark-hovered');
-        document.documentElement.style.removeProperty('--button-shade-top-active');
-        document.documentElement.style.removeProperty('--button-shade-bottom-active');
-        document.documentElement.style.removeProperty('--button-border-color-default');
-        document.documentElement.style.removeProperty('--button-border-color-hovered');
-        document.documentElement.style.removeProperty('--button-border-color-active');
-        document.documentElement.style.removeProperty('--textbox-border-color-focused');
-        document.documentElement.style.removeProperty('--textbox-border-top-color-focused');
-        document.documentElement.style.removeProperty('--menu-icon-background-border-color');
-        document.documentElement.style.removeProperty('--menu-icon-checkmark-color');
-        document.documentElement.style.removeProperty('--menu-icon-radio-dot-outer-color');
-        document.documentElement.style.removeProperty('--menu-icon-radio-dot-inner-color');
-        document.documentElement.style.removeProperty('--menu-icon-radio-dot-border-color');
-        document.documentElement.style.removeProperty('--menu-item-hover-border-color');
+        resetTintMoreVars();
         return;
     }
+
     const playerBar = document.querySelector('.main-nowPlayingBar-nowPlayingBar');
     if (playerBar) {
         if (tintPb) {
@@ -58,9 +29,11 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
             playerBar.classList.remove('tinted');
         }
     }
+
     document.documentElement.style.setProperty('--spice-main', getTintedColor(hue, sat));
     document.documentElement.style.setProperty('--wmpotify-tint-hue', hue + 'deg');
     document.documentElement.style.setProperty('--wmpotify-tint-sat', sat / 100);
+
     if (tintMore) {
         document.documentElement.dataset.wmpotifyTintMore = true;
         const tintedAccent = getTintedColor(hue, sat, '#0067d0');
@@ -68,35 +41,38 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
         document.documentElement.style.setProperty('--spice-button-active', tintedAccent);
         document.documentElement.style.setProperty('--spice-accent', tintedAccent);
         document.documentElement.style.setProperty('--wmp11-text-hilight', tintedAccent);
+        document.documentElement.style.setProperty('--wmp11-config-link-color', tintedAccent);
         document.documentElement.style.setProperty('--hilight', tintedAccent);
         document.documentElement.style.setProperty('--hot-tracking-color', tintedAccent);
         document.documentElement.style.setProperty('--menu-hilight', tintedAccent);
 
+        document.documentElement.style.setProperty('--item-active-border', getTintedColor(hue, sat, '#95dbfd'));
+
         if (document.documentElement.dataset.wmpotifyDarkMode) {
-            document.documentElement.style.setProperty('--item-hover-background', 
-                `linear-gradient(
-                    to bottom,
-                    ${getTintedColor(hue, sat, '#272f3a')} 0%,
-                    ${getTintedColor(hue, sat, '#272f39')} 10%,
-                    ${getTintedColor(hue, sat, '#272e38')} 20%,
-                    ${getTintedColor(hue, sat, '#272d36')} 30%,
-                    ${getTintedColor(hue, sat, '#272e34')} 40%,
-                    ${getTintedColor(hue, sat, '#272c33')} 50%,
-                    ${getTintedColor(hue, sat, '#272b31')} 60%,
-                    ${getTintedColor(hue, sat, '#272c30')} 70%,
-                    ${getTintedColor(hue, sat, '#272a2e')} 80%,
-                    ${getTintedColor(hue, sat, '#272b2d')} 90%,
-                    ${getTintedColor(hue, sat, '#27282b')} 100%
-                )`
+            document.documentElement.style.setProperty('--item-hover-background',
+                'linear-gradient(' +
+                    'to bottom,' +
+                    `${getTintedColor(hue, sat, '#272f3a')} 0%,` +
+                    `${getTintedColor(hue, sat, '#272f39')} 10%,` +
+                    `${getTintedColor(hue, sat, '#272e38')} 20%,` +
+                    `${getTintedColor(hue, sat, '#272d36')} 30%,` +
+                    `${getTintedColor(hue, sat, '#272e34')} 40%,` +
+                    `${getTintedColor(hue, sat, '#272c33')} 50%,` +
+                    `${getTintedColor(hue, sat, '#272b31')} 60%,` +
+                    `${getTintedColor(hue, sat, '#272c30')} 70%,` +
+                    `${getTintedColor(hue, sat, '#272a2e')} 80%,` +
+                    `${getTintedColor(hue, sat, '#272b2d')} 90%,` +
+                    `${getTintedColor(hue, sat, '#27282b')} 100%` +
+                ')'
             );
             document.documentElement.style.setProperty('--item-hover-border', getTintedColor(hue, sat, '#2f4d73'));
-            document.documentElement.style.setProperty('--menu-item-hover-background', `
-                linear-gradient(
-                    to bottom,
-                    ${getTintedColor(hue, sat, '#303b4499')},
-                    ${getTintedColor(hue, sat, '#30383dcc')} 75%,
-                    ${getTintedColor(hue, sat, '#30373ccc')}
-                )`
+            document.documentElement.style.setProperty('--menu-item-hover-background',
+                'linear-gradient(' +
+                    'to bottom,' +
+                    `${getTintedColor(hue, sat, '#303b4499')},` +
+                    `${getTintedColor(hue, sat, '#30383dcc')} 75%,` +
+                    `${getTintedColor(hue, sat, '#30373ccc')}` +
+                ')'
             );
             document.documentElement.style.setProperty('--menu-item-hover-border-color', getTintedColor(hue, sat, '#375273'));
 
@@ -142,30 +118,30 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
                 document.documentElement.style.removeProperty('--menu-item-hover-border-color');
             }
         } else {
-            document.documentElement.style.setProperty('--item-hover-background', 
-                `linear-gradient(
-                    to bottom,
-                    ${getTintedColor(hue, sat, '#ebf4fc')} 0%,
-                    ${getTintedColor(hue, sat, '#eaf4fc')} 10%,
-                    ${getTintedColor(hue, sat, '#e9f3fc')} 20%,
-                    ${getTintedColor(hue, sat, '#e8f3fc')} 30%,
-                    ${getTintedColor(hue, sat, '#e7f2fc')} 40%,
-                    ${getTintedColor(hue, sat, '#e5f2fc')} 50%,
-                    ${getTintedColor(hue, sat, '#e2f1fc')} 60%,
-                    ${getTintedColor(hue, sat, '#e1f1fc')} 70%,
-                    ${getTintedColor(hue, sat, '#e0f0fc')} 80%,
-                    ${getTintedColor(hue, sat, '#dff0fc')} 90%,
-                    ${getTintedColor(hue, sat, '#def0fc')} 100%
-                )`
+            document.documentElement.style.setProperty('--item-hover-background',
+                'linear-gradient(' +
+                    'to bottom,' +
+                    `${getTintedColor(hue, sat, '#ebf4fc')} 0%,` +
+                    `${getTintedColor(hue, sat, '#eaf4fc')} 10%,` +
+                    `${getTintedColor(hue, sat, '#e9f3fc')} 20%,` +
+                    `${getTintedColor(hue, sat, '#e8f3fc')} 30%,` +
+                    `${getTintedColor(hue, sat, '#e7f2fc')} 40%,` +
+                    `${getTintedColor(hue, sat, '#e5f2fc')} 50%,` +
+                    `${getTintedColor(hue, sat, '#e2f1fc')} 60%,` +
+                    `${getTintedColor(hue, sat, '#e1f1fc')} 70%,` +
+                    `${getTintedColor(hue, sat, '#e0f0fc')} 80%,` +
+                    `${getTintedColor(hue, sat, '#dff0fc')} 90%,` +
+                    `${getTintedColor(hue, sat, '#def0fc')} 100%` +
+                ')'
             );
             document.documentElement.style.setProperty('--item-hover-border', getTintedColor(hue, sat, '#cde9f8'));
-            document.documentElement.style.setProperty('--menu-item-hover-background', `
-                linear-gradient(
-                    to bottom,
-                    #fff9,
-                    ${getTintedColor(hue, sat, '#e6ecf5cc')} 90%,
-                    #fffc
-                )`
+            document.documentElement.style.setProperty('--menu-item-hover-background',
+                'linear-gradient(' +
+                    'to bottom,' +
+                    '#fff9,' +
+                    `${getTintedColor(hue, sat, '#e6ecf5cc')} 90%,` +
+                    '#fffc' +
+                ')'
             );
             document.documentElement.style.setProperty('--menu-item-hover-border-color', getTintedColor(hue, sat, '#b8d6fb'));
 
@@ -204,91 +180,42 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
         }
     } else {
         delete document.documentElement.dataset.wmpotifyTintMore;
-        document.documentElement.style.removeProperty('--spice-button');
-        document.documentElement.style.removeProperty('--spice-button-active');
-        document.documentElement.style.removeProperty('--spice-accent');
-        document.documentElement.style.removeProperty('--wmp11-text-hilight');
-        document.documentElement.style.removeProperty('--hilight');
-        document.documentElement.style.removeProperty('--hot-tracking-color');
-        document.documentElement.style.removeProperty('--menu-hilight');
-        document.documentElement.style.removeProperty('--item-hover-background');
-        document.documentElement.style.removeProperty('--item-hover-border');
-        document.documentElement.style.removeProperty('--menu-item-hover-background');
-        document.documentElement.style.removeProperty('--menu-item-hover-border-color');
-        document.documentElement.style.removeProperty('--button-border-color-inner-focus');
-        document.documentElement.style.removeProperty('--menu-item-hover-color');
-        document.documentElement.style.removeProperty('--button-face-hover');
-        document.documentElement.style.removeProperty('--button-face-active');
-        document.documentElement.style.removeProperty('--button-shade-light-hovered');
-        document.documentElement.style.removeProperty('--button-shade-light-active');
-        document.documentElement.style.removeProperty('--button-shade-dark-hovered');
-        document.documentElement.style.removeProperty('--button-shade-top-active');
-        document.documentElement.style.removeProperty('--button-shade-bottom-active');
-        document.documentElement.style.removeProperty('--button-border-color-default');
-        document.documentElement.style.removeProperty('--button-border-color-hovered');
-        document.documentElement.style.removeProperty('--button-border-color-active');
-        document.documentElement.style.removeProperty('--textbox-border-color-focused');
-        document.documentElement.style.removeProperty('--textbox-border-top-color-focused');
-        document.documentElement.style.removeProperty('--menu-icon-background-border-color');
-        document.documentElement.style.removeProperty('--menu-icon-checkmark-color');
-        document.documentElement.style.removeProperty('--menu-icon-radio-dot-outer-color');
-        document.documentElement.style.removeProperty('--menu-icon-radio-dot-inner-color');
-        document.documentElement.style.removeProperty('--menu-icon-radio-dot-border-color');
-        document.documentElement.style.removeProperty('--menu-item-hover-border-color');
+        resetTintMoreVars();
     }
 }
 
-/*
-
-    --button-face-hover: #eaf6fd;
-    --button-face-active: #c4e5f6;
-    --button-shade-light-hovered: #bee6fd;
-    --button-shade-light-active: #98d1ef;
-    --button-shade-dark-hovered: #a7d9f5;
-    --button-shade-top-active: #e5f4fc;
-    --button-shade-bottom-active: #68b3db;
-    --button-border-color-default: #5586a3;
-    --button-border-color-hovered: #3c7fb1;
-    --button-border-color-active: #6d91ab;
-    --textbox-border-color-focused: #bee6fd;
-    --textbox-border-top-color-focused: #98d1ef;
-    --menu-icon-background-border-color: #b3d3f9;
-    --menu-icon-checkmark-color: #0c12a1;
-    --menu-icon-radio-dot-outer-color: #333583;
-    --menu-icon-radio-dot-border-color: #1a1490;
-    --menu-item-hover-border-color: #b8d6fb;
-
-    
-    --button-face-hover: #484e60;
-    --button-face-active: #384058;
-    --button-shade-light-hovered: #3b4255;
-    --button-shade-light-active: #2a344d;
-    --button-shade-dark-hovered: #366685;
-    --button-border-color-default: #9fa7bf;
-    --button-border-color-hovered: #9ea6be;
-    --button-border-color-active: #8e96ae;
-    --button-shade-top-active: #4b5166;
-    --button-shade-bottom-active: #2a5579;
-    --button-border-color-default: #9fa7bf;
-    --button-border-color-hovered: #9ea6be;
-    --button-border-color-active: #8e96ae;
-    --textbox-border-color-focused: #506a81;
-    --textbox-border-top-color-focused: #6aa9db;
-    --menu-icon-background-border-color: #32537c;
-    --menu-icon-checkmark-color: #aac9fe;
-    --menu-icon-radio-dot-outer-color: #b8c6e2;
-    --menu-icon-radio-dot-inner-color: #d5d4ea;
-    --menu-icon-radio-dot-border-color: #9fabca;
-    --menu-item-hover-border-color: #375273;
-
-
-    10 (tint only in light mode):
-    
-  --button-face-hover: #e5f1fb;
-  --button-face-active: #cce4f7;
-  --button-border-color-hovered: #0078d7;
-  --button-border-color-active: #005499;
-  --button-border-color-inner-focus: #0078d7;
-  --menu-item-hover-color: #91c9f7;
-    --textbox-border-color-focused: #0078d7;
-*/
+function resetTintMoreVars() {
+    document.documentElement.style.removeProperty('--spice-button');
+    document.documentElement.style.removeProperty('--spice-button-active');
+    document.documentElement.style.removeProperty('--spice-accent');
+    document.documentElement.style.removeProperty('--wmp11-text-hilight');
+    document.documentElement.style.removeProperty('--wmp11-config-link-color');
+    document.documentElement.style.removeProperty('--hilight');
+    document.documentElement.style.removeProperty('--hot-tracking-color');
+    document.documentElement.style.removeProperty('--menu-hilight');
+    document.documentElement.style.removeProperty('--item-active-border');
+    document.documentElement.style.removeProperty('--item-hover-background');
+    document.documentElement.style.removeProperty('--item-hover-border');
+    document.documentElement.style.removeProperty('--menu-item-hover-background');
+    document.documentElement.style.removeProperty('--menu-item-hover-border-color');
+    document.documentElement.style.removeProperty('--button-border-color-inner-focus');
+    document.documentElement.style.removeProperty('--menu-item-hover-color');
+    document.documentElement.style.removeProperty('--button-face-hover');
+    document.documentElement.style.removeProperty('--button-face-active');
+    document.documentElement.style.removeProperty('--button-shade-light-hovered');
+    document.documentElement.style.removeProperty('--button-shade-light-active');
+    document.documentElement.style.removeProperty('--button-shade-dark-hovered');
+    document.documentElement.style.removeProperty('--button-shade-top-active');
+    document.documentElement.style.removeProperty('--button-shade-bottom-active');
+    document.documentElement.style.removeProperty('--button-border-color-default');
+    document.documentElement.style.removeProperty('--button-border-color-hovered');
+    document.documentElement.style.removeProperty('--button-border-color-active');
+    document.documentElement.style.removeProperty('--textbox-border-color-focused');
+    document.documentElement.style.removeProperty('--textbox-border-top-color-focused');
+    document.documentElement.style.removeProperty('--menu-icon-background-border-color');
+    document.documentElement.style.removeProperty('--menu-icon-checkmark-color');
+    document.documentElement.style.removeProperty('--menu-icon-radio-dot-outer-color');
+    document.documentElement.style.removeProperty('--menu-icon-radio-dot-inner-color');
+    document.documentElement.style.removeProperty('--menu-icon-radio-dot-border-color');
+    document.documentElement.style.removeProperty('--menu-item-hover-border-color');
+}

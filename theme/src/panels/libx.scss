@@ -350,7 +350,7 @@
 
             &.active {
                 background: var(--item-hover-background);
-                border-color: #95dbfd;
+                border-color: var(--item-active-border);
             }
 
             &::before {

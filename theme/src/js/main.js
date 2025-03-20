@@ -217,7 +217,6 @@ async function init() {
     SidebarManager.init();
 
     Config.init();
-    new Spicetify.Menu.Item(Strings['MENU_CONF'], false, Config.open).register();
 
     setupTopbar();
     setupPlayerbar();
