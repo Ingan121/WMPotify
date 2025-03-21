@@ -7,6 +7,7 @@ const lang = {
     'UI_RESET': 'Reset',
     'UI_AUTO': 'Auto',
     'UI_CUSTOM': 'Custom',
+    'UI_DEFAULT': 'Default',
     'UI_CLICK_HERE': 'click here',
 
     'MAIN_MSG_ERROR_OLD_SPOTIFY': 'Your Spotify version is too old for WMPotify! Please update to Spotify 1.2.45 or newer.',
@@ -54,6 +55,7 @@ const lang = {
     'CONF_GENERAL_DARK_MODE_ALWAYS': 'Always',
     'CONF_GENERAL_DARK_MODE_NEVER': 'Never',
     'CONF_GENERAL_FONT': 'UI font',
+    'CONF_GENERAL_FONT_RELOAD': 'Reload font list',
     'CONF_GENERAL_CUSTOM_FONT_DLG_TITLE': 'Set custom font',
     'CONF_GENERAL_CUSTOM_FONT_MSG': 'Enter a valid CSS font-family name',
     'CONF_GENERAL_HIDE_PBLEFTBTN': 'Hide the like button in the now playing bar',

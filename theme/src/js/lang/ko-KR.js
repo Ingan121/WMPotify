@@ -7,6 +7,7 @@ const lang = {
     'UI_RESET': '재설정',
     'UI_AUTO': '자동',
     'UI_CUSTOM': '사용자 지정',
+    'UI_DEFAULT': '기본값',
     'UI_CLICK_HERE': '여기를 클릭',
 
     'MAIN_MSG_ERROR_OLD_SPOTIFY': 'Spotify 버전이 너무 오래되어 WMPotify를 사용할 수 없습니다! Spotify를 1.2.45 이상으로 업데이트하십시오.',
@@ -54,6 +55,7 @@ const lang = {
     'CONF_GENERAL_DARK_MODE_ALWAYS': '항상',
     'CONF_GENERAL_DARK_MODE_NEVER': '안함',
     'CONF_GENERAL_FONT': 'UI 글꼴',
+    'CONF_GENERAL_FONT_RELOAD': '글꼴 목록 다시 로드',
     'CONF_GENERAL_CUSTOM_FONT_DLG_TITLE': '사용자 정의 글꼴 설정',
     'CONF_GENERAL_CUSTOM_FONT_MSG': '올바른 CSS font-family 이름 입력',
     'CONF_GENERAL_HIDE_PBLEFTBTN': '지금 재생 막대의 좋아요 버튼 숨기기',

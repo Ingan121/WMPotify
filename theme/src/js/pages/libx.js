@@ -20,6 +20,7 @@ let lastCategories = [];
 let lastCategoriesIdentifier = [];
 
 export const ylxKeyPrefix = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number)[2] >= 58 ? 'left' : 'ylx';
+export const expandedStateKey = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number)[2] >= 58 ? 'left-sidebar-expanded-state-width' : 'ylx-expanded-state-nav-bar-width';
 
 const CustomLibX = {
     async init() {

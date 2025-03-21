@@ -178,6 +178,21 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
                 document.documentElement.style.setProperty('--menu-item-hover-border-color', getTintedColor(hue, sat, '#b8d6fb'));
             }
         }
+
+        if (localStorage.wmpotifyControlStyle !== '10') {
+            document.documentElement.style.setProperty('--checkbox-hover-background', getTintedColor(hue, sat, '#e9f7fe'));
+            document.documentElement.style.setProperty('--checkbox-hover-shadow',
+                'inset 0 0 0 1px ' + getTintedColor(hue, sat, '#def9fa') + ',' +
+                'inset 1px 1px 0 1px ' + getTintedColor(hue, sat, '#79c6f9') + ',' +
+                'inset -1px -1px 0 1px ' + getTintedColor(hue, sat, '#c6e9fc') + ',' +
+                'inset 3px 3px 6px ' + getTintedColor(hue, sat, '#b1dffd')
+            );
+            document.documentElement.style.setProperty('--checkbox-checkmark-color', getTintedColor(hue, sat, '#4a5f97'));
+        } else {
+            document.documentElement.style.setProperty('--checkbox-hover-border', getTintedColor(hue, sat, '#0078d7'));
+            document.documentElement.style.setProperty('--checkbox-active-border', getTintedColor(hue, sat, '#005499'));
+            document.documentElement.style.setProperty('--checkbox-active-background', getTintedColor(hue, sat, '#cce4f7'));
+        }
     } else {
         delete document.documentElement.dataset.wmpotifyTintMore;
         resetTintMoreVars();
@@ -218,4 +233,10 @@ function resetTintMoreVars() {
     document.documentElement.style.removeProperty('--menu-icon-radio-dot-inner-color');
     document.documentElement.style.removeProperty('--menu-icon-radio-dot-border-color');
     document.documentElement.style.removeProperty('--menu-item-hover-border-color');
+    document.documentElement.style.removeProperty('--checkbox-hover-background');
+    document.documentElement.style.removeProperty('--checkbox-hover-shadow');
+    document.documentElement.style.removeProperty('--checkbox-checkmark-color');
+    document.documentElement.style.removeProperty('--checkbox-hover-border');
+    document.documentElement.style.removeProperty('--checkbox-active-border');
+    document.documentElement.style.removeProperty('--checkbox-active-background');
 }

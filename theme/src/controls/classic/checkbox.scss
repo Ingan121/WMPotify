@@ -103,6 +103,10 @@
     margin-left: 25px !important;
   }
 
+  label[for="wmpotify-config-tint-more"] {
+    margin-left: 30px !important;
+  }
+
   label[for="wmpotify-config-auto-updates"] {
     &::after {
       top: 2px;

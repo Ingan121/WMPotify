@@ -30,10 +30,9 @@
         cursor: default !important;
 
         &:hover {
-          background: #e9f7fe;
+          background: var(--checkbox-hover-background);
           border-color: var(--button-border-color-hovered);
-          box-shadow: inset 0 0 0 1px #def9fa, inset 1px 1px 0 1px #79c6f9,
-            inset -1px -1px 0 1px #c6e9fc, inset 3px 3px 6px #b1dffd;
+          box-shadow: var(--checkbox-hover-shadow);
         }
 
         &:not(.disabled) {
@@ -45,7 +44,7 @@
             position: absolute;
             top: -2px;
             left: 1px;
-            color: #4a5f97;
+            color: var(--checkbox-checkmark-color);
             background: unset;
           }
         }

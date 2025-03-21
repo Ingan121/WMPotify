@@ -94,6 +94,10 @@
     --tooltip-shade-top: #ffffff;
     --tooltip-shade-bottom: #ebebeb;
     --tooltip-border-color: #767676;
+    --checkbox-hover-background: #e9f7fe;
+    --checkbox-hover-shadow: inset 0 0 0 1px #def9fa, inset 1px 1px 0 1px #79c6f9,
+        inset -1px -1px 0 1px #c6e9fc, inset 3px 3px 6px #b1dffd;
+    --checkbox-checkmark-color: #4a5f97;
     --button-gradient: linear-gradient(
         to bottom,
         var(--button-face) 45%,
@@ -344,6 +348,8 @@
     --spice-card: #222222;
     --spice-sidebar: #222222;
     --spice-player: #101010;
+    --spice-main-elevated: #222222;
+    --spice-highlight-elevated: #2e2e2e;
     --spice-rgb-selected-row: 0, 0, 0;
 
     --button-face: #4a4a4a;
@@ -482,5 +488,7 @@
     --spice-card: #EEF3FA;
     --spice-sidebar: #EEF3FA;
     --spice-player: #F0F0F0;
+    --spice-main-elevated: #EEF3FA;
+    --spice-highlight-elevated: #F0F0F0;
     --code-block-background-color: #d3d3d3;
 }

@@ -10,6 +10,10 @@
   --checkmark-hover: url("resources/icon/10/checkmark-hover.svg");
   --checkmark-active: url("resources/icon/10/checkmark-active.svg");
 
+  --checkbox-hover-border: #0078d7;
+  --checkbox-active-border: #005499;
+  --checkbox-active-background: #cce4f7;
+
   input.wmpotify-aero[type="checkbox"],
   input.x-toggle-input[type="checkbox"] {
     appearance: none;
@@ -44,12 +48,12 @@
       }
 
       &:hover::before {
-        border-color: #0078d7;
+        border-color: var(--checkbox-hover-border);
       }
 
       &:active::before {
-        border-color: #005499;
-        background: #cce4f7;
+        border-color: var(--checkbox-active-border);
+        background: var(--checkbox-active-background);
       }
 
       .x-toggle-indicator {
@@ -101,6 +105,20 @@
     label[for="wmpotify-config-hide-pbleftbtn"] {
       &::after {
         top: -2px !important;
+      }
+    }
+  }
+
+  &[data-wmpotify-tint-more] {  
+    input.wmpotify-aero[type="checkbox"],
+    input.x-toggle-input[type="checkbox"] {
+      &:checked {
+        + label,
+        + .x-toggle-indicatorWrapper {
+          &::after {
+            filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
+          }
+        }
       }
     }
   }

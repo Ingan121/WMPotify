@@ -129,12 +129,9 @@
         background: url('resources/config/sat.png') no-repeat;
     }
 
-    label[for="wmpotify-config-tint-playerbar"] {
-        margin-left: 10px;
-    }
-
+    label[for="wmpotify-config-tint-playerbar"],
     label[for="wmpotify-config-tint-more"] {
-        margin-left: 30px;
+        margin-left: 10px;
     }
 
     &-tab-general {

@@ -12,6 +12,7 @@ const SidebarManager = {
         window.addEventListener('resize', updateSidebarWidth);
         window.addEventListener('load', updateSidebarWidth);
         updateSidebarWidth(true);
+        updateLeftSidebarWidth();
     },
     updateSidebarWidth,
 };

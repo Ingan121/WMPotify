@@ -46,7 +46,8 @@
     #wmpotify-search-clear-button,
     div[data-testid="PanelHeader_CloseButton"] > button,
     #wmpotify-config-prev,
-    #wmpotify-config-next {
+    #wmpotify-config-next,
+    &[data-page^="/user/"] main>section .main-entityHeader-imageContainer .main-entityHeader-image:after {
         filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
     }
 }
