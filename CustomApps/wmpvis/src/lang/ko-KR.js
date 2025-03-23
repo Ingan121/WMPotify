@@ -14,6 +14,7 @@ const lang = {
     'MENU_VIS_ALBUM_ART': '앨범 아트',
     'MENU_VIS_BARS': '막대',
     'MENU_VIS_BC_RANDOM': '무작위',
+    'MENU_VISCONF': '고급 옵션',
     'MENU_LRC': '가사',
     'MENU_LRC_SHOW': '가사 표시',
     'MENU_LRC_USE_SPOTIFY': 'Spotify 가사 사용',
@@ -28,6 +29,9 @@ const lang = {
     "MSG_LOCAL_REMOVE_GUIDE": "불러온 가사를 제거하려면 오른쪽 클릭 메뉴에서 가사 불러오기를 클릭하세요.",
     "MSG_LOCAL_LOAD_FAIL": "가사 파일을 열지 못했습니다.",
     "MSG_DBG_INFO_COPIED": "디버그 정보가 클립보드에 복사되었습니다.",
+    "MSG_NO_VISCONF": "MilkDrop 시각화는 고급 옵션을 지원하지 않습니다.",
+
+    "NO_AUD_DATA": "이 트랙에 대한 오디오 데이터를 사용할 수 없습니다.",
 
     "LRC_STATUS_LOADING": "불러오는 중...",
     "LRC_STATUS_NOT_FOUND": "가사를 찾을 수 없습니다.",
@@ -48,6 +52,36 @@ const lang = {
     "LRCFIND_OVERRIDE_INFO": "가사 -> 가사 불러오기를 클릭하여 이 설정을 제거하세요",
     "LRCFIND_ADVANCED_EXPAND": "고급 >>",
     "LRCFIND_ADVANCED_COLLAPSE": "고급 <<",
+
+    "VISCONF_TITLE": "시각화 속성",
+    "VISCONF_COLOR_TITLE": "색상",
+    "VISCONF_COLOR_DEFAULT": "기본값",
+    "VISCONF_COLOR_FOLLOW_SCHEME": "색 구성표 따르기",
+    "VISCONF_COLOR_CUSTOM": "사용자 정의",
+    "VISCONF_COLOR_FOLLOW_ALBUM_ART": "가능할 경우 앨범 아트 색상 따르기",
+
+    "VISCONF_CUSTOM_COLOR_TITLE": "사용자 정의 색상",
+    "VISCONF_CUSTOM_COLOR_BG": "배경:",
+    "VISCONF_CUSTOM_COLOR_BAR": "막대:",
+    "VISCONF_CUSTOM_COLOR_TOP": "윗 부분:",
+
+    "VISCONF_ALBUM_ART_TITLE": "앨범 아트",
+    "VISCONF_ALBUM_ART_SHOW": "앨범 아트 표시",
+    "VISCONF_ALBUM_ART_DIM": "앨범 아트 어둡게 표시",
+
+    "VISCONF_ALBUM_ART_SIZE_TITLE": "앨범 아트 크기",
+    "VISCONF_ALBUM_ART_SIZE_AUTO": "자동",
+    "VISCONF_ALBUM_ART_SIZE_AUTO2X": "자동 (2배 선호)",
+    "VISCONF_ALBUM_ART_SIZE_AUTO2XMIN": "자동 (최소 크기 2배)",
+    "VISCONF_ALBUM_ART_SIZE_ORIG": "원본",
+    "VISCONF_ALBUM_ART_SIZE_2X": "2배",
+
+    "VISCONF_VIS_TITLE": "시각화",
+    "VISCONF_BAR_WIDTH": "고정 막대 너비:",
+    "VISCONF_DEC_SPEED": "감소 속도:",
+    "VISCONF_PRIMARY_SCALE": "주 배율:",
+    "VISCONF_DIFF_SCALE": "차이 배율:",
+    "VISCONF_SCALE_INFO": "* 막대가 너무 빨리 상단에 도달한다고 생각하면 배율 값을 조정하세요."
 };
 
 export default lang;

@@ -3,7 +3,7 @@
   --checkbox-label-spacing: 6px;
   --checkbox-total-width-precalc: 0;
   --checkbox-total-width: calc(var(--checkbox-total-width-precalc));
-  --checkmark-top: 0;
+  --checkmark-top: 2px;
   --checkmark-left: 0;
 
   --checkmark: url("resources/icon/10/checkmark.svg");
@@ -43,21 +43,46 @@
         border-color: #333333;
         box-sizing: border-box;
         transition: 0.4s;
-        left: unset;
         position: unset;
-      }
-
-      &:hover::before {
-        border-color: var(--checkbox-hover-border);
-      }
-
-      &:active::before {
-        border-color: var(--checkbox-active-border);
-        background: var(--checkbox-active-background);
+        margin-top: 2px;
+        margin-bottom: -3px;
       }
 
       .x-toggle-indicator {
         display: none;
+      }
+    }
+
+    &:not(:disabled) {
+      &:hover {
+        + label,
+        + .x-toggle-indicatorWrapper {
+          &::before {
+            border-color: var(--checkbox-hover-border);
+          }
+        }
+      }
+
+      &:active {
+        + label,
+        + .x-toggle-indicatorWrapper {
+          &::before {
+            border-color: var(--checkbox-active-border);
+            background: var(--checkbox-active-background);
+          }
+        }
+      }
+
+      &:checked {
+        + label,
+        + .x-toggle-indicatorWrapper {
+          &:hover::after {
+            background: var(--checkmark-hover);
+          }
+          &:active::after {
+            background: var(--checkmark-active);
+          }
+        }
       }
     }
 
@@ -81,12 +106,6 @@
           left: var(--checkmark-left);
           background: var(--checkmark);
         }
-        &:hover::after {
-          background: var(--checkmark-hover);
-        }
-        &:active::after {
-          background: var(--checkmark-active);
-        }
       }
     }
 
@@ -104,9 +123,25 @@
     label[for="wmpotify-config-auto-updates"],
     label[for="wmpotify-config-hide-pbleftbtn"] {
       &::after {
-        top: -2px !important;
+        top: -1px !important;
       }
     }
+    label[for="wmpotify-config-tint-playerbar"],
+    label[for="wmpotify-config-tint-more"] {
+      &::after {
+        top: 2px !important;
+      }
+    }
+  }
+
+  #wmpvis-config {
+    input.wmpotify-aero[type="checkbox"] + label::after {
+      top: -2px;
+    }
+  }
+
+  label[for="wmpvis-lyrics-addOverrideChkBox"]::after {
+    top: -2px !important;
   }
 
   &[data-wmpotify-tint-more] {  

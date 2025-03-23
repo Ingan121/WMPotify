@@ -3,7 +3,7 @@
   --checkbox-label-spacing: 6px;
   --checkbox-total-width-precalc: 0;
   --checkbox-total-width: calc(var(--checkbox-total-width-precalc));
-  --checkmark-top: -1px;
+  --checkmark-top: 1px;
   --checkmark-left: 2px;
 
   input.wmpotify-aero[type="checkbox"],
@@ -37,18 +37,26 @@
           inset -1px -1px 0 1px #ddd, inset 3px 3px 6px #ccc;
         box-sizing: border-box;
         transition: 0.4s;
-        left: unset;
         position: unset;
-      }
-
-      &:hover::before {
-        background: var(--checkbox-hover-background);
-        border-color: var(--button-border-color-hovered);
-        box-shadow: var(--checkbox-hover-shadow);
+        margin-top: 2px;
+        margin-bottom: -3px;
       }
 
       .x-toggle-indicator {
         display: none;
+      }
+    }
+
+    &:not(:disabled) {
+      &:hover {
+        + label,
+        + .x-toggle-indicatorWrapper {
+          &::before {
+            background: var(--checkbox-hover-background);
+            border-color: var(--button-border-color-hovered);
+            box-shadow: var(--checkbox-hover-shadow);
+          }
+        }
       }
     }
 
@@ -93,5 +101,21 @@
         top: -2px !important;
       }
     }
+    label[for="wmpotify-config-tint-playerbar"],
+    label[for="wmpotify-config-tint-more"] {
+      &::after {
+        top: 1px !important;
+      }
+    }
+  }
+
+  #wmpvis-config {
+    input.wmpotify-aero[type="checkbox"] + label::after {
+      top: -2px;
+    }
+  }
+
+  label[for="wmpvis-lyrics-addOverrideChkBox"]::after {
+    top: -2px !important;
   }
 }

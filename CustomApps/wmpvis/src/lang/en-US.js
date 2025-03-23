@@ -14,6 +14,7 @@ const lang = {
     'MENU_VIS_ALBUM_ART': 'Album Art',
     'MENU_VIS_BARS': 'Bars',
     'MENU_VIS_BC_RANDOM': 'Random',
+    'MENU_VISCONF': 'Advanced Options',
     'MENU_LRC': 'Lyrics',
     'MENU_LRC_SHOW': 'Show Lyrics',
     'MENU_LRC_USE_SPOTIFY': 'Use Spotify Lyrics',
@@ -28,6 +29,9 @@ const lang = {
     'MSG_LOCAL_REMOVE_GUIDE': 'Click Load Lyrics in the right-click menu to remove the override.',
     'MSG_LOCAL_LOAD_FAIL': 'Failed to open the lyrics file.',
     'MSG_DBG_INFO_COPIED': 'Debug info copied to clipboard.',
+    'MSG_NO_VISCONF': 'MilkDrop visualization does not support advanced options.',
+
+    'NO_AUD_DATA': 'No audio data available for this track.',
 
     "LRC_STATUS_LOADING": "Loading...",
     "LRC_STATUS_NOT_FOUND": "No lyrics found.",
@@ -48,6 +52,36 @@ const lang = {
     "LRCFIND_OVERRIDE_INFO": "Click Lyrics -> Load Lyrics to remove the override",
     "LRCFIND_ADVANCED_EXPAND": "Advanced >>",
     "LRCFIND_ADVANCED_COLLAPSE": "Advanced <<",
+
+    "VISCONF_TITLE": "Visualizer Properties",
+    "VISCONF_COLOR_TITLE": "Colors",
+    "VISCONF_COLOR_DEFAULT": "Default",
+    "VISCONF_COLOR_FOLLOW_SCHEME": "Follow color scheme",
+    "VISCONF_COLOR_CUSTOM": "Custom",
+    "VISCONF_COLOR_FOLLOW_ALBUM_ART": "Follow album art colors if available",
+
+    "VISCONF_CUSTOM_COLOR_TITLE": "Custom colors",
+    "VISCONF_CUSTOM_COLOR_BG": "Background:",
+    "VISCONF_CUSTOM_COLOR_BAR": "Bar:",
+    "VISCONF_CUSTOM_COLOR_TOP": "Top:",
+
+    "VISCONF_ALBUM_ART_TITLE": "Album art",
+    "VISCONF_ALBUM_ART_SHOW": "Show album art",
+    "VISCONF_ALBUM_ART_DIM": "Dim album art",
+
+    "VISCONF_ALBUM_ART_SIZE_TITLE": "Album art size",
+    "VISCONF_ALBUM_ART_SIZE_AUTO": "Auto",
+    "VISCONF_ALBUM_ART_SIZE_AUTO2X": "Auto (Prefer 2x)",
+    "VISCONF_ALBUM_ART_SIZE_AUTO2XMIN": "Auto (2x minimum size)",
+    "VISCONF_ALBUM_ART_SIZE_ORIG": "Original",
+    "VISCONF_ALBUM_ART_SIZE_2X": "2x",
+
+    "VISCONF_VIS_TITLE": "Visualization",
+    "VISCONF_BAR_WIDTH": "Fixed bar width:",
+    "VISCONF_DEC_SPEED": "Decrement speed:",
+    "VISCONF_PRIMARY_SCALE": "Primary scale:",
+    "VISCONF_DIFF_SCALE": "Difference scale:",
+    "VISCONF_SCALE_INFO": "* Adjust the scale values if you think the bars reach the top too fast.",
 };
 
 export default lang;
