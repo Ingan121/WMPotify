@@ -26,6 +26,7 @@ class App extends React.Component {
       lyrics: React.createRef()
     };
     this.state = {
+      type: localStorage.wmpotifyVisType || "bars",
       bgColor:
         ((localStorage.wmpotifyVisType === "albumArt" || localStorage.wmpotifyVisUseSchemeColors) && !localStorage.wmpotifyVisBgColor) ?
           "var(--spice-main)" :
@@ -37,7 +38,14 @@ class App extends React.Component {
       showAlbumArt: !!localStorage.wmpotifyVisShowAlbumArt,
       dimAlbumArt: !!localStorage.wmpotifyVisDimAlbumArt,
       albumArtSize: localStorage.wmpotifyVisAlbumArtSize || "auto",
-      type: localStorage.wmpotifyVisType || "bars",
+      albumArtSizeProps: { // "Original"
+        width: "auto",
+        height: "auto",
+        minHeight: "0",
+        maxWidth: "none",
+        maxHeight: "none",
+        objectFit: "contain",
+      },
       bcPreset: localStorage.wmpotifyVisBCPreset || "Random",
       showLyrics: !!localStorage.wmpotifyVisShowLyrics,
       enableSpotifyLyrics: !localStorage.wmpotifyVisLyricsNoSpotify,
@@ -423,6 +431,12 @@ class App extends React.Component {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
+              width: this.state.albumArtSizeProps.width,
+              height: this.state.albumArtSizeProps.height,
+              minHeight: this.state.albumArtSizeProps.minHeight,
+              maxWidth: this.state.albumArtSizeProps.maxWidth,
+              maxHeight: this.state.albumArtSizeProps.maxHeight,
+              objectFit: this.state.albumArtSizeProps.objectFit,
               opacity: this.state.dimAlbumArt ? 0.5 : 1,
               boxShadow: "var(--album-shadow-big)",
               zIndex: 0

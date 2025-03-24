@@ -26,16 +26,17 @@ let idle = false;
 
 let visConfig = {};
 
-const arraySize = 96;
+const arraySizeOrig = 96;
 const arraySizeReduced = 49;
+let arraySize = localStorage.wmpotifyVisDontReduceBars ? arraySizeOrig : arraySizeReduced;
 
 const fps = 30;
 let interval;
 
-const lastAud = new Array(arraySize).fill(0);
-const lastBar = new Array(arraySizeReduced).fill(0);
-const lastTop = new Array(arraySizeReduced).fill(0);
-const topSpeed = new Array(arraySizeReduced).fill(0);
+const lastAud = new Array(96).fill(0);
+const lastBar = new Array(96).fill(0);
+const lastTop = new Array(96).fill(0);
+const topSpeed = new Array(96).fill(0);
 
 let lastIndex = 0;
 
@@ -84,15 +85,18 @@ async function wallpaperAudioListener() {
     }
 
     const index = findAudioArray(lastIndex);
+    let audioArray;
     if (index < 0) {
-        return;
+        audioArray = new Array(arraySizeOrig).fill(0);
+        lastIndex = 0;
+    } else {
+        audioArray = audioData[index]?.slice(1) || new Array(arraySizeOrig).fill(0);
+        const same = index === lastIndex;
+        if (same) {
+            audioArray = new Array(arraySizeOrig).fill(0);
+        }
+        lastIndex = index;
     }
-    let audioArray = audioData[index]?.slice(1) || new Array(arraySize).fill(0);
-    const same = index === lastIndex;
-    if (same) {
-        audioArray = new Array(arraySize).fill(0);
-    }
-    lastIndex = index;
 
     // Optimization
     if (idle) {
@@ -101,18 +105,24 @@ async function wallpaperAudioListener() {
         }
         idle = false;
     }
-    
-    for (let i = 0; i < audioArray.length - 2; i += 2) {
-        audioArray[i / 2] = (audioArray[i] + audioArray[i + 1]) / 2;
+
+    // Reduce the number of bars to make it look like WMP
+    if (visConfig.reduceBars) {
+        arraySize = arraySizeReduced;
+        for (let i = 0; i < audioArray.length - 2; i += 2) {
+            audioArray[i / 2] = (audioArray[i] + audioArray[i + 1]) / 2;
+        }
+        audioArray[arraySizeReduced - 2] = audioArray[arraySizeOrig - 2];
+        audioArray[arraySizeReduced - 1] = audioArray[arraySizeOrig - 1];
+    } else {
+        arraySize = arraySizeOrig;
     }
-    audioArray[arraySizeReduced - 2] = audioArray[arraySize - 2];
-    audioArray[arraySizeReduced - 1] = audioArray[arraySize - 1];
 
     // Clear the canvas
     visBarCtx.clearRect(0, 0, visBar.width, visBar.height);
 
     // Render bars along the full width of the canvas
-    const barWidth = visConfig.barWidth || Math.max(Math.round(1.0 / arraySizeReduced * visBar.width), 6);
+    const barWidth = visConfig.barWidth || Math.max(Math.round(1.0 / arraySize * visBar.width), 6);
     const gap = 1;
 
     visBarCtx.fillStyle = visConfig.barColor;
@@ -126,14 +136,11 @@ async function wallpaperAudioListener() {
     }
 
     let leftMargin = 0;
-    if (barWidth * arraySizeReduced < visBar.width) {
-        leftMargin = Math.round((visBar.width - barWidth * arraySizeReduced) / 2);
+    if (barWidth * arraySize < visBar.width) {
+        leftMargin = Math.round((visBar.width - barWidth * arraySize) / 2);
     }
     let allZero = true;
-    for (var i = 0; i < audioArray.length; ++i) {
-        if (i === 64 && visConfig.channelSeparation === 3) {
-            break;
-        }
+    for (let i = 0; i < arraySize; ++i) {
         // Create an audio bar with its hight depending on the audio volume level of the current frequency
         const height = Math.round(visBar.height * Math.min(audioArray[i], 1) * visConfig.primaryScale);
         if (height > lastBar[i]) {
@@ -201,8 +208,12 @@ export function updateVisConfig() {
         barWidth: parseInt(localStorage.wmpotifyVisBarWidth || 6),
         decSpeed: parseFloat(localStorage.wmpotifyVisDecSpeed || 2),
         primaryScale: parseFloat(localStorage.wmpotifyVisPrimaryScale || 1.0),
-        diffScale: parseFloat(localStorage.wmpotifyVisDiffScale || 0.07)
+        diffScale: parseFloat(localStorage.wmpotifyVisDiffScale || 0.07),
+        reduceBars: !localStorage.wmpotifyVisDontReduceBars,
     };
+    if (localStorage.wmpotifyVisAutoSizeBars) {
+        delete visConfig.barWidth;
+    }
     visTopCtx.clearRect(0, 0, visTop.width, visTop.height);
     idle = false;
 
@@ -214,6 +225,7 @@ export function updateVisConfig() {
         if (visConfig.followAlbumArt) {
             updateAlbumArtColor();
         }
+        updateAlbumArtSize();
     }
 }
 
@@ -242,22 +254,64 @@ async function updateAlbumArtColor() {
     App.setState({ bgColorFromAlbumArt: bgColor, albumArtTopColor });
 }
 
-const mpSchemeUpdateObserver = new MutationObserver((mutationsList) => {
-    for (const mutation of mutationsList) {
-        if (mutation.type === 'childList') {
-            const addedNodes = Array.from(mutation.addedNodes);
+function updateAlbumArtSize() {
+    if (!albumArt || !App.state.showAlbumArt) {
+        return;
+    }
 
-            const hasMarketplaceCSS = (nodes) => nodes.some(node => 
-                node.nodeType === Node.ELEMENT_NODE && 
-                node.matches('.marketplaceCSS.marketplaceScheme')
-            );
-
-            if (hasMarketplaceCSS(addedNodes)) {
-                updateSchemeColor();
-            }
+    const props = {
+        width: "auto",
+        height: "auto",
+        minHeight: "0",
+        maxWidth: "none",
+        maxHeight: "none",
+        objectFit: "contain",
+    };
+    if (albumArt?.src) {
+        const width = albumArt.naturalWidth;
+        const height = albumArt.naturalHeight;
+        switch (localStorage.wmpotifyVisAlbumArtSize) {
+            case "auto":
+                props.minHeight = '35%';
+                props.maxWidth = '100%';
+                props.maxHeight = '100%';
+                break;
+            case "auto2x":
+                props.width = width * 2 + 'px';
+                props.height = height * 2 + 'px';
+                props.minHeight = '35%';
+                props.maxWidth = '100%';
+                props.maxHeight = '100%';
+                break;
+            case "auto2xmin":
+                props.minHeight = '70%';
+                props.maxWidth = '100%';
+                props.maxHeight = '100%';
+                break;
+            case "2x":
+                props.width = width * 2 + 'px';
+                props.height = height * 2 + 'px';
+                break;
+            case "horizfit":
+                props.width = "100%";
+                props.height = "100%";
+                break;
+            case "vertfit":
+                props.width = "100%";
+                props.height = "100%";
+                props.objectFit = "cover";
+                break;
+            case "scale":
+                props.width = "100%";
+                props.height = "100%";
+                props.objectFit = "fill";
+                break;
+            default: // "orig" or not set, do nothing
+                break;
         }
     }
-});
+    App.setState({ albumArtSizeProps: props });
+}
 
 async function setupListeners() {
     console.log('Setting up listeners');
@@ -279,11 +333,14 @@ async function setupListeners() {
     if (visConfig.followAlbumArt) {
         updateAlbumArtColor();
     }
+    albumArt.addEventListener('load', updateAlbumArtSize);
+    albumArt.addEventListener('error', () => {
+        albumArt.src = '';
+        updateAlbumArtSize();
+    });
     albumArt.src = document.querySelector('.main-nowPlayingWidget-coverArt .cover-art img')?.src || '';
 
-    // Observe color scheme changes through Spicetify Marketplace
-    mpSchemeUpdateObserver.observe(document.body, { childList: true });
-    // Observe color scheme changes through WMPotify Color Chooser
+    // Observe color scheme changes through WMPotify Color Chooser / Dark Mode
     new MutationObserver(updateSchemeColor).observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
 
     Spicetify.Player.addEventListener('songchange', async () => {

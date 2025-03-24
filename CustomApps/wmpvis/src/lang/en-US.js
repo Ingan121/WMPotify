@@ -75,12 +75,16 @@ const lang = {
     "VISCONF_ALBUM_ART_SIZE_AUTO2XMIN": "Auto (2x minimum size)",
     "VISCONF_ALBUM_ART_SIZE_ORIG": "Original",
     "VISCONF_ALBUM_ART_SIZE_2X": "2x",
+    "VISCONF_ALBUM_ART_SIZE_FIT": "Fit",
+    "VISCONF_ALBUM_ART_SIZE_FILL": "Fill",
+    "VISCONF_ALBUM_ART_SIZE_STRETCH": "Stretch",
 
     "VISCONF_VIS_TITLE": "Visualization",
     "VISCONF_BAR_WIDTH": "Fixed bar width:",
     "VISCONF_DEC_SPEED": "Decrement speed:",
     "VISCONF_PRIMARY_SCALE": "Primary scale:",
     "VISCONF_DIFF_SCALE": "Difference scale:",
+    'VISCONF_REDUCE_BARS': 'Reduce the number of bars to make it look like WMP',
     "VISCONF_SCALE_INFO": "* Adjust the scale values if you think the bars reach the top too fast.",
 };
 

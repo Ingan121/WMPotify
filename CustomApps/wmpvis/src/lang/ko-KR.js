@@ -75,12 +75,16 @@ const lang = {
     "VISCONF_ALBUM_ART_SIZE_AUTO2XMIN": "자동 (최소 크기 2배)",
     "VISCONF_ALBUM_ART_SIZE_ORIG": "원본",
     "VISCONF_ALBUM_ART_SIZE_2X": "2배",
+    "VISCONF_ALBUM_ART_SIZE_FIT": "맞춤",
+    "VISCONF_ALBUM_ART_SIZE_FILL": "채우기",
+    "VISCONF_ALBUM_ART_SIZE_STRETCH": "늘이기",
 
     "VISCONF_VIS_TITLE": "시각화",
     "VISCONF_BAR_WIDTH": "고정 막대 너비:",
     "VISCONF_DEC_SPEED": "감소 속도:",
     "VISCONF_PRIMARY_SCALE": "주 배율:",
     "VISCONF_DIFF_SCALE": "차이 배율:",
+    'VISCONF_REDUCE_BARS': 'WMP와 같이 보이도록 막대 수 줄이기',
     "VISCONF_SCALE_INFO": "* 막대가 너무 빨리 상단에 도달한다고 생각하면 배율 값을 조정하세요."
 };
 

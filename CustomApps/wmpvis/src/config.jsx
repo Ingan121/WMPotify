@@ -26,7 +26,7 @@ const ConfigDialog = React.memo(() => {
                 #wmpvis-config .field-row > * + * {
                     margin-left: 6px;
                 }
-                
+
                 #wmpvis-config #colorSelector {
                     margin-bottom: 4px;
                 }
@@ -82,6 +82,8 @@ const ConfigDialog = React.memo(() => {
                     height: 0;
                     opacity: 0;
                     position: absolute;
+                    left: 0;
+                    bottom: 0;
                 }
 
                 #wmpvis-config .selectorArea {
@@ -203,14 +205,14 @@ const ConfigDialog = React.memo(() => {
                 <div id="albumArtSizeArea" class="selectorArea disabled">
                     <span id="albumArtSizeLabel" class="selectorLabel">{Strings["VISCONF_ALBUM_ART_SIZE_TITLE"]}:</span>
                     <select id="albumArtSizeSelector" class="wmpotify-aero" disabled>
+                        <option value="orig">{Strings["VISCONF_ALBUM_ART_SIZE_ORIG"]}</option>
                         <option value="auto">{Strings["VISCONF_ALBUM_ART_SIZE_AUTO"]}</option>
                         <option value="auto2x">{Strings["VISCONF_ALBUM_ART_SIZE_AUTO2X"]}</option>
                         <option value="auto2xmin">{Strings["VISCONF_ALBUM_ART_SIZE_AUTO2XMIN"]}</option>
-                        <option value="orig">{Strings["VISCONF_ALBUM_ART_SIZE_ORIG"]}</option>
                         <option value="2x">{Strings["VISCONF_ALBUM_ART_SIZE_2X"]}</option>
-                        <option value="horizfit">{Strings["MADCONF_WPDISPLAY_FIT"]}</option>
-                        <option value="vertfit">{Strings["MADCONF_WPDISPLAY_FILL"]}</option>
-                        <option value="scale">{Strings["MADCONF_WPDISPLAY_STRETCH"]}</option>
+                        <option value="horizfit">{Strings["VISCONF_ALBUM_ART_SIZE_FIT"]}</option>
+                        <option value="vertfit">{Strings["VISCONF_ALBUM_ART_SIZE_FILL"]}</option>
+                        <option value="scale">{Strings["VISCONF_ALBUM_ART_SIZE_STRETCH"]}</option>
                     </select>
                 </div>
             </fieldset><hr />
@@ -235,6 +237,8 @@ const ConfigDialog = React.memo(() => {
                         <input id="diffScaleInput" class="wmpotify-aero" type="number" name="diffScale" defaultValue="0.07" max="1.0" step="0.001" placeholder="0.07" />
                     </div>
                 </div>
+                <input id="reduceBarsChkBox" class="wmpotify-aero" type="checkbox" name="reduceBars" defaultChecked />
+                <label for="reduceBarsChkBox">{Strings["VISCONF_REDUCE_BARS"]}</label>
                 <p id="diffScaleInfo">
                     {Strings["VISCONF_SCALE_INFO"]}
                 </p>
@@ -286,6 +290,7 @@ function init(root) {
     const diffScaleLabel = root.querySelector("#diffScaleLabel");
     const diffScaleInput = root.querySelector("#diffScaleInput");
     const diffScaleInfo = root.querySelector("#diffScaleInfo");
+    const reduceBarsChkBox = root.querySelector("#reduceBarsChkBox");
 
     const okBtn = root.querySelector("#okBtn");
     const cancelBtn = root.querySelector("#cancelBtn");
@@ -386,13 +391,21 @@ function init(root) {
 
         if (fixedBarsChkBox.checked) {
             localStorage.wmpotifyVisBarWidth = barWidthInput.value;
+            delete localStorage.wmpotifyVisAutoSizeBars
         } else {
             delete localStorage.wmpotifyVisBarWidth;
+            localStorage.wmpotifyVisAutoSizeBars = true;
         }
 
         localStorage.wmpotifyVisDecSpeed = decSpeedInput.value;
         localStorage.wmpotifyVisPrimaryScale = primaryScaleInput.value;
         localStorage.wmpotifyVisDiffScale = diffScaleInput.value;
+
+        if (reduceBarsChkBox.checked) {
+            delete localStorage.wmpotifyVisDontReduceBars;
+        } else {
+            localStorage.wmpotifyVisDontReduceBars = true;
+        }
 
         App.setState({
             bgColor:
@@ -402,7 +415,7 @@ function init(root) {
             followAlbumArt: !!localStorage.wmpotifyVisFollowAlbumArt,
             showAlbumArt: !!localStorage.wmpotifyVisShowAlbumArt,
             dimAlbumArt: !!localStorage.wmpotifyVisDimAlbumArt,
-            albumArtSize: localStorage.wmpotifyVisAlbumArtSize || "auto",
+            albumArtSize: localStorage.wmpotifyVisAlbumArtSize || "orig",
         });
         updateVisConfig();
     }
@@ -455,9 +468,9 @@ function init(root) {
     }
 
     // Visualizer fieldset
-    if (localStorage.wmpotifyVisBarWidth) {
+    if (!localStorage.wmpotifyVisAutoSizeBars) {
         fixedBarsChkBox.checked = true;
-        barWidthInput.value = localStorage.wmpotifyVisBarWidth;
+        barWidthInput.value = localStorage.wmpotifyVisBarWidth || 6;
         barWidthInput.disabled = false;
     }
     if (localStorage.wmpotifyVisDecSpeed) {
@@ -468,6 +481,9 @@ function init(root) {
     }
     if (localStorage.wmpotifyVisDiffScale) {
         diffScaleInput.value = localStorage.wmpotifyVisDiffScale;
+    }
+    if (localStorage.wmpotifyVisDontReduceBars) {
+        reduceBarsChkBox.checked = false;
     }
 
     if (["none", "albumArt"].includes(localStorage.wmpotifyVisType)) {
@@ -486,5 +502,6 @@ function init(root) {
         diffScaleLabel.classList.add("disabled");
         diffScaleInput.disabled = true;
         diffScaleInfo.classList.add("disabled");
+        reduceBarsChkBox.disabled = true;
     }
 }

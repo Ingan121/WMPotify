@@ -136,12 +136,12 @@
 
   #wmpvis-config {
     input.wmpotify-aero[type="checkbox"] + label::after {
-      top: -2px;
+      top: -1px;
     }
   }
 
   label[for="wmpvis-lyrics-addOverrideChkBox"]::after {
-    top: -2px !important;
+    top: -1px !important;
   }
 
   &[data-wmpotify-tint-more] {  
