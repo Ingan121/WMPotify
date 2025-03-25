@@ -1,5 +1,5 @@
 :root[data-page^="/content-feed"] .Root__main-view {
-    div[data-testid="infinite-scroll-list"] {
+    div[role="list"] > div {
         hr {
             display: none;
         }
@@ -27,7 +27,7 @@
                 background: none;
             }
 
-            .Button-buttonPrimary-useBrowserDefaultFocusStyle-data-is-icon-only {
+            button[data-encore-id="buttonPrimary"] {
                 width: 42px;
                 height: 43px;
                 background: url('resources/playerbar/play.png') no-repeat;

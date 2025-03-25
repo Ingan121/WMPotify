@@ -126,6 +126,10 @@ const ConfigDialog = React.memo(() => {
                     margin-top: 3px;
                 }
 
+                #wmpvis-config input[type=number] {
+                    color: black;
+                }
+
                 #wmpvis-config input[type=number]::-webkit-inner-spin-button, 
                 #wmpvis-config input[type=number]::-webkit-outer-spin-button { 
                     appearance: none;
@@ -307,7 +311,7 @@ function init(root) {
             customColors.classList.add("disabled");
         } else if (colorSelector.value === "scheme") {
             bgColorPickerColor.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-main');
-            barColorPickerColor.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-accent');
+            barColorPickerColor.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-accent') || '#1ed760';
             topColorPickerColor.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-text');
             bgColorPicker.disabled = true;
             barColorPicker.disabled = true;
@@ -437,7 +441,7 @@ function init(root) {
     if (localStorage.wmpotifyVisUseSchemeColors) {
         colorSelector.value = "scheme";
         bgColorPickerColor.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-main');
-        barColorPickerColor.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-accent');
+        barColorPickerColor.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-accent') || '#1ed760';
         topColorPickerColor.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-text');
     } else if (localStorage.wmpotifyVisBgColor) {
         colorSelector.value = "custom";

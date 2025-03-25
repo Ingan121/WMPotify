@@ -1,6 +1,6 @@
 # <img src="https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/theme/src/resources/icon/wmpotify_48.png"> WMPotify
 * A Windows Media Player 11 inspired Spicetify theme for Spotify
-* Supported versions: 1.2.45 - 1.2.59
+* Supported versions: 1.2.45 - 1.2.60
     * Primarily tested on 1.2.52
     * 1.2.45: `Show Global nav bar with home button, search input and user avatar` must be set to `home-next-to-search` in the experimental features
     * 1.2.44 and below are not supported
@@ -153,6 +153,9 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 * Bars Visualization
 ![wmpvis_bars](screenshots/wmpvis_bars_xp.png)
 
+* Options
+![wmpvis_options](screenshots/wmpvis_options.png)
+
 ### Library
 
 * Compact
@@ -206,8 +209,10 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
     * **A:** Check `Enable Queue on the right panel.` in the user button -> `Experimental features`.
     * If this still does not work and the Experimental features popup shows `Using fallback mode`, you need to downgrade Spotify to a version fully supported by Spicetify. Old releases are available [here](https://docs.google.com/spreadsheets/d/1wztO1L4zvNykBRw7X4jxP8pvo11oQjT0O5DvZ_-S4Ok/edit?pli=1&gid=803394557#gid=803394557)
 2. **Q:** Aero Glass or the mini mode does not work
-    * **A:** Currently those features are only available on Windows, and if you have installed the [CEF/Spotify Tweaks](https://windhawk.net/mods/cef-titlebar-enabler-universal) [Windhawk](https://windhawk.net/) mod. macOS and Linux are not supported now, and it needs more research to implement them.
+    * **A:** Currently those features are only available on Windows, and if you have installed the [CEF/Spotify Tweaks](https://windhawk.net/mods/cef-titlebar-enabler-universal) [Windhawk](https://windhawk.net/) mod. macOS is not supported now, and it needs more research to implement them.
+    * For Linux, you can use [libcef-transparency-linux](https://github.com/fixpointer/libcef-transparency-linux) by [fixpointer](https://github.com/fixpointer) to enable transparency. You may need to apply additional mods like force blur.
     * For the mini mode, you might get it working by force resizing the window to a smaller size with an external tool. I will implement a custom miniplayer in the future that looks like the mini mode.
+    * KDE users: [You can get the mini mode working with Window Rules](https://github.com/Ingan121/WMPotify/issues/31).
 3. **Q.** Custom title bar only shows the close button
     * **A.** Either the CEF/Spotify Tweaks Windhawk mod or the Spotify API Extender Chrome extension required for the minimize/maximize/restore buttons to show up. The extension is available in the [SpotifyCrExt](/SpotifyCrExt) folder in the repository.
     * Using the extension is only recommended if you cannot use the Windhawk mod, such as on Linux or macOS.

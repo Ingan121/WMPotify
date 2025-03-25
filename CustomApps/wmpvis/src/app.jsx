@@ -256,7 +256,7 @@ class App extends React.Component {
             if (this.state.type !== "milkdrop") {
               openConfigDialog();
             } else {
-              Spicetify.showNotification(Strings['MSG_NO_VISCONF']);
+              ButterchurnAdaptor.openConfigDialog();
             }
           }}
         >

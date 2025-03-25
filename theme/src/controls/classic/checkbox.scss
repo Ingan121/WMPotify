@@ -116,9 +116,6 @@
   #wmpotify-config-tab-general {
     input[type="checkbox"] + label {
       padding-bottom: 5px;
-      &::after {
-        top: 2px !important;
-      }
     }
   }
 }

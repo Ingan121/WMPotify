@@ -218,7 +218,7 @@ export function updateVisConfig() {
     idle = false;
 
     if (visConfig.type === 'milkdrop') {
-        ButterchurnAdaptor.init(visBC);
+        ButterchurnAdaptor.init(visBC, debugView);
         ButterchurnAdaptor.setPaused(false);
     } else {
         ButterchurnAdaptor.setPaused(true);
@@ -230,7 +230,7 @@ export function updateVisConfig() {
 }
 
 function updateSchemeColor() {
-    schemeBarColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-accent');
+    schemeBarColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-accent') || '#1ed760';
     schemeTopColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-text');
     App.setState({ schemeTopColor });
 }
@@ -356,8 +356,9 @@ async function setupListeners() {
         if (visConfig.followAlbumArt) {
             updateAlbumArtColor();
         }
+        ButterchurnAdaptor.setAudioData(audioData || []);
     });
-    ButterchurnAdaptor.setAudioData(audioData);
+    ButterchurnAdaptor.setAudioData(audioData || []);
     if (interval) {
         clearInterval(interval);
     }
@@ -384,7 +385,7 @@ export async function init(elemRefs) {
     new ResizeObserver(updateSize).observe(visBar);
 
     if (visConfig.type === 'milkdrop') {
-        ButterchurnAdaptor.init(visBC);
+        ButterchurnAdaptor.init(visBC, debugView);
     }
 
     MadVisLyrics.init(elemRefs.lyrics.current);

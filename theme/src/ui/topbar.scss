@@ -196,7 +196,8 @@
         }
 
         &.main-globalNav-navLinkActive,
-        &:has(svg.Svg-img-icon-small-textBase) {
+        &:has(svg.Svg-img-icon-small-textBase),
+        &:has(svg[style*="--encore-icon-fill"]) {
             border-image-source: url('resources/topbar/tab_active.png');
 
             &:hover {
@@ -381,14 +382,14 @@ body[data-hide-libx] {
     }
 
     #wmpotify-tabs-container button[data-identifier="search"] {
-        border-image-source: url('resources/topbar/tab_active.png');
+        border-image-source: url('resources/topbar/tab_active.png') !important;
 
         &:hover {
-            border-image-source: url('resources/topbar/tab_active_hover.png');
+            border-image-source: url('resources/topbar/tab_active_hover.png') !important;
         }
 
         &:active {
-            border-image-source: url('resources/topbar/tab_active_pressed.png');
+            border-image-source: url('resources/topbar/tab_active_pressed.png') !important;
         }
     }
 

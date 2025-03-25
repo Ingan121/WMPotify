@@ -277,7 +277,7 @@ function waitForReady() {
                 document.documentElement.dataset.wmpotifyInitComplete = true;
             } catch (e) {
                 console.error('WMPotify: Error during init:', e);
-                let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_INIT'] + '\n\n' + e.message + '\n' + e.stack;
+                let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_INIT'] + '\n\n' + e.stack;
                 if (window.confirm(msg)) {
                     window.location.reload();
                 }
@@ -295,9 +295,9 @@ function waitForReady() {
                     let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_LOAD_FAIL'] + '\n\n';
                     let extraMsg = '';
                     if (ready === false) {
-                        extraMsg += 'Missing elements:\n\n' + elementsRequired.filter(selector => !document.querySelector(selector)).join('\n');
+                        extraMsg += 'Missing elements:\n' + elementsRequired.filter(selector => !document.querySelector(selector)).join('\n');
                     } else {
-                        extraMsg += 'Missing API objects:\n\n' + Object.entries({
+                        extraMsg += 'Missing API objects:\n' + Object.entries({
                             'Spicetify.Platform.PlayerAPI': window.Spicetify?.Platform?.PlayerAPI,
                             'Spicetify.AppTitle': window.Spicetify.AppTitle,
                             'Spicetify.Menu': window.Spicetify.Menu,

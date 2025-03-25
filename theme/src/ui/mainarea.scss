@@ -92,6 +92,10 @@ body[data-hide-libx],
         nav ul {
             display: flex;
         }
+
+        &:has(.main-topBar-background[style*="opacity: 1"]) {
+            display: flex !important;
+        }
     }
 }
 

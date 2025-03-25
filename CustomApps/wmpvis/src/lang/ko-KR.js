@@ -29,7 +29,6 @@ const lang = {
     "MSG_LOCAL_REMOVE_GUIDE": "불러온 가사를 제거하려면 오른쪽 클릭 메뉴에서 가사 불러오기를 클릭하세요.",
     "MSG_LOCAL_LOAD_FAIL": "가사 파일을 열지 못했습니다.",
     "MSG_DBG_INFO_COPIED": "디버그 정보가 클립보드에 복사되었습니다.",
-    "MSG_NO_VISCONF": "MilkDrop 시각화는 고급 옵션을 지원하지 않습니다.",
 
     "NO_AUD_DATA": "이 트랙에 대한 오디오 데이터를 사용할 수 없습니다.",
 
@@ -85,7 +84,15 @@ const lang = {
     "VISCONF_PRIMARY_SCALE": "주 배율:",
     "VISCONF_DIFF_SCALE": "차이 배율:",
     'VISCONF_REDUCE_BARS': 'WMP와 같이 보이도록 막대 수 줄이기',
-    "VISCONF_SCALE_INFO": "* 막대가 너무 빨리 상단에 도달한다고 생각하면 배율 값을 조정하세요."
+    "VISCONF_SCALE_INFO": "* 막대가 너무 빨리 상단에 도달한다고 생각하면 배율 값을 조정하세요.",
+
+    "BCCONF_TITLE": "MilkDrop 속성",
+    "BCCONF_HARDCUT_TYPE": "하드 컷 유형",
+    "BCCONF_HARDCUT_NONE": "없음",
+    "BCCONF_FPS": "FPS:",
+    "BCCONF_RANDOM_TIMER": "랜덤 프리셋 전환 간격:",
+    "BCCONF_TRANSITION_TIME": "전환 시간:",
+    "BCCONF_HARDCUT_TRANSITION_TIME": "하드 컷 전환 시간:"
 };
 
 export default lang;

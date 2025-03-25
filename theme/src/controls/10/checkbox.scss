@@ -117,33 +117,6 @@
     }
   }
 
-  #wmpotify-config {
-    label[for="wmpotify-config-show-libx"],
-    label[for="wmpotify-config-lock-title"],
-    label[for="wmpotify-config-auto-updates"],
-    label[for="wmpotify-config-hide-pbleftbtn"] {
-      &::after {
-        top: -1px !important;
-      }
-    }
-    label[for="wmpotify-config-tint-playerbar"],
-    label[for="wmpotify-config-tint-more"] {
-      &::after {
-        top: 2px !important;
-      }
-    }
-  }
-
-  #wmpvis-config {
-    input.wmpotify-aero[type="checkbox"] + label::after {
-      top: -1px;
-    }
-  }
-
-  label[for="wmpvis-lyrics-addOverrideChkBox"]::after {
-    top: -1px !important;
-  }
-
   &[data-wmpotify-tint-more] {  
     input.wmpotify-aero[type="checkbox"],
     input.x-toggle-input[type="checkbox"] {

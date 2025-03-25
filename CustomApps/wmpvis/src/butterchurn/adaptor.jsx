@@ -24,8 +24,7 @@ let renderTimer = null;
 let visualizer = null;
 let resizeObserver = null;
 
-let fps = 30;
-
+let fps = parseInt(localStorage.wmpotifyVisBCFPS || "30");
 
 const ConfigDialog = React.memo(() => {
     return <>
@@ -52,14 +51,22 @@ const ConfigDialog = React.memo(() => {
                     margin-right: 5px;
                 }
 
+                #wmpvis-config input[type=number] {
+                    width: 40px;
+                    text-align: right;
+                    margin-top: 3px;
+                    margin-left: 5px;
+                    color: black;
+                }
+
+                #wmpvis-config #hardcutArea {
+                    margin-top: 3px;
+                }
+
                 #wmpvis-config input[type=number]::-webkit-inner-spin-button, 
                 #wmpvis-config input[type=number]::-webkit-outer-spin-button { 
                     appearance: none;
                     margin: 0; 
-                }
-
-                #wmpvis-config p {
-                    margin: 3px 0;
                 }
 
                 #wmpvis-config .bottomButtons {
@@ -82,23 +89,23 @@ const ConfigDialog = React.memo(() => {
                 `}
         </style>
         <div style={{ fontSize: "11px" }} id="wmpvis-config">
-            <div id="hardcutArea" class="selectorArea disabled">
+            <span id="fpsLabel">{Strings["BCCONF_FPS"]}</span>
+            <input id="fpsInput" class="wmpotify-aero" type="number" name="fps" defaultValue="30" step="1" placeholder="30" /><br />
+            <span id="randomTimerLabel">{Strings["BCCONF_RANDOM_TIMER"]}</span>
+            <input id="randomTimerInput" class="wmpotify-aero" type="number" name="randomTimer" defaultValue="10" step="0.001" placeholder="10" /><br />
+            <span id="transitionTimeLabel">{Strings["BCCONF_TRANSITION_TIME"]}</span>
+            <input id="transitionTimeInput" class="wmpotify-aero" type="number" name="transitionTime" defaultValue="8" step="0.001" placeholder="8" /><br />
+            <div id="hardcutArea" class="selectorArea">
                 <span id="hardcutLabel" class="selectorLabel">{Strings["BCCONF_HARDCUT_TYPE"]}:</span>
-                <select id="hardcutSelector" class="wmpotify-aero" disabled>
+                <select id="hardcutSelector" class="wmpotify-aero">
                     <option value="0">{Strings["BCCONF_HARDCUT_NONE"]}</option>
-                    <option value="1">{Strings["BCCONF_HARDCUT_1"]}</option>
-                    <option value="2">{Strings["BCCONF_HARDCUT_2"]}</option>
-                    <option value="3">{Strings["BCCONF_HARDCUT_3"]}</option>
-                    <option value="4">{Strings["BCCONF_HARDCUT_4"]}</option>
-                    <option value="5">{Strings["BCCONF_HARDCUT_5"]}</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                 </select>
             </div>
-            <span id="fpsLabel">{Strings["BCCONF_FPS"]}</span>
-            <input id="fpsInput" class="wmpotify-aero" type="number" name="fps" defaultValue="30" step="1" placeholder="30" />
-            <span id="randomTimerLabel">{Strings["BCCONF_RANDOM_TIMER"]}</span>
-            <input id="randomTimerInput" class="wmpotify-aero" type="number" name="randomTimer" defaultValue="10" step="0.001" placeholder="10" />
-            <span id="transitionTimeLabel">{Strings["BCCONF_TRANSITION_TIME"]}</span>
-            <input id="transitionTimeInput" class="wmpotify-aero" type="number" name="transitionTime" defaultValue="8" step="0.001" placeholder="8" />
             <span id="hardcutTransitionTimeLabel">{Strings["BCCONF_HARDCUT_TRANSITION_TIME"]}</span>
             <input id="hardcutTransitionTimeInput" class="wmpotify-aero" type="number" name="hardcutTransitionTime" defaultValue="0.1" step="0.001" placeholder="0.1" disabled />
             <section class="bottomButtons field-row">
@@ -112,7 +119,7 @@ const ConfigDialog = React.memo(() => {
 
 function openConfigDialog() {
     Spicetify.PopupModal.display({
-        title: Strings['VISCONF_TITLE'],
+        title: Strings['BCCONF_TITLE'],
         content: <ConfigDialog />,
     });
 
@@ -127,10 +134,11 @@ function openConfigDialog() {
     const cancelBtn = root.querySelector("#cancelBtn");
     const applyBtn = root.querySelector("#applyBtn");
 
-    hardcutSelector.value = localStorage.wmpotifyVisBCHardcut || "0";
-    randomTimerInput.value = localStorage.wmpotifyVisBCRandomTimer || "10";
-    transitionTimeInput.value = localStorage.wmpotifyVisBCTransitionTime || "10";
-    hardcutTransitionTimeInput.value = localStorage.wmpotifyVisBCHardcutTransitionTime || "0.1";
+    fpsInput.value = localStorage.wmpotifyVisBCFPS || 30;
+    hardcutSelector.value = localStorage.wmpotifyVisBCHardcut || 0;
+    randomTimerInput.value = localStorage.wmpotifyVisBCRandomTimer || 10;
+    transitionTimeInput.value = localStorage.wmpotifyVisBCTransitionTime || 10;
+    hardcutTransitionTimeInput.value = localStorage.wmpotifyVisBCHardcutTransitionTime || 0.1;
 
     hardcutSelector.addEventListener("change", () => {
         if (hardcutSelector.value === "0") {
@@ -140,8 +148,17 @@ function openConfigDialog() {
         }
     });
 
+    if (localStorage.wmpotifyVisBCPreset) {
+        randomTimerInput.disabled = true;
+        transitionTimeInput.disabled = true;
+    }
+
+    if (hardcutSelector.value !== 0) {
+        hardcutTransitionTimeInput.disabled = false;
+    }
+
     function apply() {
-        if (hardcutSelector.value === "0") {
+        if (hardcutSelector.value === 0) {
             delete localStorage.wmpotifyVisBCHardcut;
         } else {
             localStorage.wmpotifyVisBCHardcut = hardcutSelector.value;
@@ -153,17 +170,17 @@ function openConfigDialog() {
         localStorage.wmpotifyVisBCHardcutTransitionTime = hardcutTransitionTimeInput.value;
 
         if (prevRandomTimer !== randomTimerInput.value) {
-            beginRandomTimer();
+            beginRandomTimer(transitionTimeInput.value);
         }
     }
 
     okBtn.addEventListener("click", () => {
         apply();
-        Spicetify.PopupModal.close();
+        Spicetify.PopupModal.hide();
     });
 
     cancelBtn.addEventListener("click", () => {
-        Spicetify.PopupModal.close();
+        Spicetify.PopupModal.hide();
     });
 
     applyBtn.addEventListener("click", () => {
@@ -178,7 +195,7 @@ const presets = Object.assign(
     butterchurnPresetsExtra2.getPresets()
 );
 
-export function init(canvas) {
+export function init(canvas, debugView) {
     if (inited) {
         return;
     }
@@ -222,13 +239,18 @@ export function init(canvas) {
         const currentTime = +Date.now();
         const elapsedTime = (currentTime - lastTime) / 1000;
         lastTime = currentTime;
+        const elapsedTimeSinceHardcut = (currentTime - lastHardcutTime);
+        const elapsedTimeSinceHardcutRecalc = (currentTime - lastHardcutRecalcTime);
 
         let renderTime = (Date.now() - currentTime) / 1000;
 
         if (!audioData || !visualizer || pause || !Spicetify.Player.isPlaying()) {
+            if (!audioData) {
+                debugView.innerText = 'No audio data';
+            }
             renderTimer = setTimeout(() => {
                 window.requestAnimationFrame(animationStep);
-            }, (1/fps - renderTime)*1000);
+            }, (1 / fps - renderTime) * 1000);
             return;
         }
 
@@ -250,36 +272,43 @@ export function init(canvas) {
 
         audioArray = audioArray.map(value => value * 256);
 
-        switch(localStorage.wmpotifyVisBCHardcut) {
-            case 1: 
-            case 2: 
-            case 3: 
-            case 4: {
+        switch (localStorage.wmpotifyVisBCHardcut) {
+            case "1": 
+            case "2": 
+            case "3": 
+            case "4": {
                 let hardcutThresholdSet = 0;
                 let hardcutFreq = 0;
                 let minimumHardcutDelay = 0;
                 let maximumHardcutDelay = 0;
 
-                if (localStorage.wmpotifyVisBCHardcut == 1) {
-                    hardcutThresholdSet = 220;
-                    hardcutFreq = 2;
-                    minimumHardcutDelay = 200;
-                    maximumHardcutDelay = 10000;
-                } else if (localStorage.wmpotifyVisBCHardcut == 2) {
-                    hardcutThresholdSet = 150;
-                    hardcutFreq = 60;
-                    minimumHardcutDelay = 200;
-                    maximumHardcutDelay = 10000;
-                } else if (localStorage.wmpotifyVisBCHardcut == 3) {
-                    hardcutThresholdSet = 255;
-                    hardcutFreq = 2;
-                    minimumHardcutDelay = 8000;
-                    maximumHardcutDelay = 30000;
-                } else if (localStorage.wmpotifyVisBCHardcut == 4) {
-                    hardcutThresholdSet = 190;
-                    hardcutFreq = 60;
-                    minimumHardcutDelay = 8000;
-                    maximumHardcutDelay = 30000;
+                switch (localStorage.wmpotifyVisBCHardcut) {
+                    case "1":
+                        hardcutThresholdSet = 220;
+                        hardcutFreq = 2;
+                        minimumHardcutDelay = 200;
+                        maximumHardcutDelay = 10000;
+                        break;
+                    case "2":
+                        hardcutThresholdSet = 150;
+                        hardcutFreq = 60;
+                        minimumHardcutDelay = 200;
+                        maximumHardcutDelay = 10000;
+                        break;
+                    case "3":
+                        hardcutThresholdSet = 255;
+                        hardcutFreq = 2;
+                        minimumHardcutDelay = 8000;
+                        maximumHardcutDelay = 30000;
+                        break;
+                    case "4":
+                        hardcutThresholdSet = 190;
+                        hardcutFreq = 60;
+                        minimumHardcutDelay = 8000;
+                        maximumHardcutDelay = 30000;
+                        break;
+                    default:
+                        break;
                 }
 
                 if (hardcutThreshold == null) {
@@ -304,20 +333,17 @@ export function init(canvas) {
                     }
 
                     if (elapsedTimeSinceHardcut > minimumHardcutDelay) {
-                        //if(presetCycle) nextPreset(wallpaperSettings.hardcutThresholdTransitionTime);
                         if (!localStorage.wmpotifyVisBCPreset) {
-                            beginRandomTimer();
+                            beginRandomTimer(parseFloat(localStorage.wmpotifyVisBCHardcutTransitionTime || 0.1));
                         }
                         lastHardcutTime = currentTime;
                     }
                 }
 
                 lastHardcutFreqVol = hardcutCheck;
-
-                controls_current_preset_hardcut_threshold.innerText = hardcutThreshold.toFixed();
             }
             break;
-            case 5: {
+            case "5": {
                 const hardcutThresholdSet = 220;
                 const hardcutFreq = 2;
                 const breakdownLength = 4000;
@@ -326,9 +352,8 @@ export function init(canvas) {
 
                 if (hardcutCheck >= hardcutThresholdSet && lastHardcutFreqVol <= (hardcutCheck / 2)) {
                     if (currentTime > (lastHardcutTime+breakdownLength)) {
-                        //if(presetCycle) nextPreset(wallpaperSettings.hardcutThresholdTransitionTime);
                         if (!localStorage.wmpotifyVisBCPreset) {
-                            beginRandomTimer();
+                            beginRandomTimer(parseFloat(localStorage.wmpotifyVisBCHardcutTransitionTime || 0.1));
                         }
                     }
                     lastHardcutTime = currentTime;
@@ -336,7 +361,7 @@ export function init(canvas) {
 
                 lastHardcutFreqVol = hardcutCheck;
             }
-            case 0:
+            case "0":
             default:
                 break;
         }
@@ -366,16 +391,18 @@ export function init(canvas) {
     inited = true;
 }
 
-function beginRandomTimer() {
+function beginRandomTimer(blend = 0) {
     clearInterval(randomTimer);
-    random();
-    randomTimer = setInterval(random, (localStorage.wmpotifyVisBCRandomTimer || 10) * 1000);
+    random(blend);
+    randomTimer = setInterval(() => {
+        random(parseFloat(localStorage.wmpotifyVisBCTransitionTime || 8));
+    }, (localStorage.wmpotifyVisBCRandomTimer || 10) * 1000);
 }
 
-function random() {
+function random(blend) {
     const presetNames = Object.keys(presets);
     const randomPreset = presetNames[Math.floor(Math.random() * presetNames.length)];
-    visualizer.loadPreset(presets[randomPreset]);
+    visualizer.loadPreset(presets[randomPreset], blend);
     console.debug(`Random preset: ${randomPreset}`);
 }
 
@@ -392,10 +419,10 @@ const ButterchurnAdaptor = {
     },
     setPreset: (presetName) => {
         if (presetName === null) {
-            beginRandomTimer();
+            beginRandomTimer(0.5);
         } else {
             clearInterval(randomTimer);
-            visualizer.loadPreset(presets[presetName]);
+            visualizer.loadPreset(presets[presetName], 0.5);
         }
     },
     openConfigDialog,

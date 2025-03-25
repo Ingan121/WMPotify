@@ -29,7 +29,6 @@ const lang = {
     'MSG_LOCAL_REMOVE_GUIDE': 'Click Load Lyrics in the right-click menu to remove the override.',
     'MSG_LOCAL_LOAD_FAIL': 'Failed to open the lyrics file.',
     'MSG_DBG_INFO_COPIED': 'Debug info copied to clipboard.',
-    'MSG_NO_VISCONF': 'MilkDrop visualization does not support advanced options.',
 
     'NO_AUD_DATA': 'No audio data available for this track.',
 
@@ -86,6 +85,14 @@ const lang = {
     "VISCONF_DIFF_SCALE": "Difference scale:",
     'VISCONF_REDUCE_BARS': 'Reduce the number of bars to make it look like WMP',
     "VISCONF_SCALE_INFO": "* Adjust the scale values if you think the bars reach the top too fast.",
+
+    "BCCONF_TITLE": "MilkDrop Properties",
+    "BCCONF_HARDCUT_TYPE": "Hard cut type",
+    "BCCONF_HARDCUT_NONE": "None",
+    "BCCONF_FPS": "Frames per second:",
+    "BCCONF_RANDOM_TIMER": "Random preset switch interval:",
+    "BCCONF_TRANSITION_TIME": "Transition time:",
+    "BCCONF_HARDCUT_TRANSITION_TIME": "Hard cut transition time:",
 };
 
 export default lang;
