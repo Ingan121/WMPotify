@@ -4,7 +4,7 @@
 @import "10/button.scss";
 
 .wmpotify-toolbar-button,
-.artist-artistDiscography-button,
+div[data-identifier="discography-topbar"] [role="switch"],
 [role="combobox"],
 header nav li,
 [class*="LegacyChipComponent-checkbox-chip-sm-"] {
@@ -58,7 +58,8 @@ header nav li,
   padding: 0;
 }
 
-button.x-sortBox-sortDropdown {
+button.x-sortBox-sortDropdown,
+button[aria-controls="sort-and-view-picker"] {
   color: var(--spice-text);
   padding: 0;
   gap: 0;
@@ -83,6 +84,12 @@ button.x-sortBox-sortDropdown {
   &:has(path[d="M15.5 13.5H.5V12h15v1.5zm0-4.75H.5v-1.5h15v1.5zm0-4.75H.5V2.5h15V4z"]) {
       &::before {
           background-image: url('resources/icon/compact.png');
+      }
+  }
+
+  &:has(path[d="M1 1h6v6H1V1zm1.5 1.5v3h3v-3h-3zM1 9h6v6H1V9zm1.5 1.5v3h3v-3h-3zM9 1h6v6H9V1zm1.5 1.5v3h3v-3h-3zM9 9h6v6H9V9zm1.5 1.5v3h3v-3h-3z"]) {
+      &::before {
+          background-image: url('resources/icon/grid.png');
       }
   }
 

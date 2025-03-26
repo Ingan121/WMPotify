@@ -79,7 +79,7 @@ body[data-hide-libx],
             display: none;
         }
 
-        &:has(.main-topBar-topbarContent > span.main-entityHeader-topbarTitle) {
+        &:has(.main-topBar-topbarContent > span.main-entityHeader-topbarTitle):not(:has(div[data-identifier="discography-topbar"])) {
             position: absolute;
             width: calc(100% - var(--scrollbar-size));
             outline: none;

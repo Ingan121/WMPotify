@@ -83,7 +83,7 @@ export function setupTopbar() {
                 loadOrder();
             }
         });
-        observer.observe(customAppsButtonsParent, { childList: true });
+        observer.observe(customAppsButtonsParent, { childList: true, subtree: true });
     }
     const rightButtons = document.querySelectorAll('.main-topBar-topbarContentRight > .main-actionButtons > button');
     for (const btn of rightButtons) {

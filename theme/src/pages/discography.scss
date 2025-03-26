@@ -1,20 +1,21 @@
-header:has(.artist-artistDiscography-topBar) {
+header:has(div[data-identifier="discography-topbar"]) {
     > .contentSpacing {
         padding: 0;
     }
 
     .main-topBar-topbarContent {
-        > *:not(.artist-artistDiscography-topBar) {
+        > *:not(div[data-identifier="discography-topbar"]) {
             display: none;
         }
 
-        .artist-artistDiscography-topBar {
+        div[data-identifier="discography-topbar"] {
+            width: 100%;
             height: 28px;
             left: 0;
             border-bottom: solid 1px var(--wmp11-separator-shadow);
             box-shadow: none !important;
 
-            .artist-artistDiscography-artistName {
+            div[data-encore-id="text"] {
                 margin-left: 8px;
                 font-size: 12px;
                 font-family: var(--ui-font);
@@ -24,7 +25,8 @@ header:has(.artist-artistDiscography-topBar) {
                 order: 0;
             }
 
-            .artist-artistDiscography-button {
+            button[role="switch"] {
+                position: relative;
                 width: 28px;
                 margin-left: 0;
 
@@ -47,17 +49,25 @@ header:has(.artist-artistDiscography-topBar) {
                     display: none;
                 }
             }
+
+            button[aria-controls="sort-and-view-picker"] { /* 1.2.60 */
+                order: 0;
+                padding-inline-end: 0;
+                min-block-size: unset;
+                transform: none !important;
+            }
         }
     }
 }
 
-section[data-testid="artist-page"] {
+section[data-testid="artist-page"],
+section[data-test-uri^="spotify:artist:"] {
     > .contentSpacing {
         padding: 0;
     }
 
     /* Hide this before relocation with JS */
-    .artist-artistDiscography-topBar {
+    div[data-identifier="discography-topbar"] {
         display: none;
     }
 
@@ -244,7 +254,8 @@ section[data-testid="artist-page"] {
         }
     }
 
-    .artist-artistDiscography-cardGrid {
+    .artist-artistDiscography-cardGrid,
+    .artist-artistDiscography-cardGrid .main-gridContainer-gridContainer {
         margin-top: 0;
 
         > div {

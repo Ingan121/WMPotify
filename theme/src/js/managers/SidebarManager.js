@@ -34,7 +34,7 @@ function updateSidebarWidth(force) {
     // Thus reducing the right sidebar width
     // So just get the real width and set it back
     widthObserver.disconnect();
-    const rightSidebar = document.querySelector('.Root__right-sidebar aside');
+    const rightSidebar = document.querySelector('.Root__right-sidebar');
     document.documentElement.style.setProperty("--panel-width", rightSidebar ? rightSidebar.offsetWidth : 8);
     const rightSidebarWidth = getComputedStyle(document.documentElement).getPropertyValue("--right-sidebar-width");
     if (rightSidebarWidth) {

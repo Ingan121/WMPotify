@@ -557,7 +557,6 @@ LRESULT CALLBACK SubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                     GetClientRect(hWnd, &rect);
                     FillRect(hdc, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
                     EndPaint(hWnd, &ps);
-                    Wh_Log(L"djkljlkfdj");
                 }
                 return 0;
             }

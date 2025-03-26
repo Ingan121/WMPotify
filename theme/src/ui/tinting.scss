@@ -35,7 +35,7 @@
 
     /* Toolbar buttons */
     .wmpotify-toolbar-button:not(#wmpotify-queue-clear-button),
-    .artist-artistDiscography-button,
+    div[data-identifier="discography-topbar"] [role="switch"],
     [role="combobox"],
     header nav li,
     [class*="LegacyChipComponent-checkbox-chip-sm-"],

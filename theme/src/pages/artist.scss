@@ -1,4 +1,5 @@
-section[data-testid="artist-page"] {
+section[data-testid="artist-page"],
+section[data-test-uri^="spotify:artist:"] {
     .main-actionBar-ActionBarRow {
         > span:first-child > div:first-child button {
             width: 42px;
@@ -56,7 +57,7 @@ section[data-testid="artist-page"] {
 }
 
 :root[data-page^="/artist/"] .Root__main-view {
-    header:not(:has(.artist-artistDiscography-topBar)) {
+    header:not(:has(div[data-identifier="discography-topbar"])) {
         width: calc(100% - var(--scrollbar-size)) !important;
 
         .main-topBar-background {
@@ -101,7 +102,8 @@ section[data-testid="artist-page"] {
 }
 
 :root[data-wmpotify-dark-mode] {
-    section[data-testid="artist-page"] {
+    section[data-testid="artist-page"],
+    section[data-test-uri^="spotify:artist:"] {
         .main-entityHeader-container:not(.main-entityHeader-withBackgroundImage) {
             background-color: #222222;
         }
