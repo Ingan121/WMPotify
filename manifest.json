@@ -1,10 +1,23 @@
-{
-    "name": "WMPotify",
-    "description": "A Windows Media Player 11 inspired Spicetify theme for Spotify",
-    "preview": "screenshots/home_aero.png",
-    "readme": "README.md",
-    "usercss": "theme/dist/user.css",
-    "schemes": "theme/dist/color.ini",
-    "include": ["https://cdn.jsdelivr.net/gh/Ingan121/WMPotify@refs/heads/master/theme/dist/theme.js"],
-    "tags": ["aero", "wmp", "customizable"]
-}
+[
+    {
+        "name": "WMPotify",
+        "description": "A Windows Media Player 11 inspired Spicetify theme for Spotify",
+        "preview": "screenshots/home_aero.png",
+        "readme": "README.md",
+        "usercss": "theme/dist/user.css",
+        "schemes": "theme/dist/color.ini",
+        "include": ["https://cdn.jsdelivr.net/gh/Ingan121/WMPotify@refs/heads/master/theme/dist/theme.js"],
+        "tags": ["aero", "wmp", "customizable"]
+    },
+    {
+        "name": "WMPotify (Pre-release)",
+        "description": "Not recommended, expect unfinished and broken stuff",
+        "preview": "screenshots/home_aero.png",
+        "readme": "README.md",
+        "usercss": "theme/dist/user.css",
+        "schemes": "theme/dist/color.ini",
+        "include": ["https://cdn.jsdelivr.net/gh/Ingan121/WMPotify@refs/heads/prerelease/theme/dist/theme.js"],
+        "tags": ["aero", "wmp", "customizable"],
+        "branch": "prerelease"
+    }
+]
