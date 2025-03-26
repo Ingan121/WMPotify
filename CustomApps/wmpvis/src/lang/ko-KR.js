@@ -79,6 +79,7 @@ const lang = {
     "VISCONF_ALBUM_ART_SIZE_STRETCH": "늘이기",
 
     "VISCONF_VIS_TITLE": "시각화",
+    "VISCONF_FPS": "FPS:",
     "VISCONF_BAR_WIDTH": "고정 막대 너비:",
     "VISCONF_DEC_SPEED": "감소 속도:",
     "VISCONF_PRIMARY_SCALE": "주 배율:",
@@ -89,7 +90,6 @@ const lang = {
     "BCCONF_TITLE": "MilkDrop 속성",
     "BCCONF_HARDCUT_TYPE": "하드 컷 유형",
     "BCCONF_HARDCUT_NONE": "없음",
-    "BCCONF_FPS": "FPS:",
     "BCCONF_RANDOM_TIMER": "랜덤 프리셋 전환 간격:",
     "BCCONF_TRANSITION_TIME": "전환 시간:",
     "BCCONF_HARDCUT_TRANSITION_TIME": "하드 컷 전환 시간:"

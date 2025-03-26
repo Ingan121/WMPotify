@@ -4,6 +4,7 @@
 
 import React from "react";
 import Strings from "../strings";
+import { appInstance as App } from "../app";
 
 import butterchurn from './butterchurn.min.js';
 import butterchurnExtraImages from './butterchurnExtraImages.min.js';
@@ -24,7 +25,7 @@ let renderTimer = null;
 let visualizer = null;
 let resizeObserver = null;
 
-let fps = parseInt(localStorage.wmpotifyVisBCFPS || "30");
+let fps = parseInt(localStorage.wmpotifyVisFPS || "30");
 
 const ConfigDialog = React.memo(() => {
     return <>
@@ -89,7 +90,7 @@ const ConfigDialog = React.memo(() => {
                 `}
         </style>
         <div style={{ fontSize: "11px" }} id="wmpvis-config">
-            <span id="fpsLabel">{Strings["BCCONF_FPS"]}</span>
+            <span id="fpsLabel">{Strings["VISCONF_FPS"]}</span>
             <input id="fpsInput" class="wmpotify-aero" type="number" name="fps" defaultValue="30" step="1" placeholder="30" /><br />
             <span id="randomTimerLabel">{Strings["BCCONF_RANDOM_TIMER"]}</span>
             <input id="randomTimerInput" class="wmpotify-aero" type="number" name="randomTimer" defaultValue="10" step="0.001" placeholder="10" /><br />
@@ -134,7 +135,7 @@ function openConfigDialog() {
     const cancelBtn = root.querySelector("#cancelBtn");
     const applyBtn = root.querySelector("#applyBtn");
 
-    fpsInput.value = localStorage.wmpotifyVisBCFPS || 30;
+    fpsInput.value = localStorage.wmpotifyVisFPS || 30;
     hardcutSelector.value = localStorage.wmpotifyVisBCHardcut || 0;
     randomTimerInput.value = localStorage.wmpotifyVisBCRandomTimer || 10;
     transitionTimeInput.value = localStorage.wmpotifyVisBCTransitionTime || 10;
@@ -163,7 +164,7 @@ function openConfigDialog() {
         } else {
             localStorage.wmpotifyVisBCHardcut = hardcutSelector.value;
         }
-        localStorage.wmpotifyVisBCFPS = fps = fpsInput.value;
+        localStorage.wmpotifyVisFPS = fps = fpsInput.value;
         const prevRandomTimer = localStorage.wmpotifyVisBCRandomTimer;
         localStorage.wmpotifyVisBCRandomTimer = randomTimerInput.value;
         localStorage.wmpotifyVisBCTransitionTime = transitionTimeInput.value;
@@ -179,7 +180,10 @@ function openConfigDialog() {
         Spicetify.PopupModal.hide();
     });
 
-    cancelBtn.addEventListener("click", () => {
+    cancelBtn.addEventListener("click", (event) => {
+        if (event.shiftKey) {
+            App.setState({ debugMode: !App.state.debugMode });
+        }
         Spicetify.PopupModal.hide();
     });
 
@@ -246,7 +250,7 @@ export function init(canvas, debugView) {
 
         if (!audioData || !visualizer || pause || !Spicetify.Player.isPlaying()) {
             if (!audioData) {
-                debugView.innerText = 'No audio data';
+                debugView.children[0].innerText = 'No audio data';
             }
             renderTimer = setTimeout(() => {
                 window.requestAnimationFrame(animationStep);

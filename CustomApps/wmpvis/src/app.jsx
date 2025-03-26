@@ -52,6 +52,7 @@ class App extends React.Component {
       enableLyricsCache: !localStorage.wmpotifyVisLyricsNoCache,
       isFullscreen: !!document.fullscreenElement,
       noAudioData: false,
+      debugMode: false,
       updateAvailable: false
     };
   }
@@ -343,7 +344,7 @@ class App extends React.Component {
           >
             {Strings['MENU_LRC_CACHE']}
           </Spicetify.ReactComponent.MenuItem>
-          <Spicetify.ReactComponent.MenuItem
+          {this.state.debugMode && <Spicetify.ReactComponent.MenuItem
             label="Copy Debug Info"
             onClick={() => {
               MadVisLyrics.copyDebugInfo();
@@ -351,7 +352,7 @@ class App extends React.Component {
             }}
           >
             {Strings['MENU_LRC_COPY_DBG_INFO']}
-          </Spicetify.ReactComponent.MenuItem>
+          </Spicetify.ReactComponent.MenuItem>}
         </Spicetify.ReactComponent.MenuSubMenuItem>
         <Spicetify.ReactComponent.MenuItem
           label="Full Screen"
@@ -485,7 +486,16 @@ class App extends React.Component {
           <p
             className="wmpvis-debug"
             style={{
-              display: "none",
+              display: this.state.debugMode ? "block" : "none",
+              color:
+                this.state.type !== "milkdrop" ?
+                  this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
+                    this.state.albumArtTopColor :
+                    localStorage.wmpotifyVisUseSchemeColors ?
+                      this.state.schemeTopColor :
+                        localStorage.wmpotifyVisTopColor || "white"
+                  : "white",
+              backgroundColor: this.state.type !== "milkdrop" ? "transparent" : "rgba(0, 0, 0, 0.5)",
               position: "absolute",
               top: 0,
               left: 0,

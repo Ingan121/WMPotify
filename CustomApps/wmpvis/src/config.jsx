@@ -115,15 +115,22 @@ const ConfigDialog = React.memo(() => {
                 #wmpvis-config #barWidthInput,
                 #wmpvis-config #decSpeedInput,
                 #wmpvis-config #primaryScaleInput,
-                #wmpvis-config #diffScaleInput {
+                #wmpvis-config #diffScaleInput,
+                #wmpvis-config #fpsInput {
                     width: 40px;
                     text-align: right;
                     margin-left: 5px;
                 }
 
                 #wmpvis-config #primaryScaleInput,
-                #wmpvis-config #diffScaleInput {
+                #wmpvis-config #diffScaleInput,
+                #wmpvis-config #fpsInput {
                     margin-top: 3px;
+                }
+
+                label[for="reduceBarsChkBox"] {
+                    position: relative;
+                    left: 15px;
                 }
 
                 #wmpvis-config input[type=number] {
@@ -241,6 +248,8 @@ const ConfigDialog = React.memo(() => {
                         <input id="diffScaleInput" class="wmpotify-aero" type="number" name="diffScale" defaultValue="0.07" max="1.0" step="0.001" placeholder="0.07" />
                     </div>
                 </div>
+                <span id="fpsLabel">{Strings["VISCONF_FPS"]}</span>
+                <input id="fpsInput" class="wmpotify-aero" type="number" name="fps" defaultValue="30" step="1" placeholder="30" />
                 <input id="reduceBarsChkBox" class="wmpotify-aero" type="checkbox" name="reduceBars" defaultChecked />
                 <label for="reduceBarsChkBox">{Strings["VISCONF_REDUCE_BARS"]}</label>
                 <p id="diffScaleInfo">
@@ -294,6 +303,7 @@ function init(root) {
     const diffScaleLabel = root.querySelector("#diffScaleLabel");
     const diffScaleInput = root.querySelector("#diffScaleInput");
     const diffScaleInfo = root.querySelector("#diffScaleInfo");
+    const fpsInput = root.querySelector("#fpsInput");
     const reduceBarsChkBox = root.querySelector("#reduceBarsChkBox");
 
     const okBtn = root.querySelector("#okBtn");
@@ -404,6 +414,7 @@ function init(root) {
         localStorage.wmpotifyVisDecSpeed = decSpeedInput.value;
         localStorage.wmpotifyVisPrimaryScale = primaryScaleInput.value;
         localStorage.wmpotifyVisDiffScale = diffScaleInput.value;
+        localStorage.wmpotifyVisFPS = fpsInput.value;
 
         if (reduceBarsChkBox.checked) {
             delete localStorage.wmpotifyVisDontReduceBars;
@@ -429,7 +440,10 @@ function init(root) {
         Spicetify.PopupModal.hide();
     });
 
-    cancelBtn.addEventListener("click", () => {
+    cancelBtn.addEventListener("click", (event) => {
+        if (event.shiftKey) {
+            App.setState({ debugMode: !App.state.debugMode });
+        }
         Spicetify.PopupModal.hide();
     });
 
@@ -485,6 +499,9 @@ function init(root) {
     }
     if (localStorage.wmpotifyVisDiffScale) {
         diffScaleInput.value = localStorage.wmpotifyVisDiffScale;
+    }
+    if (localStorage.wmpotifyVisFPS) {
+        fpsInput.value = localStorage.wmpotifyVisFPS;
     }
     if (localStorage.wmpotifyVisDontReduceBars) {
         reduceBarsChkBox.checked = false;

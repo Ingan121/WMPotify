@@ -79,6 +79,7 @@ const lang = {
     "VISCONF_ALBUM_ART_SIZE_STRETCH": "Stretch",
 
     "VISCONF_VIS_TITLE": "Visualization",
+    "VISCONF_FPS": "FPS:",
     "VISCONF_BAR_WIDTH": "Fixed bar width:",
     "VISCONF_DEC_SPEED": "Decrement speed:",
     "VISCONF_PRIMARY_SCALE": "Primary scale:",
@@ -89,7 +90,6 @@ const lang = {
     "BCCONF_TITLE": "MilkDrop Properties",
     "BCCONF_HARDCUT_TYPE": "Hard cut type",
     "BCCONF_HARDCUT_NONE": "None",
-    "BCCONF_FPS": "Frames per second:",
     "BCCONF_RANDOM_TIMER": "Random preset switch interval:",
     "BCCONF_TRANSITION_TIME": "Transition time:",
     "BCCONF_HARDCUT_TRANSITION_TIME": "Hard cut transition time:",

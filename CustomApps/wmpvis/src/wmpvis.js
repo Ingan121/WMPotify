@@ -19,6 +19,8 @@ let visBC = null;
 let visBarCtx = null;
 let visTopCtx = null;
 let debugView = null;
+let debugViewIndex = null;
+let debugViewFps = null;
 
 let audioData = null;
 
@@ -30,8 +32,10 @@ const arraySizeOrig = 96;
 const arraySizeReduced = 49;
 let arraySize = localStorage.wmpotifyVisDontReduceBars ? arraySizeOrig : arraySizeReduced;
 
-const fps = 30;
-let interval;
+let fps = parseInt(localStorage.wmpotifyVisFPS || "30");
+let interval, fpsDetectorInterval;
+let updatesPerSecond = 0;
+let actualFps = fps;
 
 const lastAud = new Array(96).fill(0);
 const lastBar = new Array(96).fill(0);
@@ -69,7 +73,7 @@ export function findAudioArray(near) {
         index++;
     }
 
-    debugView.innerText = index;
+    debugViewIndex.innerText = index;
 
     return index;
 }
@@ -106,6 +110,8 @@ async function wallpaperAudioListener() {
         idle = false;
     }
 
+    updatesPerSecond++;
+
     // Reduce the number of bars to make it look like WMP
     if (visConfig.reduceBars) {
         arraySize = arraySizeReduced;
@@ -140,6 +146,8 @@ async function wallpaperAudioListener() {
         leftMargin = Math.round((visBar.width - barWidth * arraySize) / 2);
     }
     let allZero = true;
+    const adjustedDecSpeed = visConfig.decSpeed / (actualFps / 30);
+    globalThis.asfdsfsd = adjustedDecSpeed;
     for (let i = 0; i < arraySize; ++i) {
         // Create an audio bar with its hight depending on the audio volume level of the current frequency
         const height = Math.round(visBar.height * Math.min(audioArray[i], 1) * visConfig.primaryScale);
@@ -147,7 +155,7 @@ async function wallpaperAudioListener() {
             lastBar[i] = height;
             visBarCtx.fillRect(leftMargin + barWidth * i, visBar.height - height, barWidth - gap, height);
         } else {
-            lastBar[i] -= visConfig.decSpeed;
+            lastBar[i] -= adjustedDecSpeed;
             const diff = audioArray[i] - lastAud[i];
             if (diff > 0.1) {
                 lastBar[i] += Math.round(360 * diff * visConfig.diffScale);
@@ -166,18 +174,18 @@ async function wallpaperAudioListener() {
         } else if (lastTop[i] < visTop.height - 1) {
             visTopCtx.clearRect(leftMargin + barWidth * i, 0, barWidth - gap, visTop.height);
             if (topSpeed[i] > 38) {
-                lastTop[i] += 5 * Math.round(visConfig.decSpeed / 3);
+                lastTop[i] += 5 * Math.round(adjustedDecSpeed / 3);
             } else if (topSpeed[i] > 26) {
-                lastTop[i] += 4 * Math.round(visConfig.decSpeed / 3);
+                lastTop[i] += 4 * Math.round(adjustedDecSpeed / 3);
                 topSpeed[i] += 1;
             } else if (topSpeed[i] > 18) {
-                lastTop[i] += 3 * Math.round(visConfig.decSpeed / 3);
+                lastTop[i] += 3 * Math.round(adjustedDecSpeed / 3);
                 topSpeed[i] += 1;
             } else if (topSpeed[i] > 10) {
-                lastTop[i] += 2 * Math.round(visConfig.decSpeed / 3);
+                lastTop[i] += 2 * Math.round(adjustedDecSpeed / 3);
                 topSpeed[i] += 1;
             } else {
-                topSpeed[i] += 1 + Math.round(visConfig.decSpeed / 3);
+                topSpeed[i] += 1 + Math.round(adjustedDecSpeed / 3);
             }
             visTopCtx.fillRect(leftMargin + barWidth * i, lastTop[i], barWidth - gap, 1);
             allZero = false;
@@ -214,6 +222,19 @@ export function updateVisConfig() {
     if (localStorage.wmpotifyVisAutoSizeBars) {
         delete visConfig.barWidth;
     }
+    const prevFps = fps;
+    fps = parseInt(localStorage.wmpotifyVisFPS || "30");
+    if (prevFps !== fps && interval) {
+        clearInterval(interval);
+        interval = setInterval(wallpaperAudioListener, 1000 / fps);
+    }
+    clearInterval(fpsDetectorInterval);
+    fpsDetectorInterval = setInterval(() => {
+        actualFps = updatesPerSecond;
+        debugViewFps.innerText = 'FPS: ' + actualFps;
+        updatesPerSecond = 0;
+    }, 1000);
+    actualFps = fps;
     visTopCtx.clearRect(0, 0, visTop.width, visTop.height);
     idle = false;
 
@@ -363,6 +384,14 @@ async function setupListeners() {
         clearInterval(interval);
     }
     interval = setInterval(wallpaperAudioListener, 1000 / fps);
+    if (fpsDetectorInterval) {
+        clearInterval(fpsDetectorInterval);
+    }
+    fpsDetectorInterval = setInterval(() => {
+        actualFps = updatesPerSecond;
+        debugViewFps.innerText = 'FPS: ' + actualFps;
+        updatesPerSecond = 0;
+    }, 1000);
 }
 
 window.addEventListener('resize', updateSize);
@@ -374,6 +403,11 @@ export async function init(elemRefs) {
     visTop = elemRefs.visTop.current;
     visBC = elemRefs.visBC.current;
     debugView = elemRefs.debug.current;
+
+    debugViewIndex = document.createElement('p');
+    debugViewFps = document.createElement('p');
+    debugView.appendChild(debugViewIndex);
+    debugView.appendChild(debugViewFps);
 
     visBarCtx = visBar.getContext('2d');
     visTopCtx = visTop.getContext('2d');
@@ -405,6 +439,9 @@ export async function init(elemRefs) {
 export function uninit() {
     if (interval) {
         clearInterval(interval);
+    }
+    if (fpsDetectorInterval) {
+        clearInterval(fpsDetectorInterval);
     }
     ButterchurnAdaptor.uninit();
     MadVisLyrics.uninit();
