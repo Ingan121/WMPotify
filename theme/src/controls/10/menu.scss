@@ -206,10 +206,8 @@
               transform: scale(0.6) rotate(90deg);
             }
 
-            &[class*=" "] {
+            &.vvMORUKtQKpQcpQ992bR { /* Top separator */
               /* has multiple classes, usually meaning a separator on top or bottom */
-              /* :not(:first-child) - dirty workaround for non-separator class being used in artist context menu ('Create Discog Collection') */
-              /* assume top here */
               &::before {
                 top: -7px;
                 left: 29px;
@@ -217,8 +215,24 @@
                 border: none;
                 border-top: solid 1px var(--menu-separator-border-top-color);
                 border-bottom: solid 1px var(--menu-separator-border-bottom-color);
+                pointer-events: none;
               }
               margin-top: 9px;
+            }
+
+            &.Vz3pFUXmll6fKB5Fc4nd { /* Bottom separator */
+              &::before {
+                content: "";
+                position: absolute;
+                bottom: -6px;
+                left: 29px;
+                width: calc(100% - 29px);
+                border: none;
+                border-top: solid 1px var(--menu-separator-border-top-color);
+                border-bottom: solid 1px var(--menu-separator-border-bottom-color);
+                pointer-events: none;
+              }
+              margin-bottom: 9px;
             }
           }
 
@@ -227,40 +241,6 @@
             left: 4px;
             transform: scale(0.75);
           }
-        }
-
-        li:first-child,
-        li:nth-child(2),
-        li:nth-child(3),
-        li:nth-child(4),
-        li:nth-child(5),
-        li:nth-child(6) {
-          button[class*=" "] {
-            /* has multiple classes, usually meaning a separator on top or bottom */
-            /* assume bottom here */
-            &::before {
-              content: "";
-              position: absolute;
-              top: unset !important;
-              bottom: -6px;
-              pointer-events: none;
-            }
-            margin-top: 0 !important;
-            margin-bottom: 9px;
-          }
-        }
-
-        /* Bottom separator, verified classname being consistent in Spotify 1.2.45, .52, .53, .55, and .56 */
-        .Vz3pFUXmll6fKB5Fc4nd:not(#Prio1):not(#Prio2) {
-          &::before {
-            content: "";
-            position: absolute;
-            top: unset !important;
-            bottom: -6px;
-            pointer-events: none;
-          }
-          margin-top: 0 !important;
-          margin-bottom: 9px;
         }
 
         /* Hide the bottom separator if there is no menu below */

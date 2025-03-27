@@ -128,15 +128,6 @@ const ConfigDialog = React.memo(() => {
                     margin-top: 3px;
                 }
 
-                label[for="reduceBarsChkBox"] {
-                    position: relative;
-                    left: 15px;
-                }
-
-                #wmpvis-config input[type=number] {
-                    color: black;
-                }
-
                 #wmpvis-config input[type=number]::-webkit-inner-spin-button, 
                 #wmpvis-config input[type=number]::-webkit-outer-spin-button { 
                     appearance: none;
@@ -161,7 +152,11 @@ const ConfigDialog = React.memo(() => {
                     text-shadow: 1px 1px 0 var(--button-hilight);
                 }
 
-                #wmpvis-config button.wmpotify-aero {
+                input.wmpotify-aero[type=number] {
+                    color: black;
+                }
+
+                button.wmpotify-aero {
                     color: black;
                     min-height: 23px;
                     min-width: 75px;
@@ -248,8 +243,10 @@ const ConfigDialog = React.memo(() => {
                         <input id="diffScaleInput" class="wmpotify-aero" type="number" name="diffScale" defaultValue="0.07" max="1.0" step="0.001" placeholder="0.07" />
                     </div>
                 </div>
-                <span id="fpsLabel">{Strings["VISCONF_FPS"]}</span>
-                <input id="fpsInput" class="wmpotify-aero" type="number" name="fps" defaultValue="30" step="1" placeholder="30" />
+                {App.state.debugMode && <>
+                    <span id="fpsLabel">FPS (Debug only, unexpected behavior may occur):</span>
+                    <input id="fpsInput" class="wmpotify-aero" type="number" name="fps" defaultValue="30" step="1" placeholder="30" /> <br />
+                </>}
                 <input id="reduceBarsChkBox" class="wmpotify-aero" type="checkbox" name="reduceBars" defaultChecked />
                 <label for="reduceBarsChkBox">{Strings["VISCONF_REDUCE_BARS"]}</label>
                 <p id="diffScaleInfo">
@@ -414,7 +411,13 @@ function init(root) {
         localStorage.wmpotifyVisDecSpeed = decSpeedInput.value;
         localStorage.wmpotifyVisPrimaryScale = primaryScaleInput.value;
         localStorage.wmpotifyVisDiffScale = diffScaleInput.value;
-        localStorage.wmpotifyVisFPS = fpsInput.value;
+        if (fpsInput) {
+            if (fpsInput.value == 30) {
+                delete localStorage.wmpotifyVisFPS;
+            } else {
+                localStorage.wmpotifyVisFPS = fpsInput.value;
+            }
+        }
 
         if (reduceBarsChkBox.checked) {
             delete localStorage.wmpotifyVisDontReduceBars;
@@ -500,7 +503,7 @@ function init(root) {
     if (localStorage.wmpotifyVisDiffScale) {
         diffScaleInput.value = localStorage.wmpotifyVisDiffScale;
     }
-    if (localStorage.wmpotifyVisFPS) {
+    if (fpsInput && localStorage.wmpotifyVisFPS) {
         fpsInput.value = localStorage.wmpotifyVisFPS;
     }
     if (localStorage.wmpotifyVisDontReduceBars) {

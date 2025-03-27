@@ -27,7 +27,8 @@
     div[class*="PromotionDefaultNative-module_footer-area"] > span[data-encore-id="overlayTrigger"]:first-child button,
     .main-card-PlayButtonContainer button,
     .main-actionBar-ActionBarRow > div:first-child > button,
-    .main-actionBar-ActionBarRow > span:first-child > div:first-child button
+    .main-actionBar-ActionBarRow > span:first-child > div:first-child button,
+    .main-topBar-topbarContent > div:first-child button,
     &[data-page^="/content-feed"] .Button-buttonPrimary-useBrowserDefaultFocusStyle-data-is-icon-only,
     .artist-artistDiscography-cardGrid > div button,
     div[data-testid="top-result-card"] > div > div button,
@@ -39,7 +40,7 @@
     [role="combobox"],
     header nav li,
     [class*="LegacyChipComponent-checkbox-chip-sm-"],
-    
+
     /* Misc */
     .x-filterBox-searchIconContainer,
     .x-filterBox-clearButton,

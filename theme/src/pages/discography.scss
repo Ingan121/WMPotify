@@ -23,6 +23,10 @@ header:has(div[data-identifier="discography-topbar"]) {
 
             .x-sortBox-sortDropdown {
                 order: 0;
+
+                &::before {
+                    display: none;
+                }
             }
 
             button[role="switch"] {
@@ -77,6 +81,7 @@ section[data-test-uri^="spotify:artist:"] {
         float: left;
         width: 240px;
         position: relative;
+        padding-top: 0 !important; /* 1.2.45 */
         z-index: 1;
 
         .artist-artistDiscography-headerImage {
@@ -214,6 +219,7 @@ section[data-test-uri^="spotify:artist:"] {
                 padding: 0;
                 margin-top: -54px;
                 margin-bottom: 30px;
+                opacity: 1 !important;
 
                 .main-trackList-trackListHeaderRow {
                     margin-left: 240px;

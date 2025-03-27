@@ -106,8 +106,11 @@
     }
 }
 
+.main-globalNav-historyButtonsContainer,
 .main-globalNav-searchContainer,
-.custom-navlinks-scrollable_container {
+.custom-navlinks-scrollable_container,
+.main-topBar-topbarContentRight {
+    /* Important is to override the Spotify's animation removal when the system animation is disabled */
     animation: appear 8s !important;
 }
 
@@ -133,13 +136,20 @@
     .main-topBar-topbarContentRight > .main-actionButtons > button {
         display: none;
     }
+
+    .main-globalNav-historyButtonsContainer,
+    .main-topBar-topbarContentRight {
+        animation: none !important;
+    }
 }
 
 :root[data-wmpotify-js-fail] {
+    .main-globalNav-historyButtonsContainer,
     .main-globalNav-searchContainer,
     .custom-navlinks-scrollable_container,
+    .main-topBar-topbarContentRight,
     .main-topBar-topbarContentRight > .main-actionButtons > button {
-        animation: none;
+        animation: none !important;
     }
 }
 

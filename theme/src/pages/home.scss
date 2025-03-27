@@ -46,6 +46,18 @@
                 span {
                     opacity: 0;
                 }
+
+                &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+                    background-image: url('resources/playerbar/pause.png') !important;
+    
+                    &:hover {
+                        background-image: url('resources/playerbar/pause_hover.png') !important;
+                    }
+    
+                    &:active {
+                        background-image: url('resources/playerbar/pause_pressed.png') !important;
+                    }
+                }
             }
     
             .view-homeShortcutsGrid-main:has(.view-homeShortcutsGrid-trailingIndicator) {

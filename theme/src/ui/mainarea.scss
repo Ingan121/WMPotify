@@ -113,7 +113,9 @@ body[data-hide-libx],
 
 .Root__right-sidebar {
     margin-right: calc(var(--panel-gap) * -1);
+
     aside {
+        animation: appear 8s !important;
         background: transparent !important;
         border-radius: 0 !important;
 
@@ -123,6 +125,11 @@ body[data-hide-libx],
 
         div:has([data-testid='NPV_Panel_OpenDiv']) {
             background: transparent !important;
+        }
+
+        &:has([data-testid='NPV_Panel_OpenDiv']),
+        &:has(#spotify-queue-panel-content) {
+            animation: none !important;
         }
 
         div[data-testid="PanelHeader_CloseButton"] button {
@@ -163,6 +170,13 @@ body[data-hide-libx],
         .LayoutResizer__resize-bar.LayoutResizer__inline-start {
             display: none;
         }
+    }
+}
+
+:root[data-wmpotify-init-complete],
+:root[data-wmpotify-js-fail] {
+    .Root__right-sidebar aside {
+        animation: none !important;
     }
 }
 

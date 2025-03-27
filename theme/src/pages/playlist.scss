@@ -137,20 +137,6 @@ section[data-testid="playlist-page"],
             }
         }
     }
-
-    &.playing {
-        .main-actionBar-ActionBarRow > div:first-child button {
-            background-image: url('resources/playerbar/pause.png') !important;
-
-            &:hover {
-                background-image: url('resources/playerbar/pause_hover.png') !important;
-            }
-
-            &:active {
-                background-image: url('resources/playerbar/pause_pressed.png') !important;
-            }
-        }
-    }
 }
 
 :root[data-page^="/playlist/"] .Root__main-view,
@@ -159,9 +145,10 @@ section[data-testid="playlist-page"],
         .main-topBar-background {
             border-radius: 0;
             width: calc(100% - var(--scrollbar-size));
+            background: var(--wmp11-window) !important;
 
             .main-topBar-overlay {
-                background: var(--wmp11-window);
+                background: var(--wmp11-window) !important;
             }
         }
 
@@ -199,21 +186,6 @@ section[data-testid="playlist-page"],
             #playlist-search-box-container {
                 margin-top: 3px;
             }
-        }
-    }
-}
-
-/* Sort and view picker in playlist page */
-ul[id*="sortboxlist-"] {
-    li:last-child {
-        button {
-            margin-top: 0 !important;
-        }
-    }
-
-    button:has(svg:not(:first-child)) {
-        svg:first-child {
-            display: none;
         }
     }
 }

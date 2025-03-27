@@ -146,8 +146,13 @@ async function wallpaperAudioListener() {
         leftMargin = Math.round((visBar.width - barWidth * arraySize) / 2);
     }
     let allZero = true;
-    const adjustedDecSpeed = visConfig.decSpeed / (actualFps / 30);
-    globalThis.asfdsfsd = adjustedDecSpeed;
+    if (actualFps < 12 && actualFps < fps) { // Fix for laggy situations
+        actualFps = fps;
+    }
+    let adjustedDecSpeed = visConfig.decSpeed;
+    if (visConfig.fpsSet) {
+        adjustedDecSpeed /= actualFps / 30;
+    }
     for (let i = 0; i < arraySize; ++i) {
         // Create an audio bar with its hight depending on the audio volume level of the current frequency
         const height = Math.round(visBar.height * Math.min(audioArray[i], 1) * visConfig.primaryScale);
@@ -218,10 +223,12 @@ export function updateVisConfig() {
         primaryScale: parseFloat(localStorage.wmpotifyVisPrimaryScale || 1.0),
         diffScale: parseFloat(localStorage.wmpotifyVisDiffScale || 0.07),
         reduceBars: !localStorage.wmpotifyVisDontReduceBars,
+        fpsSet: !!localStorage.wmpotifyVisFPS,
     };
     if (localStorage.wmpotifyVisAutoSizeBars) {
         delete visConfig.barWidth;
     }
+
     const prevFps = fps;
     fps = parseInt(localStorage.wmpotifyVisFPS || "30");
     if (prevFps !== fps && interval) {
@@ -235,6 +242,7 @@ export function updateVisConfig() {
         updatesPerSecond = 0;
     }, 1000);
     actualFps = fps;
+
     visTopCtx.clearRect(0, 0, visTop.width, visTop.height);
     idle = false;
 

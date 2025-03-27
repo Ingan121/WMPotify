@@ -25,7 +25,7 @@ let renderTimer = null;
 let visualizer = null;
 let resizeObserver = null;
 
-let fps = parseInt(localStorage.wmpotifyVisFPS || "30");
+let fps = parseInt(localStorage.wmpotifyVisBCFPS || "30");
 
 const ConfigDialog = React.memo(() => {
     return <>
@@ -57,7 +57,6 @@ const ConfigDialog = React.memo(() => {
                     text-align: right;
                     margin-top: 3px;
                     margin-left: 5px;
-                    color: black;
                 }
 
                 #wmpvis-config #hardcutArea {
@@ -80,7 +79,11 @@ const ConfigDialog = React.memo(() => {
                     text-shadow: 1px 1px 0 var(--button-hilight);
                 }
 
-                #wmpvis-config button.wmpotify-aero {
+                input.wmpotify-aero[type=number] {
+                    color: black;
+                }
+
+                button.wmpotify-aero {
                     color: black;
                     min-height: 23px;
                     min-width: 75px;
@@ -135,7 +138,7 @@ function openConfigDialog() {
     const cancelBtn = root.querySelector("#cancelBtn");
     const applyBtn = root.querySelector("#applyBtn");
 
-    fpsInput.value = localStorage.wmpotifyVisFPS || 30;
+    fpsInput.value = localStorage.wmpotifyVisBCFPS || 30;
     hardcutSelector.value = localStorage.wmpotifyVisBCHardcut || 0;
     randomTimerInput.value = localStorage.wmpotifyVisBCRandomTimer || 10;
     transitionTimeInput.value = localStorage.wmpotifyVisBCTransitionTime || 10;
@@ -164,7 +167,7 @@ function openConfigDialog() {
         } else {
             localStorage.wmpotifyVisBCHardcut = hardcutSelector.value;
         }
-        localStorage.wmpotifyVisFPS = fps = fpsInput.value;
+        localStorage.wmpotifyVisBCFPS = fps = fpsInput.value;
         const prevRandomTimer = localStorage.wmpotifyVisBCRandomTimer;
         localStorage.wmpotifyVisBCRandomTimer = randomTimerInput.value;
         localStorage.wmpotifyVisBCTransitionTime = transitionTimeInput.value;

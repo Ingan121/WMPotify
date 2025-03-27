@@ -40,7 +40,7 @@ function updateSidebarWidth(force) {
     if (rightSidebarWidth) {
         document.documentElement.style.setProperty("--right-sidebar-width", rightSidebar ? rightSidebar.offsetWidth : 8);
     }
-    if (rightSidebar) {
+    if (rightSidebar.querySelector('aside')) {
         document.body.classList.add('sidebar-open');
     } else {
         document.body.classList.remove('sidebar-open');

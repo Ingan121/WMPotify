@@ -7,6 +7,14 @@
   transform: var(--tippy-force-transform) !important;
 }
 
+#context-menu {
+  button[role="menuitemradio"]:has(svg:not(:first-child)) {
+    svg:first-child {
+      display: none;
+    }
+  }
+}
+
 /* For MadMenu */
 @keyframes fade {
   0% {

@@ -75,6 +75,8 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
                 ')'
             );
             document.documentElement.style.setProperty('--menu-item-hover-border-color', getTintedColor(hue, sat, '#375273'));
+            document.documentElement.style.removeProperty('--wmp11-separator-shadow');
+            document.documentElement.style.removeProperty('--wmp11-separator-light');
 
             document.documentElement.style.removeProperty('--button-border-color-inner-focus');
             document.documentElement.style.removeProperty('--menu-item-hover-color');
@@ -144,6 +146,8 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
                 ')'
             );
             document.documentElement.style.setProperty('--menu-item-hover-border-color', getTintedColor(hue, sat, '#b8d6fb'));
+            document.documentElement.style.setProperty('--wmp11-separator-shadow', getTintedColor(hue, sat, '#a9b7c9'));
+            document.documentElement.style.setProperty('--wmp11-separator-light', getTintedColor(hue, sat, '#f2f7fc'));
 
             if (localStorage.wmpotifyControlStyle === '10') {
                 document.documentElement.style.setProperty('--button-face-hover', getTintedColor(hue, sat, '#e5f1fb'));
@@ -175,7 +179,6 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
                 document.documentElement.style.setProperty('--menu-icon-checkmark-color', getTintedColor(hue, sat, '#0c12a1'));
                 document.documentElement.style.setProperty('--menu-icon-radio-dot-outer-color', getTintedColor(hue, sat, '#333583'));
                 document.documentElement.style.setProperty('--menu-icon-radio-dot-border-color', getTintedColor(hue, sat, '#1a1490'));
-                document.documentElement.style.setProperty('--menu-item-hover-border-color', getTintedColor(hue, sat, '#b8d6fb'));
             }
         }
 
@@ -213,6 +216,8 @@ function resetTintMoreVars() {
     document.documentElement.style.removeProperty('--item-hover-border');
     document.documentElement.style.removeProperty('--menu-item-hover-background');
     document.documentElement.style.removeProperty('--menu-item-hover-border-color');
+    document.documentElement.style.removeProperty('--wmp11-separator-shadow');
+    document.documentElement.style.removeProperty('--wmp11-separator-light');
     document.documentElement.style.removeProperty('--button-border-color-inner-focus');
     document.documentElement.style.removeProperty('--menu-item-hover-color');
     document.documentElement.style.removeProperty('--button-face-hover');
@@ -232,7 +237,6 @@ function resetTintMoreVars() {
     document.documentElement.style.removeProperty('--menu-icon-radio-dot-outer-color');
     document.documentElement.style.removeProperty('--menu-icon-radio-dot-inner-color');
     document.documentElement.style.removeProperty('--menu-icon-radio-dot-border-color');
-    document.documentElement.style.removeProperty('--menu-item-hover-border-color');
     document.documentElement.style.removeProperty('--checkbox-hover-background');
     document.documentElement.style.removeProperty('--checkbox-hover-shadow');
     document.documentElement.style.removeProperty('--checkbox-checkmark-color');
