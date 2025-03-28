@@ -235,8 +235,15 @@ function updateTimeText() {
     switch (timeTextMode) {
         case 0:
             {
-                const remaining = Spicetify.Player.data?.item?.metadata?.duration - Spicetify.Player.getProgress();
-                timeText.textContent = formatTime(remaining, true);
+                try {
+                    const remaining = Spicetify.Player.data?.item?.metadata?.duration - Spicetify.Player.getProgress();
+                    timeText.textContent = formatTime(remaining, true);
+                } catch (e) {
+                    // getProgress might fail if some internal Spotify stuff goes wrong (more internal Spotify errors show up in console before WMPotify fail logs)
+                    // As this function is called directly on init, to prevent error during init, just set it to 00:00
+                    console.error('WMPotify: Error getting remaining time:', e);
+                    timeText.textContent = '00:00';
+                }
             }
             break;
         case 1:

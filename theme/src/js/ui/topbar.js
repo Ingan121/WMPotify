@@ -69,6 +69,9 @@ export function setupTopbar() {
         const customAppsButtonsParent = document.querySelector('.main-globalNav-historyButtonsContainer');
         const observer = new MutationObserver(() => {
             console.log('WMPotify: Handling late custom apps buttons mount');
+            for (const btn of tabs) {
+                delete btn.dataset.hidden;
+            }
             const customAppsButtons = document.querySelectorAll('.custom-navlinks-scrollable_container div[role="presentation"] > button');
             if (customAppsButtons.length > 0) {
                 for (const btn of customAppsButtons) {

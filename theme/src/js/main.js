@@ -16,6 +16,7 @@ import { ver, checkUpdates, compareVersions, compareSpotifyVersion } from './uti
 import { openUpdateDialog } from './ui/dialogs';
 import ThemeManager from './managers/ThemeManager';
 import { ylxKeyPrefix } from "./pages/libx";
+import { applyScheme } from './utils/appearance';
 
 const elementsRequired = [
     '.Root__globalNav',
@@ -145,6 +146,9 @@ function earlyInit() {
     document.documentElement.dataset.wmpotifyStyle = style;
 
     document.documentElement.dataset.wmpotifyControlStyle = localStorage.wmpotifyControlStyle || 'aero';
+    if (localStorage.wmpotifyCustomScheme) {
+        applyScheme(localStorage.wmpotifyCustomScheme);
+    }
 
     window.addEventListener('resize', () => {
         if (style === 'aero') {

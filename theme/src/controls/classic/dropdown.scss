@@ -16,7 +16,7 @@
     border-radius: 0;
     height: 21px;
     position: relative;
-    background-image: url("resources/icon/98/button-down.svg");
+    background-image: var(--scroll-down);
     background-position: top 2px right 2px;
     background-repeat: no-repeat;
     padding-right: 32px;
@@ -33,34 +33,12 @@
     }
 
     &:not(:disabled):active {
-      background-image: url("resources/icon/98/button-down-active.svg");
+      background-image: var(--dropdown-button-pressed);
     }
 
     &:disabled {
       color: var(--gray-text);
       background-color: var(--button-face);
-    }
-  }
-
-  &[data-wmpotify-control-style="standard"] {
-    select.wmpotify-aero,
-    .main-dropDown-dropDown {
-      background-image: url("resources/icon/2k/button-down.svg");
-  
-      &:not(:disabled):active {
-        background-image: url("resources/icon/2k/button-down-active.svg");
-      }
-    }
-  }
-
-  &[data-wmpotify-dark-mode] {
-    select.wmpotify-aero,
-    .main-dropDown-dropDown {
-      background-image: url("resources/icon/98dark/button-down.svg");
-  
-      &:not(:disabled):active {
-        background-image: url("resources/icon/98dark/button-down-active.svg");
-      }
     }
   }
 }

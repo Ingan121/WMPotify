@@ -1,10 +1,11 @@
-:root[data-wmpotify-control-style="xp"] {
+:root[data-wmpotify-control-style="xp"],
+:root[data-wmpotify-flat-menus]:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style="10"]) {
   /* For Spotify menus */
   #context-menu:not(#Prio1):not(#Prio2) {
     ul:not([id*="curation-"]) {
       &[role="menu"] {
-        background: white;
-        box-shadow: #aca899 -1px -1px inset, #aca899 1px 1px inset,
+        background: var(--menu);
+        box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset,
           5px 5px 4px -4px rgba(0, 0, 0, 0.75);
 
         > [role="menuitem"],
@@ -15,30 +16,26 @@
           &[aria-haspopup="true"] {
             &:hover,
             &:focus-visible {
-              background: #316ac5;
-              color: white;
+              background: var(--menu-hilight);
+              color: var(--hilight-text);
             }
           }
 
           > button,
           > a {
-            &[class*=" "] {
+            &.vvMORUKtQKpQcpQ992bR,
+            &.Vz3pFUXmll6fKB5Fc4nd {
               &::before {
-                top: -7px;
-                left: 0;
-                width: 100%;
-                border: none;
-                border-top: solid 1px #aca899;
+                border-top: solid 1px var(--button-shadow-color);
                 border-bottom: solid 1px transparent;
               }
-              margin-top: 9px;
             }
           }
         }
         
         &:has(+ [role="menu"]) {
           &::after {
-            background: white;
+            background: var(--menu);
             border: none;
           }
         }
@@ -48,8 +45,8 @@
     /* Add to playlist menu */
     form,
     ul[id*="curation-folder-submenu-"] {
-      background: white;
-      border: solid 1px #aca899;
+      background: var(--menu);
+      border: solid 1px var(--button-shadow-color);
       box-shadow: 5px 5px 4px -4px rgba(0, 0, 0, 0.75);
     }
   }

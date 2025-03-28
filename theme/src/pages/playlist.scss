@@ -23,6 +23,10 @@ section[data-testid="playlist-page"],
         box-shadow: var(--wmp11-separator-light) 0 -1px 0 0, var(--wmp11-separator-shadow) 0 -2px 0 0; 
         top: 29px !important;
 
+        > div[role="presentation"]:first-child > button {
+            display: none;
+        }
+
         .main-trackList-trackListHeaderRow {
             height: 25px;
             grid-gap: 0;

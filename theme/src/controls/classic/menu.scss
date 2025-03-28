@@ -54,6 +54,10 @@
               line-height: 1.1;
               overflow: visible;
             }
+
+            .TypeElement-type-mesto-textBrightAccent {
+              color: var(--menu-text);
+            }
           }
 
           > a,
@@ -75,7 +79,7 @@
               color: var(--hilight-text);
 
               &:not(:has(svg.activeStyle)) span::before {
-                filter: invert(1);
+                background-image: var(--checkmark-menu-hover);
               }
 
               svg {
@@ -105,22 +109,24 @@
                 left: 0;
                 width: 16px;
                 height: 16px;
-                background: url("resources/icon/marlett/check_menu.svg")
-                  no-repeat;
+                background: var(--checkmark-menu) no-repeat;
                 z-index: 2;
               }
 
-              &:has(svg.activeStyle) > span::before {
-                content: "●";
-                font-family: Arial !important;
-                font-size: 1.3em !important;
-                color: inherit;
-                position: absolute;
-                top: 0;
-                left: 4px;
-                width: unset;
-                height: unset;
-                background: none;
+              &:has(svg.activeStyle),
+              &[role="menuitemradio"] {
+                > span::before {
+                  content: "●";
+                  font-family: Arial !important;
+                  font-size: 1.3em !important;
+                  color: inherit;
+                  position: absolute;
+                  top: 0;
+                  left: 4px;
+                  width: unset;
+                  height: unset;
+                  background: none;
+                }
               }
             }
           }
@@ -241,27 +247,5 @@
     --menu-icon-area-color: #2b2b2b;
     --menu-item-hover-color: #414141;
     --menu-item-radio-dot-color: white;
-
-    #context-menu {
-      ul:not([id*="curation-"]) {
-        &[role="menu"] {
-          > [role="menuitem"],
-        .main-contextMenu-menuItem {
-          > a,
-          > button,
-          > label,
-          &[aria-haspopup="true"] {
-            &:has(
-                path[d="M15.53 2.47a.75.75 0 0 1 0 1.06L4.907 14.153.47 9.716a.75.75 0 0 1 1.06-1.06l3.377 3.376L14.47 2.47a.75.75 0 0 1 1.06 0z"]
-              ) {
-                &:not(:has(svg.activeStyle)) span::before {
-                  filter: invert(1);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
   }
 }

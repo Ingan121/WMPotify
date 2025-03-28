@@ -9,6 +9,7 @@ import WindowManager from "../managers/WindowManager";
 import { checkUpdates } from "../utils/UpdateCheck";
 import ThemeManager from "../managers/ThemeManager";
 import { ylxKeyPrefix } from "./libx";
+import { importScheme } from "../utils/appearance";
 
 const configWindow = document.createElement('div');
 let tabs = null;
@@ -57,11 +58,12 @@ function init() {
             <button id="wmpotify-config-apply" class="wmpotify-aero">${Strings['CONF_GENERAL_APPLY']}</button><br>
             <label for="wmpotify-config-control-style">${Strings['CONF_GENERAL_CONTROL_STYLE']}</label>
             <select id="wmpotify-config-control-style" class="wmpotify-aero">
-                <option value="classic">Windows Classic</option>
-                <option value="standard">Windows Standard</option>
+                <option value="classic">${Strings['CONF_GENERAL_CONTROL_STYLE_CLASSIC']}</option>
+                <option value="standard">${Strings['CONF_GENERAL_CONTROL_STYLE_STANDARD']}</option>
                 <option value="xp">Windows XP</option>
                 <option value="aero" selected>Windows Aero</option>
                 <option value="10">Windows 10</option>
+                <option value="custom">${Strings['CONF_GENERAL_CONTROL_STYLE_CUSTOM']}</option>
             </select>
             <label for="wmpotify-config-dark-mode">${Strings['CONF_GENERAL_DARK_MODE']}</label>
             <select id="wmpotify-config-dark-mode" class="wmpotify-aero">
@@ -145,7 +147,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 (Pre-release 2025-03-27)<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 (Pre-release 2025-03-28)<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -200,7 +202,20 @@ function init() {
             textBasicColor = textColor;
         }
     });
-    elements.controlStyle.addEventListener('change', () => {
+    elements.controlStyle.addEventListener('change', async () => {
+        if (elements.controlStyle.value === 'custom') {
+            try {
+                await importScheme();
+            } catch {
+                elements.controlStyle.value = localStorage.wmpotifyControlStyle || 'aero';
+            }
+            return;
+        }
+
+        document.getElementById('wmpotify-scheme')?.remove();
+        delete localStorage.wmpotifyCustomScheme;
+        delete document.documentElement.dataset.wmpotifyFlatMenus;
+
         localStorage.wmpotifyControlStyle = elements.controlStyle.value;
         document.documentElement.dataset.wmpotifyControlStyle = elements.controlStyle.value;
 

@@ -66,6 +66,10 @@
               line-height: 1.1;
               overflow: visible;
             }
+
+            .TypeElement-type-mesto-textBrightAccent {
+              color: var(--menu-text);
+            }
           }
 
           > a,
@@ -130,24 +134,27 @@
                 font-family:"Segoe UI", "SegoeUI", "Noto Sans", sans-serif;
               }
 
-              &:has(svg.activeStyle) > span::before {
-                content: "";
-                left: 8px;
-                top: 50%;
-                transform: translateY(-50%);
-                background: radial-gradient(
-                  circle at 75% 25%,
-                  var(--menu-icon-radio-dot-inner-color),
-                  var(--menu-icon-radio-dot-outer-color)
-                );
-                border: 1px solid var(--menu-icon-radio-dot-border-color);
-                box-shadow: none;
-                border-radius: 50%;
-                box-sizing: border-box;
-                height: 8px;
-                width: 8px;
-                position: absolute;
-                z-index: 2;
+              &:has(svg.activeStyle),
+              &[role="menuitemradio"] {
+                > span::before {
+                  content: "";
+                  left: 8px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  background: radial-gradient(
+                    circle at 75% 25%,
+                    var(--menu-icon-radio-dot-inner-color),
+                    var(--menu-icon-radio-dot-outer-color)
+                  );
+                  border: 1px solid var(--menu-icon-radio-dot-border-color);
+                  box-shadow: none;
+                  border-radius: 50%;
+                  box-sizing: border-box;
+                  height: 8px;
+                  width: 8px;
+                  position: absolute;
+                  z-index: 2;
+                }
               }
             }
           }

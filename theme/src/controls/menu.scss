@@ -97,8 +97,7 @@
   left: 0;
   width: 16px;
   height: 16px;
-  background: url("resources/icon/marlett/check_menu.svg")
-    no-repeat;
+  background: var(--checkmark-menu) no-repeat;
 }
 
 .contextMenuItem[data-active] {

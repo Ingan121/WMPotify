@@ -62,6 +62,16 @@
     --border-window-inner: inset -2px -2px var(--button-shadow-color),
         inset 2px 2px var(--button-hilight);
 
+    /* Scrollbar SVG images (Classic) */
+    --scroll-up: url("resources/icon/98/button-up.svg");
+    --scroll-down: url("resources/icon/98/button-down.svg");
+    --scroll-left: url("resources/icon/98/button-left.svg");
+    --scroll-right: url("resources/icon/98/button-right.svg");
+    --scroll-track: url("resources/icon/98/scrollbar-background.svg");
+    --dropdown-button-pressed: url("resources/icon/98/button-down-active.svg");
+    --checkmark-menu: url("resources/icon/marlett/check_menu.svg");
+    --checkmark-menu-hover: url("resources/icon/marlett/check_menu_dark.svg");
+
     /* Button styles (Aero) */
     --button-highlight: #fff;
     --button-face: #f2f2f2;
@@ -337,6 +347,13 @@
     --menu-font: 11px/1 var(--ui-font);
     --message-font: 11px var(--ui-font);
     --status-font: 11px var(--ui-font);
+
+    --scroll-up: url("resources/icon/2k/button-up.svg");
+    --scroll-down: url("resources/icon/2k/button-down.svg");
+    --scroll-left: url("resources/icon/2k/button-left.svg");
+    --scroll-right: url("resources/icon/2k/button-right.svg");
+    --scroll-track: url("resources/icon/2k/scrollbar-background.svg");
+    --dropdown-button-pressed: url("resources/icon/2k/button-down-active.svg");
 }
 
 :root[data-wmpotify-dark-mode] {
@@ -405,6 +422,13 @@
 
     --scrollbar-y: #111111;
     --scrollbar-x: #111111;
+
+    --scroll-up: url("resources/icon/98dark/button-up.svg");
+    --scroll-down: url("resources/icon/98dark/button-down.svg");
+    --scroll-left: url("resources/icon/98dark/button-left.svg");
+    --scroll-right: url("resources/icon/98dark/button-right.svg");
+    --scroll-track: url("resources/icon/98dark/scrollbar-background.svg");
+    --dropdown-button-pressed: url("resources/icon/98dark/button-down-active.svg");
 
     --wmp11-subtext: #A0A4AC;
     --wmp11-separator-shadow: #111111;
@@ -475,6 +499,8 @@
         --window: #191919;
         --window-frame: #A0A0A0;
         --window-text: #E0E4EC;
+
+        --checkmark-menu: url("resources/icon/marlett/check_menu_dark.svg");
     }
 }
 
