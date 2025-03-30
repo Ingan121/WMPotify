@@ -33,7 +33,7 @@ export async function importScheme() {
                 "application/json": [".json"]
             }
         }, {
-            description: "CSS Files (Not recommended)",
+            description: "CSS Files",
             accept: {
                 "text/css": [".css"]
             }
@@ -57,7 +57,34 @@ export async function importScheme() {
     const text = new TextDecoder(encoding).decode(arrayBuffer);
 
     if (text.match("--.*:.*;") || file.name.endsWith(".css")) {
-        const cssScheme = text.replace('--button-face:', '--surface:').replace('--button-shadow:', '--button-shadow-color:').replace('--ui-font:', '--ui-font-default:').replace(/;\s*}/g, ' !important; }');
+        let cssScheme = text;
+        if (!cssScheme.includes('wmpotify-compatible')) { // Skip processing if already wmpotify-compatible
+            // Convert MAD CSS to WMPotify CSS
+            cssScheme = text.replace('--button-face:', '--surface:').replace('--button-shadow:', '--button-shadow-color:').replace('--ui-font:', '--ui-font-default:');
+            for (const line of cssScheme.split('\n')) {
+                if (line.length > 500) {
+                    // ModernActiveDesktop scheme CSS files with compiled CSS theme data (e.g. XP.css, 7.css)
+                    // This breaks the Spotify UI as it includes some global CSS rules for buttons, etc.
+                    // Lightweight CSS themes (e.g. Blur, Windose) works fine so set the limit to 500 chars
+                    Spicetify.showNotification(Strings["CONF_GENERAL_MSG_UNSUPPORTED_SCHEME_FILE"]);
+                    return -1;
+                }
+                if (!line.includes('!important') && line.includes(':')) {
+                    cssScheme = cssScheme.replace(line, line.replace(/:\s*(.*);/, ': $1 !important;'));
+                }
+            }
+            const scheme = [];
+            scheme['surface'] = cssScheme.match(/--surface:\s*(.*);/)?.[1].replace(/ !important/, '');
+            scheme['button-shadow-color'] = cssScheme.match(/--button-shadow-color:\s*(.*);/)?.[1].replace(/ !important/, '');
+            scheme['button-dk-shadow'] = cssScheme.match(/--button-dk-shadow:\s*(.*);/)?.[1].replace(/ !important/, '');
+            scheme['button-hilight'] = cssScheme.match(/--button-hilight:\s*(.*);/)?.[1].replace(/ !important/, '');
+            scheme['button-light'] = cssScheme.match(/--button-light:\s*(.*);/)?.[1].replace(/ !important/, '');
+            scheme['button-text'] = cssScheme.match(/--button-text:\s*(.*);/)?.[1].replace(/ !important/, '');
+            scheme['menu-text'] = cssScheme.match(/--menu-text:\s*(.*);/)?.[1].replace(/ !important/, '');
+            scheme['hilight-text'] = cssScheme.match(/--hilight-text:\s*(.*);/)?.[1].replace(/ !important/, '');
+            cssScheme += ':root {' + generateThemeSvgs(scheme) + '}';
+            cssScheme = cssScheme.replace(/  |\n/g, '');
+        }
         applyScheme(cssScheme);
         localStorage.wmpotifyControlStyle = "custom";
         localStorage.wmpotifyCustomScheme = cssScheme;
@@ -144,7 +171,7 @@ export async function importScheme() {
                 localStorage.wmpotifyCustomScheme = cssScheme;
             } catch {
                 Spicetify.showNotification(Strings["CONF_GENERAL_MSG_INVALID_SCHEME_FILE"]);
-                throw new Error('Invalid scheme file');
+                return -1;
             }
         }
     }
@@ -174,12 +201,11 @@ function generateCssScheme(scheme) {
         'menu-animation',
         'menu-shadow',
         'supports-colorization',
-        'default-colorization-color',
         'win-open-anim',
         'win-close-anim',
         'palette-title-height',
     ];
-    const replaceKeys = { // MAD-WMPotify variable name differences
+    const replaceKeys = { // MAD <-> WMPotify variable name differences
         'button-face': 'surface',
         'button-shadow': 'button-shadow-color',
         'ui-font': 'ui-font-default',

@@ -12,6 +12,7 @@ generic-modal {
     [role="dialog"] {
       transition: none !important;
       border-radius: 0;
+      forced-color-adjust: none;
 
       > div {
         border-radius: 0;

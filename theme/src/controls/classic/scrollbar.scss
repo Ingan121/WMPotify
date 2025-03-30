@@ -17,6 +17,7 @@ html:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style=
     &-thumb {
       background-color: var(--surface);
       box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+      forced-color-adjust: none;
     }
 
     &-button {

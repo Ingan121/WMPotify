@@ -276,7 +276,7 @@
 
     .wmpotify-user-label {
         position: relative;
-        padding: 10px;
+        margin: 10px;
     }
 
     /* Spotify update alert */
@@ -419,5 +419,11 @@ body[data-hide-libx] {
         &:active {
             border-image-source: url('resources/topbar/tab_active_pressed.png');
         }
+    }
+}
+
+@media (forced-colors: active) {
+    .wmpotify-user-label {
+        background: var(--window);
     }
 }

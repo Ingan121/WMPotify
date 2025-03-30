@@ -18,6 +18,10 @@
         &:hover {
             background: var(--item-hover-background);
             border-color: var(--item-hover-border);
+
+            a {
+                color: var(--hilight-text);
+            }
         }
 
         .view-homeShortcutsGrid-imageContainer {
@@ -32,15 +36,15 @@
         &:hover,
         &:focus-within {
             .view-homeShortcutsGrid-PlayButtonContainer button {
-                background: url('resources/playerbar/play.png') center / cover no-repeat;
+                background: var(--play) center / cover no-repeat;
                 border-radius: 0;
     
                 &:hover {
-                    background-image: url('resources/playerbar/play_hover.png');
+                    background-image: var(--play-hover);
                 }
     
                 &:active {
-                    background-image: url('resources/playerbar/play_pressed.png');
+                    background-image: var(--play-pressed);
                 }
     
                 span {
@@ -48,29 +52,29 @@
                 }
 
                 &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
-                    background-image: url('resources/playerbar/pause.png') !important;
+                    background-image: var(--pause) !important;
     
                     &:hover {
-                        background-image: url('resources/playerbar/pause_hover.png') !important;
+                        background-image: var(--pause-hover) !important;
                     }
     
                     &:active {
-                        background-image: url('resources/playerbar/pause_pressed.png') !important;
+                        background-image: var(--pause-pressed) !important;
                     }
                 }
             }
     
             .view-homeShortcutsGrid-main:has(.view-homeShortcutsGrid-trailingIndicator) {
                 .view-homeShortcutsGrid-PlayButtonContainer button {
-                    background: url('resources/playerbar/pause.png') center / cover no-repeat;
+                    background: var(--pause) center / cover no-repeat;
                     border-radius: 0;
     
                     &:hover {
-                        background-image: url('resources/playerbar/pause_hover.png');
+                        background-image: var(--pause-hover);
                     }
     
                     &:active {
-                        background-image: url('resources/playerbar/pause_pressed.png');
+                        background-image: var(--pause-pressed);
                     }
                 }
             }
@@ -101,15 +105,15 @@
             div[class*="PromotionDefaultNative-module_footer-area"] {
                 > span[data-encore-id="overlayTrigger"]:first-child {
                     button {
-                        background: url('resources/playerbar/play.png') center / cover no-repeat;
+                        background: var(--play) center / cover no-repeat;
                         border-radius: 0;
         
                         &:hover {
-                            background-image: url('resources/playerbar/play_hover.png');
+                            background-image: var(--play-hover);
                         }
         
                         &:active {
-                            background-image: url('resources/playerbar/play_pressed.png');
+                            background-image: var(--play-pressed);
                         }
         
                         span {
@@ -150,14 +154,14 @@
             button {
                 width: 42px;
                 height: 43px;
-                background: url('resources/playerbar/play.png') no-repeat;
+                background: var(--play) no-repeat;
 
                 &:hover {
-                    background-image: url('resources/playerbar/play_hover.png');
+                    background-image: var(--play-hover);
                 }
 
                 &:active {
-                    background-image: url('resources/playerbar/play_pressed.png');
+                    background-image: var(--play-pressed);
                 }
 
                 span {
@@ -167,17 +171,38 @@
 
             &.main-card-PlayButtonContainerVisible { /* Currently playing playlist - show pause button */
                 button {
-                    background-image: url('resources/playerbar/pause.png') ;
+                    background-image: var(--pause) ;
 
                     &:hover {
-                        background-image: url('resources/playerbar/pause_hover.png');
+                        background-image: var(--pause-hover);
                     }
 
                     &:active {
-                        background-image: url('resources/playerbar/pause_pressed.png');
+                        background-image: var(--pause-pressed);
                     }
                 }
+            }
+        }
+    }
+}
 
+@media (forced-colors: active) {
+    .main-home-content {
+        .view-homeShortcutsGrid-shortcut:hover a {
+            color: var(--hilight-text);
+        }
+
+        .main-shelf-shelfGrid > div,
+        .search-searchCategory-categoryGrid > div[role="presentation"] > div { /* home carousel */
+            &:hover {
+                background: var(--item-hover-background);
+                border-color: var(--item-hover-border);
+
+                .LineClamp, .LineClamp * {
+                    color: var(--hilight-text) !important;
+                    background-color: var(--hilight) !important;
+                    forced-color-adjust: none !important; /* bugfix, otherwise white text on white background for some reason */
+                }
             }
         }
     }

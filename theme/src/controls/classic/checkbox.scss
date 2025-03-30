@@ -30,6 +30,7 @@
       margin-left: var(--checkbox-total-width);
       width: auto;
       background: none !important;
+      forced-color-adjust: preserve-parent-color;
 
       &::before {
         content: "";

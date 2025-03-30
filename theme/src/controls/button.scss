@@ -140,3 +140,27 @@ button.Button-sc-y0gtbx-0,
     transform: none !important;
   }
 }
+
+@media (forced-colors: active) {
+  .wmpotify-toolbar-button,
+  div[data-identifier="discography-topbar"] [role="switch"],
+  [role="combobox"],
+  header nav li,
+  [class*="LegacyChipComponent-checkbox-chip-sm-"] {
+    border: none;
+    padding: 3px;
+    border-image: none !important;
+    border-radius: 0;
+    forced-color-adjust: none;
+
+    &:hover {
+      box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+    }
+
+    &:active,
+    &:has([class*="ctive"]),
+    &[class*="-selected-"] {
+      box-shadow: var(--border-sunken-outer), var(--border-sunken-inner);
+    }
+  }
+}

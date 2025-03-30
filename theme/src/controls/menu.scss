@@ -38,6 +38,7 @@
   box-shadow: var(--border-window-outer), var(--border-window-inner), 5px 5px 4px -4px rgba(0, 0, 0, 0.75);
   padding: 3px;
   box-sizing: content-box;
+  forced-color-adjust: none;
 }
 
 .contextMenuBg u {

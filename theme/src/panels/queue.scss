@@ -196,6 +196,7 @@
 
                 * {
                     color: var(--hilight-text) !important;
+                    forced-color-adjust: preserve-parent-color !important;
                 }
 
                 p[data-encore-id="listRowSubtitle"]::before {

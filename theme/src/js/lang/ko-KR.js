@@ -51,6 +51,7 @@ const lang = {
     'CONF_GENERAL_CONTROL_STYLE_STANDARD': 'Windows 표준',
     'CONF_GENERAL_CONTROL_STYLE_CUSTOM': 'Windows 고전 (사용자 지정)',
     'CONF_GENERAL_MSG_INVALID_SCHEME_FILE': '가져온 파일이 올바른 색상을 포함하고 있지 않습니다.',
+    'CONF_GENERAL_MSG_UNSUPPORTED_SCHEME_FILE': '가져온 파일이 WMPotify에서 지원되지 않습니다.',
     'CONF_GENERAL_DARK_MODE': '다크 모드',
     'CONF_GENERAL_DARK_MODE_FOLLOW_SCHEME': '색 구성표 따르기',
     'CONF_GENERAL_DARK_MODE_SYSTEM': '시스템 설정 따르기',

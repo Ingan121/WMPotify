@@ -518,3 +518,123 @@
     --spice-highlight-elevated: #F0F0F0;
     --code-block-background-color: #d3d3d3;
 }
+
+@media (forced-colors: active) {
+    :root[data-wmpotify-control-style="classic"]:not(#Prio1),
+    :root[data-wmpotify-control-style="standard"]:not(#Prio1) {
+        /* System colors for high contrast mode (only those supported by modern Chromium and currently used in WMPotify) */
+        --surface: ButtonFace;
+        --button-text: ButtonText;
+        --gray-text: GrayText;
+        --hilight: Highlight;
+        --hilight-text: HighlightText;
+        --hot-tracking-color: LinkText;
+        --menu: Canvas;
+        --menu-hilight: Highlight;
+        --menu-text: CanvasText;
+        --window: Canvas;
+        --window-frame: ButtonBorder;
+        --window-text: CanvasText;
+
+        --item-hover-background: var(--hilight);
+        --item-hover-border: var(--window-frame);
+        --item-active-border: var(--hilight-text);
+    }
+
+    /* Disable animations and transitions in forced colors mode */
+    *, :after, :before {
+        -webkit-animation-delay: -1ms !important;
+        animation-delay: -1ms !important;
+        -webkit-animation-duration: 1ms !important;
+        animation-duration: 1ms !important;
+        -webkit-animation-iteration-count: 1 !important;
+        animation-iteration-count: 1 !important;
+        background-attachment: scroll !important;
+        scroll-behavior: auto !important;
+        -webkit-transition-delay: 0s !important;
+        transition-delay: 0s !important;
+        -webkit-transition-duration: 0s !important;
+        transition-duration: 0s !important;
+    }
+
+    .LineClamp:has(.NUoUlYHQoMKe6r7dL2Hg) {
+        display: none;
+    }
+
+    /* Placeholder colors for unsupported system colors (from Windows high contrast themes) */
+    @media (prefers-color-scheme: dark) {
+        :root[data-wmpotify-control-style="classic"],
+        :root[data-wmpotify-control-style="standard"] {
+            /* High Contrast #1 */
+            --active-border: #0000FF;
+            --active-title: #0000FF;
+            --app-workspace: #000000;
+            --background: #000000;
+            --button-alternate-face: #C0C0C0;
+            --button-dk-shadow: #FFFFFF;
+            --surface: #000000;
+            --button-hilight: #C0C0C0;
+            --button-light: #FFFFFF;
+            --button-shadow-color: #808080;
+            --button-text: #FFFFFF;
+            --gradient-active-title: #0000FF;
+            --gradient-inactive-title: #00FFFF;
+            --gray-text: #00FF00;
+            --hilight: #008000;
+            --hilight-text: #FFFFFF;
+            --hot-tracking-color: #800080;
+            --inactive-border: #00FFFF;
+            --inactive-title: #00FFFF;
+            --inactive-title-text: #000000;
+            --info-text: #FFFF00;
+            --info-window: #000000;
+            --menu: #000000;
+            --menu-bar: #000000;
+            --menu-hilight: #008000;
+            --menu-text: #FFFFFF;
+            --scrollbar: #000000;
+            --title-text: #FFFFFF;
+            --window: #000000;
+            --window-frame: #FFFFFF;
+            --window-text: #FFFF00;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root[data-wmpotify-control-style="classic"],
+        :root[data-wmpotify-control-style="standard"] {
+            /* High Contrast White */
+            --active-border: #808080;
+            --active-title: #000000;
+            --app-workspace: #808080;
+            --background: #FFFFFF;
+            --button-alternate-face: #C0C0C0;
+            --button-dk-shadow: #000000;
+            --surface: #FFFFFF;
+            --button-hilight: #C0C0C0;
+            --button-light: #C0C0C0;
+            --button-shadow-color: #808080;
+            --button-text: #000000;
+            --gradient-active-title: #000000;
+            --gradient-inactive-title: #FFFFFF;
+            --gray-text: #00FF00;
+            --hilight: #000000;
+            --hilight-text: #FFFFFF;
+            --hot-tracking-color: #000000;
+            --inactive-border: #C0C0C0;
+            --inactive-title: #FFFFFF;
+            --inactive-title-text: #000000;
+            --info-text: #000000;
+            --info-window: #FFFFFF;
+            --menu: #FFFFFF;
+            --menu-bar: #FFFFFF;
+            --menu-hilight: #000000;
+            --menu-text: #000000;
+            --scrollbar: #FFFFFF;
+            --title-text: #FFFFFF;
+            --window: #FFFFFF;
+            --window-frame: #000000;
+            --window-text: #000000;
+        }
+    }
+}

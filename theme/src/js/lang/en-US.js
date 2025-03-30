@@ -51,6 +51,7 @@ const lang = {
     'CONF_GENERAL_CONTROL_STYLE_STANDARD': 'Windows Standard',
     'CONF_GENERAL_CONTROL_STYLE_CUSTOM': 'Windows Classic (Custom)',
     'CONF_GENERAL_MSG_INVALID_SCHEME_FILE': 'The imported theme file does not contain valid colors.',
+    'CONF_GENERAL_MSG_UNSUPPORTED_SCHEME_FILE': 'The imported theme file is not supported by WMPotify.',
     'CONF_GENERAL_DARK_MODE': 'Dark mode',
     'CONF_GENERAL_DARK_MODE_FOLLOW_SCHEME': 'Follow color scheme',
     'CONF_GENERAL_DARK_MODE_SYSTEM': 'Follow system setting',

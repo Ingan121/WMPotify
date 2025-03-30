@@ -137,15 +137,15 @@
                             }
 
                             button {
-                                background: url('resources/playerbar/play.png') center / cover no-repeat;
+                                background: var(--play) center / cover no-repeat;
                                 border-radius: 0;
                 
                                 &:hover {
-                                    background-image: url('resources/playerbar/play_hover.png');
+                                    background-image: var(--play-hover);
                                 }
                 
                                 &:active {
-                                    background-image: url('resources/playerbar/play_pressed.png');
+                                    background-image: var(--play-pressed);
                                 }
                 
                                 span {
@@ -153,14 +153,14 @@
                                 }
 
                                 &:has(path[d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
-                                    background-image: url('resources/playerbar/pause.png');
+                                    background-image: var(--pause);
 
                                     &:hover {
-                                        background-image: url('resources/playerbar/pause_hover.png');
+                                        background-image: var(--pause-hover);
                                     }
 
                                     &:active {
-                                        background-image: url('resources/playerbar/pause_pressed.png');
+                                        background-image: var(--pause-pressed);
                                     }
                                 }
                             }
@@ -511,6 +511,18 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
         .main-yourLibraryX-filterArea,
         #wmpotify-libx-sidebar {
             background: #222222;
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    .main-yourLibraryX-libraryContainer {
+        li[role="listitem"]:hover {
+            [class*=encore-text], [class*=encore-text] * {
+                color: var(--hilight-text) !important;
+                background-color: var(--hilight) !important;
+                forced-color-adjust: none !important; /* bugfix, otherwise white text on white background for some reason */
+            } 
         }
     }
 }

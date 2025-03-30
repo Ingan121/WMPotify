@@ -49,14 +49,14 @@
             button {
                 width: 42px;
                 height: 43px;
-                background: url('resources/playerbar/play.png') no-repeat;
+                background: var(--play) no-repeat;
     
                 &:hover {
-                    background-image: url('resources/playerbar/play_hover.png');
+                    background-image: var(--play-hover);
                 }
     
                 &:active {
-                    background-image: url('resources/playerbar/play_pressed.png');
+                    background-image: var(--play-pressed);
                 }
     
                 span {
@@ -64,28 +64,28 @@
                 }
 
                 &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
-                    background-image: url('resources/playerbar/pause.png') !important;
+                    background-image: var(--pause) !important;
     
                     &:hover {
-                        background-image: url('resources/playerbar/pause_hover.png') !important;
+                        background-image: var(--pause-hover) !important;
                     }
     
                     &:active {
-                        background-image: url('resources/playerbar/pause_pressed.png') !important;
+                        background-image: var(--pause-pressed) !important;
                     }
                 }
             }
     
             &.main-card-PlayButtonContainerVisible { /* Currently playing playlist - show pause button */
                 button {
-                    background-image: url('resources/playerbar/pause.png') ;
+                    background-image: var(--pause) ;
     
                     &:hover {
-                        background-image: url('resources/playerbar/pause_hover.png');
+                        background-image: var(--pause-hover);
                     }
     
                     &:active {
-                        background-image: url('resources/playerbar/pause_pressed.png');
+                        background-image: var(--pause-pressed);
                     }
                 }
             }
@@ -119,7 +119,7 @@
             border-image: none !important;
             box-shadow: var(--button-shadow) !important;
             color: var(--button-text-color);
-            background: var(--button-gradient);
+            background: var(--button-gradient) var(--surface);
             z-index: 0;
             cursor: default !important;
             top: 0;
@@ -142,7 +142,7 @@
                 left: 0;
                 border-radius: var(--border-radius);
                 box-shadow: var(--button-shadow);
-                background: var(--button-gradient-hovered);
+                background: var(--button-gradient-hovered) var(--hilight);
                 opacity: 0;
                 transition: opacity 0.3s;
                 z-index: -1;
@@ -228,5 +228,28 @@
 .main-view-container {
     .under-main-view > div > div:last-child {
         --spice-rgb-shadow: 0, 0, 0;
+    }
+}
+
+@media (forced-colors: active) {
+    .main-trackList-trackListRow:hover {
+        * {
+            color: var(--hilight-text) !important;
+        }
+
+        [class*=encore-text], [class*=encore-text] * {
+            background-color: var(--hilight) !important;
+            forced-color-adjust: none !important; /* bugfix, otherwise white text on white background for some reason */
+        }
+    }
+
+    .main-shelf-shelfGrid {
+        > *:hover {
+            .LineClamp, .LineClamp * {
+                color: var(--hilight-text) !important;
+                background-color: var(--hilight) !important;
+                forced-color-adjust: none !important; /* bugfix, otherwise white text on white background for some reason */
+            }
+        }
     }
 }

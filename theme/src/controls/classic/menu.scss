@@ -1,6 +1,7 @@
 :root:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style="10"]) {
   /* For Spotify menus */
   #context-menu {
+    forced-color-adjust: none;
     ul:not([id*="curation-"]) {
       &[role] {
         margin: 0;

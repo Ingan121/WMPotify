@@ -14,6 +14,7 @@
     background: var(--surface);
     box-shadow: var(--border-raised-outer), var(--border-raised-inner);
     border-radius: 0;
+    forced-color-adjust: none;
 
     min-width: 75px;
     min-height: 23px;
