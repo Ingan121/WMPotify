@@ -84,6 +84,9 @@
     &:disabled {
       + label,
       + .x-toggle-indicatorWrapper {
+        color: var(--button-shadow-color) !important;
+        text-shadow: 1px 1px 0 var(--button-hilight) !important;
+
         &::before {
           background: var(--surface);
         }

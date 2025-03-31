@@ -308,15 +308,18 @@
             text-align: left;
             height: 18px;
             padding-right: 5px;
+            forced-color-adjust: none;
 
             &:hover {
                 background: var(--item-hover-background);
                 border-color: var(--item-hover-border);
+                color: var(--item-hover-text);
             }
 
             &.active {
                 background: var(--item-hover-background);
                 border-color: var(--item-active-border);
+                color: var(--item-hover-text);
             }
 
             &::before {
@@ -412,14 +415,19 @@
 
 body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty hack to increase specificity */
     #wmpotify-library-button {
-        border-image-source: url('resources/topbar/tab_active.png');
+        border-image-source: var(--tab-active);
 
         &:hover {
-            border-image-source: url('resources/topbar/tab_active_hover.png');
+            border-image-source: var(--tab-active-hover);
         }
 
         &:active {
-            border-image-source: url('resources/topbar/tab_active_pressed.png');
+            border-image-source: var(--tab-active-pressed);
+        }
+
+        .wmpotify-tab-label {
+            background-color: var(--tab-label-bg-active) !important;
+            color: var(--tab-label-text-active) !important;
         }
     }
 
@@ -521,8 +529,23 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
             [class*=encore-text], [class*=encore-text] * {
                 color: var(--hilight-text) !important;
                 background-color: var(--hilight) !important;
-                forced-color-adjust: none !important; /* bugfix, otherwise white text on white background for some reason */
+                forced-color-adjust: none !important;
             } 
+        }
+
+        #wmpotify-libx-header > button:hover:after,
+        #wmpotify-libx-header > div:hover:after {
+            color: unset;
+        }
+
+        .main-yourLibraryX-filterArea + div {
+            background: var(--surface) !important;
+            border-image: none !important;
+
+            > span {
+                border-image: none !important;
+                color: ButtonText !important;
+            }
         }
     }
 }

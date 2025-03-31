@@ -20,6 +20,7 @@ section[data-testid="album-page"] {
         height: 23.3px;
         box-shadow: var(--wmp11-separator-light) 0 -1px 0 0, var(--wmp11-separator-shadow) 0 -2px 0 0; 
         top: 29px !important;
+        forced-color-adjust: none;
 
         > div[role="presentation"]:first-child > button {
             display: none;
@@ -173,6 +174,39 @@ section[data-testid="album-page"] {
     section[data-testid="album-page"] {
         .main-entityHeader-container:not(.main-entityHeader-withBackgroundImage) {
             background-color: #222222;
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    section[data-testid="album-page"] {
+        .main-trackList-trackListHeader {
+            background: var(--surface) !important;
+            border-image: none !important;
+            box-shadow: none !important;
+
+            .main-trackList-trackListHeaderRow {
+                > div {
+                    border-image: none !important;
+                    box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+
+                    > div:not(#Prio1) {
+                        color: ButtonText !important;
+                        [class*=encore-text], button {
+                            color: ButtonText !important;
+                        }
+                        .Svg-img-icon-small-textBrightAccent {
+                            fill: ButtonText !important;
+                        }
+                    }
+
+                    &.has-button {
+                        &:active {
+                            box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset;
+                        }
+                    }
+                }
+            }
         }
     }
 }

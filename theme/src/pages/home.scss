@@ -201,7 +201,7 @@
                 .LineClamp, .LineClamp * {
                     color: var(--hilight-text) !important;
                     background-color: var(--hilight) !important;
-                    forced-color-adjust: none !important; /* bugfix, otherwise white text on white background for some reason */
+                    forced-color-adjust: none !important;
                 }
             }
         }

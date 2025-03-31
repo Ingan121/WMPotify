@@ -3,7 +3,7 @@
 const canvas = document.createElement('canvas');
 canvas.width = 1;
 canvas.height = 1;
-const context = canvas.getContext('2d');
+const context = canvas.getContext('2d', { alpha: false, willReadFrequently: true });
 
 function getTintedColor(hue, sat, base = '#EEF3FA') {
     context.fillStyle = base;
@@ -19,6 +19,12 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
         document.documentElement.style.removeProperty('--wmpotify-tint-sat');
         resetTintMoreVars();
         return;
+    }
+
+    const isHighContrast = window.matchMedia('(forced-colors: active)').matches;
+    if (isHighContrast) {
+        tintPb = false;
+        tintMore = false;
     }
 
     const playerBar = document.querySelector('.main-nowPlayingBar-nowPlayingBar');

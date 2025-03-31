@@ -323,3 +323,41 @@ section[data-test-uri^="spotify:artist:"] {
         }
     }
 }
+
+@media (forced-colors: active) {
+    section[data-testid="artist-page"],
+    section[data-test-uri^="spotify:artist:"] {
+        .artist-artistDiscography-firstAlbum {
+            & + .artist-artistDiscography-tracklist {
+                .main-trackList-trackListHeader {
+                    background: var(--surface) !important;
+                    border-image: none !important;
+                    box-shadow: none !important;
+
+                    .main-trackList-trackListHeaderRow {
+                        > div {
+                            border-image: none !important;
+                            box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+
+                            > div:not(#Prio1) {
+                                color: ButtonText !important;
+                                [class*=encore-text], button {
+                                    color: ButtonText !important;
+                                }
+                                .Svg-img-icon-small-textBrightAccent {
+                                    fill: ButtonText !important;
+                                }
+                            }
+
+                            &.has-button {
+                                &:active {
+                                    box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

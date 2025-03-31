@@ -404,6 +404,12 @@ class App extends React.Component {
             margin: 64px 144px 0 144px !important;
           }
         }
+
+        @media (forced-colors: active) {
+          .wmpotify-lyrics-line[style*=lightgray] {
+            color: GrayText !important;
+          }
+        }
         `}
       </style>
       <Spicetify.ReactComponent.ContextMenu

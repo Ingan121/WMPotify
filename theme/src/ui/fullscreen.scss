@@ -66,3 +66,17 @@
         }
     }
 }
+
+@media (forced-colors: active) {
+    :root:not([data-wmpotify-style="xp"]):fullscreen {
+        .Root__now-playing-bar {
+            background: ButtonFace;
+        }
+
+        body.wmpotify-playerbar-visible {
+            .Root__main-view {
+                margin-bottom: calc(var(--panel-gap) * -2 + var(--player-bar-height));
+            }
+        }
+    }
+}

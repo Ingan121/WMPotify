@@ -68,6 +68,7 @@ button[aria-controls="sort-and-view-picker"] {
   [class*=encore-text] {
     order: 1;
     font-size: 12px;
+    height: unset;
   }
 
   &::before {
@@ -155,12 +156,29 @@ button.Button-sc-y0gtbx-0,
 
     &:hover {
       box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+      color: CanvasText !important;
+
+      a, > span {
+        color: CanvasText !important;
+      }
     }
 
     &:active,
     &:has([class*="ctive"]),
     &[class*="-selected-"] {
       box-shadow: var(--border-sunken-outer), var(--border-sunken-inner);
+      color: CanvasText !important;
+
+      a, > span {
+        color: CanvasText !important;
+      }
+    }
+  }
+
+  button.x-sortBox-sortDropdown,
+  button[aria-controls="sort-and-view-picker"] {
+    &::after {
+      color: CanvasText !important;
     }
   }
 }

@@ -60,10 +60,10 @@ function init() {
             <label for="wmpotify-config-control-style">${Strings['CONF_GENERAL_CONTROL_STYLE']}</label>
             <select id="wmpotify-config-control-style" class="wmpotify-aero">
                 <option value="classic">${Strings['CONF_GENERAL_CONTROL_STYLE_CLASSIC']}</option>
-                ${!hcQuery.matches ? `<option value="standard">${Strings['CONF_GENERAL_CONTROL_STYLE_STANDARD']}</option>
+                <option value="standard">${Strings['CONF_GENERAL_CONTROL_STYLE_STANDARD']}</option>
                 <option value="xp">Windows XP</option>
                 <option value="aero" selected>Windows Aero</option>
-                <option value="10">Windows 10</option>` : ''}
+                <option value="10">Windows 10</option>
                 <option value="custom">${Strings['CONF_GENERAL_CONTROL_STYLE_CUSTOM']}</option>
             </select>
             <label for="wmpotify-config-dark-mode">${Strings['CONF_GENERAL_DARK_MODE']}</label>
@@ -148,7 +148,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 (Pre-release 2025-03-30)<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 (Pre-release 2025-03-31)<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -180,6 +180,9 @@ function init() {
     elements.autoUpdates = configWindow.querySelector('#wmpotify-config-auto-updates');
 
     configWindow.style.height = localStorage.wmpotifyConfigHeight || '';
+
+    onHCChange(hcQuery);
+    hcQuery.addEventListener('change', onHCChange);
 
     elements.style.addEventListener('change', async () => {
         if (elements.style.value === 'basic_custom') {
@@ -652,6 +655,53 @@ function loadFonts() {
             // Refresh the page and select reload to reload the fonts
             elements.fontReload.remove();
         });
+    }
+}
+
+function onHCChange(event) {
+    if (event.matches) {
+        elements.controlStyle.innerHTML = `
+            <option value="classic">${Strings['CONF_GENERAL_CONTROL_STYLE_HC']}</option>
+            <option value="custom">${Strings['CONF_GENERAL_CONTROL_STYLE_CUSTOM']}</option>
+        `;
+        if (localStorage.wmpotifyControlStyle !== 'custom') {
+            elements.controlStyle.value = 'classic';
+            document.documentElement.dataset.wmpotifyControlStyle = 'classic';
+        } else {
+            elements.controlStyle.value = 'custom';
+        }
+        elements.darkMode.innerHTML = `
+            <option value="never">${Strings['CONF_GENERAL_CONTROL_STYLE_HC']}</option>
+        `;
+        elements.darkMode.value = 'never';
+        elements.darkMode.disabled = true;
+        elements.tintPb.disabled = true;
+        elements.tintMore.disabled = true;
+        onColorChange();
+    } else {
+        elements.controlStyle.innerHTML = `
+            <option value="classic">${Strings['CONF_GENERAL_CONTROL_STYLE_CLASSIC']}</option>
+            <option value="standard">${Strings['CONF_GENERAL_CONTROL_STYLE_STANDARD']}</option>
+            <option value="xp">Windows XP</option>
+            <option value="aero" selected>Windows Aero</option>
+            <option value="10">Windows 10</option>
+            <option value="custom">${Strings['CONF_GENERAL_CONTROL_STYLE_CUSTOM']}</option>
+        `;
+        elements.controlStyle.value = localStorage.wmpotifyControlStyle || 'aero';
+        document.documentElement.dataset.wmpotifyControlStyle = elements.controlStyle.value;
+        elements.darkMode.innerHTML = `
+            <option value="follow_scheme" selected>${Strings['CONF_GENERAL_DARK_MODE_FOLLOW_SCHEME']}</option>
+            <option value="system">${Strings['CONF_GENERAL_DARK_MODE_SYSTEM']}</option>
+            <option value="always">${Strings['CONF_GENERAL_DARK_MODE_ALWAYS']}</option>
+            <option value="never">${Strings['CONF_GENERAL_DARK_MODE_NEVER']}</option>
+        `;
+        elements.darkMode.disabled = false;
+        elements.darkMode.value = localStorage.wmpotifyDarkMode || 'follow_scheme';
+        elements.tintPb.disabled = false;
+        elements.tintMore.disabled = false;
+        if (localStorage.wmpotifyTintColor) {
+            onColorChange();
+        }
     }
 }
 

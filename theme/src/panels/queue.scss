@@ -274,3 +274,25 @@
         }
     }
 }
+
+@media (forced-colors: active) {
+    #wmpotify-queue-clear-button {
+        &::before {
+            top: 3px !important;
+            left: 5px !important;
+        }
+    }
+
+    .spotify-queue-panel > div {
+        #history-panel,
+        #queue-panel {
+            .Column-lg p {
+                font-weight: bold;
+
+                [class*=encore-text] {
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}

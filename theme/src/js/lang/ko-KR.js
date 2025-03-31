@@ -49,6 +49,7 @@ const lang = {
     'CONF_GENERAL_CONTROL_STYLE': '컨트롤 스타일',
     'CONF_GENERAL_CONTROL_STYLE_CLASSIC': 'Windows 고전',
     'CONF_GENERAL_CONTROL_STYLE_STANDARD': 'Windows 표준',
+    'CONF_GENERAL_CONTROL_STYLE_HC': '고대비',
     'CONF_GENERAL_CONTROL_STYLE_CUSTOM': 'Windows 고전 (사용자 지정)',
     'CONF_GENERAL_MSG_INVALID_SCHEME_FILE': '가져온 파일이 올바른 색상을 포함하고 있지 않습니다.',
     'CONF_GENERAL_MSG_UNSUPPORTED_SCHEME_FILE': '가져온 파일이 WMPotify에서 지원되지 않습니다.',

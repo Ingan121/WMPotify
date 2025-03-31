@@ -1,8 +1,8 @@
 :root {
-    --aero-bg-large: url('resources/playerbar/bg_large.png') no-repeat;
-    --aero-bg-small: url('resources/playerbar/bg_small.png') no-repeat;
-    --xp-bg-large: url('resources/playerbar/xp/bg_large.png') no-repeat;
-    --xp-bg-small: url('resources/playerbar/xp/bg_small.png') no-repeat;
+    --aero-bg-large: url('resources/playerbar/bg_large.png');
+    --aero-bg-small: url('resources/playerbar/bg_small.png');
+    --xp-bg-large: url('resources/playerbar/xp/bg_large.png');
+    --xp-bg-small: url('resources/playerbar/xp/bg_small.png');
     --prev: url('resources/playerbar/prev.png');
     --prev-hover: url('resources/playerbar/prev_hover.png');
     --prev-pressed: url('resources/playerbar/prev_pressed.png');
@@ -45,12 +45,23 @@
     --vol-mini-expand-extrahover: url('resources/playerbar/vol_mini_expand_extrahover.png');
     --vol-mini-expand-pressed: url('resources/playerbar/vol_mini_expand_pressed.png');
     --vol-mini-hover: url('resources/playerbar/vol_mini_hover.png');
+    --vol-mini-extrahover: url('resources/playerbar/vol_mini_extrahover.png');
+    --vol-mini-pressed: url('resources/playerbar/vol_mini_pressed.png');
     --btn-bg: transparent;
     --btn-hover: url('resources/playerbar/btn_hover.png');
     --btn-pressed: url('resources/playerbar/btn_pressed.png');
     --btn-21-bg: transparent;
     --btn-21-hover: url('resources/playerbar/btn_21_hover.png');
     --btn-21-pressed: url('resources/playerbar/btn_21_pressed.png');
+    --seekhandle: url('resources/playerbar/seekhandle.png');
+    --seekhandle-hover: url('resources/playerbar/seekhandle_hover.png');
+    --seekhandle-pressed: url('resources/playerbar/seekhandle_pressed.png');
+    --pbfill: linear-gradient(to bottom, #84c5ff 1px, #0f41cd 1.5px, #6e96ff 2.5px);
+    --pbfillend: url('resources/playerbar/pbfillend.png');
+    --volfill: var(--pbfill);
+    --volhandle: url('resources/playerbar/volhandle.png');
+    --volhandle-hover: url('resources/playerbar/volhandle_hover.png');
+    --volhandle-pressed: url('resources/playerbar/volhandle_pressed.png');
 
     --hcblack-prev: url('resources/playerbar/hcblack/prev.png');
     --hcblack-play: url('resources/playerbar/hcblack/play.png');
@@ -73,6 +84,8 @@
     --hcblack-vol-mini-expand: url('resources/playerbar/hcblack/vol_mini_expand.png');
     --hcblack-btn: url('resources/playerbar/hcblack/btn.png');
     --hcblack-btn-21: url('resources/playerbar/hcblack/btn_21.png');
+    --hcblack-seekhandle: url('resources/playerbar/hcblack/seekhandle.png');
+    --hcblack-volhandle: url('resources/playerbar/hcblack/volhandle.png');
 
     --hcwhite-prev: url('resources/playerbar/hcwhite/prev.png');
     --hcwhite-play: url('resources/playerbar/hcwhite/play.png');
@@ -95,6 +108,8 @@
     --hcwhite-vol-mini-expand: url('resources/playerbar/hcwhite/vol_mini_expand.png');
     --hcwhite-btn: url('resources/playerbar/hcwhite/btn.png');
     --hcwhite-btn-21: url('resources/playerbar/hcwhite/btn_21.png');
+    --hcwhite-seekhandle: url('resources/playerbar/hcwhite/seekhandle.png');
+    --hcwhite-volhandle: url('resources/playerbar/hcwhite/volhandle.png');
 }
 
 .Root__now-playing-bar {
@@ -441,10 +456,14 @@ div[data-testid='now-playing-widget'] {
         .x-progressBar-progressBarBg {
             border-color: transparent;
             outline-color: transparent;
+
+            .x-progressBar-fillColor {
+                background: var(--volfill) !important;
+            }
         }
 
         .progress-bar__slider {
-            background: url('resources/playerbar/volhandle.png') no-repeat;
+            background: var(--volhandle) no-repeat;
             width: 12px;
             height: 13px;
             image-rendering: pixelated;
@@ -452,11 +471,11 @@ div[data-testid='now-playing-widget'] {
             display: flex !important;
 
             &:hover {
-                background-image: url('resources/playerbar/volhandle_hover.png');
+                background-image: var(--volhandle-hover);
             }
 
             &:active {
-                background-image: url('resources/playerbar/volhandle_pressed.png');
+                background-image: var(--volhandle-pressed)
             }
         }
     }
@@ -609,15 +628,16 @@ div[data-testid='now-playing-widget'] {
     background: transparent;
     border: rgba(92, 92, 92, 0.5) 1px solid;
     outline: rgba(255, 255, 255, 0.5) 1px solid;
+    forced-color-adjust: none;
 
     .x-progressBar-fillColor {
-        background: linear-gradient(to bottom, #84c5ff 1px, #0f41cd 1.5px, #6e96ff 2.5px);
+        background: var(--pbfill) !important;
         height: 3px;
 
         &::after {
             content: '';
             position: absolute;
-            background-image: url('resources/playerbar/pbfillend.png');
+            background-image: var(--pbfillend);
             width: 15px;
             height: 3px;
             right: 0;
@@ -626,17 +646,17 @@ div[data-testid='now-playing-widget'] {
 
     .progress-bar__slider {
         border-radius: 0;
-        background: url('resources/playerbar/seekhandle.png') no-repeat;
+        background: var(--seekhandle) no-repeat;
         width: 16px;
         height: 9px;
         image-rendering: pixelated;
 
         &:hover {
-            background-image: url('resources/playerbar/seekhandle_hover.png');
+            background-image: var(--seekhandle-hover);
         }
 
         &:active {
-            background-image: url('resources/playerbar/seekhandle_pressed.png');
+            background-image: var(--seekhandle-pressed);
         }
     }
 }
@@ -1088,11 +1108,11 @@ body[data-hide-pb-left-btn] {
             }
 
             &:hover::before {
-                background-image: url('resources/playerbar/vol_mini_extrahover.png');
+                background-image: var(--vol-mini-extrahover);
             }
 
             &:active::before {
-                background-image: url('resources/playerbar/vol_mini_pressed.png');
+                background-image: var(--vol-mini-pressed);
             }
 
             &:hover + .volume-bar__slider-container {
@@ -1172,6 +1192,13 @@ body[data-hide-pb-left-btn] {
     }
 }
 
+@media (forced-colors: active) {
+    .progress-bar__slider {
+        visibility: visible;
+        box-shadow: none;
+    }
+}
+
 @media (forced-colors: active) and (prefers-color-scheme: dark) {
     :root:not(#Prio1):not(#Prio2) {
         --aero-bg-large: url('resources/playerbar/hcblack/bg_large.png');
@@ -1217,19 +1244,28 @@ body[data-hide-pb-left-btn] {
         --vol-high: var(--hcblack-vol-high);
         --vol-mini-bg: var(--hcblack-vol-mini);
         --vol-mini-expand: var(--hcblack-vol-mini-expand);
-        --vol-mini-expand-hover: var(--hcwhite-vol-mini-expand);
         --vol-mini-expand-extrahover: var(--hcwhite-vol-mini-expand);
         --vol-mini-expand-pressed: var(--hcwhite-vol-mini-expand);
-        --vol-mini-hover: var(--hcwhite-vol-mini-hover);
+        --vol-mini-extrahover: var(--hcwhite-vol-mini);
+        --vol-mini-pressed: var(--hcwhite-vol-mini);
         --btn-bg: var(--hcblack-btn);
         --btn-hover: var(--hcwhite-btn);
         --btn-pressed: var(--hcwhite-btn);
         --btn-21-bg: var(--hcblack-btn-21);
         --btn-21-hover: var(--hcwhite-btn-21);
         --btn-21-pressed: var(--hcwhite-btn-21);
+        --seekhandle: var(--hcblack-seekhandle);
+        --seekhandle-hover: var(--hcwhite-seekhandle);
+        --seekhandle-pressed: var(--hcwhite-seekhandle);
+        --pbfill: white;
+        --pbfillend: transparent;
+        --volfill: black;
+        --volhandle: var(--hcblack-volhandle);
+        --volhandle-hover: var(--hcwhite-volhandle);
+        --volhandle-pressed: var(--hcwhite-volhandle);
     }
 
-    .main-nowPlayingBar-extraControls {
+    .main-nowPlayingBar-extraControls:not(#Prio1) {
         button {
             svg {
                 color: white !important;
@@ -1287,19 +1323,28 @@ body[data-hide-pb-left-btn] {
         --vol-high: var(--hcwhite-vol-high);
         --vol-mini-bg: var(--hcwhite-vol-mini);
         --vol-mini-expand: var(--hcwhite-vol-mini-expand);
-        --vol-mini-expand-hover: var(--hcblack-vol-mini-expand);
         --vol-mini-expand-extrahover: var(--hcblack-vol-mini-expand);
         --vol-mini-expand-pressed: var(--hcblack-vol-mini-expand);
-        --vol-mini-hover: var(--hcblack-vol-mini-hover);
+        --vol-mini-extrahover: var(--hcblack-vol-mini);
+        --vol-mini-pressed: var(--hcblack-vol-mini);
         --btn-bg: var(--hcwhite-btn);
         --btn-hover: var(--hcblack-btn);
         --btn-pressed: var(--hcblack-btn);
         --btn-21-bg: var(--hcwhite-btn-21);
         --btn-21-hover: var(--hcblack-btn-21);
         --btn-21-pressed: var(--hcblack-btn-21);
+        --seekhandle: var(--hcwhite-seekhandle);
+        --seekhandle-hover: var(--hcblack-seekhandle);
+        --seekhandle-pressed: var(--hcblack-seekhandle);
+        --pbfill: black;
+        --pbfillend: transparent;
+        --volfill: white;
+        --volhandle: var(--hcwhite-volhandle);
+        --volhandle-hover: var(--hcblack-volhandle);
+        --volhandle-pressed: var(--hcblack-volhandle);
     }
 
-    .main-nowPlayingBar-extraControls {
+    .main-nowPlayingBar-extraControls:not(#Prio1) {
         button {
             svg {
                 color: black !important;

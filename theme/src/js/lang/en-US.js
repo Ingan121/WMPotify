@@ -49,6 +49,7 @@ const lang = {
     'CONF_GENERAL_CONTROL_STYLE': 'Control style',
     'CONF_GENERAL_CONTROL_STYLE_CLASSIC': 'Windows Classic',
     'CONF_GENERAL_CONTROL_STYLE_STANDARD': 'Windows Standard',
+    'CONF_GENERAL_CONTROL_STYLE_HC': 'High Contrast',
     'CONF_GENERAL_CONTROL_STYLE_CUSTOM': 'Windows Classic (Custom)',
     'CONF_GENERAL_MSG_INVALID_SCHEME_FILE': 'The imported theme file does not contain valid colors.',
     'CONF_GENERAL_MSG_UNSUPPORTED_SCHEME_FILE': 'The imported theme file is not supported by WMPotify.',

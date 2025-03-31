@@ -66,6 +66,7 @@ export async function importScheme() {
                     // ModernActiveDesktop scheme CSS files with compiled CSS theme data (e.g. XP.css, 7.css)
                     // This breaks the Spotify UI as it includes some global CSS rules for buttons, etc.
                     // Lightweight CSS themes (e.g. Blur, Windose) works fine so set the limit to 500 chars
+                    // But importing as converted MAD JSON scheme is still recommended
                     Spicetify.showNotification(Strings["CONF_GENERAL_MSG_UNSUPPORTED_SCHEME_FILE"]);
                     return -1;
                 }

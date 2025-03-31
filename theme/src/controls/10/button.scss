@@ -31,7 +31,8 @@
   .ReactModalPortal button.Button-sc-1dqy6lx-0,
   #context-menu button.Button-sc-1dqy6lx-0,
   #context-menu button.Button-sc-qlcn5g-0,
-  .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2) {
+  .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2),
+  .search-searchCategory-carouselButton {
     box-sizing: border-box;
     box-shadow: inset 1px 1px 0 0 var(--button-border-color), inset -1px -1px 0 0 var(--button-border-color);
     border: none;
