@@ -2,7 +2,6 @@
 
 import Strings from './strings'
 import ControlManager from './managers/ControlManager';
-import { setTintColor } from './ui/tinting';
 import CustomTitlebar from './ui/titlebar';
 import { setupTopbar } from './ui/topbar';
 import { setupPlayerbar } from './ui/playerbar';
@@ -74,11 +73,7 @@ function earlyInit() {
         if (window.outerHeight - window.innerHeight > 0 || whStatus?.options?.showframe || navigator.userAgent.includes('Linux')) {
             titleStyle = 'native';
         } else if (window.SpotEx || whStatus) {
-            if (whStatus?.options?.showmenu && !whStatus.options.showcontrols) {
-                titleStyle = 'keepmenu';
-            } else {
-                titleStyle = 'custom';
-            }
+            titleStyle = 'custom';
         }
     }
     if (titleStyle === 'keepmenu' && !navigator.userAgent.includes('Windows')) {
@@ -95,13 +90,18 @@ function earlyInit() {
     // Set default style if the style is set to auto (not set)
     // If the Windhawk mod is available, and the title style is native:
     //   Use Aero style if transparency is enabled and DWM is enabled
-    //   Use Basic style if transparency is disabled and DWM is disabled
-    // XP otherwise (No WH, macOS/Linux, Windows Classic theme, title style is not native, etc.)
-    if (whStatus && !localStorage.wmpotifyStyle && titleStyle === 'native' && whStatus.isThemingEnabled) {
-        if (WindhawkComm.getModule()?.initialOptions.transparentrendering && whStatus.isDwmEnabled) {
-            style = 'aero';
-        } else if (!whStatus.isDwmEnabled) {
+    //   Use Basic style if transparency is disabled and DWM is disabled, or if using high contrast mode
+    // XP otherwise (No WH, macOS/Linux, Windows Classic theme (non-HighContrast), title style is not native, etc.)
+    const hcQuery = window.matchMedia('(forced-colors: active)');
+    if (!localStorage.wmpotifyStyle && titleStyle === 'native') {
+        if (hcQuery.matches) {
             style = 'basic';
+        } else if (whStatus && whStatus.isThemingEnabled) {
+            if (WindhawkComm.getModule()?.initialOptions.transparentrendering && whStatus.isDwmEnabled) {
+                style = 'aero';
+            } else if (!whStatus.isDwmEnabled) {
+                style = 'basic';
+            }
         }
     }
 
@@ -209,11 +209,6 @@ async function init() {
     const isWin11 = Spicetify.Platform.PlatformData.os_version?.split('.')[2] >= 22000;
     if (isWin11 && localStorage.wmpotifyBackdrop !== 'none') {
         WindhawkComm.setBackdrop(localStorage.wmpotifyBackdrop || 'mica');
-    }
-
-    if (localStorage.wmpotifyTintColor) {
-        const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
-        setTintColor(hue, sat, tintPb, tintMore);
     }
 
     ControlManager.init();

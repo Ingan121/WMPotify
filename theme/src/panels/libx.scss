@@ -490,7 +490,7 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
             margin-left: 0;
         }
 
-        body.sidebar-open #Desktop_LeftSidebar_Id {
+        &.sidebar-open #Desktop_LeftSidebar_Id {
             width: calc(100vw - var(--panel-width, var(--right-sidebar-width)) * 1px - var(--panel-gap) * 2 - 2px);
         }
     }

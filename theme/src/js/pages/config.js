@@ -677,7 +677,10 @@ function onHCChange(event) {
         elements.darkMode.disabled = true;
         elements.tintPb.disabled = true;
         elements.tintMore.disabled = true;
-        onColorChange();
+        if (localStorage.wmpotifyTintColor) {
+            const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+            setTintColor(hue, sat, false, false);
+        }
     } else {
         elements.controlStyle.innerHTML = `
             <option value="classic">${Strings['CONF_GENERAL_CONTROL_STYLE_CLASSIC']}</option>
@@ -700,7 +703,8 @@ function onHCChange(event) {
         elements.tintPb.disabled = false;
         elements.tintMore.disabled = false;
         if (localStorage.wmpotifyTintColor) {
-            onColorChange();
+            const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+            setTintColor(hue, sat, tintPb, tintMore);
         }
     }
 }

@@ -58,8 +58,11 @@ body[data-hide-libx],
         margin-left: calc(var(--panel-gap) * -2);
         width: calc(100% + var(--panel-gap) * 3);
     }
+}
 
-    &.sidebar-open .Root__main-view {
+body[data-hide-libx].sidebar-open,
+:root:fullscreen body.sidebar-open {
+    .Root__main-view {
         width: calc(100% + var(--panel-gap) * 3 - 3px);
     }
 }
@@ -248,7 +251,7 @@ body.sidebar-open .Root {
             width: calc(100% + var(--panel-gap) * 3) !important;
         }
 
-        &.sidebar-open .Root__main-view {
+        body.sidebar-open .Root__main-view {
             width: calc(100% + var(--panel-gap) * 3 - 3px) !important;
         }
     }

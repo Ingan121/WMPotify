@@ -18,10 +18,6 @@
         &:hover {
             background: var(--item-hover-background);
             border-color: var(--item-hover-border);
-
-            a {
-                color: var(--hilight-text);
-            }
         }
 
         .view-homeShortcutsGrid-imageContainer {
@@ -202,6 +198,16 @@
                     color: var(--hilight-text) !important;
                     background-color: var(--hilight) !important;
                     forced-color-adjust: none !important;
+                }
+            }
+        }
+
+        section:not(.main-shelf-shelfGrid):not(.view-homeShortcutsGrid-shortcuts) {
+            a:has(div[class*="PromotionDefaultNative-"]):hover {
+                [class*=encore-text] {
+                    color: HighlightText !important;
+                    background-color: Highlight !important;
+                    forced-color-adjust: none;
                 }
             }
         }

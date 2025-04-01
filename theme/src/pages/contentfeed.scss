@@ -17,7 +17,7 @@
             }
 
             &:hover {
-                background: var(--item-hover-background);
+                background: var(--item-hover-background) !important;
                 border-color: var(--item-hover-border);
             }
 
@@ -55,6 +55,18 @@
                         background-image: var(--pause-pressed) !important;
                     }
                 }
+            }
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    :root[data-page^="/content-feed"] .Root__main-view {
+        div[role="list"] > div > div > div[draggable] > div:hover {
+            [class*=encore-text], [class*=encore-text] span, a {
+                color: HighlightText !important;
+                background: Highlight !important;
+                forced-color-adjust: none !important;
             }
         }
     }

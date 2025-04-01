@@ -121,8 +121,9 @@ export function setupTopbar() {
     const menu = new MadMenu(['wmpotifyTab', 'wmpotifyTabMenu']);
     overflowButton = document.createElement('button');
     overflowButton.id = 'wmpotify-tabs-overflow-button';
+    const top = !!document.querySelector('#wmpotify-title-bar') ? '25px' : '0';
     overflowButton.addEventListener('click', () => {
-        menu.openMenu('wmpotifyTab', { top: '0', left: overflowButton.getBoundingClientRect().left + 'px' });
+        menu.openMenu('wmpotifyTab', { top, left: overflowButton.getBoundingClientRect().left + 'px' });
     });
     tabsContainer.appendChild(overflowButton);
 

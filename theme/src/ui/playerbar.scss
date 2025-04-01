@@ -1,7 +1,7 @@
 :root {
     --aero-bg-large: url('resources/playerbar/bg_large.png');
     --aero-bg-small: url('resources/playerbar/bg_small.png');
-    --xp-bg-large: url('resources/playerbar/xp/bg_large.png');
+    --xp-bg-large: url('resources/playerbar/xp/bg_large.png') center;
     --xp-bg-small: url('resources/playerbar/xp/bg_small.png');
     --prev: url('resources/playerbar/prev.png');
     --prev-hover: url('resources/playerbar/prev_hover.png');
@@ -829,7 +829,7 @@ div[data-testid='now-playing-widget'] {
             transform: translateX(-50%);
             width: 558px;
             height: 59px;
-            background: var(--xp-bg-large) center no-repeat;
+            background: var(--xp-bg-large) no-repeat;
             z-index: -2;
         }
     }
@@ -1199,11 +1199,19 @@ body[data-hide-pb-left-btn] {
     }
 }
 
+@media (forced-colors: active) and (max-width: 636px) {
+    :root[data-wmpotify-style=xp] .Root__now-playing-bar:after {
+        left: calc(50% - var(--panel-gap));
+    }
+}
+
 @media (forced-colors: active) and (prefers-color-scheme: dark) {
     :root:not(#Prio1):not(#Prio2) {
         --aero-bg-large: url('resources/playerbar/hcblack/bg_large.png');
         --aero-bg-small: url('resources/playerbar/hcblack/bg_small.png');
-        --prev: var(--hcblack-prev);
+        --xp-bg-large: url('resources/playerbar/hcblack/bg_large.png') 50% 0;
+        --xp-bg-small: url('resources/playerbar/hcblack/bg_small.png');
+        --prev: var(--hcblack-prev) !important;
         --prev-hover: var(--hcwhite-prev);
         --prev-pressed: var(--hcwhite-prev);
         --prev-disabled: var(--hcblack-prev);
@@ -1215,7 +1223,7 @@ body[data-hide-pb-left-btn] {
         --pause-hover: var(--hcwhite-pause);
         --pause-pressed: var(--hcwhite-pause);
         --pause-disabled: var(--hcblack-pause);
-        --next: var(--hcblack-next);
+        --next: var(--hcblack-next) !important;
         --next-hover: var(--hcwhite-next);
         --next-pressed: var(--hcwhite-next);
         --next-disabled: var(--hcblack-next);
@@ -1282,7 +1290,9 @@ body[data-hide-pb-left-btn] {
     :root:not(#Prio1):not(#Prio2) {
         --aero-bg-large: url('resources/playerbar/hcwhite/bg_large.png');
         --aero-bg-small: url('resources/playerbar/hcwhite/bg_small.png');
-        --prev: var(--hcwhite-prev);
+        --xp-bg-large: url('resources/playerbar/hcwhite/bg_large.png') 50% 0;
+        --xp-bg-small: url('resources/playerbar/hcwhite/bg_small.png');
+        --prev: var(--hcwhite-prev) !important;
         --prev-hover: var(--hcblack-prev);
         --prev-pressed: var(--hcblack-prev);
         --prev-disabled: var(--hcwhite-prev);
@@ -1294,7 +1304,7 @@ body[data-hide-pb-left-btn] {
         --pause-hover: var(--hcblack-pause);
         --pause-pressed: var(--hcblack-pause);
         --pause-disabled: var(--hcwhite-pause);
-        --next: var(--hcwhite-next);
+        --next: var(--hcwhite-next) !important;
         --next-hover: var(--hcblack-next);
         --next-pressed: var(--hcblack-next);
         --next-disabled: var(--hcwhite-next);
