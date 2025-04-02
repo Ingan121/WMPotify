@@ -148,7 +148,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 (Pre-release 2025-04-01)<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 (Pre-release 2025-04-02)<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -430,13 +430,15 @@ function init() {
     if (localStorage.wmpotifyTitleStyle) {
         elements.titleStyle.value = localStorage.wmpotifyTitleStyle;
     }
-    if (localStorage.wmpotifyControlStyle) {
-        elements.controlStyle.value = localStorage.wmpotifyControlStyle;
-    }
-    if (['follow_scheme', 'system', 'always', 'never'].includes(localStorage.wmpotifyDarkMode)) {
-        elements.darkMode.value = localStorage.wmpotifyDarkMode;
-    } else if (WindhawkComm.getModule()?.initialOptions.noforceddarkmode) {
-        elements.darkMode.value = 'system';
+    if (!hcQuery.matches) {
+        if (localStorage.wmpotifyControlStyle) {
+            elements.controlStyle.value = localStorage.wmpotifyControlStyle;
+        }
+        if (['follow_scheme', 'system', 'always', 'never'].includes(localStorage.wmpotifyDarkMode)) {
+            elements.darkMode.value = localStorage.wmpotifyDarkMode;
+        } else if (WindhawkComm.getModule()?.initialOptions.noforceddarkmode) {
+            elements.darkMode.value = 'system';
+        }
     }
     if (localStorage.wmpotifyHidePbLeftBtn) {
         elements.hidePbLeftBtn.checked = true;

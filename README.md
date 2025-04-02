@@ -95,6 +95,38 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
     Replace the second line with `spicetify config current_theme " "` if you don't plan to use themes from the Spicetify Marketplace, or you don't have Marketplace installed.
 2. Delete the `Themes\WMPotify` and `CustomApps\wmpvis` folders in the Spicetify directory. Find the directory with `spicetify config-dir` or `spicetify path userdata`.
 
+## Frequently Asked Questions
+1. **Q:** Queue list does not show up in the right panel
+    * **A:** Check `Enable Queue on the right panel.` in the user button -> `Experimental features`.
+    * If this still does not work and the Experimental features popup shows `Using fallback mode`, you need to downgrade Spotify to a version fully supported by Spicetify. Old releases are available [here](https://docs.google.com/spreadsheets/d/1wztO1L4zvNykBRw7X4jxP8pvo11oQjT0O5DvZ_-S4Ok/edit?pli=1&gid=803394557#gid=803394557)
+2. **Q:** Aero Glass or the mini mode does not work
+    * **A:** Currently those features are only available on Windows, and if you have installed the [CEF/Spotify Tweaks](https://windhawk.net/mods/cef-titlebar-enabler-universal) [Windhawk](https://windhawk.net/) mod. macOS is not supported now, and it needs more research to implement them.
+    * For Linux, you can use [libcef-transparency-linux](https://github.com/fixpointer/libcef-transparency-linux) by [fixpointer](https://github.com/fixpointer) to enable transparency. You may need to apply additional mods like force blur.
+    * For the mini mode, you might get it working by force resizing the window to a smaller size with an external tool. I will implement a custom miniplayer in the future that looks like the mini mode.
+    * KDE users: [You can get the mini mode working with Window Rules](https://github.com/Ingan121/WMPotify/issues/31).
+3. **Q.** Custom title bar only shows the close button
+    * **A.** Either the CEF/Spotify Tweaks Windhawk mod or the Spotify API Extender Chrome extension is required for the minimize/maximize/restore buttons to show up. The extension is available in the [SpotifyCrExt](/SpotifyCrExt) folder in the repository.
+    * Using the extension is only recommended if you cannot use the Windhawk mod, such as on Linux or macOS.
+    * To install the extension, you have to enable DevTools with `spicetify enable-devtools`, right-click any empty space, click `Show Chrome Tools`, open `chrome://extensions`, enable developer mode, and load the unpacked extension. If the extension installation doesn't work, run `spicetify enable-devtools` again and try again.
+    * Note that Chrome extensions only work if DevTools is enabled. Spotify will randomly disable DevTools after a while and all extensions will stop working. To permanently enable DevTools and extensions, hex-patch the Spotify executable to fill the `disable-extensions` string to something invalid.
+4. **Q:** This theme is too slow!
+    * **A1:** Make sure hardware acceleration is enabled in Spotify settings. 
+    * **A2:** Remove the Beautiful Lyrics extension if you have it installed. This extension is known to slow down Spotify. This theme doesn't really support the extension either. Use WMPotify NowPlaying instead.
+
+## Switching Between Custom and Native Title Bar
+* This only applies to Windows users with the CEF/Spotify Tweaks mod installed.
+* To use the native Windows title bar:
+    * Open the Windhawk UI and go to the details page of the CEF/Spotify Tweaks mod.
+    * Go to the Settings tab and enable the `Enable native frames and title bars on the main window*` option.
+    * Restart Spotify.
+    * In the WMPotify Properties, set the `Title style` to either `Auto` or `Native` and apply the changes.
+* To use the custom title bar (WMP11 XP styled):
+    * Open the Windhawk UI and go to the details page of the CEF/Spotify Tweaks mod.
+    * Go to the Settings tab and disable the `Enable native frames and title bars on the main window*` option.
+    * Restart Spotify.
+    * In the WMPotify Properties, set the `Title style` to `Custom` and apply the changes.
+    * It is also recommended to set the `Style` to either `Auto` or `XP` for the best experience with the custom title bar.
+
 ## **Screenshots**
 
 ### Home
@@ -116,7 +148,11 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 
 * Classic
 ![home_classic](screenshots/home_classic.png)
-* Either enable the transparency option in the CEF/Spotify Tweaks mod settings and use the `Aero` style, or use the `Basic (Custom)` style and set the colors manually.
+Either enable the transparency option in the CEF/Spotify Tweaks mod settings and use the `Aero` style, or use the `Basic (Custom)` style and set the colors manually.
+
+* High Contrast
+![home_hcblack](screenshots/home_hcblack.png)
+(Requires Chrome runtime on Spotify 1.2.45 and 1.2.46. Run Spotify.exe with `--enable-chrome-runtime` flag if the high contrast mode is not working.)
 
 ### Mini Mode
 
@@ -203,38 +239,6 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 
 * Discography
 ![discography_aero](screenshots/discography_aero.png)
-
-## Frequently Asked Questions
-1. **Q:** Queue list does not show up in the right panel
-    * **A:** Check `Enable Queue on the right panel.` in the user button -> `Experimental features`.
-    * If this still does not work and the Experimental features popup shows `Using fallback mode`, you need to downgrade Spotify to a version fully supported by Spicetify. Old releases are available [here](https://docs.google.com/spreadsheets/d/1wztO1L4zvNykBRw7X4jxP8pvo11oQjT0O5DvZ_-S4Ok/edit?pli=1&gid=803394557#gid=803394557)
-2. **Q:** Aero Glass or the mini mode does not work
-    * **A:** Currently those features are only available on Windows, and if you have installed the [CEF/Spotify Tweaks](https://windhawk.net/mods/cef-titlebar-enabler-universal) [Windhawk](https://windhawk.net/) mod. macOS is not supported now, and it needs more research to implement them.
-    * For Linux, you can use [libcef-transparency-linux](https://github.com/fixpointer/libcef-transparency-linux) by [fixpointer](https://github.com/fixpointer) to enable transparency. You may need to apply additional mods like force blur.
-    * For the mini mode, you might get it working by force resizing the window to a smaller size with an external tool. I will implement a custom miniplayer in the future that looks like the mini mode.
-    * KDE users: [You can get the mini mode working with Window Rules](https://github.com/Ingan121/WMPotify/issues/31).
-3. **Q.** Custom title bar only shows the close button
-    * **A.** Either the CEF/Spotify Tweaks Windhawk mod or the Spotify API Extender Chrome extension required for the minimize/maximize/restore buttons to show up. The extension is available in the [SpotifyCrExt](/SpotifyCrExt) folder in the repository.
-    * Using the extension is only recommended if you cannot use the Windhawk mod, such as on Linux or macOS.
-    * To install the extension, you have to enable DevTools with `spicetify enable-devtools`, right-click any empty space, click `Show Chrome Tools`, open `chrome://extensions`, enable developer mode, and load the unpacked extension. If the extension installation doesn't work, run `spicetify enable-devtools` again and try again.
-    * Note that Chrome extensions only work if DevTools is enabled. Spotify will randomly disable DevTools after a while and all extensions will stop working. To permanently enable DevTools and extensions, hex-patch the Spotify executable to fill the `disable-extensions` string to something invalid.
-4. **Q:** This theme is too slow!
-    * **A1:** Make sure hardware acceleration is enabled in Spotify settings. 
-    * **A2:** Remove the Beautiful Lyrics extension if you have it installed. This extension is known to slow down Spotify. This theme doesn't really support the extension either. Use WMPotify NowPlaying instead.
-
-## Switching Between Custom and Native Title Bar
-* This only applies to Windows users with the CEF/Spotify Tweaks mod installed.
-* To use the native Windows title bar:
-    * Open the Windhawk UI and go to the details page of the CEF/Spotify Tweaks mod.
-    * Go to the Settings tab and enable the `Enable native frames and title bars on the main window*` option.
-    * Restart Spotify.
-    * In the WMPotify Properties, set the `Title style` to either `Auto` or `Native` and apply the changes.
-* To use the custom title bar (WMP11 XP styled):
-    * Open the Windhawk UI and go to the details page of the CEF/Spotify Tweaks mod.
-    * Go to the Settings tab and disable the `Enable native frames and title bars on the main window*` option.
-    * Restart Spotify.
-    * In the WMPotify Properties, set the `Title style` to `Custom` and apply the changes.
-    * It is also recommended to set the `Style` to either `Auto` or `XP` for the best experience with the custom title bar.
 
 ## Credits
 * [Spicetify](https://spicetify.app/)

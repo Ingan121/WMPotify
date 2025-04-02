@@ -185,6 +185,8 @@
     --wmp11-search-face: #f6f9fc;
     --wmp11-queue-hover: #d7dbe1;
     --wmp11-config-link-color: #abd5fd;
+    --wmp11-header-text: #003399;
+    --wmp11-header-line: #a6b9dd;
 
     --album-shadow-big: 5px 5px 4px -4px rgba(0, 0, 0, 0.75);
     --album-shadow-small: 1px 1px rgba(0, 0, 0, 0.2);
@@ -440,6 +442,7 @@
         --wmp11-search-gradient: linear-gradient(to bottom, #3d3e39, #4c4e4d);
         --wmp11-search-face: #121212;
         --wmp11-queue-hover: #4b4b4b;
+        --wmp11-header-text: #abd5fd;
 
         --item-hover-background: linear-gradient(
             to bottom,
