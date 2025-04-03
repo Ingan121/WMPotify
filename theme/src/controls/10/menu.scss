@@ -216,6 +216,13 @@
             }
           }
 
+          &:last-child .Vz3pFUXmll6fKB5Fc4nd {
+            margin-bottom: 0;
+            &::before {
+              display: none;
+            }
+          }
+
           svg {
             position: absolute;
             left: 4px;

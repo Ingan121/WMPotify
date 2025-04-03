@@ -251,6 +251,7 @@ export function updateVisConfig() {
         ButterchurnAdaptor.setPaused(false);
     } else {
         ButterchurnAdaptor.setPaused(true);
+        loadAlbumArt();
         if (visConfig.followAlbumArt) {
             updateAlbumArtColor();
         }
@@ -262,6 +263,21 @@ function updateSchemeColor() {
     schemeBarColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-accent') || '#1ed760';
     schemeTopColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-text');
     App.setState({ schemeTopColor });
+}
+
+function loadAlbumArt() {
+    const images = Spicetify.Player.data?.item?.album?.images;
+    if (images) {
+        const size = localStorage.wmpotifyVisAlbumArtSrcSize || 'standard';
+        const image = images.find((img) => img.label === size || img.label === 'large' || img.label === 'xlarge');
+        if (image) {
+            albumArt.src = image.url.replace('spotify:image:', 'https://i.scdn.co/image/');
+        } else {
+            albumArt.src = images[0].url.replace('spotify:image:', 'https://i.scdn.co/image/');
+        }
+    } else {
+        albumArt.src = '';
+    }
 }
 
 async function updateAlbumArtColor() {
@@ -288,6 +304,7 @@ function updateAlbumArtSize() {
         return;
     }
 
+    const mode = localStorage.wmpotifyVisAlbumArtSize || 'orig';
     const props = {
         width: "auto",
         height: "auto",
@@ -299,7 +316,7 @@ function updateAlbumArtSize() {
     if (albumArt?.src) {
         const width = albumArt.naturalWidth;
         const height = albumArt.naturalHeight;
-        switch (localStorage.wmpotifyVisAlbumArtSize) {
+        switch (mode) {
             case "auto":
                 props.minHeight = '35%';
                 props.maxWidth = '100%';
@@ -339,7 +356,7 @@ function updateAlbumArtSize() {
                 break;
         }
     }
-    App.setState({ albumArtSizeProps: props });
+    App.setState({ albumArtSizeProps: props, albumArtSize: mode });
 }
 
 async function setupListeners() {
@@ -367,7 +384,10 @@ async function setupListeners() {
         albumArt.src = '';
         updateAlbumArtSize();
     });
-    albumArt.src = document.querySelector('.main-nowPlayingWidget-coverArt .cover-art img')?.src || '';
+    loadAlbumArt();
+    if (!albumArt.src) {
+        albumArt.src = document.querySelector('.main-nowPlayingWidget-coverArt .cover-art img')?.src || '';
+    }
 
     // Observe color scheme changes through WMPotify Color Chooser / Dark Mode
     new MutationObserver(updateSchemeColor).observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
@@ -381,7 +401,7 @@ async function setupListeners() {
             App.setState({ noAudioData: true });
         }
         lastIndex = 0;
-        albumArt.src = Spicetify.Player.data?.item?.album?.images?.[0]?.url?.replace('spotify:image:', 'https://i.scdn.co/image/') || '';
+        loadAlbumArt();
         if (visConfig.followAlbumArt) {
             updateAlbumArtColor();
         }

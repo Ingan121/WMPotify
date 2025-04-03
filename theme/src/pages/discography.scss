@@ -1,4 +1,6 @@
 header:has(div[data-identifier="discography-topbar"]) {
+    display: block !important;
+
     > .contentSpacing {
         padding: 0;
     }
@@ -71,6 +73,7 @@ section[data-test-uri^="spotify:artist:"] {
     }
 
     /* Hide this before relocation with JS */
+    .artist-artistDiscography-topBar,
     div[data-identifier="discography-topbar"] {
         display: none;
     }
@@ -264,7 +267,11 @@ section[data-test-uri^="spotify:artist:"] {
         }
     }
 
-    .artist-artistDiscography-cardGrid,
+    .artist-artistDiscography-cardGrid {
+        margin-top: 0;
+    }
+ 
+    .artist-artistDiscography-cardGrid.main-gridContainer-gridContainer,
     .artist-artistDiscography-cardGrid .main-gridContainer-gridContainer {
         margin-top: 0;
 
@@ -325,6 +332,15 @@ section[data-test-uri^="spotify:artist:"] {
 }
 
 @media (forced-colors: active) {
+    div[data-identifier="discography-topbar"] {
+        button[role="switch"] {
+            &::after {
+                top: 3px !important;
+                left: 4px !important;
+            }
+        }
+    }
+
     section[data-testid="artist-page"],
     section[data-test-uri^="spotify:artist:"] {
         .artist-artistDiscography-firstAlbum {

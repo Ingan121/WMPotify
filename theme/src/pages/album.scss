@@ -179,6 +179,12 @@ section[data-testid="album-page"] {
         .main-entityHeader-container:not(.main-entityHeader-withBackgroundImage) {
             background-color: #222222;
         }
+        .main-entityHeader-backgroundColor {
+            background-color: #222222 !important;
+        }
+        .main-actionBar-ActionBar {
+            background-color: #222222;
+        }
     }
 }
 

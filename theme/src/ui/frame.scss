@@ -215,7 +215,8 @@
         }
     }
 
-    &:fullscreen {
+    &:fullscreen,
+    *:fullscreen {
         #wmpotify-title-bar {
             display: none;
         }

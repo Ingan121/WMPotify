@@ -46,6 +46,7 @@ class App extends React.Component {
         maxHeight: "none",
         objectFit: "contain",
       },
+      albumArtShadow: !localStorage.wmpotifyVisNoAlbumArtShadow,
       bcPreset: localStorage.wmpotifyVisBCPreset || "Random",
       showLyrics: !!localStorage.wmpotifyVisShowLyrics,
       enableSpotifyLyrics: !localStorage.wmpotifyVisLyricsNoSpotify,
@@ -445,7 +446,7 @@ class App extends React.Component {
               maxHeight: this.state.albumArtSizeProps.maxHeight,
               objectFit: this.state.albumArtSizeProps.objectFit,
               opacity: this.state.dimAlbumArt ? 0.5 : 1,
-              boxShadow: "var(--album-shadow-big)",
+              boxShadow: (this.state.albumArtSize.includes("auto") || !this.state.albumArtShadow) ? "none" : "5px 5px 4px -4px rgba(0, 0, 0, 0.75)",
               zIndex: 0
             }}
             ref={this.elemRefs.albumArt}

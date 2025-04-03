@@ -67,6 +67,7 @@ const lang = {
     "VISCONF_ALBUM_ART_TITLE": "Album art",
     "VISCONF_ALBUM_ART_SHOW": "Show album art",
     "VISCONF_ALBUM_ART_DIM": "Dim album art",
+    "VISCONF_ALBUM_ART_SHADOW": "Show shadows under the album art",
 
     "VISCONF_ALBUM_ART_SIZE_TITLE": "Album art size",
     "VISCONF_ALBUM_ART_SIZE_AUTO": "Auto",
@@ -77,6 +78,12 @@ const lang = {
     "VISCONF_ALBUM_ART_SIZE_FIT": "Fit",
     "VISCONF_ALBUM_ART_SIZE_FILL": "Fill",
     "VISCONF_ALBUM_ART_SIZE_STRETCH": "Stretch",
+
+    "VISCONF_ALBUM_ART_SRC_SIZE_TITLE": "Source album art size",
+    "VISCONF_ALBUM_ART_SRC_SIZE_STD": "Standard (usually 300)",
+    "VISCONF_ALBUM_ART_SRC_SIZE_SMALL": "Small (usually 64)",
+    "VISCONF_ALBUM_ART_SRC_SIZE_LARGE": "Large (usually 640)",
+    "VISCONF_ALBUM_ART_SRC_SIZE_XLARGE": "XLarge (usually 640)",
 
     "VISCONF_VIS_TITLE": "Visualization",
     "VISCONF_FPS": "FPS:",

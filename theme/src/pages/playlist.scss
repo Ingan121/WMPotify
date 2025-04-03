@@ -15,6 +15,11 @@ section[data-testid="playlist-page"],
         box-shadow: var(--album-shadow-big);
     }
 
+    /* Choose column button, 1.2.59 */
+    .main-trackList-trackList + button:has(path[d="m14 6-6 6-6-6h12z"]) {
+        display: none;
+    }
+
     .main-trackList-trackListHeader {
         background: none !important;
         border-image: var(--listview-header) 0 0 1 2 fill stretch;
@@ -24,6 +29,7 @@ section[data-testid="playlist-page"],
         top: 29px !important;
         forced-color-adjust: none;
 
+        /* Choose column button, 1.2.57 */
         > div[role="presentation"]:first-child > button {
             display: none;
         }
@@ -55,12 +61,19 @@ section[data-testid="playlist-page"],
                 }
 
                 &.has-button {
+                    > div:empty { /* 1.2.55 */
+                        opacity: 0;
+                    }
+
                     &:hover {
                         border-image-source: url('resources/ui/listview_header_hover.png');
                         [class*=encore-text] {
                             color: black !important;
                         }
                         .Svg-img-icon-small-textBrightAccent {
+                            fill: black !important;
+                        }
+                        svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
                             fill: black !important;
                         }
                     }
@@ -71,6 +84,9 @@ section[data-testid="playlist-page"],
                             color: black !important;
                         }
                         .Svg-img-icon-small-textBrightAccent {
+                            fill: black !important;
+                        }
+                        svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
                             fill: black !important;
                         }
                     }
@@ -229,6 +245,9 @@ section[data-testid="playlist-page"],
                             color: ButtonText !important;
                         }
                         .Svg-img-icon-small-textBrightAccent {
+                            fill: ButtonText !important;
+                        }
+                        svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
                             fill: ButtonText !important;
                         }
                     }

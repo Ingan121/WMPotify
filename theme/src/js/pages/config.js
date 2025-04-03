@@ -148,7 +148,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 (Pre-release 2025-04-02)<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 (Pre-release 2025-04-03)<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -701,7 +701,8 @@ function onHCChange(event) {
             <option value="never">${Strings['CONF_GENERAL_DARK_MODE_NEVER']}</option>
         `;
         elements.darkMode.disabled = false;
-        elements.darkMode.value = localStorage.wmpotifyDarkMode || 'follow_scheme';
+        const defaultDarkMode = WindhawkComm.getModule()?.initialOptions.noforceddarkmode ? 'system' : 'follow_scheme';
+        elements.darkMode.value = localStorage.wmpotifyDarkMode || defaultDarkMode;
         elements.tintPb.disabled = false;
         elements.tintMore.disabled = false;
         if (localStorage.wmpotifyTintColor) {

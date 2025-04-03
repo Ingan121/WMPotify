@@ -177,8 +177,13 @@ button.Button-sc-y0gtbx-0,
 
   button.x-sortBox-sortDropdown,
   button[aria-controls="sort-and-view-picker"] {
+    &::before {
+      margin-left: 5px !important;
+    }
+
     &::after {
       color: CanvasText !important;
+      margin-right: 1px !important;
     }
   }
 }

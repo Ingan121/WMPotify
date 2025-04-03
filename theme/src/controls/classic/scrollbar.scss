@@ -28,8 +28,7 @@ html:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style=
             display: block;
           }
 
-          &:increment,
-          &:decrement {
+          &:increment {
             display: none;
           }
 
@@ -43,7 +42,6 @@ html:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style=
             display: block;
           }
 
-          &:increment,
           &:decrement {
             display: none;
           }

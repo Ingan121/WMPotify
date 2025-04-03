@@ -98,7 +98,8 @@ const ConfigDialog = React.memo(() => {
                     margin-top: 3px;
                 }
 
-                #wmpvis-config #albumArtSizeArea {
+                #wmpvis-config #albumArtSizeArea,
+                #wmpvis-config #albumArtSrcSizeArea {
                     margin-top: 4px;
                 }
 
@@ -207,7 +208,9 @@ const ConfigDialog = React.memo(() => {
                 <input id="albumArtChkBox" class="wmpotify-aero" type="checkbox" name="albumArt" accesskey="h" />
                 <label for="albumArtChkBox">{Strings["VISCONF_ALBUM_ART_SHOW"]}</label><br />
                 <input id="dimAlbumArtChkBox" class="wmpotify-aero" type="checkbox" name="albumArt" disabled accesskey="i" />
-                <label for="dimAlbumArtChkBox">{Strings["VISCONF_ALBUM_ART_DIM"]}</label>
+                <label for="dimAlbumArtChkBox">{Strings["VISCONF_ALBUM_ART_DIM"]}</label><br />
+                <input id="albumArtShadowChkBox" class="wmpotify-aero" type="checkbox" name="albumArtShadow" defaultChecked disabled accesskey="s" />
+                <label for="albumArtShadowChkBox">{Strings["VISCONF_ALBUM_ART_SHADOW"]}</label>
                 <div id="albumArtSizeArea" class="selectorArea disabled">
                     <span id="albumArtSizeLabel" class="selectorLabel">{Strings["VISCONF_ALBUM_ART_SIZE_TITLE"]}:</span>
                     <select id="albumArtSizeSelector" class="wmpotify-aero" disabled>
@@ -219,6 +222,15 @@ const ConfigDialog = React.memo(() => {
                         <option value="horizfit">{Strings["VISCONF_ALBUM_ART_SIZE_FIT"]}</option>
                         <option value="vertfit">{Strings["VISCONF_ALBUM_ART_SIZE_FILL"]}</option>
                         <option value="scale">{Strings["VISCONF_ALBUM_ART_SIZE_STRETCH"]}</option>
+                    </select>
+                </div>
+                <div id="albumArtSrcSizeArea" class="selectorArea disabled">
+                    <span id="albumArtSrcSizeLabel" class="selectorLabel">{Strings["VISCONF_ALBUM_ART_SRC_SIZE_TITLE"]}:</span>
+                    <select id="albumArtSrcSizeSelector" class="wmpotify-aero" disabled>
+                        <option value="standard">{Strings["VISCONF_ALBUM_ART_SRC_SIZE_STD"]}</option>
+                        <option value="small">{Strings["VISCONF_ALBUM_ART_SRC_SIZE_SMALL"]}</option>
+                        <option value="large">{Strings["VISCONF_ALBUM_ART_SRC_SIZE_LARGE"]}</option>
+                        <option value="xlarge">{Strings["VISCONF_ALBUM_ART_SRC_SIZE_XLARGE"]}</option>
                     </select>
                 </div>
             </fieldset><hr />
@@ -287,8 +299,11 @@ function init(root) {
 
     const albumArtChkBox = root.querySelector("#albumArtChkBox");
     const dimAlbumArtChkBox = root.querySelector("#dimAlbumArtChkBox");
+    const albumArtShadowChkBox = root.querySelector("#albumArtShadowChkBox");
     const albumArtSizeArea = root.querySelector("#albumArtSizeArea");
     const albumArtSizeSelector = root.querySelector("#albumArtSizeSelector");
+    const albumArtSrcSizeArea = root.querySelector("#albumArtSrcSizeArea");
+    const albumArtSrcSizeSelector = root.querySelector("#albumArtSrcSizeSelector");
 
     const fixedBarsChkBox = root.querySelector("#fixedBarsChkBox");
     const barWidthInput = root.querySelector("#barWidthInput");
@@ -337,12 +352,18 @@ function init(root) {
     albumArtChkBox.addEventListener("change", () => {
         if (albumArtChkBox.checked) {
             dimAlbumArtChkBox.disabled = false;
+            albumArtShadowChkBox.disabled = false;
             albumArtSizeArea.classList.remove("disabled");
             albumArtSizeSelector.disabled = false;
+            albumArtSrcSizeArea.classList.remove("disabled");
+            albumArtSrcSizeSelector.disabled = false;
         } else {
             dimAlbumArtChkBox.disabled = true;
+            albumArtShadowChkBox.disabled = true;
             albumArtSizeArea.classList.add("disabled");
             albumArtSizeSelector.disabled = true;
+            albumArtSrcSizeArea.classList.add("disabled");
+            albumArtSrcSizeSelector.disabled = true;
         }
     });
 
@@ -398,7 +419,13 @@ function init(root) {
         } else {
             delete localStorage.wmpotifyVisDimAlbumArt;
         }
+        if (albumArtShadowChkBox.checked) {
+            delete localStorage.wmpotifyVisNoAlbumArtShadow;
+        } else {
+            localStorage.wmpotifyVisNoAlbumArtShadow = true;
+        }
         localStorage.wmpotifyVisAlbumArtSize = albumArtSizeSelector.value;
+        localStorage.wmpotifyVisAlbumArtSrcSize = albumArtSrcSizeSelector.value;
 
         if (fixedBarsChkBox.checked) {
             localStorage.wmpotifyVisBarWidth = barWidthInput.value;
@@ -434,6 +461,7 @@ function init(root) {
             showAlbumArt: !!localStorage.wmpotifyVisShowAlbumArt,
             dimAlbumArt: !!localStorage.wmpotifyVisDimAlbumArt,
             albumArtSize: localStorage.wmpotifyVisAlbumArtSize || "orig",
+            albumArtShadow: !localStorage.wmpotifyVisNoAlbumArtShadow,
         });
         updateVisConfig();
     }
@@ -478,14 +506,23 @@ function init(root) {
     if (localStorage.wmpotifyVisShowAlbumArt) {
         albumArtChkBox.checked = true;
         dimAlbumArtChkBox.disabled = false;
+        albumArtShadowChkBox.disabled = false;
         albumArtSizeArea.classList.remove("disabled");
         albumArtSizeSelector.disabled = false;
+        albumArtSrcSizeArea.classList.remove("disabled");
+        albumArtSrcSizeSelector.disabled = false;
     }
     if (localStorage.wmpotifyVisDimAlbumArt) {
         dimAlbumArtChkBox.checked = true;
     }
+    if (localStorage.wmpotifyVisNoAlbumArtShadow) {
+        albumArtShadowChkBox.checked = false;
+    }
     if (localStorage.wmpotifyVisAlbumArtSize) {
         albumArtSizeSelector.value = localStorage.wmpotifyVisAlbumArtSize;
+    }
+    if (localStorage.wmpotifyVisAlbumArtSrcSize) {
+        albumArtSrcSizeSelector.value = localStorage.wmpotifyVisAlbumArtSrcSize;
     }
 
     // Visualizer fieldset

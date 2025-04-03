@@ -14,7 +14,7 @@ export async function initDiscographyPage(wait) {
 
     await waitForFullRender(section);
 
-    let topbar = section.querySelector('section div:has(> .x-sortBox-sortDropdown)');
+    let topbar = section.querySelector('.artist-artistDiscography-topBar') || section.querySelector('section div:has(> .x-sortBox-sortDropdown)');
     if (topbar) {
         topbar.dataset.identifier = 'discography-topbar';
         document.querySelector('.main-topBar-topbarContent').appendChild(topbar);

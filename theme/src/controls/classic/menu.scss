@@ -86,6 +86,10 @@
               svg {
                 fill: var(--hilight-text) !important;
               }
+
+              .TypeElement-type-mesto-textBrightAccent {
+                color: var(--hilight-text) !important;
+              }
             }
 
             span {
@@ -173,6 +177,13 @@
                 pointer-events: none;
               }
               margin-bottom: 9px;
+            }
+          }
+
+          &:last-child .Vz3pFUXmll6fKB5Fc4nd {
+            margin-bottom: 0;
+            &::before {
+              display: none;
             }
           }
 

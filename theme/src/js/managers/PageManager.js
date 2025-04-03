@@ -72,7 +72,7 @@ const PageManager = {
             }
         }
 
-        if (location.pathname.match('/artist/.*/discography/.*')) {
+        if (location.pathname.match('/artist/.*/discography.*')) {
             initDiscographyPage(true);
         } else if (location.pathname.startsWith('/playlist/')) {
             if (!document.querySelector('.playlist-playlist-playlist')) {

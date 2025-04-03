@@ -67,6 +67,7 @@ const lang = {
     "VISCONF_ALBUM_ART_TITLE": "앨범 아트",
     "VISCONF_ALBUM_ART_SHOW": "앨범 아트 표시",
     "VISCONF_ALBUM_ART_DIM": "앨범 아트 어둡게 표시",
+    "VISCONF_ALBUM_ART_SHADOW": "앨범 아트 아래에 그림자 표시",
 
     "VISCONF_ALBUM_ART_SIZE_TITLE": "앨범 아트 크기",
     "VISCONF_ALBUM_ART_SIZE_AUTO": "자동",
@@ -77,6 +78,12 @@ const lang = {
     "VISCONF_ALBUM_ART_SIZE_FIT": "맞춤",
     "VISCONF_ALBUM_ART_SIZE_FILL": "채우기",
     "VISCONF_ALBUM_ART_SIZE_STRETCH": "늘이기",
+
+    "VISCONF_ALBUM_ART_SRC_SIZE_TITLE": "원본 앨범 아트 크기",
+    "VISCONF_ALBUM_ART_SRC_SIZE_STD": "표준 (보통 300)",
+    "VISCONF_ALBUM_ART_SRC_SIZE_SMALL": "작음 (보통 64)",
+    "VISCONF_ALBUM_ART_SRC_SIZE_LARGE": "대형 (보통 640)",
+    "VISCONF_ALBUM_ART_SRC_SIZE_XLARGE": "특대형 (보통 640)",
 
     "VISCONF_VIS_TITLE": "시각화",
     "VISCONF_FPS": "FPS:",
