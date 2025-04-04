@@ -6,7 +6,7 @@ const supportedLanguages = {
     "ko-KR": "한국어"
 };
 
-let lang = navigator.language;
+let lang = 'en'// navigator.language;
 
 if (!(lang in supportedLanguages)) {
     for (const supportedLang in supportedLanguages) {

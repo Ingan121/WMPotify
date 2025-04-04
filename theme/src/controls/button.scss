@@ -5,7 +5,7 @@
 
 .wmpotify-toolbar-button,
 div[data-identifier="discography-topbar"] [role="switch"],
-[role="combobox"],
+button[role="combobox"],
 header nav li,
 [class*="LegacyChipComponent-checkbox-chip-sm-"] {
   appearance: none;
@@ -145,7 +145,7 @@ button.Button-sc-y0gtbx-0,
 @media (forced-colors: active) {
   .wmpotify-toolbar-button,
   div[data-identifier="discography-topbar"] [role="switch"],
-  [role="combobox"],
+  button[role="combobox"],
   header nav li,
   [class*="LegacyChipComponent-checkbox-chip-sm-"] {
     border: none;

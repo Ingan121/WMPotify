@@ -79,7 +79,7 @@ export async function initDiscographyPage(wait) {
     let subtreeNeeded = false;
     let target = section.querySelector('[data-testid="infinite-scroll-list"]');
     if (!target) {
-        target = section.querySelector('section > div[role="presentation"]');
+        target = section.querySelector('section');
         subtreeNeeded = true;
     }
     observer.observe(target, { childList: true, subtree: subtreeNeeded });

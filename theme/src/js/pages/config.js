@@ -148,7 +148,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 (Pre-release 2025-04-03)<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 Release Candidate<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -484,9 +484,9 @@ function open() {
     if (!tabs) {
         return;
     }
-    if (document.body.dataset.wmpotifyLibPageOpen) {
-        // Close standalone LibX and go to home / NowPlaying to show the config panel
-        // As standalone LibX page hides the main area
+    if (document.body.dataset.wmpotifyLibPageOpen || document.querySelector('.QdB2YtfEq0ks5O4QbtwX')) {
+        // Close standalone LibX or improved cinema and go to home / NowPlaying to show the config panel
+        // As standalone LibX page or improved cinema hides the main area
         if (Spicetify.Config.custom_apps.includes('wmpvis')) {
             Spicetify.Platform.History.push({ pathname: '/wmpvis' });
         } else {

@@ -25,7 +25,7 @@
         }
     }
 
-    [role="combobox"] {
+    button[role="combobox"] {
         top: -3px;
         min-height: 0;
         opacity: 1 !important;
@@ -70,7 +70,7 @@
 
     &:has(ul[role="treegrid"]) {
         .main-yourLibraryX-filterArea {
-            [role="combobox"] {
+            button[role="combobox"] {
                 span:nth-child(2) {
                     background-image: url('resources/icon/grid.png');
                 }
