@@ -9,6 +9,7 @@ const lang = {
     'UI_CUSTOM': '사용자 정의',
     'UI_CLICK_HERE': '여기를 클릭',
 
+    'MENU_SHOW_LIST': '목록 보기',
     'MENU_TRACK_INFO': '정보 센터 보기(I): Spotify',
     'MENU_NO_VIS': '시각화 없음',
     'MENU_VIS_ALBUM_ART': '앨범 아트',

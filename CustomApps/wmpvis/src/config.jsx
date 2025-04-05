@@ -341,10 +341,8 @@ function init(root) {
             customColors.classList.add("disabled");
         } else {
             bgColorPicker.disabled = false;
-            if (!["none", "albumArt"].includes(localStorage.wmpotifyVisType)) {
-                barColorPicker.disabled = false;
-                topColorPicker.disabled = false;
-            }
+            barColorPicker.disabled = false;
+            topColorPicker.disabled = false;
             customColors.classList.remove("disabled");
         }
     });
@@ -550,10 +548,6 @@ function init(root) {
     if (["none", "albumArt"].includes(localStorage.wmpotifyVisType)) {
         albumArtChkBox.disabled = true;
         dimAlbumArtChkBox.disabled = true;
-        barColorPicker.disabled = true;
-        topColorPicker.disabled = true;
-        barColorPickerLabel.classList.add("disabled");
-        topColorPickerLabel.classList.add("disabled");
         fixedBarsChkBox.disabled = true;
         barWidthInput.disabled = true;
         decSpeedLabel.classList.add("disabled");

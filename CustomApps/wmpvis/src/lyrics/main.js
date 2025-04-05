@@ -660,7 +660,7 @@ async function loadLyrics(idOrLrc, addOverride) {
         const providerView = document.createElement('p');
         providerView.classList.add('wmpotify-lyrics-provider');
         providerView.textContent = Strings['LRC_PROVIDER_INFO'] + lyrics.provider;
-        providerView.style = 'font-size: 0.875rem; font-weight: 400; color: lightgray; padding: 20px 0;';
+        providerView.style = 'font-size: 0.875rem; font-weight: 400; color: var(--wmpvis-lyrics-inactive); padding: 20px 0;';
         lyricsView.appendChild(providerView);
         const hash = await getSongHash(visStatus.lastMusic?.artist, visStatus.lastMusic?.title, visStatus.lastMusic?.albumTitle);
         if (!hash) {
@@ -738,7 +738,7 @@ function processTimeline(init) {
         for (let i = 0; i < lyricsView.children.length; i++) {
             const lyric = lyricsView.children[i];
             if (i <= nearestIndex) {
-                lyric.style.color = 'white';
+                lyric.style.color = 'var(--wmpvis-lyrics-active)';
 
                 if ((!scrolling || init === true) && i === nearestIndex) {
                     const lyricTop = lyric.offsetTop;
@@ -769,7 +769,7 @@ function processTimeline(init) {
                     }
                 }
             } else {
-                lyric.style.color = 'lightgray';
+                lyric.style.color = 'var(--wmpvis-lyrics-inactive)';
             }
         }
     }

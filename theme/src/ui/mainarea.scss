@@ -256,3 +256,43 @@ body.sidebar-open .Root {
         }
     }
 }
+
+@media (max-width: 358px) {
+    #Desktop_LeftSidebar_Id {
+        display: none;
+    }
+
+    .Root__main-view {
+        margin-left: calc(var(--panel-gap) * -2);
+        width: calc(100% + var(--panel-gap) * 3);
+    }
+
+    body.sidebar-open {
+        .Root__main-view {
+            display: none;
+        }
+
+        .Root__right-sidebar {
+            margin-left: calc(var(--panel-gap) * -3) !important;
+
+            .XOawmCGZcQx4cesyNfVO {
+                width: 358px !important;
+            }
+        }
+    }
+
+    :root[data-wmpotify-style="xp"] {
+        .Root__main-view {
+            margin-left: calc(var(--panel-gap) * -1);
+            width: calc(100% + var(--panel-gap) * 1);
+        }
+
+        body.sidebar-open .Root__right-sidebar {
+            margin-left: calc(var(--panel-gap) * -2) !important;
+
+            .XOawmCGZcQx4cesyNfVO {
+                width: 342px !important;
+            }
+        }
+    }
+}

@@ -21,6 +21,8 @@
         }
 
         .main-yourLibraryX-libraryFilter {
+            background: var(--wmp11-window);
+            z-index: 1;
             grid-gap: 0; /* fix for 1.2.60 */
         }
     }

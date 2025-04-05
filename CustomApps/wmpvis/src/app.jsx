@@ -33,8 +33,10 @@ class App extends React.Component {
           localStorage.wmpotifyVisBgColor || "black",
       bgColorFromAlbumArt: null,
       schemeTopColor: null,
+      schemeBarColor: null,
       followAlbumArt: !!localStorage.wmpotifyVisFollowAlbumArt,
       albumArtTopColor: null,
+      albumArtBarColor: null,
       showAlbumArt: !!localStorage.wmpotifyVisShowAlbumArt,
       dimAlbumArt: !!localStorage.wmpotifyVisDimAlbumArt,
       albumArtSize: localStorage.wmpotifyVisAlbumArtSize || "auto",
@@ -176,6 +178,13 @@ class App extends React.Component {
 
     const MenuWrapper = React.memo(() => {
       return <Spicetify.ReactComponent.Menu>
+        {window.innerWidth < 418 && <Spicetify.ReactComponent.MenuItem
+          label="Show List"
+          onClick={() => document.querySelector('button[data-testid="control-button-queue"]')?.click()}
+          divider="after"
+        >
+          {Strings['MENU_SHOW_LIST']}
+        </Spicetify.ReactComponent.MenuItem>}
         <Spicetify.ReactComponent.MenuItem
           label="Track Info"
           onClick={() => window.open(Spicetify.Player.data?.item?.uri)}
@@ -386,11 +395,37 @@ class App extends React.Component {
     });
 
     return <>
-      <style>
-        {`
+      <style>{`
+        .wmpotify-lyrics-line {` +
+          (this.state.type === "none" ? `
+            --wmpvis-lyrics-active: ${
+              this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
+                this.state.albumArtTopColor :
+                localStorage.wmpotifyVisUseSchemeColors ?
+                  "var(--spice-text)" :
+                    localStorage.wmpotifyVisTopColor || "white"};
+            --wmpvis-lyrics-inactive: ${
+              this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
+                this.state.albumArtBarColor :
+                localStorage.wmpotifyVisUseSchemeColors ?
+                  "var(--text-subdued)" :
+                    localStorage.wmpotifyVisBarColor || "lightgray"};` :
+            `--wmpvis-lyrics-active: white;
+            --wmpvis-lyrics-inactive: lightgray;`
+          ) + `
+        }
+
         .wmpotify-lyrics-line:hover {
           cursor: pointer;
           text-decoration: underline;
+        }
+
+        @media (max-width: 600px) { ${/* Original MADVis Lyrics style */ ''}
+          .wmpvis-lyrics {
+            margin: 16px 16px 0 16px !important;
+            font-size: 11px !important;
+            text-align: center !important;
+          }
         }
 
         @media (min-width: 1280px) {
@@ -407,8 +442,10 @@ class App extends React.Component {
         }
 
         @media (forced-colors: active) {
-          .wmpotify-lyrics-line[style*=lightgray] {
-            color: GrayText !important;
+          .wmpotify-lyrics-line {
+            --wmpvis-lyrics-active: CanvasText;
+            --wmpvis-lyrics-inactive: GrayText;
+            forced-color-adjust: auto;
           }
         }
         `}
@@ -429,6 +466,7 @@ class App extends React.Component {
               this.state.bgColor,
             overflow: "hidden",
             maxWidth: "none",
+            forcedColorAdjust: "none",
           }}
           ref={this.elemRefs.root}
         >
@@ -542,7 +580,7 @@ class App extends React.Component {
               zIndex: 4,
               width: "100%",
               height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              backgroundColor: this.state.type === "none" ? "transparent" : "rgba(0, 0, 0, 0.5)",
               overflow: "auto",
             }}
           >

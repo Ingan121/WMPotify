@@ -467,6 +467,12 @@ body[data-hide-libx] {
     }
 }
 
+@media (max-width: 418px) {
+    .main-topBar-topbarContentRight > button:last-child {
+        display: none !important;
+    }
+}
+
 @media (forced-colors: active) {
     .wmpotify-user-label {
         background: var(--window);

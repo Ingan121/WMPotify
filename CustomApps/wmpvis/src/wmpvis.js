@@ -262,7 +262,7 @@ export function updateVisConfig() {
 function updateSchemeColor() {
     schemeBarColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-accent') || '#1ed760';
     schemeTopColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-text');
-    App.setState({ schemeTopColor });
+    App.setState({ schemeTopColor, schemeBarColor });
 }
 
 function loadAlbumArt() {
@@ -296,7 +296,7 @@ async function updateAlbumArtColor() {
     albumArtBarColor = `rgb(${colors.text >> 16 & 0xFF}, ${colors.text >> 8 & 0xFF}, ${colors.text & 0xFF})`;
     albumArtTopColor = `rgb(${colors.highlightText >> 16 & 0xFF}, ${colors.highlightText >> 8 & 0xFF}, ${colors.highlightText & 0xFF})`;
     const bgColor = `rgb(${colors.background >> 16 & 0xFF}, ${colors.background >> 8 & 0xFF}, ${colors.background & 0xFF})`;
-    App.setState({ bgColorFromAlbumArt: bgColor, albumArtTopColor });
+    App.setState({ bgColorFromAlbumArt: bgColor, albumArtTopColor, albumArtBarColor });
 }
 
 function updateAlbumArtSize() {

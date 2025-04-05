@@ -9,6 +9,7 @@ const lang = {
     'UI_CUSTOM': 'Custom',
     'UI_CLICK_HERE': 'click here',
 
+    'MENU_SHOW_LIST': 'Show List',
     'MENU_TRACK_INFO': 'Info Center View: Spotify',
     'MENU_NO_VIS': 'No Visualization',
     'MENU_VIS_ALBUM_ART': 'Album Art',
