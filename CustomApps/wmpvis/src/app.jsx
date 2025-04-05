@@ -396,7 +396,7 @@ class App extends React.Component {
 
     return <>
       <style>{`
-        .wmpotify-lyrics-line {` +
+        .wmpvis-lyrics {` +
           (this.state.type === "none" ? `
             --wmpvis-lyrics-active: ${
               this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
@@ -428,7 +428,7 @@ class App extends React.Component {
           }
         }
 
-        @media (min-width: 1280px) {
+        @media (min-width: 1280px) { ${/* Stock Spotify Lyrics styles */ ''}
           .wmpvis-lyrics {
             font-size: 2rem !important;
           }
@@ -442,9 +442,12 @@ class App extends React.Component {
         }
 
         @media (forced-colors: active) {
-          .wmpotify-lyrics-line {
+          .wmpvis-lyrics {
             --wmpvis-lyrics-active: CanvasText;
             --wmpvis-lyrics-inactive: GrayText;
+          }
+
+          .wmpotify-lyrics-line {
             forced-color-adjust: auto;
           }
         }

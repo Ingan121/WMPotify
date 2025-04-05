@@ -393,11 +393,14 @@ function init(root) {
             delete localStorage.wmpotifyVisTopColor;
             delete localStorage.wmpotifyVisUseSchemeColors;
         } else if (colorSelector.value === "scheme") {
+            delete localStorage.wmpotifyVisBgColor;
+            delete localStorage.wmpotifyVisBarColor;
+            delete localStorage.wmpotifyVisTopColor;
             localStorage.wmpotifyVisUseSchemeColors = true;
         } else {
-            localStorage.wmpotifyVisBgColor = bgColorPickerColor.style.backgroundColor;
-            localStorage.wmpotifyVisBarColor = barColorPickerColor.style.backgroundColor;
-            localStorage.wmpotifyVisTopColor = topColorPickerColor.style.backgroundColor;
+            localStorage.wmpotifyVisBgColor = bgColorPickerColor.style.backgroundColor || "#000000";
+            localStorage.wmpotifyVisBarColor = barColorPickerColor.style.backgroundColor || "#a4eb0c";
+            localStorage.wmpotifyVisTopColor = topColorPickerColor.style.backgroundColor || "#dfeaf7";
             delete localStorage.wmpotifyVisUseSchemeColors;
         }
 
