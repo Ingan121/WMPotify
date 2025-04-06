@@ -124,8 +124,7 @@ body[data-hide-libx].sidebar-open,
     /* For Peek NPV */
     > div:first-child,
     > div:first-child > div:first-child,
-    > div:first-child > div:first-child > div:first-child,
-    > div:first-child > div:first-child > div:first-child > div:first-child {
+    > div:first-child > div:first-child > div {
         border-radius: 0 !important;
     }
 
