@@ -117,6 +117,7 @@
     margin: calc(var(--panel-gap) * -1);
     width: calc(100% + var(--panel-gap) * 2);
     padding-right: calc(var(--panel-gap) * 2);
+    z-index: 10;
 }
 
 .main-nowPlayingBar-nowPlayingBar {

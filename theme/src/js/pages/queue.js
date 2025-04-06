@@ -32,7 +32,7 @@ export function initQueuePanel() {
     if (panel && previousPanel) {
         previousPanel.style.display = 'none';
     }
-    panel.classList.add('spotify-queue-panel');
+    panel.dataset.identifier = 'spotify-queue-panel';
     const top = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel) > div > div:first-child > div:first-child');
     const belowSeparator = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel) > div > div:nth-child(2)');
     belowSeparator.id = 'spotify-queue-panel-content';
