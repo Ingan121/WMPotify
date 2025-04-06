@@ -116,6 +116,7 @@ button[aria-controls="sort-and-view-picker"] {
 
 button.wmpotify-aero,
 button.Button-sc-y0gtbx-0,
+button[class*="0-button-primary"][type="submit"],
 .ReactModalPortal button.Button-sc-qlcn5g-0,
 .ReactModalPortal button.Button-sc-1dqy6lx-0,
 #context-menu button.Button-sc-1dqy6lx-0,
@@ -131,7 +132,9 @@ button.Button-sc-y0gtbx-0,
   }
 
   .ButtonInner-small,
-  .ButtonInner-medium {
+  .ButtonInner-medium,
+  [class*="0-button--small"],
+  [class*="0-button--medium"] {
     display: block;
     background: none !important;
     color: var(--spice-text);

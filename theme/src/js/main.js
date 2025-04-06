@@ -223,7 +223,7 @@ async function init() {
     initQueuePanel();
     new MutationObserver(initQueuePanel).observe(
         // Right panel has varying structure in different versions
-        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // Seems same on .45-.60 but may change in future
+        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // Seems same on .45-.61 but may change in future
         document.querySelector('.Root__right-sidebar > div > div[class]:first-child') ||
         document.querySelector('.Root__right-sidebar div[class]') // Works on .45-.52
     , { childList: true });

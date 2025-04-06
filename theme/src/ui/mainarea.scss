@@ -121,6 +121,14 @@ body[data-hide-libx].sidebar-open,
 .Root__right-sidebar {
     margin-right: calc(var(--panel-gap) * -1);
 
+    /* For Peek NPV */
+    > div:first-child,
+    > div:first-child > div:first-child,
+    > div:first-child > div:first-child > div:first-child,
+    > div:first-child > div:first-child > div:first-child > div:first-child {
+        border-radius: 0 !important;
+    }
+
     aside {
         animation: appear 8s !important;
         background: transparent !important;

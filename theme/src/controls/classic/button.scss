@@ -1,6 +1,7 @@
 :root:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style="xp"]):not([data-wmpotify-control-style="10"]) {
   button.wmpotify-aero,
   button.Button-sc-y0gtbx-0,
+  button[class*="0-button-primary"][type="submit"],
   .ReactModalPortal button.Button-sc-qlcn5g-0,
   .ReactModalPortal button.Button-sc-1dqy6lx-0,
   #context-menu button.Button-sc-1dqy6lx-0,
