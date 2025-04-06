@@ -230,6 +230,24 @@
           }
         }
 
+        /* 1.2.61 LibX view chooser */
+        > div[style*="view-menu-selected-offset"] {
+          background: var(--menu-background-color);
+          padding: 0;
+
+          span {
+            display: flex;
+            justify-content: center;
+
+            svg {
+              position: relative;
+              top: 0;
+              left: 0;
+              transform: scale(0.8);
+            }
+          }
+        }
+
         /* Hide the bottom separator if there is no menu below */
         &:not(:has(+ [role="menu"])) {
           .main-contextMenu-menuItem:not(:has(+ .main-contextMenu-menuItem)) {
