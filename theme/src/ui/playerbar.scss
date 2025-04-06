@@ -166,6 +166,14 @@ button[data-testid="cover-art-button"] {
 
 div[data-testid='now-playing-widget'] {
     max-width: calc((100vw - 438px) / 2 - 60px);
+
+    .likeControl-wrapper {
+        margin-top: 0;
+
+        span {
+            height: 16px;
+        }
+    }
 }
 
 .main-nowPlayingBar-nowPlayingBar:has(.wmpotify-time-text[data-mode='2']) div[data-testid='now-playing-widget'] {
