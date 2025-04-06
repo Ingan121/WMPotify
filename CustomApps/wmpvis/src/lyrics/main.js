@@ -12,6 +12,7 @@ import lrcCache from "./caching";
 import { getSpotifyNowPlaying } from "./spotify";
 import { openSearchDialog } from "./search";
 import { ver } from "../UpdateCheck";
+import { appInstance as App } from "../app";
 
 let lyricsView = null;
 
@@ -778,6 +779,7 @@ function processTimeline(init) {
 // #region Utils
 function getNearestLyricIndex(time) {
     if (lastSyncedLyricsParsed) {
+        time += App.state.syncDelay;
         if (time < lastSyncedLyricsParsed[0].time) {
             return 0;
         }

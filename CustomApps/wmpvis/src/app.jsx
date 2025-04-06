@@ -8,6 +8,7 @@ import MadVisLyrics from './lyrics/main';
 import lrcCache from './lyrics/caching';
 import { checkUpdates } from './UpdateCheck';
 import { openConfigDialog } from './config';
+import { promptModal } from './dialogs';
 
 let appInstance = null;
 
@@ -52,6 +53,7 @@ class App extends React.Component {
       bcPreset: localStorage.wmpotifyVisBCPreset || "Random",
       showLyrics: !!localStorage.wmpotifyVisShowLyrics,
       enableSpotifyLyrics: !localStorage.wmpotifyVisLyricsNoSpotify,
+      syncDelay: parseFloat(localStorage.wmpotifyVisLyricsSyncDelay) || 0,
       enableLyricsCache: !localStorage.wmpotifyVisLyricsNoCache,
       isFullscreen: !!document.fullscreenElement,
       noAudioData: false,
@@ -340,6 +342,22 @@ class App extends React.Component {
             {Strings['MENU_LRC_OPENFILE']}
           </Spicetify.ReactComponent.MenuItem>
           <Spicetify.ReactComponent.MenuItem
+            label="Adjust Sync"
+            onClick={async () => {
+              const syncDelay = await promptModal(Strings["MENU_LRC_ADJUST_SYNC"], Strings["UI_PROMPT_ENTER_VALUE"], "", this.state.syncDelay);
+              if (syncDelay) {
+                localStorage.wmpotifyVisLyricsSyncDelay = syncDelay;
+              } else {
+                delete localStorage.wmpotifyVisLyricsSyncDelay;
+              }
+              this.setState({ syncDelay: parseFloat(syncDelay) || 0 });
+              MadVisLyrics.processTimeline();
+            }}
+            divider="after"
+          >
+            {Strings['MENU_LRC_ADJUST_SYNC'] + ` (${this.state.syncDelay}s)`}
+          </Spicetify.ReactComponent.MenuItem>
+          <Spicetify.ReactComponent.MenuItem
             label="Cache Lyrics"
             onClick={() => {
               if (this.state.enableLyricsCache) {
@@ -409,8 +427,8 @@ class App extends React.Component {
                 this.state.albumArtBarColor :
                 localStorage.wmpotifyVisUseSchemeColors ?
                   "var(--text-subdued)" :
-                    localStorage.wmpotifyVisBarColor || "lightgray"};` :
-            `--wmpvis-lyrics-active: white;
+                    localStorage.wmpotifyVisBarColor || "lightgray"};` : `
+            --wmpvis-lyrics-active: white;
             --wmpvis-lyrics-inactive: lightgray;`
           ) + `
         }
@@ -420,11 +438,12 @@ class App extends React.Component {
           text-decoration: underline;
         }
 
-        @media (max-width: 600px) { ${/* Original MADVis Lyrics style */ ''}
+        @media (max-width: 640px) { ${/* Original MADVis Lyrics style */ ''}
           .wmpvis-lyrics {
             margin: 16px 16px 0 16px !important;
             font-size: 11px !important;
             text-align: center !important;
+            font-weight: normal !important;
           }
         }
 

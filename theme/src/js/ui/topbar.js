@@ -31,7 +31,7 @@ export function setupTopbar() {
             }
         });
         if (localStorage.wmpotifyNoWmpvis && !Spicetify.Config.custom_apps.includes('wmpvis')) {
-            nowPlayingButton.dataset.hidden = true;
+            nowPlayingButton.dataset.extraHidden = true;
         }
     }
     nowPlayingButton.setAttribute('aria-label', Strings['TAB_NOW_PLAYING']);

@@ -358,6 +358,7 @@ div[data-testid='now-playing-widget'] {
         background: var(--shuffle) no-repeat;
         transform: none !important;
         margin-right: -2px;
+        will-change: unset; /* 1.2.61, prevent image going below ::after */
 
         &.Button-buttonTertiary-textBrightAccent-small-small-iconOnly-useBrowserDefaultFocusStyle {
             background-image: var(--shuffle-active);
@@ -381,6 +382,7 @@ div[data-testid='now-playing-widget'] {
         background: var(--repeat) no-repeat;
         transform: none !important;
         margin-right: 12px;
+        will-change: unset; /* 1.2.61, prevent image going below ::after */
 
         &::before {
             display: none;

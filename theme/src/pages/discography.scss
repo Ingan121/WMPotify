@@ -209,6 +209,11 @@ section[data-test-uri^="spotify:artist:"] {
             margin-top: 46px;
             margin-bottom: 44px;
 
+            /* Choose column button, 1.2.59-1.2.61 */
+            .main-trackList-trackList + button:has(path[d="m14 6-6 6-6-6h12z"]) {
+                display: none;
+            }
+
             .main-trackList-trackListHeader {
                 display: block;
                 background: none !important;
@@ -224,6 +229,7 @@ section[data-test-uri^="spotify:artist:"] {
                 margin-bottom: 30px;
                 opacity: 1 !important;
 
+                /* Choose column button, 1.2.57 */
                 > div[role="presentation"]:first-child > button {
                     display: none;
                 }

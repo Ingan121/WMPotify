@@ -205,7 +205,8 @@
         margin-inline-start: 0;
         forced-color-adjust: none;
 
-        &[data-hidden] {
+        &[data-hidden],
+        &[data-extra-hidden] {
             display: none !important;
         }
 

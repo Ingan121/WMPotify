@@ -13,6 +13,11 @@ section[data-testid="album-page"] {
         box-shadow: var(--album-shadow-big);
     }
 
+    /* Choose column button, 1.2.59-1.2.61 */
+    .main-trackList-trackList + button:has(path[d="m14 6-6 6-6-6h12z"]) {
+        display: none;
+    }
+
     .main-trackList-trackListHeader {
         background: none !important;
         border-image: var(--listview-header) 0 0 1 2 fill stretch;
@@ -22,6 +27,7 @@ section[data-testid="album-page"] {
         top: 29px !important;
         forced-color-adjust: none;
 
+        /* Choose column button, 1.2.57 */
         > div[role="presentation"]:first-child > button {
             display: none;
         }

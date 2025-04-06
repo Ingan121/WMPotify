@@ -71,7 +71,7 @@ export function promptModal(title = "WMPotify", message, text, hint) {
         buttonContainer.classList.add('wmpotify-modal-bottom-buttons');
         const okButton = document.createElement('button');
         okButton.classList.add('wmpotify-aero');
-        okButton.textContent = 'OK';
+        okButton.textContent = Strings['UI_OK'];
         okButton.addEventListener('click', (event) => {
             observer.disconnect();
             Spicetify.PopupModal.hide();
@@ -82,7 +82,7 @@ export function promptModal(title = "WMPotify", message, text, hint) {
         buttonContainer.appendChild(okButton);
         const cancelButton = document.createElement('button');
         cancelButton.classList.add('wmpotify-aero');
-        cancelButton.textContent = 'Cancel';
+        cancelButton.textContent = Strings['UI_CANCEL'];
         cancelButton.addEventListener('click', (event) => {
             observer.disconnect();
             Spicetify.PopupModal.hide();

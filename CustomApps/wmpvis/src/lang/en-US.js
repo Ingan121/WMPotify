@@ -8,6 +8,7 @@ const lang = {
     'UI_AUTO': 'Auto',
     'UI_CUSTOM': 'Custom',
     'UI_CLICK_HERE': 'click here',
+    "UI_PROMPT_ENTER_VALUE": "Enter value",
 
     'MENU_SHOW_LIST': 'Show List',
     'MENU_TRACK_INFO': 'Info Center View: Spotify',
@@ -22,6 +23,7 @@ const lang = {
     'MENU_LRC_LOAD': 'Load Lyrics',
     'MENU_LRC_SEARCH': 'Search Lyrics',
     'MENU_LRC_OPENFILE': 'Open Lyrics File',
+    'MENU_LRC_ADJUST_SYNC': 'Adjust Sync',
     'MENU_LRC_CACHE': 'Cache Lyrics',
     'MENU_LRC_COPY_DBG_INFO': 'Copy Debug Info',
     'MENU_FULLSCREEN': 'Full Screen',

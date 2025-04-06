@@ -100,7 +100,7 @@
         }
 
         /* <div class="" data-overlayscrollbars-viewport="scrollbarHidden overflowXScroll overflowYScroll" tabindex="-1" style="margin-right: 0px; margin-bottom: 0px; margin-left: 0px; top: 0px; right: auto; left: 0px; width: calc(100% + 0px); padding: 0px;"> */
-        > div:nth-child(3) {
+        > div[data-overlayscrollbars-viewport] {
             overflow-x: hidden !important;
 
             > div {

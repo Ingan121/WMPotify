@@ -8,6 +8,7 @@ const lang = {
     'UI_AUTO': '자동',
     'UI_CUSTOM': '사용자 정의',
     'UI_CLICK_HERE': '여기를 클릭',
+    "UI_PROMPT_ENTER_VALUE": "값 입력",
 
     'MENU_SHOW_LIST': '목록 보기',
     'MENU_TRACK_INFO': '정보 센터 보기(I): Spotify',
@@ -22,6 +23,7 @@ const lang = {
     'MENU_LRC_LOAD': '가사 불러오기',
     'MENU_LRC_SEARCH': '가사 검색',
     'MENU_LRC_OPENFILE': '가사 파일 열기',
+    'MENU_LRC_ADJUST_SYNC': '가사 싱크 조정',
     'MENU_LRC_CACHE': '가사 캐시 사용',
     'MENU_LRC_COPY_DBG_INFO': '디버그 정보 복사',
     'MENU_FULLSCREEN': '전체 화면',

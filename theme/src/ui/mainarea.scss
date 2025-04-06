@@ -78,6 +78,10 @@ body[data-hide-libx].sidebar-open,
         outline: solid 1px var(--wmp11-separator-light);
         overflow: hidden;
 
+        &:has(.Dropdown-menu) {
+            overflow: visible;
+        }
+
         &:has(.main-topBar-topbarContentWrapper:empty) {
             display: none;
         }
