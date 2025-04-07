@@ -65,7 +65,7 @@
                 }
             }
 
-            .main-nowPlayingView-contextItemInfo button svg:not(.Svg-img-icon-small-textBrightAccent) {
+            .main-nowPlayingView-contextItemInfo button svg:not(.Svg-img-icon-small-textBrightAccent):not([style*="--encore-icon-fill"]) {
                 fill: white !important;
             }
 

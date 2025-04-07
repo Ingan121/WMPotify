@@ -42,8 +42,14 @@ function updateSidebarWidth(force) {
     }
     if (rightSidebar.querySelector('aside')) {
         document.body.classList.add('sidebar-open');
+        if (document.querySelector('.QdB2YtfEq0ks5O4QbtwX') && !rightSidebar.querySelector('aside.NowPlayingView')) {
+            document.body.classList.add('sidebar-open-in-cinema');
+        } else {
+            document.body.classList.remove('sidebar-open-in-cinema');
+        }
     } else {
         document.body.classList.remove('sidebar-open');
+        document.body.classList.remove('sidebar-open-in-cinema');
     }
     widthObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
 }

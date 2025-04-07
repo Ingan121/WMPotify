@@ -46,3 +46,9 @@ body:fullscreen {
         }
     }
 }
+
+body.sidebar-open-in-cinema {
+    .QdB2YtfEq0ks5O4QbtwX:not(#Prio1):not(#Prio2) {
+        margin-right: calc(var(--panel-gap) * -1 + 3px) !important;
+    }
+}

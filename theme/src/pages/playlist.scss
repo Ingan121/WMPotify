@@ -59,7 +59,11 @@ section[data-testid="playlist-page"],
                     [class*=encore-text] {
                         color: black !important;
                     }
-                    .Svg-img-icon-small-textBrightAccent {
+                    svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                    svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                        fill: black !important;
+                    }
+                    svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
                         fill: black !important;
                     }
                 }
@@ -74,7 +78,8 @@ section[data-testid="playlist-page"],
                         [class*=encore-text] {
                             color: black !important;
                         }
-                        .Svg-img-icon-small-textBrightAccent {
+                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
                             fill: black !important;
                         }
                         svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
@@ -87,7 +92,8 @@ section[data-testid="playlist-page"],
                         [class*=encore-text] {
                             color: black !important;
                         }
-                        .Svg-img-icon-small-textBrightAccent {
+                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
                             fill: black !important;
                         }
                         svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
@@ -103,7 +109,8 @@ section[data-testid="playlist-page"],
                         width: 100%;
                         justify-content: flex-start;
 
-                        .Svg-img-icon-small-textBrightAccent {
+                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
                             fill: var(--window-text) !important;
                             order: 1;
                             width: 11px;
@@ -248,7 +255,8 @@ section[data-testid="playlist-page"],
                         [class*=encore-text], button {
                             color: ButtonText !important;
                         }
-                        .Svg-img-icon-small-textBrightAccent {
+                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
                             fill: ButtonText !important;
                         }
                         svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {

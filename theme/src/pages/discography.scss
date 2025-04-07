@@ -366,7 +366,8 @@ section[data-test-uri^="spotify:artist:"] {
                                 [class*=encore-text], button {
                                     color: ButtonText !important;
                                 }
-                                .Svg-img-icon-small-textBrightAccent {
+                                svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                                svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
                                     fill: ButtonText !important;
                                 }
                             }

@@ -369,7 +369,7 @@ div[data-testid='now-playing-widget'] {
         margin-right: -2px;
         will-change: unset; /* 1.2.61, prevent image going below ::after */
 
-        &.Button-buttonTertiary-textBrightAccent-small-small-iconOnly-useBrowserDefaultFocusStyle {
+        &[class*="-textBrightAccent-"] {
             background-image: var(--shuffle-active);
         }
 
