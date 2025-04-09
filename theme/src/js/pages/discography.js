@@ -21,6 +21,9 @@ export async function initDiscographyPage(wait) {
     } else {
         topbar = document.querySelector('[data-identifier="discography-topbar"]');
     }
+    if (!topbar) {
+        return;
+    }
 
     if (section.querySelector('.artist-artistDiscography-cardGrid')) {
         await waitForFullRender(section, true);
