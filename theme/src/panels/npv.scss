@@ -30,6 +30,10 @@
 
     .main-nowPlayingView-section {
         background: transparent;
+
+        .search-searchCategory-carouselButton {
+            top: 50%;
+        }
     }
 
     .main-trackInfo-artists a {
@@ -37,9 +41,18 @@
     }
 
     aside.NowPlayingView {
-        &:has(.canvasVideoContainerNPV) {
-            .main-trackInfo-contentWrapper h1 {
-                color: white !important;
+        &:has(.canvasVideoContainerNPV) { /* Canvas is enabled */
+            > div:first-child > div:first-child:not([class*=" "]), /* Newer versions that uses spice-main for the top bar when scrolled (puts multiple classes) */
+            &[style*="--background-base"] > div:first-child > div:first-child { /* Older versions that uses colors from album art for the top bar when scrolled */
+                h1 {
+                    color: white !important;
+                }
+
+                svg:has(path[d="M3 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm6.5 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM16 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"]),
+                svg:has(path[d="M15 16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14Zm-8.5-1.5v-13h8v13h-8Zm-1.5 0H1.5v-13H5v13Z"]),
+                svg:has(path[d="M6.53 9.47a.75.75 0 0 1 0 1.06l-2.72 2.72h1.018a.75.75 0 0 1 0 1.5H1.25v-3.579a.75.75 0 0 1 1.5 0v1.018l2.72-2.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l2.72-2.72h-1.018a.75.75 0 1 1 0-1.5h3.578v3.579a.75.75 0 0 1-1.5 0V3.81l-2.72 2.72a.75.75 0 0 1-1.06 0z"]) {
+                    fill: white !important;
+                }
             }
 
             .main-nowPlayingView-trackInfo {
@@ -52,13 +65,17 @@
                 }
             }
 
-            .main-nowPlayingView-contextItemInfo button svg:not(.Svg-img-icon-small-textBrightAccent) {
+            .main-nowPlayingView-contextItemInfo button svg:not(.Svg-img-icon-small-textBrightAccent):not([style*="--encore-icon-fill"]) {
                 fill: white !important;
+            }
+
+            video {
+                border-radius: 0;
             }
         }
     }
 
-    .main-nowPlayingView-aboutArtistV2ImageContainer[style*="i.scdn.co"] .main-nowPlayingView-sectionHeaderText {
+    div[style*="i.scdn.co"] .main-nowPlayingView-sectionHeaderText {
         color: white !important;
     }
 }

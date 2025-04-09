@@ -4,8 +4,8 @@
 @import "10/button.scss";
 
 .wmpotify-toolbar-button,
-.artist-artistDiscography-button,
-[role="combobox"],
+div[data-identifier="discography-topbar"] [role="switch"],
+button[role="combobox"],
 header nav li,
 [class*="LegacyChipComponent-checkbox-chip-sm-"] {
   appearance: none;
@@ -43,7 +43,7 @@ header nav li,
     }
   }
 
-  a, > span {
+  a, > span, .Dropdown-control {
     background-color: transparent !important;
     margin: 0 !important;
     padding: 0 5px !important;
@@ -58,41 +58,55 @@ header nav li,
   padding: 0;
 }
 
-button.x-sortBox-sortDropdown {
+button.x-sortBox-sortDropdown,
+button[aria-controls="sort-and-view-picker"] {
   color: var(--spice-text);
   padding: 0;
   gap: 0;
   order: -1;
 
   [class*=encore-text] {
-      order: 1;
-      font-size: 12px;
+    order: 1;
+    font-size: 12px;
+    height: unset;
   }
 
   &::before {
-      content: '';
-      display: block;
-      width: 16px;
-      height: 16px;
-      margin-top: 1px;
-      margin-left: 2px;
-      margin-right: 3px;
-      background: url('resources/icon/list.png') no-repeat;
+    content: '';
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    margin-left: 2px;
+    margin-right: 3px;
+    background: url('resources/icon/list.png') no-repeat;
+  }
+
+  &:has(path[d="M15.5 13.5H.5V12h15v1.5zm0-4.75H.5v-1.5h15v1.5zm0-4.75H.5V2.5h15V4z"]) {
+    &::before {
+      background-image: url('resources/icon/compact.png');
+    }
+  }
+
+  &:has(path[d="M1 1h6v6H1V1zm1.5 1.5v3h3v-3h-3zM1 9h6v6H1V9zm1.5 1.5v3h3v-3h-3zM9 1h6v6H9V1zm1.5 1.5v3h3v-3h-3zM9 9h6v6H9V9zm1.5 1.5v3h3v-3h-3z"]) {
+    &::before {
+      background-image: url('resources/icon/grid.png');
+    }
   }
 
   svg {
-      display: none;
+    display: none;
   }
 
   &::after {
-      content: '⏷';
-      font-size: 12px;
-      color: var(--spice-text);
-      margin-top: -2px;
-      margin-left: 4px;
-      margin-right: -2px;
-      order: 2;
-      inline-size: unset;
+    content: '⏷';
+    font-size: 12px;
+    color: var(--spice-text);
+    margin-top: -2px;
+    margin-left: 4px;
+    margin-right: -2px;
+    order: 2;
+    inline-size: unset;
   }
 
   &:hover::after {
@@ -102,8 +116,12 @@ button.x-sortBox-sortDropdown {
 
 button.wmpotify-aero,
 button.Button-sc-y0gtbx-0,
+button[class*="0-button-primary"][type="submit"],
 .ReactModalPortal button.Button-sc-qlcn5g-0,
 .ReactModalPortal button.Button-sc-1dqy6lx-0,
+dialog button.Button-sc-qlcn5g-0,
+dialog button.Button-sc-1dqy6lx-0,
+dialog button[class*="0-button-primary"],
 #context-menu button.Button-sc-1dqy6lx-0,
 #context-menu button.Button-sc-qlcn5g-0,
 .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2) {
@@ -117,7 +135,9 @@ button.Button-sc-y0gtbx-0,
   }
 
   .ButtonInner-small,
-  .ButtonInner-medium {
+  .ButtonInner-medium,
+  [class*="0-button--small"],
+  [class*="0-button--medium"] {
     display: block;
     background: none !important;
     color: var(--spice-text);
@@ -125,5 +145,51 @@ button.Button-sc-y0gtbx-0,
     padding-inline: 0;
     min-block-size: 0;
     transform: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .wmpotify-toolbar-button,
+  div[data-identifier="discography-topbar"] [role="switch"],
+  button[role="combobox"],
+  header nav li,
+  [class*="LegacyChipComponent-checkbox-chip-sm-"] {
+    border: none;
+    padding: 3px;
+    border-image: none !important;
+    border-radius: 0;
+    forced-color-adjust: none;
+
+    &:hover {
+      box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+      color: CanvasText !important;
+
+      a, > span {
+        color: CanvasText !important;
+      }
+    }
+
+    &:active,
+    &:has([class*="ctive"]),
+    &[class*="-selected-"] {
+      box-shadow: var(--border-sunken-outer), var(--border-sunken-inner);
+      color: CanvasText !important;
+
+      a, > span {
+        color: CanvasText !important;
+      }
+    }
+  }
+
+  button.x-sortBox-sortDropdown,
+  button[aria-controls="sort-and-view-picker"] {
+    &::before {
+      margin-left: 5px !important;
+    }
+
+    &::after {
+      color: CanvasText !important;
+      margin-right: 1px !important;
+    }
   }
 }

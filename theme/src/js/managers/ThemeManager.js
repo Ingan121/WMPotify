@@ -1,5 +1,7 @@
 'use strict';
 
+import { setTintColor } from '../ui/tinting';
+
 const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
 const mpSchemeUpdateObserver = new MutationObserver((mutationsList) => {
@@ -18,6 +20,10 @@ const mpSchemeUpdateObserver = new MutationObserver((mutationsList) => {
                 } else {
                     delete document.documentElement.dataset.wmpotifyDarkMode;
                 }
+                if (localStorage.wmpotifyTintColor) {
+                    const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+                    setTintColor(hue, sat, tintPb, tintMore);
+                }
             }
         }
     }
@@ -28,6 +34,10 @@ function updateSystemDarkMode(event) {
         document.documentElement.dataset.wmpotifyDarkMode = true;
     } else {
         delete document.documentElement.dataset.wmpotifyDarkMode;
+    }
+    if (localStorage.wmpotifyTintColor) {
+        const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+        setTintColor(hue, sat, tintPb, tintMore);
     }
 }
 

@@ -5,16 +5,12 @@ import { formatTime } from '../utils/functions';
 import WindhawkComm from '../WindhawkComm';
 import WindowManager from '../managers/WindowManager';
 
-let playPauseButton, volumeButton, volumeBarProgress, timeTexts, timeTextMode, timeText;
+let volumeButton, volumeBarProgress, timeTexts, timeTextMode, timeText;
 let longPressTimer = null;
 let titleSet = false;
 
 export function setupPlayerbar() {
     const playerBar = document.querySelector('.main-nowPlayingBar-nowPlayingBar');
-
-    playPauseButton = document.querySelector(".player-controls__buttons button[data-testid='control-button-playpause']");
-    Spicetify.Player.addEventListener("onplaypause", updatePlayPauseButton);
-    new MutationObserver(updatePlayPauseButton).observe(playPauseButton, { attributes: true, attributeFilter: ['aria-label'] });
 
     setupTrackInfoWidget();
     new MutationObserver(setupTrackInfoWidget).observe(document.querySelector('.main-nowPlayingBar-left'), { childList: true });
@@ -142,7 +138,6 @@ export function setupPlayerbar() {
 }
 
 async function setupTrackInfoWidget() {
-    updatePlayPauseButton();
     const isCustomTitlebar = !!document.querySelector('#wmpotify-title-bar');
     const whAvailable = WindhawkComm.available();
     const origDefaultTitle = await Spicetify.AppTitle.get();
@@ -223,14 +218,6 @@ async function setupTrackInfoWidget() {
     });
 }
 
-export function updatePlayPauseButton() {
-    playPauseButton?.classList.toggle('playing', Spicetify.Player.isPlaying());
-    const currentPlaylistPage = document.querySelector(`.playlist-playlist-playlist[data-test-uri="${Spicetify.Player.data?.context?.uri}"]`);
-    if (currentPlaylistPage) {
-        currentPlaylistPage.classList.toggle('playing', Spicetify.Player.isPlaying());
-    }
-}
-
 function updateVolumeIcon() {
     const volume = getComputedStyle(volumeBarProgress).getPropertyValue('--progress-bar-transform').replace('%', '') / 100;
     if (volume === 0) {
@@ -248,8 +235,15 @@ function updateTimeText() {
     switch (timeTextMode) {
         case 0:
             {
-                const remaining = Spicetify.Player.data?.item?.metadata?.duration - Spicetify.Player.getProgress();
-                timeText.textContent = formatTime(remaining, true);
+                try {
+                    const remaining = Spicetify.Player.data?.item?.metadata?.duration - Spicetify.Player.getProgress();
+                    timeText.textContent = formatTime(remaining, true);
+                } catch (e) {
+                    // getProgress might fail if some internal Spotify stuff goes wrong (more internal Spotify errors show up in console before WMPotify fail logs)
+                    // As this function is called directly on init, to prevent error during init, just set it to 00:00
+                    console.error('WMPotify: Error getting remaining time:', e);
+                    timeText.textContent = '00:00';
+                }
             }
             break;
         case 1:

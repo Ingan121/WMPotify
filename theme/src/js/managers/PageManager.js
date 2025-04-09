@@ -1,9 +1,11 @@
+'use strict';
+
 import DirectUserStorage from "../utils/DirectUserStorage";
 import SidebarManager from "../managers/SidebarManager";
 import CustomLibX from "../pages/libx";
-import { updatePlayPauseButton } from "../ui/playerbar";
 import { initDiscographyPage } from "../pages/discography";
 import { initPlaylistPage } from "../pages/playlist";
+import { ylxKeyPrefix, expandedStateKey } from "../pages/libx";
 
 let initTime = 0;
 
@@ -39,12 +41,12 @@ const PageManager = {
             document.body.dataset.wmpotifyLibPageOpen = true;
 
             // Use Spicetify.LocalStorageAPI for immediate effect, then revert the underlying localStorage values to prevent persistence
-            const origSidebarState = DirectUserStorage.getItem("ylx-sidebar-state");
-            const origSidebarWidth = DirectUserStorage.getItem("ylx-expanded-state-nav-bar-width");
-            Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 2);
-            Spicetify.Platform.LocalStorageAPI.setItem("ylx-expanded-state-nav-bar-width", 0);
-            DirectUserStorage.setItem("ylx-sidebar-state", origSidebarState); // make the previous setItem temporary
-            DirectUserStorage.setItem("ylx-expanded-state-nav-bar-width", origSidebarWidth);
+            const origSidebarState = DirectUserStorage.getItem(`${ylxKeyPrefix}-sidebar-state`);
+            const origSidebarWidth = DirectUserStorage.getItem(expandedStateKey);
+            Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 2);
+            Spicetify.Platform.LocalStorageAPI.setItem(expandedStateKey, 0);
+            DirectUserStorage.setItem(`${ylxKeyPrefix}-sidebar-state`, origSidebarState); // make the previous setItem temporary
+            DirectUserStorage.setItem(expandedStateKey, origSidebarWidth);
 
             if (!(await CustomLibX.init())) {
                 // Already initialized
@@ -59,24 +61,23 @@ const PageManager = {
             CustomLibX.uninit();
 
             if (localStorage.wmpotifyShowLibX) {
-                const origSidebarState = DirectUserStorage.getItem("ylx-sidebar-state");
-                DirectUserStorage.removeItem("ylx-sidebar-state"); // Spicetify LocalStorageAPI does nothing if setting to same value, so remove it first
-                const origSidebarWidth = DirectUserStorage.getItem("ylx-expanded-state-nav-bar-width");
-                DirectUserStorage.removeItem("ylx-expanded-state-nav-bar-width");
-                Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", parseInt(origSidebarState));
-                Spicetify.Platform.LocalStorageAPI.setItem("ylx-expanded-state-nav-bar-width", parseInt(origSidebarWidth));
+                const origSidebarState = DirectUserStorage.getItem(`${ylxKeyPrefix}-sidebar-state`);
+                DirectUserStorage.removeItem(`${ylxKeyPrefix}-sidebar-state`); // Spicetify LocalStorageAPI does nothing if setting to same value, so remove it first
+                const origSidebarWidth = DirectUserStorage.getItem(expandedStateKey);
+                DirectUserStorage.removeItem(expandedStateKey);
+                Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, parseInt(origSidebarState));
+                Spicetify.Platform.LocalStorageAPI.setItem(expandedStateKey, parseInt(origSidebarWidth));
             } else {
-                Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 1); // collapsed
+                Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 1); // collapsed
             }
         }
 
-        if (location.pathname.match('/artist/.*/discography/.*')) {
+        if (location.pathname.match('/artist/.*/discography.*')) {
             initDiscographyPage(true);
         } else if (location.pathname.startsWith('/playlist/')) {
             if (!document.querySelector('.playlist-playlist-playlist')) {
                 await PageManager.waitForPageRender();
             }
-            updatePlayPauseButton();
         }
 
         initPlaylistPage(true);

@@ -2,7 +2,6 @@
 
 import Strings from './strings'
 import ControlManager from './managers/ControlManager';
-import { setTintColor } from './ui/tinting';
 import CustomTitlebar from './ui/titlebar';
 import { setupTopbar } from './ui/topbar';
 import { setupPlayerbar } from './ui/playerbar';
@@ -13,8 +12,13 @@ import WindhawkComm from './WindhawkComm';
 import PageManager from './managers/PageManager';
 import WindowManager from './managers/WindowManager';
 import { ver, checkUpdates, compareVersions, compareSpotifyVersion } from './utils/UpdateCheck';
-import { openUpdateDialog } from './ui/dialogs';
+import { openUpdateDialog, openWmpvisInstallDialog, promptModal, confirmModal } from './ui/dialogs';
 import ThemeManager from './managers/ThemeManager';
+import { ylxKeyPrefix } from "./pages/libx";
+import { applyScheme } from './utils/appearance';
+import { setTintColor } from './ui/tinting';
+import { MadMenu, createMadMenu } from './utils/MadMenu';
+import CustomLibX from './pages/libx';
 
 const elementsRequired = [
     '.Root__globalNav',
@@ -72,11 +76,7 @@ function earlyInit() {
         if (window.outerHeight - window.innerHeight > 0 || whStatus?.options?.showframe || navigator.userAgent.includes('Linux')) {
             titleStyle = 'native';
         } else if (window.SpotEx || whStatus) {
-            if (whStatus?.options?.showmenu && !whStatus.options.showcontrols) {
-                titleStyle = 'keepmenu';
-            } else {
-                titleStyle = 'custom';
-            }
+            titleStyle = 'custom';
         }
     }
     if (titleStyle === 'keepmenu' && !navigator.userAgent.includes('Windows')) {
@@ -90,11 +90,21 @@ function earlyInit() {
         CustomTitlebar.earlyInit();
     }
 
-    if (whStatus && !localStorage.wmpotifyStyle && titleStyle === 'native' && whStatus.isThemingEnabled) {
-        if (WindhawkComm.getModule()?.initialOptions.transparentrendering && whStatus.isDwmEnabled) {
-            style = 'aero';
-        } else if (!whStatus.isDwmEnabled) {
+    // Set default style if the style is set to auto (not set)
+    // If the Windhawk mod is available, and the title style is native:
+    //   Use Aero style if transparency is enabled and DWM is enabled
+    //   Use Basic style if transparency is disabled and DWM is disabled, or if using high contrast mode
+    // XP otherwise (No WH, macOS/Linux, Windows Classic theme (non-HighContrast), title style is not native, etc.)
+    const hcQuery = window.matchMedia('(forced-colors: active)');
+    if (!localStorage.wmpotifyStyle && titleStyle === 'native') {
+        if (hcQuery.matches) {
             style = 'basic';
+        } else if (whStatus && whStatus.isThemingEnabled) {
+            if (WindhawkComm.getModule()?.initialOptions.transparentrendering && whStatus.isDwmEnabled) {
+                style = 'aero';
+            } else if (!whStatus.isDwmEnabled) {
+                style = 'basic';
+            }
         }
     }
 
@@ -112,23 +122,36 @@ function earlyInit() {
             break;
         case 'basic':
             WindhawkComm.extendFrame(0, 0, 0, 0);
-            document.body.style.setProperty('--basic-pb-text', localStorage.wmpotifyBasicTextColor || '#002963');
+
+            if (localStorage.wmpotifyBasicTextColor) {
+                document.body.style.setProperty('--basic-pb-text', localStorage.wmpotifyBasicTextColor);
+            }
+            if (localStorage.wmpotifyBasicActiveColor) {
+                document.body.style.setProperty('--basic-pb-active-bg', localStorage.wmpotifyBasicActiveColor);
+            }
+            if (localStorage.wmpotifyBasicInactiveColor) {
+                document.body.style.setProperty('--basic-pb-inactive-bg', localStorage.wmpotifyBasicInactiveColor);
+            }
+
             if (document.hasFocus()) {
-                document.body.style.backgroundColor = localStorage.wmpotifyBasicActiveColor || '#b9d1ea';
+                document.body.style.backgroundColor = 'var(--basic-pb-active-bg, #b9d1ea)';
             } else {
-                document.body.style.backgroundColor = localStorage.wmpotifyBasicInactiveColor || '#d7e4f2';
+                document.body.style.backgroundColor = 'var(--basic-pb-inactive-bg, #d7e4f2)';
             }
             window.addEventListener('focus', () => {
-                document.body.style.backgroundColor = localStorage.wmpotifyBasicActiveColor || '#b9d1ea';
+                document.body.style.backgroundColor = 'var(--basic-pb-active-bg, #b9d1ea)';
             });
             window.addEventListener('blur', () => {
-                document.body.style.backgroundColor = localStorage.wmpotifyBasicInactiveColor || '#d7e4f2';
+                document.body.style.backgroundColor = 'var(--basic-pb-inactive-bg, #d7e4f2)';
             });
             break;
     }
     document.documentElement.dataset.wmpotifyStyle = style;
 
     document.documentElement.dataset.wmpotifyControlStyle = localStorage.wmpotifyControlStyle || 'aero';
+    if (localStorage.wmpotifyCustomScheme) {
+        applyScheme(localStorage.wmpotifyCustomScheme);
+    }
 
     window.addEventListener('resize', () => {
         if (style === 'aero') {
@@ -175,6 +198,28 @@ function earlyInit() {
 
 earlyInit();
 
+globalThis.WMPotify = {
+    ver,
+    Strings,
+    Config,
+    WindowManager,
+    ThemeManager,
+    WindhawkComm,
+    CustomLibX,
+    Dialog: {
+        openUpdateDialog,
+        openWmpvisInstallDialog,
+        promptModal,
+        confirmModal,
+    },
+    MadMenu: {
+        createMadMenu,
+        MadMenu,
+    },
+    setTintColor,
+    checkUpdates
+};
+
 async function init() {
     await CustomTitlebar.init(titleStyle);
 
@@ -183,7 +228,7 @@ async function init() {
     }
 
     if (!localStorage.wmpotifyShowLibX) {
-        Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 1);
+        Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 1);
     }
 
     const isWin11 = Spicetify.Platform.PlatformData.os_version?.split('.')[2] >= 22000;
@@ -191,17 +236,11 @@ async function init() {
         WindhawkComm.setBackdrop(localStorage.wmpotifyBackdrop || 'mica');
     }
 
-    if (localStorage.wmpotifyTintColor) {
-        const [hue, sat, tintPb] = localStorage.wmpotifyTintColor.split(',');
-        setTintColor(hue, sat, tintPb);
-    }
-
     ControlManager.init();
     PageManager.init();
     SidebarManager.init();
 
     Config.init();
-    new Spicetify.Menu.Item(Strings['MENU_CONF'], false, Config.open).register();
 
     setupTopbar();
     setupPlayerbar();
@@ -209,7 +248,7 @@ async function init() {
     initQueuePanel();
     new MutationObserver(initQueuePanel).observe(
         // Right panel has varying structure in different versions
-        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // Seems same on .52-.56 but may change in future
+        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // Seems same on .45-.61 but may change in future
         document.querySelector('.Root__right-sidebar > div > div[class]:first-child') ||
         document.querySelector('.Root__right-sidebar div[class]') // Works on .45-.52
     , { childList: true });
@@ -261,38 +300,49 @@ function waitForReady() {
                 console.log('WMPotify: Theme loaded');
                 document.documentElement.dataset.wmpotifyInitComplete = true;
             } catch (e) {
-                (window.Spicetify?.showNotification || window.alert)('[WMPotify] ' + Strings['MAIN_MSG_ERROR_INIT']);
                 console.error('WMPotify: Error during init:', e);
+                let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_INIT'] + '\n\n' + e.stack;
+                if (window.confirm(msg)) {
+                    window.location.reload();
+                }
                 document.documentElement.dataset.wmpotifyJsFail = true;
             }
         } else if (cnt++ > 80) {
             if (compareSpotifyVersion('1.2.45') < 0) {
                 (window.Spicetify?.showNotification || window.alert)('[WMPotify] ' + Strings['MAIN_MSG_ERROR_OLD_SPOTIFY']);
             } else {
-                const locId = compareSpotifyVersion('1.2.45') === 0 ? 'MAIN_MSG_ERROR_LOAD_FAIL_GLOBALNAV' : 'MAIN_MSG_ERROR_LOAD_FAIL';
-                if (window.confirm('[WMPotify] ' + Strings[locId])) {
-                    window.location.reload();
+                if (compareSpotifyVersion('1.2.45') === 0 && !document.querySelector('.Root__globalNav')) {
+                    if (window.confirm('[WMPotify] ' + Strings['MAIN_MSG_ERROR_LOAD_FAIL_GLOBALNAV'])) {
+                        window.location.reload();
+                    }
+                } else {
+                    let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_LOAD_FAIL'] + '\n\n';
+                    let extraMsg = '';
+                    if (ready === false) {
+                        extraMsg += 'Missing elements:\n' + elementsRequired.filter(selector => !document.querySelector(selector)).join('\n');
+                    } else {
+                        extraMsg += 'Missing API objects:\n' + Object.entries({
+                            'Spicetify.Platform.PlayerAPI': window.Spicetify?.Platform?.PlayerAPI,
+                            'Spicetify.AppTitle': window.Spicetify.AppTitle,
+                            'Spicetify.Menu': window.Spicetify.Menu,
+                            'Spicetify.Platform.History.listen': window.Spicetify.Platform.History?.listen,
+                            'Spicetify.Platform.LocalStorageAPI': window.Spicetify.Platform.LocalStorageAPI,
+                            'Spicetify.Platform.Translations': window.Spicetify.Platform.Translations,
+                            'Spicetify.Platform.PlatformData': window.Spicetify.Platform.PlatformData,
+                        }).filter(([_, obj]) => !obj).map(([key, _]) => key).join('\n');
+                    }
+                    if (window.confirm(msg + extraMsg)) {
+                        window.location.reload();
+                    }
+                    console.error('WMPotify:', extraMsg);
                 }
             }
-            if (ready === false) {
-                console.error('WMPotify: Missing elements:', elementsRequired.filter(selector => !document.querySelector(selector)));
-                if (!document.querySelector('.Root__globalNav')) {
-                    // Show headers and sidebar when global nav is missing
-                    // To allow users to access experimental features, marketplace, etc.
-                    document.documentElement.dataset.wmpotifyNoGlobalNav = true;
-                    delete document.body.dataset.hideLibx;
-                    console.error('WMPotify: Global nav not found');
-                }
-            } else {
-                console.error('WMPotify: Missing API objects:', Object.entries({
-                    'Spicetify.Platform.PlayerAPI': window.Spicetify?.Platform?.PlayerAPI,
-                    'Spicetify.AppTitle': window.Spicetify.AppTitle,
-                    'Spicetify.Menu': window.Spicetify.Menu,
-                    'Spicetify.Platform.History.listen': window.Spicetify.Platform.History?.listen,
-                    'Spicetify.Platform.LocalStorageAPI': window.Spicetify.Platform.LocalStorageAPI,
-                    'Spicetify.Platform.Translations': window.Spicetify.Platform.Translations,
-                    'Spicetify.Platform.PlatformData': window.Spicetify.Platform.PlatformData,
-                }).filter(([_, obj]) => !obj));
+            if (!document.querySelector('.Root__globalNav')) {
+                // Show headers and sidebar when global nav is missing
+                // To allow users to access experimental features, marketplace, etc.
+                document.documentElement.dataset.wmpotifyNoGlobalNav = true;
+                delete document.body.dataset.hideLibx;
+                console.error('WMPotify: Global nav not found');
             }
             clearInterval(interval);
         }

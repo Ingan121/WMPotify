@@ -19,47 +19,23 @@
         [role="presentation"] {
             order: -1;
         }
+
+        .main-yourLibraryX-libraryFilter {
+            background: var(--wmp11-window);
+            z-index: 1;
+            grid-gap: 0; /* fix for 1.2.60 */
+        }
     }
 
-    [role="combobox"] {
+    button[role="combobox"] {
         top: -3px;
         min-height: 0;
-        color: var(--spice-text);
-        padding: 0;
         opacity: 1 !important;
         transform: none !important;
-
-        [class*=encore-text] {
-            order: 1;
-            font-size: 12px;
-        }
+        grid-gap: 0; /* fix for 1.2.59 */
 
         span:nth-child(2) {
-            width: 16px;
-            height: 16px;
-            margin-top: 1px;
-            margin-left: 2px;
-            margin-right: 3px;
-            background: url('resources/icon/list.png') no-repeat;
-
-            svg {
-                display: none;
-            }
-        }
-
-        &::after {
-            content: '⏷';
-            font-size: 12px;
-            color: var(--spice-text);
-            margin-top: -2px;
-            margin-left: 4px;
-            margin-right: -2px;
-            order: 2;
-            inline-size: unset;
-        }
-
-        &:hover::after {
-          color: black;
+            display: none;
         }
     }
 
@@ -94,19 +70,9 @@
         margin-bottom: 50px;
     }
 
-    &:has(.main-rootlist-wrapper[style*="row-height: 32"]) {
-        .main-yourLibraryX-filterArea {
-            [role="combobox"] {
-                span:nth-child(2) {
-                    background-image: url('resources/icon/compact.png');
-                }
-            }
-        }
-    }
-
     &:has(ul[role="treegrid"]) {
         .main-yourLibraryX-filterArea {
-            [role="combobox"] {
+            button[role="combobox"] {
                 span:nth-child(2) {
                     background-image: url('resources/icon/grid.png');
                 }
@@ -173,15 +139,15 @@
                             }
 
                             button {
-                                background: url('resources/playerbar/play.png') center / cover no-repeat;
+                                background: var(--play) center / cover no-repeat;
                                 border-radius: 0;
                 
                                 &:hover {
-                                    background-image: url('resources/playerbar/play_hover.png');
+                                    background-image: var(--play-hover);
                                 }
                 
                                 &:active {
-                                    background-image: url('resources/playerbar/play_pressed.png');
+                                    background-image: var(--play-pressed);
                                 }
                 
                                 span {
@@ -189,14 +155,14 @@
                                 }
 
                                 &:has(path[d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
-                                    background-image: url('resources/playerbar/pause.png');
+                                    background-image: var(--pause);
 
                                     &:hover {
-                                        background-image: url('resources/playerbar/pause_hover.png');
+                                        background-image: var(--pause-hover);
                                     }
 
                                     &:active {
-                                        background-image: url('resources/playerbar/pause_pressed.png');
+                                        background-image: var(--pause-pressed);
                                     }
                                 }
                             }
@@ -261,7 +227,7 @@
             }
 
             /* Local files playlist */
-            .HeaderSideAreaFlexContainer > div > div:has(path[d="M1 4a2 2 0 0 1 2-2h5.155a3 3 0 0 1 2.598 1.5l.866 1.5H21a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4z"]) {
+            div[id*="spotify:collection:local-files"] + div > div > div > div {
                 background: url('resources/library/download_192.png') 0 0 / cover no-repeat;
 
                 svg {
@@ -344,15 +310,18 @@
             text-align: left;
             height: 18px;
             padding-right: 5px;
+            forced-color-adjust: none;
 
             &:hover {
                 background: var(--item-hover-background);
                 border-color: var(--item-hover-border);
+                color: var(--item-hover-text);
             }
 
             &.active {
                 background: var(--item-hover-background);
-                border-color: #95dbfd;
+                border-color: var(--item-active-border);
+                color: var(--item-hover-text);
             }
 
             &::before {
@@ -446,24 +415,21 @@
     }
 }
 
-#sort-and-view-picker {
-    button:has(svg:not(:first-child)) {
-        svg:first-child {
-            display: none;
-        }
-    }
-}
-
 body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty hack to increase specificity */
     #wmpotify-library-button {
-        border-image-source: url('resources/topbar/tab_active.png');
+        border-image-source: var(--tab-active);
 
         &:hover {
-            border-image-source: url('resources/topbar/tab_active_hover.png');
+            border-image-source: var(--tab-active-hover);
         }
 
         &:active {
-            border-image-source: url('resources/topbar/tab_active_pressed.png');
+            border-image-source: var(--tab-active-pressed);
+        }
+
+        .wmpotify-tab-label {
+            background-color: var(--tab-label-bg-active) !important;
+            color: var(--tab-label-text-active) !important;
         }
     }
 
@@ -511,8 +477,8 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
         }
     }
     
-    .Root:has(.Root__right-sidebar aside) #Desktop_LeftSidebar_Id {
-        width: calc(100vw - var(--panel-width, var(--right-sidebar-width)) * 1px - 2px);
+    &.sidebar-open #Desktop_LeftSidebar_Id {
+        width: calc(100vw - var(--panel-width, var(--right-sidebar-width)) * 1px - 3px);
         margin-right: calc(var(--panel-gap) * -2 + 2px);
     }
 
@@ -526,14 +492,14 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
             margin-left: 0;
         }
 
-        .Root:has(.Root__right-sidebar aside) #Desktop_LeftSidebar_Id {
-            width: calc(100vw - var(--panel-width, var(--right-sidebar-width)) * 1px - var(--panel-gap) * 2 - 2px);
+        &.sidebar-open #Desktop_LeftSidebar_Id {
+            width: calc(100vw - var(--panel-width, var(--right-sidebar-width)) * 1px - var(--panel-gap) * 2 - 3px);
         }
     }
 }
 
 :root[data-wmpotify-dark-mode] {
-    .main-yourLibraryX-library {
+    .main-yourLibraryX-library, .main-yourLibraryX-libraryContainer {
         background: #222222;
     }
     #wmpotify-libx-sidebar {
@@ -555,6 +521,33 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
         .main-yourLibraryX-filterArea,
         #wmpotify-libx-sidebar {
             background: #222222;
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    .main-yourLibraryX-libraryContainer {
+        li[role="listitem"]:hover {
+            [class*=encore-text], [class*=encore-text] * {
+                color: var(--hilight-text) !important;
+                background-color: var(--hilight) !important;
+                forced-color-adjust: none !important;
+            } 
+        }
+
+        #wmpotify-libx-header > button:hover:after,
+        #wmpotify-libx-header > div:hover:after {
+            color: unset;
+        }
+
+        .main-yourLibraryX-filterArea + div {
+            background: var(--surface) !important;
+            border-image: none !important;
+
+            > span {
+                border-image: none !important;
+                color: ButtonText !important;
+            }
         }
     }
 }

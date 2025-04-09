@@ -3,7 +3,7 @@
 }
 
 /* <aside aria-label="Queue" class="ffFwfKcPDbmAPLXzxzKq" id="Desktop_PanelContainer_Id" tabindex="-1"> */
-.spotify-queue-panel > div {
+aside[data-identifier="spotify-queue-panel"] > div {
     > div:first-child { /* panel header (tabs) */
         box-shadow: none; /* Hide the shadow when the queue panel is scrolled down */
 
@@ -100,7 +100,7 @@
         }
 
         /* <div class="" data-overlayscrollbars-viewport="scrollbarHidden overflowXScroll overflowYScroll" tabindex="-1" style="margin-right: 0px; margin-bottom: 0px; margin-left: 0px; top: 0px; right: auto; left: 0px; width: calc(100% + 0px); padding: 0px;"> */
-        > div:nth-child(3) {
+        > div[data-overlayscrollbars-viewport] {
             overflow-x: hidden !important;
 
             > div {
@@ -119,7 +119,7 @@
         }
 
         /* Nothing in queue message */
-        > div:first-child:has(> svg:first-child) {
+        > div:first-child[data-nothing-in-queue] {
             height: 170px;
 
             svg {
@@ -196,6 +196,7 @@
 
                 * {
                     color: var(--hilight-text) !important;
+                    forced-color-adjust: preserve-parent-color !important;
                 }
 
                 p[data-encore-id="listRowSubtitle"]::before {
@@ -269,6 +270,32 @@
             svg:has(path[d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm7.975 4.287c1.268-.448 1.959-1.448 2.288-2.318.042-.113.432-.113.474 0 .33.87 1.02 1.87 2.288 2.318.113.04.113.386 0 .426-1.268.448-1.959 1.448-2.288 2.319-.042.112-.432.112-.474 0-.33-.87-1.02-1.871-2.288-2.319-.113-.04-.113-.386 0-.426zM1.893 9.33c2.347-.647 3.474-2.68 3.904-4.25.033-.118.373-.118.406 0 .43 1.57 1.557 3.603 3.904 4.25.115.032.115.308 0 .34-2.347.648-3.474 2.68-3.904 4.25-.033.118-.373.118-.406 0-.43-1.57-1.557-3.602-3.904-4.25-.115-.032-.115-.308 0-.34z"]) {
                 display: block !important;
                 transform: scale(0.9);
+            }
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    #wmpotify-queue-playlist-button {
+        padding-left: 10px !important;
+    }
+
+    #wmpotify-queue-clear-button {
+        &::before {
+            top: 3px !important;
+            left: 5px !important;
+        }
+    }
+
+    aside[data-identifier="spotify-queue-panel"] > div {
+        #history-panel,
+        #queue-panel {
+            .Column-lg p {
+                font-weight: bold;
+
+                [class*=encore-text] {
+                    font-weight: bold;
+                }
             }
         }
     }

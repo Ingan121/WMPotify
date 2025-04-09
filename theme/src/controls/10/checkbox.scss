@@ -3,12 +3,16 @@
   --checkbox-label-spacing: 6px;
   --checkbox-total-width-precalc: 0;
   --checkbox-total-width: calc(var(--checkbox-total-width-precalc));
-  --checkmark-top: 0;
+  --checkmark-top: 2px;
   --checkmark-left: 0;
 
   --checkmark: url("resources/icon/10/checkmark.svg");
   --checkmark-hover: url("resources/icon/10/checkmark-hover.svg");
   --checkmark-active: url("resources/icon/10/checkmark-active.svg");
+
+  --checkbox-hover-border: #0078d7;
+  --checkbox-active-border: #005499;
+  --checkbox-active-background: #cce4f7;
 
   input.wmpotify-aero[type="checkbox"],
   input.x-toggle-input[type="checkbox"] {
@@ -39,21 +43,46 @@
         border-color: #333333;
         box-sizing: border-box;
         transition: 0.4s;
-        left: unset;
         position: unset;
-      }
-
-      &:hover::before {
-        border-color: #0078d7;
-      }
-
-      &:active::before {
-        border-color: #005499;
-        background: #cce4f7;
+        margin-top: 2px;
+        margin-bottom: -3px;
       }
 
       .x-toggle-indicator {
         display: none;
+      }
+    }
+
+    &:not(:disabled) {
+      &:hover {
+        + label,
+        + .x-toggle-indicatorWrapper {
+          &::before {
+            border-color: var(--checkbox-hover-border);
+          }
+        }
+      }
+
+      &:active {
+        + label,
+        + .x-toggle-indicatorWrapper {
+          &::before {
+            border-color: var(--checkbox-active-border);
+            background: var(--checkbox-active-background);
+          }
+        }
+      }
+
+      &:checked {
+        + label,
+        + .x-toggle-indicatorWrapper {
+          &:hover::after {
+            background: var(--checkmark-hover);
+          }
+          &:active::after {
+            background: var(--checkmark-active);
+          }
+        }
       }
     }
 
@@ -77,12 +106,6 @@
           left: var(--checkmark-left);
           background: var(--checkmark);
         }
-        &:hover::after {
-          background: var(--checkmark-hover);
-        }
-        &:active::after {
-          background: var(--checkmark-active);
-        }
       }
     }
 
@@ -94,13 +117,16 @@
     }
   }
 
-  #wmpotify-config {
-    label[for="wmpotify-config-show-libx"],
-    label[for="wmpotify-config-lock-title"],
-    label[for="wmpotify-config-auto-updates"],
-    label[for="wmpotify-config-hide-pbleftbtn"] {
-      &::after {
-        top: -2px !important;
+  &[data-wmpotify-tint-more] {  
+    input.wmpotify-aero[type="checkbox"],
+    input.x-toggle-input[type="checkbox"] {
+      &:checked {
+        + label,
+        + .x-toggle-indicatorWrapper {
+          &::after {
+            filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
+          }
+        }
       }
     }
   }

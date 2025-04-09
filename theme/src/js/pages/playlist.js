@@ -1,7 +1,7 @@
 let observer = null;
 
 export async function initPlaylistPage(wait) {
-    const section = document.querySelector('main > [role=presentation]');
+    const section = document.querySelector('main [role=presentation]');
     if (!section) {
         if (wait) {
             await waitForPageRender();
@@ -39,6 +39,30 @@ export async function initPlaylistPage(wait) {
         }
     });
     observer.observe(topbarContent, { attributes: true, attributeFilter: ['class'] });
+
+    const listHeader = section.querySelector('.main-trackList-trackListHeaderRow');
+    if (listHeader) {
+        for (const button of listHeader.querySelectorAll(':scope > div')) {
+            if (button.querySelector('button')) {
+                button.classList.add('has-button');
+
+                if (button.querySelector('svg:has(path[d="m14 6-6 6-6-6h12z"])') || button.querySelector('svg:has(path[d="M14 10 8 4l-6 6h12z"])')) {
+                    button.classList.add('selected');
+                }
+    
+                const observer = new MutationObserver(() => {
+                    observer.disconnect();
+                    if (button.querySelector('svg:has(path[d="m14 6-6 6-6-6h12z"])') || button.querySelector('svg:has(path[d="M14 10 8 4l-6 6h12z"])')) {
+                        button.classList.add('selected');
+                    } else {
+                        button.classList.remove('selected');
+                    }
+                    observer.observe(button, { childList: true, subtree: true });
+                });
+                observer.observe(button, { childList: true, subtree: true });
+            }
+        }
+    }
 }
 
 function waitForPageRender() {
@@ -47,7 +71,7 @@ function waitForPageRender() {
             if (document.querySelector('.main-loadingPage-container')) {
                 return;
             }
-            if (document.querySelector('main > [role=presentation]')) {
+            if (document.querySelector('main [role=presentation]')) {
                 resolve();
                 observer.disconnect();
             }

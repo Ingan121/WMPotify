@@ -1,5 +1,5 @@
-:root[data-page^="/content-feed"] {
-    div[data-testid="infinite-scroll-list"] {
+:root[data-page^="/content-feed"] .Root__main-view {
+    div[role="list"] > div {
         hr {
             display: none;
         }
@@ -17,7 +17,7 @@
             }
 
             &:hover {
-                background: var(--item-hover-background);
+                background: var(--item-hover-background) !important;
                 border-color: var(--item-hover-border);
             }
 
@@ -27,17 +27,17 @@
                 background: none;
             }
 
-            .Button-buttonPrimary-useBrowserDefaultFocusStyle-data-is-icon-only {
+            button[data-encore-id="buttonPrimary"] {
                 width: 42px;
                 height: 43px;
-                background: url('resources/playerbar/play.png') no-repeat;
+                background: var(--play) no-repeat;
 
                 &:hover {
-                    background-image: url('resources/playerbar/play_hover.png');
+                    background-image: var(--play-hover);
                 }
 
                 &:active {
-                    background-image: url('resources/playerbar/play_pressed.png');
+                    background-image: var(--play-pressed);
                 }
 
                 span {
@@ -45,16 +45,28 @@
                 }
 
                 &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
-                    background-image: url('resources/playerbar/pause.png') !important;
+                    background-image: var(--pause) !important;
 
                     &:hover {
-                        background-image: url('resources/playerbar/pause_hover.png') !important;
+                        background-image: var(--pause-hover) !important;
                     }
 
                     &:active {
-                        background-image: url('resources/playerbar/pause_pressed.png') !important;
+                        background-image: var(--pause-pressed) !important;
                     }
                 }
+            }
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    :root[data-page^="/content-feed"] .Root__main-view {
+        div[role="list"] > div > div > div[draggable] > div:hover {
+            [class*=encore-text], [class*=encore-text] span, a {
+                color: HighlightText !important;
+                background: Highlight !important;
+                forced-color-adjust: none !important;
             }
         }
     }
