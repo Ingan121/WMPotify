@@ -206,6 +206,3 @@ export async function openUpdateDialog(alreadyUpdated, tagName, content) {
         });
     }
 }
-
-globalThis.wmpotifyOpenWmpvisInstallDialog = openWmpvisInstallDialog;
-globalThis.wmpotifyOpenUpdateDialog = openUpdateDialog;

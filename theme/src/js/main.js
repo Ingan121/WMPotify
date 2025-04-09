@@ -12,10 +12,13 @@ import WindhawkComm from './WindhawkComm';
 import PageManager from './managers/PageManager';
 import WindowManager from './managers/WindowManager';
 import { ver, checkUpdates, compareVersions, compareSpotifyVersion } from './utils/UpdateCheck';
-import { openUpdateDialog } from './ui/dialogs';
+import { openUpdateDialog, openWmpvisInstallDialog, promptModal, confirmModal } from './ui/dialogs';
 import ThemeManager from './managers/ThemeManager';
 import { ylxKeyPrefix } from "./pages/libx";
 import { applyScheme } from './utils/appearance';
+import { setTintColor } from './ui/tinting';
+import { MadMenu, createMadMenu } from './utils/MadMenu';
+import CustomLibX from './pages/libx';
 
 const elementsRequired = [
     '.Root__globalNav',
@@ -194,6 +197,28 @@ function earlyInit() {
 }
 
 earlyInit();
+
+globalThis.WMPotify = {
+    ver,
+    Strings,
+    Config,
+    WindowManager,
+    ThemeManager,
+    WindhawkComm,
+    CustomLibX,
+    Dialog: {
+        openUpdateDialog,
+        openWmpvisInstallDialog,
+        promptModal,
+        confirmModal,
+    },
+    MadMenu: {
+        createMadMenu,
+        MadMenu,
+    },
+    setTintColor,
+    checkUpdates
+};
 
 async function init() {
     await CustomTitlebar.init(titleStyle);
