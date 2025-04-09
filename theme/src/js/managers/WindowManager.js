@@ -12,7 +12,7 @@ function toggleMiniMode() {
     if (isMiniMode()) {
         const lastSize = localStorage.wmpotifyPreMiniModeSize?.split(',');
         if (lastSize && lastSize.length === 2) {
-            window.resizeTo(parseInt(lastSize[0]), parseInt(lastSize[1]));
+            WindhawkComm.resizeTo(parseInt(lastSize[0]), parseInt(lastSize[1]));
         }
     } else {
         if (document.fullscreenElement) {

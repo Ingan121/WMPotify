@@ -7,10 +7,15 @@ import ButterchurnAdaptor from './butterchurn/adaptor';
 import MadVisLyrics from './lyrics/main';
 import lrcCache from './lyrics/caching';
 import { checkUpdates } from './UpdateCheck';
+import { openConfigDialog } from './config';
+import { promptModal } from './dialogs';
+
+let appInstance = null;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+    appInstance = this;
     this.props = props;
     this.elemRefs = {
       root: React.createRef(),
@@ -23,11 +28,36 @@ class App extends React.Component {
     };
     this.state = {
       type: localStorage.wmpotifyVisType || "bars",
+      bgColor:
+        ((localStorage.wmpotifyVisType === "albumArt" || localStorage.wmpotifyVisUseSchemeColors) && !localStorage.wmpotifyVisBgColor) ?
+          "var(--spice-main)" :
+          localStorage.wmpotifyVisBgColor || "black",
+      bgColorFromAlbumArt: null,
+      schemeTopColor: null,
+      schemeBarColor: null,
+      followAlbumArt: !!localStorage.wmpotifyVisFollowAlbumArt,
+      albumArtTopColor: null,
+      albumArtBarColor: null,
+      showAlbumArt: !!localStorage.wmpotifyVisShowAlbumArt,
+      dimAlbumArt: !!localStorage.wmpotifyVisDimAlbumArt,
+      albumArtSize: localStorage.wmpotifyVisAlbumArtSize || "auto",
+      albumArtSizeProps: { // "Original"
+        width: "auto",
+        height: "auto",
+        minHeight: "0",
+        maxWidth: "none",
+        maxHeight: "none",
+        objectFit: "contain",
+      },
+      albumArtShadow: !localStorage.wmpotifyVisNoAlbumArtShadow,
       bcPreset: localStorage.wmpotifyVisBCPreset || "Random",
       showLyrics: !!localStorage.wmpotifyVisShowLyrics,
       enableSpotifyLyrics: !localStorage.wmpotifyVisLyricsNoSpotify,
+      syncDelay: parseFloat(localStorage.wmpotifyVisLyricsSyncDelay) || 0,
       enableLyricsCache: !localStorage.wmpotifyVisLyricsNoCache,
       isFullscreen: !!document.fullscreenElement,
+      noAudioData: false,
+      debugMode: false,
       updateAvailable: false
     };
   }
@@ -108,6 +138,11 @@ class App extends React.Component {
     this.setState({
       type: type
     });
+    if (!localStorage.wmpotifyVisUseSchemeColors && !localStorage.wmpotifyVisBgColor && !(this.state.followAlbumArt && this.state.bgColorFromAlbumArt)) {
+      this.setState({
+        bgColor: type === "albumArt" ? "var(--spice-main)" : "black"
+      });
+    }
   };
 
   setShowLyrics = (show) => {
@@ -145,6 +180,13 @@ class App extends React.Component {
 
     const MenuWrapper = React.memo(() => {
       return <Spicetify.ReactComponent.Menu>
+        {window.innerWidth < 418 && <Spicetify.ReactComponent.MenuItem
+          label="Show List"
+          onClick={() => document.querySelector('button[data-testid="control-button-queue"]')?.click()}
+          divider="after"
+        >
+          {Strings['MENU_SHOW_LIST']}
+        </Spicetify.ReactComponent.MenuItem>}
         <Spicetify.ReactComponent.MenuItem
           label="Track Info"
           onClick={() => window.open(Spicetify.Player.data?.item?.uri)}
@@ -154,7 +196,11 @@ class App extends React.Component {
         </Spicetify.ReactComponent.MenuItem>
         <Spicetify.ReactComponent.MenuItem
           label="No Visualization"
-          onClick={() => this.changeVisType("none")}
+          onClick={() => {
+            this.changeVisType("none");
+            this.setState({ showAlbumArt: false });
+            delete localStorage.wmpotifyVisShowAlbumArt;
+          }}
           divider="after"
           leadingIcon={this.state.type === "none" ? <ActiveRadio /> : null}
         >
@@ -162,14 +208,23 @@ class App extends React.Component {
         </Spicetify.ReactComponent.MenuItem>
         <Spicetify.ReactComponent.MenuItem
           label="Album Art"
-          onClick={() => this.changeVisType("albumArt")}
+          onClick={() => {
+            this.changeVisType("albumArt");
+            this.setState({ showAlbumArt: true, dimAlbumArt: false });
+            localStorage.wmpotifyVisShowAlbumArt = true;
+            delete localStorage.wmpotifyVisDimAlbumArt;
+          }}
           leadingIcon={this.state.type === "albumArt" ? <ActiveRadio /> : null}
         >
           {Strings['MENU_VIS_ALBUM_ART']}
         </Spicetify.ReactComponent.MenuItem>
         <Spicetify.ReactComponent.MenuItem
           label="Bars"
-          onClick={() => this.changeVisType("bars")}
+          onClick={() => {
+            this.changeVisType("bars");
+            this.setState({ showAlbumArt: false });
+            delete localStorage.wmpotifyVisShowAlbumArt
+          }}
           leadingIcon={this.state.type === "bars" ? <ActiveRadio /> : null}
         >
           {Strings['MENU_VIS_BARS']}
@@ -177,7 +232,6 @@ class App extends React.Component {
         <Spicetify.ReactComponent.MenuSubMenuItem
           displayText="MilkDrop"
           label="MilkDrop"
-          divider="after"
           leadingIcon={this.state.type === "milkdrop" ? <ActiveRadio /> : null}
         >
           <Spicetify.ReactComponent.MenuItem
@@ -208,6 +262,19 @@ class App extends React.Component {
             </Spicetify.ReactComponent.MenuItem>
           ))}
         </Spicetify.ReactComponent.MenuSubMenuItem>
+        <Spicetify.ReactComponent.MenuItem
+          label="Advanced Options"
+          divider="after"
+          onClick={() => {
+            if (this.state.type !== "milkdrop") {
+              openConfigDialog();
+            } else {
+              ButterchurnAdaptor.openConfigDialog();
+            }
+          }}
+        >
+          {Strings['MENU_VISCONF']}
+        </Spicetify.ReactComponent.MenuItem>
         <Spicetify.ReactComponent.MenuSubMenuItem
           displayText={Strings['MENU_LRC']}
           label="Lyrics"
@@ -275,6 +342,22 @@ class App extends React.Component {
             {Strings['MENU_LRC_OPENFILE']}
           </Spicetify.ReactComponent.MenuItem>
           <Spicetify.ReactComponent.MenuItem
+            label="Adjust Sync"
+            onClick={async () => {
+              const syncDelay = await promptModal(Strings["MENU_LRC_ADJUST_SYNC"], Strings["UI_PROMPT_ENTER_VALUE"], "", this.state.syncDelay);
+              if (syncDelay) {
+                localStorage.wmpotifyVisLyricsSyncDelay = syncDelay;
+              } else {
+                delete localStorage.wmpotifyVisLyricsSyncDelay;
+              }
+              this.setState({ syncDelay: parseFloat(syncDelay) || 0 });
+              MadVisLyrics.processTimeline();
+            }}
+            divider="after"
+          >
+            {Strings['MENU_LRC_ADJUST_SYNC'] + ` (${this.state.syncDelay}s)`}
+          </Spicetify.ReactComponent.MenuItem>
+          <Spicetify.ReactComponent.MenuItem
             label="Cache Lyrics"
             onClick={() => {
               if (this.state.enableLyricsCache) {
@@ -289,7 +372,7 @@ class App extends React.Component {
           >
             {Strings['MENU_LRC_CACHE']}
           </Spicetify.ReactComponent.MenuItem>
-          <Spicetify.ReactComponent.MenuItem
+          {this.state.debugMode && <Spicetify.ReactComponent.MenuItem
             label="Copy Debug Info"
             onClick={() => {
               MadVisLyrics.copyDebugInfo();
@@ -297,7 +380,7 @@ class App extends React.Component {
             }}
           >
             {Strings['MENU_LRC_COPY_DBG_INFO']}
-          </Spicetify.ReactComponent.MenuItem>
+          </Spicetify.ReactComponent.MenuItem>}
         </Spicetify.ReactComponent.MenuSubMenuItem>
         <Spicetify.ReactComponent.MenuItem
           label="Full Screen"
@@ -330,14 +413,41 @@ class App extends React.Component {
     });
 
     return <>
-      <style>
-        {`
+      <style>{`
+        .wmpvis-lyrics {` +
+          (this.state.type === "none" ? `
+            --wmpvis-lyrics-active: ${
+              this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
+                this.state.albumArtTopColor :
+                localStorage.wmpotifyVisUseSchemeColors ?
+                  "var(--spice-text)" :
+                    localStorage.wmpotifyVisTopColor || "white"};
+            --wmpvis-lyrics-inactive: ${
+              this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
+                this.state.albumArtBarColor :
+                localStorage.wmpotifyVisUseSchemeColors ?
+                  "var(--text-subdued)" :
+                    localStorage.wmpotifyVisBarColor || "lightgray"};` : `
+            --wmpvis-lyrics-active: white;
+            --wmpvis-lyrics-inactive: lightgray;`
+          ) + `
+        }
+
         .wmpotify-lyrics-line:hover {
           cursor: pointer;
           text-decoration: underline;
         }
 
-        @media (min-width: 1280px) {
+        @media (max-width: 640px) { ${/* Original MADVis Lyrics style */ ''}
+          .wmpvis-lyrics {
+            margin: 16px 16px 0 16px !important;
+            font-size: 11px !important;
+            text-align: center !important;
+            font-weight: normal !important;
+          }
+        }
+
+        @media (min-width: 1280px) { ${/* Stock Spotify Lyrics styles */ ''}
           .wmpvis-lyrics {
             font-size: 2rem !important;
           }
@@ -347,6 +457,17 @@ class App extends React.Component {
           .wmpvis-lyrics {
             font-size: 3rem !important;
             margin: 64px 144px 0 144px !important;
+          }
+        }
+
+        @media (forced-colors: active) {
+          .wmpvis-lyrics {
+            --wmpvis-lyrics-active: CanvasText;
+            --wmpvis-lyrics-inactive: GrayText;
+          }
+
+          .wmpotify-lyrics-line {
+            forced-color-adjust: auto;
           }
         }
         `}
@@ -362,20 +483,30 @@ class App extends React.Component {
           style={{
             position: "absolute",
             height: "100%",
-            backgroundColor: this.state.type === "albumArt" ? "var(--spice-main)" : "black",
+            backgroundColor: this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
+              this.state.bgColorFromAlbumArt :
+              this.state.bgColor,
             overflow: "hidden",
             maxWidth: "none",
+            forcedColorAdjust: "none",
           }}
           ref={this.elemRefs.root}
         >
           <img className="wmpvis-albumArt"
             style={{
-              display: this.state.type === "albumArt" ? "block" : "none",
+              display: this.state.showAlbumArt && this.state.type !== "none" ? "block" : "none",
               position: "absolute",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              boxShadow: "var(--album-shadow-big)",
+              width: this.state.albumArtSizeProps.width,
+              height: this.state.albumArtSizeProps.height,
+              minHeight: this.state.albumArtSizeProps.minHeight,
+              maxWidth: this.state.albumArtSizeProps.maxWidth,
+              maxHeight: this.state.albumArtSizeProps.maxHeight,
+              objectFit: this.state.albumArtSizeProps.objectFit,
+              opacity: this.state.dimAlbumArt ? 0.5 : 1,
+              boxShadow: (this.state.albumArtSize.includes("auto") || !this.state.albumArtShadow) ? "none" : "5px 5px 4px -4px rgba(0, 0, 0, 0.75)",
               zIndex: 0
             }}
             ref={this.elemRefs.albumArt}
@@ -422,7 +553,16 @@ class App extends React.Component {
           <p
             className="wmpvis-debug"
             style={{
-              display: "none",
+              display: this.state.debugMode ? "block" : "none",
+              color:
+                this.state.type !== "milkdrop" ?
+                  this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
+                    this.state.albumArtTopColor :
+                    localStorage.wmpotifyVisUseSchemeColors ?
+                      this.state.schemeTopColor :
+                        localStorage.wmpotifyVisTopColor || "white"
+                  : "white",
+              backgroundColor: this.state.type !== "milkdrop" ? "transparent" : "rgba(0, 0, 0, 0.5)",
               position: "absolute",
               top: 0,
               left: 0,
@@ -430,6 +570,27 @@ class App extends React.Component {
             }}
             ref={this.elemRefs.debug}
           ></p>
+          <p
+            className="wmpotify-no-audio-notification"
+            style={{
+              display: this.state.noAudioData && ["bars", "milkdrop"].includes(this.state.type) ? "block" : "none",
+              color:
+                this.state.type !== "milkdrop" ?
+                  this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
+                    this.state.albumArtTopColor :
+                    localStorage.wmpotifyVisUseSchemeColors ?
+                      this.state.schemeTopColor :
+                        localStorage.wmpotifyVisTopColor || "white"
+                  : "white",
+              backgroundColor: this.state.type !== "milkdrop" ? "transparent" : "rgba(0, 0, 0, 0.5)",
+              position: "absolute",
+              left: 0,
+              bottom: 0,
+              zIndex: 4
+            }}
+          >
+            {Strings['NO_AUD_DATA']}
+          </p>
           <div
             className="wmpvis-lyrics-container"
             style={{
@@ -441,7 +602,7 @@ class App extends React.Component {
               zIndex: 4,
               width: "100%",
               height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              backgroundColor: this.state.type === "none" ? "transparent" : "rgba(0, 0, 0, 0.5)",
               overflow: "auto",
             }}
           >
@@ -465,3 +626,4 @@ class App extends React.Component {
 }
 
 export default App;
+export { appInstance };

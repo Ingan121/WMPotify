@@ -8,6 +8,8 @@ import WindhawkComm from "../WindhawkComm";
 import WindowManager from "../managers/WindowManager";
 import { checkUpdates } from "../utils/UpdateCheck";
 import ThemeManager from "../managers/ThemeManager";
+import { ylxKeyPrefix } from "./libx";
+import { importScheme } from "../utils/appearance";
 
 const configWindow = document.createElement('div');
 let tabs = null;
@@ -27,6 +29,7 @@ function init() {
 
     const whStatus = WindhawkComm.query();
     const mainView = document.querySelector('.Root__main-view');
+    const hcQuery = window.matchMedia('(forced-colors: active)');
 
     configWindow.id = 'wmpotify-config';
     configWindow.innerHTML = `
@@ -56,11 +59,12 @@ function init() {
             <button id="wmpotify-config-apply" class="wmpotify-aero">${Strings['CONF_GENERAL_APPLY']}</button><br>
             <label for="wmpotify-config-control-style">${Strings['CONF_GENERAL_CONTROL_STYLE']}</label>
             <select id="wmpotify-config-control-style" class="wmpotify-aero">
-                <option value="classic">Windows Classic</option>
-                <option value="standard">Windows Standard</option>
+                <option value="classic">${Strings['CONF_GENERAL_CONTROL_STYLE_CLASSIC']}</option>
+                <option value="standard">${Strings['CONF_GENERAL_CONTROL_STYLE_STANDARD']}</option>
                 <option value="xp">Windows XP</option>
                 <option value="aero" selected>Windows Aero</option>
                 <option value="10">Windows 10</option>
+                <option value="custom">${Strings['CONF_GENERAL_CONTROL_STYLE_CUSTOM']}</option>
             </select>
             <label for="wmpotify-config-dark-mode">${Strings['CONF_GENERAL_DARK_MODE']}</label>
             <select id="wmpotify-config-dark-mode" class="wmpotify-aero">
@@ -71,7 +75,9 @@ function init() {
             </select><br>
             <label for="wmpotify-config-font">${Strings['CONF_GENERAL_FONT']}</label>
             <select id="wmpotify-config-font" class="wmpotify-aero">
+                <option value="default">${Strings['UI_DEFAULT']}</option>
                 <option value="custom">${Strings['UI_CUSTOM']}</option>
+                <option value="reload">${Strings['CONF_GENERAL_FONT_RELOAD']}</option>
             </select><br>
             <label for="wmpotify-config-topmost">${Strings['CONF_GENERAL_TOPMOST']}</label>
             <select id="wmpotify-config-topmost" class="wmpotify-aero" disabled>
@@ -98,6 +104,8 @@ function init() {
                 <a href="#" id="wmpotify-config-color-reset">${Strings['UI_RESET']}</a>
                 <input type="checkbox" id="wmpotify-config-tint-playerbar" class="wmpotify-aero">
                 <label for="wmpotify-config-tint-playerbar">${Strings['CONF_COLOR_TINTPB']}</label>
+                <input type="checkbox" id="wmpotify-config-tint-more" class="wmpotify-aero">
+                <label for="wmpotify-config-tint-more">${Strings['CONF_COLOR_TINTMORE']}</label>
             </section>
             <label>${Strings['CONF_COLOR_HUE']}</label><br>
             <input type="range" id="wmpotify-config-hue" class="wmpotify-aero no-track" min="0" max="360" step="1" value="180"><br>
@@ -140,7 +148,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0 Beta 4<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -153,12 +161,15 @@ function init() {
     elements.hue = configWindow.querySelector('#wmpotify-config-hue');
     elements.sat = configWindow.querySelector('#wmpotify-config-sat');
     elements.tintPb = configWindow.querySelector('#wmpotify-config-tint-playerbar');
+    elements.tintMore = configWindow.querySelector('#wmpotify-config-tint-more');
     elements.style = configWindow.querySelector('#wmpotify-config-style');
     elements.titleStyle = configWindow.querySelector('#wmpotify-config-title-style');
     elements.controlStyle = configWindow.querySelector('#wmpotify-config-control-style');
     elements.darkMode = configWindow.querySelector('#wmpotify-config-dark-mode');
     elements.fontSelector = configWindow.querySelector('#wmpotify-config-font');
-    elements.fontCustom = configWindow.querySelector('#wmpotify-config-font option');
+    elements.fontDefault = configWindow.querySelector('#wmpotify-config-font option[value="default"]');
+    elements.fontCustom = configWindow.querySelector('#wmpotify-config-font option[value="custom"]');
+    elements.fontReload = configWindow.querySelector('#wmpotify-config-font option[value="reload"]');
     elements.hidePbLeftBtn = configWindow.querySelector('#wmpotify-config-hide-pbleftbtn');
     elements.topmost = configWindow.querySelector('#wmpotify-config-topmost');
     elements.backdrop = configWindow.querySelector('#wmpotify-config-backdrop');
@@ -169,6 +180,9 @@ function init() {
     elements.autoUpdates = configWindow.querySelector('#wmpotify-config-auto-updates');
 
     configWindow.style.height = localStorage.wmpotifyConfigHeight || '';
+
+    onHCChange(hcQuery);
+    hcQuery.addEventListener('change', onHCChange);
 
     elements.style.addEventListener('change', async () => {
         if (elements.style.value === 'basic_custom') {
@@ -192,9 +206,31 @@ function init() {
             textBasicColor = textColor;
         }
     });
-    elements.controlStyle.addEventListener('change', () => {
+
+    elements.controlStyle.addEventListener('change', async () => {
+        if (elements.controlStyle.value === 'custom') {
+            try {
+                const res = await importScheme();
+                if (res === -1) {
+                    elements.controlStyle.value = localStorage.wmpotifyControlStyle || 'aero';
+                }
+            } catch {
+                elements.controlStyle.value = localStorage.wmpotifyControlStyle || 'aero';
+            }
+            return;
+        }
+
+        document.getElementById('wmpotify-scheme')?.remove();
+        delete localStorage.wmpotifyCustomScheme;
+        delete document.documentElement.dataset.wmpotifyFlatMenus;
+
         localStorage.wmpotifyControlStyle = elements.controlStyle.value;
         document.documentElement.dataset.wmpotifyControlStyle = elements.controlStyle.value;
+
+        if (localStorage.wmpotifyTintColor) {
+            const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+            setTintColor(hue, sat, tintPb, tintMore);
+        }
     });
     elements.darkMode.addEventListener('change', async () => {
         const darkMode = elements.darkMode.value;
@@ -227,21 +263,41 @@ function init() {
         } else {
             ThemeManager.removeMarketplaceSchemeObserver();
         }
+
+        if (localStorage.wmpotifyTintColor) {
+            const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+            setTintColor(hue, sat, tintPb, tintMore);
+        }
     });
     elements.fontSelector.addEventListener('change', async () => {
         if (elements.fontSelector.value === 'custom') {
             const fontName = await promptModal(Strings['CONF_GENERAL_CUSTOM_FONT_DLG_TITLE'], Strings['CONF_GENERAL_CUSTOM_FONT_MSG'], '', localStorage.wmpotifyFont || 'Segoe UI');
             if (!fontName) {
-                elements.fontSelector.value = localStorage.wmpotifyFont || 'Segoe UI';
+                elements.fontSelector.value = localStorage.wmpotifyFont || 'default';
                 return;
             }
             elements.fontCustom.textContent = fontName;
             localStorage.wmpotifyFont = fontName;
         } else {
             elements.fontCustom.textContent = Strings['UI_CUSTOM'];
-            localStorage.wmpotifyFont = elements.fontSelector.value;
+            if (elements.fontSelector.value === 'reload') {
+                delete localStorage.wmpotifyFontCache;
+                const cnt = elements.fontSelector.options.length - 3;
+                for (let i = 0; i < cnt; i++) {
+                    elements.fontSelector.options[2].remove();
+                }
+                loadFonts();
+            } else if (elements.fontSelector.value === 'default') {
+                delete localStorage.wmpotifyFont;
+            } else {
+                localStorage.wmpotifyFont = elements.fontSelector.value;
+            }
         }
-        document.documentElement.style.setProperty('--ui-font', localStorage.wmpotifyFont);
+        if (localStorage.wmpotifyFont) {
+            document.documentElement.style.setProperty('--ui-font', localStorage.wmpotifyFont);
+        } else {
+            document.documentElement.style.removeProperty('--ui-font');
+        }
     });
     elements.hidePbLeftBtn.addEventListener('change', () => {
         if (elements.hidePbLeftBtn.checked) {
@@ -259,7 +315,7 @@ function init() {
         } else {
             delete localStorage.wmpotifyShowLibX;
             document.body.dataset.hideLibx = true;
-            Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 1);
+            Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 1);
         }
     });
     configWindow.querySelector('#wmpotify-config-close').addEventListener('click', close);
@@ -347,24 +403,13 @@ function init() {
     elements.hue.addEventListener('input', onColorChange);
     elements.sat.addEventListener('input', onColorChange);
     elements.tintPb.addEventListener('change', onColorChange);
+    elements.tintMore.addEventListener('change', onColorChange);
     configWindow.querySelector('#wmpotify-config-color-reset').addEventListener('click', resetColor);
 
     configWindow.querySelector('#wmpotify-config-prev').addEventListener('click', prevTab);
     configWindow.querySelector('#wmpotify-config-next').addEventListener('click', nextTab);
 
-    FontDetective.each(font => {
-        const option = document.createElement("option");
-        option.textContent = font.name;
-        option.value = font.name;
-        if (font.name === (localStorage.wmpotifyFont || 'Segoe UI')) {
-            option.selected = true;
-        }
-        if (font.name === 'Segoe UI') {
-            elements.fontSelector.insertBefore(option, elements.fontSelector.firstChild);
-        } else {
-            elements.fontSelector.insertBefore(option, elements.fontCustom);
-        }
-    });
+    loadFonts();
 
     if (localStorage.wmpotifyStyle) {
         if (localStorage.wmpotifyStyle === 'basic' && localStorage.wmpotifyBasicActiveColor && localStorage.wmpotifyBasicInactiveColor && localStorage.wmpotifyBasicTextColor) {
@@ -385,13 +430,15 @@ function init() {
     if (localStorage.wmpotifyTitleStyle) {
         elements.titleStyle.value = localStorage.wmpotifyTitleStyle;
     }
-    if (localStorage.wmpotifyControlStyle) {
-        elements.controlStyle.value = localStorage.wmpotifyControlStyle;
-    }
-    if (['follow_scheme', 'system', 'always', 'never'].includes(localStorage.wmpotifyDarkMode)) {
-        elements.darkMode.value = localStorage.wmpotifyDarkMode;
-    } else if (WindhawkComm.getModule()?.initialOptions.noforceddarkmode) {
-        elements.darkMode.value = 'system';
+    if (!hcQuery.matches) {
+        if (localStorage.wmpotifyControlStyle) {
+            elements.controlStyle.value = localStorage.wmpotifyControlStyle;
+        }
+        if (['follow_scheme', 'system', 'always', 'never'].includes(localStorage.wmpotifyDarkMode)) {
+            elements.darkMode.value = localStorage.wmpotifyDarkMode;
+        } else if (WindhawkComm.getModule()?.initialOptions.noforceddarkmode) {
+            elements.darkMode.value = 'system';
+        }
     }
     if (localStorage.wmpotifyHidePbLeftBtn) {
         elements.hidePbLeftBtn.checked = true;
@@ -424,15 +471,22 @@ function init() {
     }, true);
 
     mainView.appendChild(configWindow);
+
+    const interval = setInterval(() => {
+        try {
+            new Spicetify.Menu.Item(Strings['MENU_CONF'], false, Config.open).register();
+            clearInterval(interval);
+        } catch (e) {}
+    }, 100);
 }
 
 function open() {
     if (!tabs) {
         return;
     }
-    if (document.body.dataset.wmpotifyLibPageOpen) {
-        // Close standalone LibX and go to home / NowPlaying to show the config panel
-        // As standalone LibX page hides the main area
+    if (document.body.dataset.wmpotifyLibPageOpen || document.querySelector('.QdB2YtfEq0ks5O4QbtwX')) {
+        // Close standalone LibX or improved cinema and go to home / NowPlaying to show the config panel
+        // As standalone LibX page or improved cinema hides the main area
         if (Spicetify.Config.custom_apps.includes('wmpvis')) {
             Spicetify.Platform.History.push({ pathname: '/wmpvis' });
         } else {
@@ -444,11 +498,14 @@ function open() {
     }
     configWindow.style.display = 'block';
     if (localStorage.wmpotifyTintColor) {
-        const [hue, sat, tintPb] = localStorage.wmpotifyTintColor.split(',');
+        const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
         elements.hue.value = parseInt(hue) + 180;
         elements.sat.value = parseInt(sat) * 121 / 100;
         if (tintPb) {
             elements.tintPb.checked = true;
+        }
+        if (tintMore) {
+            elements.tintMore.checked = true;
         }
     }
 }
@@ -480,8 +537,8 @@ function nextTab() {
 function onColorChange() {
     const hue = elements.hue.value - 180;
     const sat = elements.sat.value * 100 / 121;
-    setTintColor(hue, sat, elements.tintPb.checked);
-    localStorage.wmpotifyTintColor = hue + ',' + sat + ',' + (elements.tintPb.checked ? '1' : '');
+    setTintColor(hue, sat, elements.tintPb.checked, elements.tintMore.checked);
+    localStorage.wmpotifyTintColor = hue + ',' + sat + ',' + (elements.tintPb.checked ? '1' : '') + ',' + (elements.tintMore.checked ? '1' : '');
 }
 
 function resetColor() {
@@ -544,6 +601,115 @@ function apply() {
         delete localStorage.wmpotifyTitleStyle;
     }
     location.reload();
+}
+
+function loadFonts() {
+    const fonts = localStorage.wmpotifyFontCache?.split(',') || [];
+    if (fonts.length) {
+        fonts.forEach(font => {
+            const option = document.createElement("option");
+            option.textContent = font;
+            option.value = font;
+            if (font === localStorage.wmpotifyFont) {
+                option.selected = true;
+            }
+            if (font === 'Segoe UI') {
+                elements.fontSelector.insertBefore(option, elements.fontCustom.nextElementSibling);
+            } else {
+                elements.fontSelector.insertBefore(option, elements.fontReload);
+            }
+        });
+        if (!fonts.includes(localStorage.wmpotifyFont)) {
+            if (localStorage.wmpotifyFont) {
+                elements.fontSelector.value = 'custom';
+                elements.fontCustom.textContent = localStorage.wmpotifyFont;
+            } else {
+                elements.fontSelector.value = 'default';
+            }
+        }
+    } else {
+        FontDetective.each(font => {
+            const option = document.createElement("option");
+            option.textContent = font.name;
+            option.value = font.name;
+            if (font.name === localStorage.wmpotifyFont) {
+                option.selected = true;
+            }
+            if (font.name === 'Segoe UI') {
+                elements.fontSelector.insertBefore(option, elements.fontCustom.nextElementSibling);
+            } else {
+                elements.fontSelector.insertBefore(option, elements.fontReload);
+            }
+            fonts.push(font.name);
+        });
+
+        FontDetective.all(() => {
+            if (!fonts.includes(localStorage.wmpotifyFont)) {
+                if (localStorage.wmpotifyFont) {
+                    elements.fontSelector.value = 'custom';
+                    elements.fontCustom.textContent = localStorage.wmpotifyFont;
+                } else {
+                    elements.fontSelector.value = 'default';
+                }
+            }
+            localStorage.wmpotifyFontCache = fonts.join(',');
+            // FD will just return the same fonts if called again, so remove the reload option
+            // Refresh the page and select reload to reload the fonts
+            elements.fontReload.remove();
+        });
+    }
+}
+
+function onHCChange(event) {
+    if (event.matches) {
+        elements.controlStyle.innerHTML = `
+            <option value="classic">${Strings['CONF_GENERAL_CONTROL_STYLE_HC']}</option>
+            <option value="custom">${Strings['CONF_GENERAL_CONTROL_STYLE_CUSTOM']}</option>
+        `;
+        if (localStorage.wmpotifyControlStyle !== 'custom') {
+            elements.controlStyle.value = 'classic';
+            document.documentElement.dataset.wmpotifyControlStyle = 'classic';
+        } else {
+            elements.controlStyle.value = 'custom';
+        }
+        elements.darkMode.innerHTML = `
+            <option value="never">${Strings['CONF_GENERAL_CONTROL_STYLE_HC']}</option>
+        `;
+        elements.darkMode.value = 'never';
+        elements.darkMode.disabled = true;
+        elements.tintPb.disabled = true;
+        elements.tintMore.disabled = true;
+        if (localStorage.wmpotifyTintColor) {
+            const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+            setTintColor(hue, sat, false, false);
+        }
+    } else {
+        elements.controlStyle.innerHTML = `
+            <option value="classic">${Strings['CONF_GENERAL_CONTROL_STYLE_CLASSIC']}</option>
+            <option value="standard">${Strings['CONF_GENERAL_CONTROL_STYLE_STANDARD']}</option>
+            <option value="xp">Windows XP</option>
+            <option value="aero" selected>Windows Aero</option>
+            <option value="10">Windows 10</option>
+            <option value="custom">${Strings['CONF_GENERAL_CONTROL_STYLE_CUSTOM']}</option>
+        `;
+        elements.controlStyle.value = localStorage.wmpotifyControlStyle || 'aero';
+        document.documentElement.dataset.wmpotifyControlStyle = elements.controlStyle.value;
+        elements.darkMode.innerHTML = `
+            <option value="follow_scheme" selected>${Strings['CONF_GENERAL_DARK_MODE_FOLLOW_SCHEME']}</option>
+            <option value="system">${Strings['CONF_GENERAL_DARK_MODE_SYSTEM']}</option>
+            <option value="always">${Strings['CONF_GENERAL_DARK_MODE_ALWAYS']}</option>
+            <option value="never">${Strings['CONF_GENERAL_DARK_MODE_NEVER']}</option>
+        `;
+        elements.darkMode.disabled = false;
+        const defaultDarkMode = WindhawkComm.getModule()?.initialOptions.noforceddarkmode ? 'system' : 'follow_scheme';
+        elements.darkMode.value = localStorage.wmpotifyDarkMode || defaultDarkMode;
+        elements.tintPb.disabled = false;
+        elements.tintMore.disabled = false;
+        if (localStorage.wmpotifyTintColor) {
+            const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+            setTintColor(hue, sat, tintPb, tintMore);
+        }
+    }
 }
 
 const Config = {

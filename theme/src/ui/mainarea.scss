@@ -44,7 +44,7 @@
     }
 }
 
-#main:has(.Root__right-sidebar aside) .Root__main-view {
+body.sidebar-open .Root__main-view {
     width: calc(100% + var(--panel-gap) - 3px);
 }
 
@@ -58,8 +58,11 @@ body[data-hide-libx],
         margin-left: calc(var(--panel-gap) * -2);
         width: calc(100% + var(--panel-gap) * 3);
     }
+}
 
-    #main:has(.Root__right-sidebar aside) .Root__main-view {
+body[data-hide-libx].sidebar-open,
+:root:fullscreen body.sidebar-open {
+    .Root__main-view {
         width: calc(100% + var(--panel-gap) * 3 - 3px);
     }
 }
@@ -75,11 +78,15 @@ body[data-hide-libx],
         outline: solid 1px var(--wmp11-separator-light);
         overflow: hidden;
 
+        &:has(.Dropdown-menu) {
+            overflow: visible;
+        }
+
         &:has(.main-topBar-topbarContentWrapper:empty) {
             display: none;
         }
 
-        &:has(.main-topBar-topbarContent > span.main-entityHeader-topbarTitle) {
+        &:has(.main-topBar-topbarContent > span.main-entityHeader-topbarTitle):not(:has(div[data-identifier="discography-topbar"])) {
             position: absolute;
             width: calc(100% - var(--scrollbar-size));
             outline: none;
@@ -91,6 +98,10 @@ body[data-hide-libx],
 
         nav ul {
             display: flex;
+        }
+
+        &:has(.main-topBar-background[style*="opacity: 1"]) {
+            display: flex !important;
         }
     }
 }
@@ -109,7 +120,16 @@ body[data-hide-libx],
 
 .Root__right-sidebar {
     margin-right: calc(var(--panel-gap) * -1);
+
+    /* For Peek NPV */
+    > div:first-child,
+    > div:first-child > div:first-child,
+    > div:first-child > div:first-child > div {
+        border-radius: 0 !important;
+    }
+
     aside {
+        animation: appear 8s !important;
         background: transparent !important;
         border-radius: 0 !important;
 
@@ -119,6 +139,11 @@ body[data-hide-libx],
 
         div:has([data-testid='NPV_Panel_OpenDiv']) {
             background: transparent !important;
+        }
+
+        &:has([data-testid='NPV_Panel_OpenDiv']),
+        &:has(#spotify-queue-panel-content) {
+            animation: none !important;
         }
 
         div[data-testid="PanelHeader_CloseButton"] button {
@@ -162,11 +187,19 @@ body[data-hide-libx],
     }
 }
 
+:root[data-wmpotify-init-complete],
+:root[data-wmpotify-js-fail] {
+    .Root__right-sidebar aside {
+        animation: none !important;
+    }
+}
+
 .Root {
     --main-area-right: 0px;
-    &:has(.Root__right-sidebar aside) {
-        --main-area-right: calc(var(--panel-width, var(--right-sidebar-width)) * 1px + 3px);
-    }
+}
+
+body.sidebar-open .Root {
+    --main-area-right: calc(var(--panel-width, var(--right-sidebar-width)) * 1px + 3px);
 }
 
 .main-loadingIndicator-loadingIcon {
@@ -189,12 +222,13 @@ body[data-hide-libx],
 
     .Root {
         --main-area-right: var(--panel-gap);
-        &:has(.Root__right-sidebar aside) {
-            --main-area-right: calc(var(--panel-width, var(--right-sidebar-width)) * 1px + var(--panel-gap) + 3px);
+    }
 
-            .Root__main-view {
-                width: calc(100% + var(--panel-gap) - 3px);
-            }
+    body.sidebar-open .Root {
+        --main-area-right: calc(var(--panel-width, var(--right-sidebar-width)) * 1px + var(--panel-gap) + 3px);
+
+        .Root__main-view {
+            width: calc(100% + var(--panel-gap) - 3px);
         }
     }
 
@@ -217,7 +251,7 @@ body[data-hide-libx],
             width: calc(100% + var(--panel-gap) * 1);
         }
 
-        #main:has(.Root__right-sidebar aside) .Root__main-view {
+        &.sidebar-open .Root__main-view {
             width: calc(100% + var(--panel-gap) * 2 - 3px);
         }
     }
@@ -228,8 +262,48 @@ body[data-hide-libx],
             width: calc(100% + var(--panel-gap) * 3) !important;
         }
 
-        #main:has(.Root__right-sidebar aside) .Root__main-view {
+        body.sidebar-open .Root__main-view {
             width: calc(100% + var(--panel-gap) * 3 - 3px) !important;
+        }
+    }
+}
+
+@media (max-width: 358px) {
+    #Desktop_LeftSidebar_Id {
+        display: none;
+    }
+
+    .Root__main-view {
+        margin-left: calc(var(--panel-gap) * -2);
+        width: calc(100% + var(--panel-gap) * 3);
+    }
+
+    body.sidebar-open {
+        .Root__main-view {
+            display: none;
+        }
+
+        .Root__right-sidebar {
+            margin-left: calc(var(--panel-gap) * -3) !important;
+
+            .XOawmCGZcQx4cesyNfVO {
+                width: 358px !important;
+            }
+        }
+    }
+
+    :root[data-wmpotify-style="xp"] {
+        .Root__main-view {
+            margin-left: calc(var(--panel-gap) * -1);
+            width: calc(100% + var(--panel-gap) * 1);
+        }
+
+        body.sidebar-open .Root__right-sidebar {
+            margin-left: calc(var(--panel-gap) * -2) !important;
+
+            .XOawmCGZcQx4cesyNfVO {
+                width: 342px !important;
+            }
         }
     }
 }

@@ -30,6 +30,7 @@
       margin-left: var(--checkbox-total-width);
       width: auto;
       background: none !important;
+      forced-color-adjust: preserve-parent-color;
 
       &::before {
         content: "";
@@ -83,6 +84,9 @@
     &:disabled {
       + label,
       + .x-toggle-indicatorWrapper {
+        color: var(--button-shadow-color) !important;
+        text-shadow: 1px 1px 0 var(--button-hilight) !important;
+
         &::before {
           background: var(--surface);
         }
@@ -103,6 +107,10 @@
     margin-left: 25px !important;
   }
 
+  label[for="wmpotify-config-tint-more"] {
+    margin-left: 30px !important;
+  }
+
   label[for="wmpotify-config-auto-updates"] {
     &::after {
       top: 2px;
@@ -112,9 +120,6 @@
   #wmpotify-config-tab-general {
     input[type="checkbox"] + label {
       padding-bottom: 5px;
-      &::after {
-        top: 2px !important;
-      }
     }
   }
 }

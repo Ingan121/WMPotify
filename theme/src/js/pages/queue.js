@@ -32,7 +32,7 @@ export function initQueuePanel() {
     if (panel && previousPanel) {
         previousPanel.style.display = 'none';
     }
-    panel.classList.add('spotify-queue-panel');
+    panel.dataset.identifier = 'spotify-queue-panel';
     const top = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel) > div > div:first-child > div:first-child');
     const belowSeparator = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel) > div > div:nth-child(2)');
     belowSeparator.id = 'spotify-queue-panel-content';
@@ -113,11 +113,23 @@ export function initQueuePanel() {
 }
 
 function onQueuePanelInit() {
-    const panelContent = document.querySelectorAll('#queue-panel ul')[1];
-    if (panelContent) {
-        processQueueItems();
-        new MutationObserver(processQueueItems).observe(panelContent, { childList: true });
+    const queueContainer = document.querySelector('#queue-panel > div:first-child');
+    if (!queueContainer) {
+        return;
     }
+    const queueContent = queueContainer?.querySelectorAll('#queue-panel ul')[1];
+    if (queueContent) {
+        delete queueContainer.dataset.nothingInQueue;
+        processQueueItems();
+        new MutationObserver(processQueueItems).observe(queueContent, { childList: true });
+    } else {
+        if (document.querySelector('#queue-panel > div:first-child > svg:first-child')) {
+            queueContainer.dataset.nothingInQueue = true;
+        } else {
+            delete queueContainer.dataset.nothingInQueue;
+        }
+    }
+
 }
 
 function processQueueItems() {

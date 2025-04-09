@@ -3,7 +3,7 @@
 import PageManager from "../managers/PageManager";
 
 export async function initDiscographyPage(wait) {
-    const section = document.querySelector('section[data-testid="artist-page"]');
+    const section = document.querySelector('section[data-test-uri^="spotify:artist:"]');
     if (!section) {
         if (wait) {
             await PageManager.waitForPageRender();
@@ -14,13 +14,22 @@ export async function initDiscographyPage(wait) {
 
     await waitForFullRender(section);
 
-    document.querySelector('.main-topBar-topbarContent').appendChild(document.querySelector('.artist-artistDiscography-topBar'));
+    let topbar = section.querySelector('.artist-artistDiscography-topBar') || section.querySelector('section div:has(> .x-sortBox-sortDropdown)');
+    if (topbar) {
+        topbar.dataset.identifier = 'discography-topbar';
+        document.querySelector('.main-topBar-topbarContent').appendChild(topbar);
+    } else {
+        topbar = document.querySelector('[data-identifier="discography-topbar"]');
+    }
+    if (!topbar) {
+        return;
+    }
 
     if (section.querySelector('.artist-artistDiscography-cardGrid')) {
         await waitForFullRender(section, true);
     }
 
-    const artistName = document.querySelector('.main-topBar-topbarContent .artist-artistDiscography-topBar a').textContent;
+    const artistName = topbar.querySelector('a').textContent;
     const artistUrl = section.dataset.testUri;
 
     const headers = section.querySelectorAll('.artist-artistDiscography-headerContainer');
@@ -70,7 +79,13 @@ export async function initDiscographyPage(wait) {
         initDiscographyPage(false);
         observer.disconnect();
     });
-    observer.observe(section.querySelector('[data-testid="infinite-scroll-list"]'), { childList: true });
+    let subtreeNeeded = false;
+    let target = section.querySelector('[data-testid="infinite-scroll-list"]');
+    if (!target) {
+        target = section.querySelector('section');
+        subtreeNeeded = true;
+    }
+    observer.observe(target, { childList: true, subtree: subtreeNeeded });
 }
 
 function waitForFullRender(section, noGridView) {

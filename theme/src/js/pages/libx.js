@@ -19,6 +19,9 @@ let exittingFolder = false;
 let lastCategories = [];
 let lastCategoriesIdentifier = [];
 
+export const ylxKeyPrefix = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number)[2] >= 58 ? 'left' : 'ylx';
+export const expandedStateKey = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number)[2] >= 58 ? 'left-sidebar-expanded-state-width' : 'ylx-expanded-state-nav-bar-width';
+
 const CustomLibX = {
     async init() {
         if (document.querySelector('#wmpotify-libx-sidebar')) {
@@ -446,9 +449,9 @@ function renderSidebar() {
 }
 
 function handleResize() {
-    const origSidebarState = DirectUserStorage.getItem("ylx-sidebar-state");
-    Spicetify.Platform.LocalStorageAPI.setItem("ylx-sidebar-state", 2);
-    DirectUserStorage.setItem("ylx-sidebar-state", origSidebarState); // make the previous setItem temporary
+    const origSidebarState = DirectUserStorage.getItem(`${ylxKeyPrefix}-sidebar-state`);
+    Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 2);
+    DirectUserStorage.setItem(`${ylxKeyPrefix}-sidebar-state`, origSidebarState); // make the previous setItem temporary
 }
 
 function waitForLibXLoad() {

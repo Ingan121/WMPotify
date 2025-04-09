@@ -11,12 +11,13 @@ html:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style=
     }
 
     &-track {
-      background-image: url("resources/icon/98/scrollbar-background.svg");
+      background-image: var(--scroll-track);
     }
 
     &-thumb {
       background-color: var(--surface);
       box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+      forced-color-adjust: none;
     }
 
     &-button {
@@ -27,12 +28,11 @@ html:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style=
             display: block;
           }
 
-          &:increment,
-          &:decrement {
+          &:increment {
             display: none;
           }
 
-          background-image: url("resources/icon/98/button-left.svg");
+          background-image: var(--scroll-left);
           width: 16px;
         }
 
@@ -42,12 +42,11 @@ html:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style=
             display: block;
           }
 
-          &:increment,
           &:decrement {
             display: none;
           }
 
-          background-image: url("resources/icon/98/button-right.svg");
+          background-image: var(--scroll-right);
           width: 16px;
         }
       }
@@ -59,7 +58,7 @@ html:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style=
             display: block;
           }
 
-          background-image: url("resources/icon/98/button-up.svg");
+          background-image: var(--scroll-up);
           height: 17px;
         }
 
@@ -69,7 +68,7 @@ html:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style=
             display: block;
           }
 
-          background-image: url("resources/icon/98/button-down.svg");
+          background-image: var(--scroll-down);
           height: 17px;
         }
       }
@@ -79,64 +78,6 @@ html:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style=
       &:vertical:start:increment,
       &:vertical:end:decrement {
         display: none !important;
-      }
-    }
-  }
-
-  &[data-wmpotify-control-style="standard"] {
-    ::-webkit-scrollbar {
-      &-track {
-        background-image: url("resources/icon/2k/scrollbar-background.svg");
-      }
-  
-      &-button {
-        &:horizontal {
-          &:start {
-            background-image: url("resources/icon/2k/button-left.svg");
-          }
-  
-          &:end {
-            background-image: url("resources/icon/2k/button-right.svg");
-          }
-        }
-  
-        &:vertical {
-          &:start {
-            background-image: url("resources/icon/2k/button-up.svg");
-          }
-          &:end {
-            background-image: url("resources/icon/2k/button-down.svg");
-          }
-        }
-      }
-    }
-  }
-
-  &[data-wmpotify-dark-mode] {
-    ::-webkit-scrollbar {
-      &-track {
-        background-image: url("resources/icon/98dark/scrollbar-background.svg");
-      }
-
-      &-button {
-        &:horizontal {
-          &:start {
-            background-image: url("resources/icon/98dark/button-left.svg");
-          }
-
-          &:end {
-            background-image: url("resources/icon/98dark/button-right.svg");
-          }
-        }
-
-        &:vertical {
-          &:start {
-            background-image: url("resources/icon/98dark/button-up.svg");
-          }
-          &:end {
-            background-image: url("resources/icon/98dark/button-down.svg");
-          }
-        }
       }
     }
   }

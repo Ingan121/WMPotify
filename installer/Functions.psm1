@@ -51,6 +51,19 @@ function Wait-Input {
         $Host.UI.RawUI.ReadKey('NoEcho, IncludeKeyDown') | Out-Null
     }
 }
+
+function Write-Win78Warning {
+    [CmdletBinding()]
+    param ()
+    process {
+        Write-Host -Object 'ATTENTION!' -ForegroundColor Yellow
+        Write-Host -Object 'You are using Windows 7 or 8.1.'
+        Write-Host -Object 'Please note that the WMPotify theme may not work properly on these versions.'
+        Write-Host -Object 'Before continuing, please make sure you have installed Spotify and Spicetify that are compatible with WMPotify and applied appropriate workarounds (e.g. VxKex) to make them work on your system.'
+        Write-Host -Object 'Do note that launching Spotify with the --no-sandbox flag is required to get the Windhawk mod working properly with Aero Glass, etc.'
+        Wait-Input
+    }
+}
 #endregion Console helpers
 
 #region Spotify
@@ -63,7 +76,9 @@ function Test-Spotify {
     }
     process {
         $desktopApp = Test-Path -Path "$env:APPDATA\Spotify" -PathType Container
-        $storeApp = Get-AppxPackage -Name '*SpotifyAB*'
+        if ([System.Environment]::OSVersion.Version -ge [Version]'10.0') {
+            $storeApp = Get-AppxPackage -Name '*SpotifyAB*'
+        }
     }
     end {
         $desktopApp -or $storeApp
@@ -627,6 +642,7 @@ function Get-WindowsAppsTheme {
     [CmdletBinding()]
     param ()
     begin {
+
         Write-Verbose -Message 'Getting current Windows apps theme...'
         $Parameters = @{
             Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
@@ -634,9 +650,13 @@ function Get-WindowsAppsTheme {
         }
     }
     process {
-        switch (Get-ItemPropertyValue @Parameters) {
-            0 { 'dark' }
-            1 { 'light' }
+        if ([System.Environment]::OSVersion.Version -lt [Version]'10.0') {
+            'light'
+        } else {
+            switch (Get-ItemPropertyValue @Parameters) {
+                0 { 'dark' }
+                1 { 'light' }
+            }
         }
     }
 }

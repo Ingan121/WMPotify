@@ -1,11 +1,16 @@
 :root:not([data-wmpotify-control-style="aero"]):not([data-wmpotify-control-style="xp"]):not([data-wmpotify-control-style="10"]) {
   button.wmpotify-aero,
   button.Button-sc-y0gtbx-0,
+  button[class*="0-button-primary"][type="submit"],
   .ReactModalPortal button.Button-sc-qlcn5g-0,
   .ReactModalPortal button.Button-sc-1dqy6lx-0,
+  dialog button.Button-sc-qlcn5g-0,
+  dialog button.Button-sc-1dqy6lx-0,
+  dialog button[class*="0-button-primary"],
   #context-menu button.Button-sc-1dqy6lx-0,
   #context-menu button.Button-sc-qlcn5g-0,
-  .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2) {
+  .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2),
+  .search-searchCategory-carouselButton {
     font-size: 11px;
     box-sizing: border-box;
     border: none;
@@ -14,6 +19,7 @@
     background: var(--surface);
     box-shadow: var(--border-raised-outer), var(--border-raised-inner);
     border-radius: 0;
+    forced-color-adjust: none;
 
     min-width: 75px;
     min-height: 23px;

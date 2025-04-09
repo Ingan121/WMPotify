@@ -4,99 +4,107 @@
 @import "10/dialog.scss";
 
 .ReactModalPortal,
-generic-modal {
-  .GenericModal__overlay {
+generic-modal,
+dialog {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+
+  .GenericModal__overlay,
+  &::backdrop {
     background: none;
     transition: none !important;
+  }
 
-    [role="dialog"] {
-      transition: none !important;
-      border-radius: 0;
+  [role="dialog"] {
+    transition: none !important;
+    border-radius: 0;
+    forced-color-adjust: none;
+  }
 
-      > div {
-        border-radius: 0;
-        background-color: var(--surface);
-        color: var(--button-text);
-        box-shadow: var(--border-window-outer), var(--border-window-inner);
+  [role="dialog"] > div,
+  &[open] > div {
+    border-radius: 0;
+    background-color: var(--surface);
+    color: var(--button-text);
+    box-shadow: var(--border-window-outer), var(--border-window-inner);
+  }
+
+  .main-duplicateTrackModal-buttonContainer {
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* For Spicetify.PopupModal */
+  .main-embedWidgetGenerator-container {
+    max-height: calc(100vh - 50px);
+  }
+
+  .main-trackCreditsModal-header {
+    padding: 8px;
+    border-bottom: none;
+
+    h1 {
+      font: var(--caption-font);
+    }
+
+    .main-trackCreditsModal-closeBtn {
+      width: 25px;
+      height: 15px;
+      background: url("resources/icon/close.png") no-repeat;
+      transform: none !important;
+
+      &:hover {
+        background: url("resources/icon/close_hover.png") no-repeat;
+      }
+
+      &:active {
+        background: url("resources/icon/close_pressed.png") no-repeat;
+      }
+
+      svg {
+        display: none;
       }
     }
+  }
 
-    .main-duplicateTrackModal-buttonContainer {
-      justify-content: flex-end;
-      gap: 8px;
+  .main-trackCreditsModal-mainSection {
+    padding: 8px;
+    scrollbar-width: none;
+
+    * {
+      font: var(--message-font);
     }
+  }
 
-    /* For Spicetify.PopupModal */
-    .main-embedWidgetGenerator-container {
-      max-height: calc(100vh - 50px);
+  .main-trackCreditsModal-originalCredits {
+    padding-bottom: 0;
+  }
+
+  .wmpotify-modal-bottom-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 8px;
+    margin-bottom: 5px;
+
+    button + button {
+      margin-left: 6px;
     }
+  }
 
-    .main-trackCreditsModal-header {
-      padding: 8px;
-      border-bottom: none;
-
-      h1 {
-        font: var(--caption-font);
+  /* For Spicetify experimental features */
+  .spicetify-exp-features {
+    > .setting-row {
+      padding: 2px 0;
+      .search-container svg {
+        display: none;
       }
 
-      .main-trackCreditsModal-closeBtn {
-        width: 25px;
-        height: 15px;
-        background: url("resources/icon/close.png") no-repeat;
-        transform: none !important;
-
-        &:hover {
-          background: url("resources/icon/close_hover.png") no-repeat;
-        }
-
-        &:active {
-          background: url("resources/icon/close_pressed.png") no-repeat;
-        }
-
-        svg {
-          display: none;
-        }
-      }
-    }
-
-    .main-trackCreditsModal-mainSection {
-      padding: 8px;
-      scrollbar-width: none;
-
-      * {
-        font: var(--message-font);
-      }
-    }
-
-    .main-trackCreditsModal-originalCredits {
-      padding-bottom: 0;
-    }
-
-    .wmpotify-modal-bottom-buttons {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      margin-top: 8px;
-      margin-bottom: 5px;
-
-      button + button {
-        margin-left: 6px;
-      }
-    }
-
-    /* For Spicetify experimental features */
-    .spicetify-exp-features {
-      > .setting-row {
-        padding: 2px 0;
-        .search-container svg {
-          display: none;
-        }
-
-        > .col.action:has(button.switch) {
-          width: 16px;
-          button.switch {
-            margin: 0;
-          }
+      > .col.action:has(button.switch) {
+        width: 16px;
+        button.switch {
+          margin: 0;
         }
       }
     }

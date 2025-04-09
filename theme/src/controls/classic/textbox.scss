@@ -20,6 +20,7 @@
         appearance: none;
         border-radius: 0;
         height: 21px;
+        forced-color-adjust: none;
         &:focus {
             outline: none;
         }

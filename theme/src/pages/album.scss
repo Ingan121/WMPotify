@@ -13,6 +13,11 @@ section[data-testid="album-page"] {
         box-shadow: var(--album-shadow-big);
     }
 
+    /* Choose column button, 1.2.59-1.2.61 */
+    .main-trackList-trackList + button:has(path[d="m14 6-6 6-6-6h12z"]) {
+        display: none;
+    }
+
     .main-trackList-trackListHeader {
         background: none !important;
         border-image: var(--listview-header) 0 0 1 2 fill stretch;
@@ -20,6 +25,12 @@ section[data-testid="album-page"] {
         height: 23.3px;
         box-shadow: var(--wmp11-separator-light) 0 -1px 0 0, var(--wmp11-separator-shadow) 0 -2px 0 0; 
         top: 29px !important;
+        forced-color-adjust: none;
+
+        /* Choose column button, 1.2.57 */
+        > div[role="presentation"]:first-child > button {
+            display: none;
+        }
 
         .main-trackList-trackListHeaderRow {
             height: 25px;
@@ -61,30 +72,34 @@ section[data-testid="album-page"] {
         color: var(--gray-text);
     }
 
-    &:has(.main-rootlist-wrapper[style*="row-height: 32"]) {
-        .playlist-playlist-searchBoxContainer {
-            button.x-sortBox-sortDropdown::before {
-                background-image: url('resources/icon/compact.png');
-            }
-        }
-    }
-
     .main-actionBar-ActionBarRow {
         > div:first-child button {
             width: 42px;
             height: 43px;
-            background: url('resources/playerbar/play.png') no-repeat;
+            background: var(--play) no-repeat;
 
             &:hover {
-                background-image: url('resources/playerbar/play_hover.png');
+                background-image: var(--play-hover);
             }
 
             &:active {
-                background-image: url('resources/playerbar/play_pressed.png');
+                background-image: var(--play-pressed);
             }
 
             span {
                 opacity: 0;
+            }
+
+            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+                background-image: var(--pause) !important;
+
+                &:hover {
+                    background-image: var(--pause-hover) !important;
+                }
+
+                &:active {
+                    background-image: var(--pause-pressed) !important;
+                }
             }
         }
     }
@@ -95,27 +110,31 @@ section[data-testid="album-page"] {
 
     &.playing {
         .main-actionBar-ActionBarRow > div:first-child button {
-            background-image: url('resources/playerbar/pause.png') !important;
+            background-image: var(--pause) !important;
 
             &:hover {
-                background-image: url('resources/playerbar/pause_hover.png') !important;
+                background-image: var(--pause-hover) !important;
             }
 
             &:active {
-                background-image: url('resources/playerbar/pause_pressed.png') !important;
+                background-image: var(--pause-pressed) !important;
             }
         }
     }
 }
 
-.Root__main-view:has(section[data-testid="album-page"]) {
+:root[data-page^="/album/"] .Root__main-view {
     header {
         width: calc(100% - var(--scrollbar-size)) !important;
 
         .main-topBar-background {
             border-radius: 0;
             width: calc(100% - var(--scrollbar-size));
-            background: var(--wmp11-window);
+            background: var(--wmp11-window) !important;
+        }
+
+        .main-topBar-overlay {
+            opacity: 0;
         }
 
         .contentSpacing {
@@ -140,38 +159,23 @@ section[data-testid="album-page"] {
             span {
                 opacity: 0;
             }
+
+            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+                background-image: var(--pause) !important;
+
+                &:hover {
+                    background-image: var(--pause-hover) !important;
+                }
+
+                &:active {
+                    background-image: var(--pause-pressed) !important;
+                }
+            }
         }
 
         .main-entityHeader-topbarTitle {
             font-size: 12px;
             font-family: var(--ui-font);
-        }
-    }
-
-    &:has(.playlist-playlist-playlist.playing) header button {
-        background-image: url('resources/playerbar/pause_31.png') !important;
-
-        &:hover {
-            background-image: url('resources/playerbar/pause_31_hover.png') !important;
-        }
-
-        &:active {
-            background-image: url('resources/playerbar/pause_31_pressed.png') !important;
-        }
-    }
-}
-
-/* Sort and view picker in playlist page */
-ul[id*="sortboxlist-"] {
-    li:last-child {
-        button {
-            margin-bottom: 0 !important;
-        }
-    }
-
-    button:has(svg:not(:first-child)) {
-        svg:first-child {
-            display: none;
         }
     }
 }
@@ -180,6 +184,46 @@ ul[id*="sortboxlist-"] {
     section[data-testid="album-page"] {
         .main-entityHeader-container:not(.main-entityHeader-withBackgroundImage) {
             background-color: #222222;
+        }
+        .main-entityHeader-backgroundColor {
+            background-color: #222222 !important;
+        }
+        .main-actionBar-ActionBar {
+            background-color: #222222;
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    section[data-testid="album-page"] {
+        .main-trackList-trackListHeader {
+            background: var(--surface) !important;
+            border-image: none !important;
+            box-shadow: none !important;
+
+            .main-trackList-trackListHeaderRow {
+                > div {
+                    border-image: none !important;
+                    box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+
+                    > div:not(#Prio1) {
+                        color: ButtonText !important;
+                        [class*=encore-text], button {
+                            color: ButtonText !important;
+                        }
+                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                            fill: ButtonText !important;
+                        }
+                    }
+
+                    &.has-button {
+                        &:active {
+                            box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset;
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -1,3 +1,30 @@
+:root {
+    --nav: url('resources/topbar/nav.png');
+    --nav-hover: url('resources/topbar/nav_hover.png');
+    --nav-pressed: url('resources/topbar/nav_pressed.png');
+    --nav-disabled: url('resources/topbar/nav_disabled.png');
+    --tab: none;
+    --tab-hover: url('resources/topbar/tab_hover.png');
+    --tab-pressed: url('resources/topbar/tab_pressed.png');
+    --tab-active: url('resources/topbar/tab_active.png');
+    --tab-active-hover: url('resources/topbar/tab_active_hover.png');
+    --tab-active-pressed: url('resources/topbar/tab_active_pressed.png');
+    --overflow: url('resources/topbar/overflow.png');
+    --overflow-hover: url('resources/topbar/overflow_hover.png');
+
+    --tab-label-bg: transparent;
+    --tab-label-bg-active: transparent;
+    --tab-label-text: white;
+    --tab-label-text-active: white;
+
+    --hcblack-nav: url('resources/topbar/nav_hcblack.png');
+    --hcblack-tab: url('resources/topbar/tab_hcblack.png');
+    --hcblack-overflow: url('resources/topbar/overflow_hcblack.png');
+    --hcwhite-nav: url('resources/topbar/nav_hcwhite.png');
+    --hcwhite-tab: url('resources/topbar/tab_hcwhite.png');
+    --hcwhite-overflow: url('resources/topbar/overflow_hcwhite.png');
+}
+
 .Root__globalNav {
     height: 36px;
     justify-content: center;
@@ -19,13 +46,31 @@
         background: url('resources/topbar/bgstrip.png') repeat-x;
         border-image: url('resources/topbar/bg.png') 2 / 2px 1px 2px 1px;
     }
+
+    /* 1.2.59 compatibility */
+    .main-globalNav-searchSection + div {
+        margin-inline-end: var(--panel-gap) !important;
+
+        > div:last-child:empty {
+            display: none;
+        }
+    }
+
+    .main-globalNav-historyButtonsContainer > div {
+        padding-inline-start: unset;
+        margin-inline-start: unset;
+
+        > div:first-child:empty {
+            display: none;
+        }
+    }
 }
 
 .main-globalNav-historyButtons {
     height: 35px;
     margin-top: -1px;
     margin-left: -1px;
-    background: url('resources/topbar/nav_disabled.png') no-repeat;
+    background: var(--nav-disabled) no-repeat;
     gap: 0 !important;
     padding-inline: 0 !important;
 
@@ -46,35 +91,35 @@
         }
 
         &:first-child {
-            background: url('resources/topbar/nav.png') 0 0 / 200% 100%;
+            background: var(--nav) 0 0 / 200% 100%;
 
             &:hover {
-                background: url('resources/topbar/nav_hover.png') 0 0 / 200% 100%;
+                background: var(--nav-hover) 0 0 / 200% 100%;
             }
 
             &:active {
-                background: url('resources/topbar/nav_pressed.png') 0 0 / 200% 100%;
+                background: var(--nav-pressed) 0 0 / 200% 100%;
             }
 
             &:disabled {
-                background: url('resources/topbar/nav_disabled.png') 0 0 / 200% 100%;
+                background: var(--nav-disabled) 0 0 / 200% 100%;
             }
         }
 
         &:nth-child(2) {
             width: 29px;
-            background: url('resources/topbar/nav.png') -100% 0 / 200% 100%;
+            background: var(-nav) -100% 0 / 200% 100%;
 
             &:hover {
-                background: url('resources/topbar/nav_hover.png') -100% 0 / 200% 100%;
+                background: var(--nav-hover) -100% 0 / 200% 100%;
             }
 
             &:active {
-                background: url('resources/topbar/nav_pressed.png') -100% 0 / 200% 100%;
+                background: var(--nav-pressed) -100% 0 / 200% 100%;
             }
 
             &:disabled {
-                background: url('resources/topbar/nav_disabled.png') -100% 0 / 200% 100%;
+                background: var(--nav-disabled) -100% 0 / 200% 100%;
             }
         }
     }
@@ -88,8 +133,11 @@
     }
 }
 
+.main-globalNav-historyButtonsContainer,
 .main-globalNav-searchContainer,
-.custom-navlinks-scrollable_container {
+.custom-navlinks-scrollable_container,
+.main-topBar-topbarContentRight {
+    /* Important is to override the Spotify's animation removal when the system animation is disabled */
     animation: appear 8s !important;
 }
 
@@ -115,13 +163,20 @@
     .main-topBar-topbarContentRight > .main-actionButtons > button {
         display: none;
     }
+
+    .main-globalNav-historyButtonsContainer,
+    .main-topBar-topbarContentRight {
+        animation: none !important;
+    }
 }
 
 :root[data-wmpotify-js-fail] {
+    .main-globalNav-historyButtonsContainer,
     .main-globalNav-searchContainer,
     .custom-navlinks-scrollable_container,
+    .main-topBar-topbarContentRight,
     .main-topBar-topbarContentRight > .main-actionButtons > button {
-        animation: none;
+        animation: none !important;
     }
 }
 
@@ -137,7 +192,7 @@
         min-height: 0;
         background: none !important;
         border: 6px solid transparent;
-        border-image: 6 4 2 4 fill stretch;
+        border-image: var(--tab) 6 4 2 4 fill stretch;
         border-image-width: 6px 4px 2px 4px;
         border-radius: 0 !important;
         color: white !important;
@@ -148,8 +203,10 @@
         padding-block: 0;
         padding-inline: 0;
         margin-inline-start: 0;
+        forced-color-adjust: none;
 
-        &[data-hidden] {
+        &[data-hidden],
+        &[data-extra-hidden] {
             display: none !important;
         }
 
@@ -163,6 +220,8 @@
             left: 0;
             font-size: 13px;
             text-align: center;
+            background-color: var(--tab-label-bg) !important;
+            color: var(--tab-label-text) !important;
         }
 
         .main-topBar-buddyFeed {
@@ -170,23 +229,29 @@
         }
 
         &:hover {
-            border-image-source: url('resources/topbar/tab_hover.png');
+            border-image-source: var(--tab-hover);
         }
 
         &:active {
-            border-image-source: url('resources/topbar/tab_pressed.png');
+            border-image-source: var(--tab-pressed);
         }
 
         &.main-globalNav-navLinkActive,
-        &:has(svg.Svg-img-icon-small-textBase) {
-            border-image-source: url('resources/topbar/tab_active.png');
+        &:has(svg.Svg-img-icon-small-textBase),
+        &:has(svg[style*="--encore-icon-fill"]) {
+            border-image-source: var(--tab-active);
 
             &:hover {
-                border-image-source: url('resources/topbar/tab_active_hover.png');
+                border-image-source: var(--tab-active-hover);
             }
 
             &:active {
-                border-image-source: url('resources/topbar/tab_active_pressed.png');
+                border-image-source: var(--tab-active-pressed);
+            }
+
+            .wmpotify-tab-label {
+                background-color: var(--tab-label-bg-active) !important;
+                color: var(--tab-label-text-active) !important;
             }
         }
     }
@@ -211,10 +276,10 @@
         width: 19px;
         height: 36px;
         border: none;
-        background: url('resources/topbar/overflow.png') no-repeat;
+        background: var(--overflow) no-repeat;
 
         &:hover {
-            background-image: url('resources/topbar/overflow_hover.png');
+            background-image: var(--overflow-hover);
         }
     }
 
@@ -247,7 +312,7 @@
 
     .wmpotify-user-label {
         position: relative;
-        padding: 10px;
+        margin: 10px;
     }
 
     /* Spotify update alert */
@@ -280,8 +345,8 @@
 #wmpotify-search-container {
     position: absolute;
     top: 36px;
-    left: 0;
-    width: 100%;
+    left: calc(var(--wmpotify-left-sidebar-width, var(--left-sidebar-width)) * 1px + var(--panel-gap) * 2);
+    width: calc(100% - var(--wmpotify-left-sidebar-width, var(--left-sidebar-width)) * 1px - var(--panel-gap) * 2);
     height: 30px;
     border-bottom: solid 1px var(--wmp11-separator-light);
     box-shadow: var(--wmp11-separator-shadow) -1px -1px inset;
@@ -342,32 +407,40 @@
     }
 }
 
-#main:has(.Root__right-sidebar aside) #wmpotify-search-container {
-    width: calc(100vw - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
+body.sidebar-open #wmpotify-search-container {
+    width: calc(100% - var(--wmpotify-left-sidebar-width, var(--left-sidebar-width)) * 1px - var(--panel-gap) * 2 - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
 }
 
-:root[data-wmpotify-style="xp"] {
-    width: calc(100vw - var(--panel-gap) * 2 - 1px);
+body[data-hide-libx] {
+    #wmpotify-search-container {
+        left: 0;
+        width: 100%;
+    }
 
-    #main:has(.Root__right-sidebar aside) #wmpotify-search-container {
-        width: calc(100vw - var(--panel-gap) * 2 - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
+    &.sidebar-open #wmpotify-search-container {
+        width: calc(100% - var(--panel-width, var(--right-sidebar-width)) * 1px - 1px);
     }
 }
 
-#main:has(#searchPage) {
+:root[data-page^="/search"] {
     #wmpotify-search-container {
         display: block;
     }
 
     #wmpotify-tabs-container button[data-identifier="search"] {
-        border-image-source: url('resources/topbar/tab_active.png');
+        border-image-source: var(--tab-active) !important;
 
         &:hover {
-            border-image-source: url('resources/topbar/tab_active_hover.png');
+            border-image-source: var(--tab-active-hover) !important;
         }
 
         &:active {
-            border-image-source: url('resources/topbar/tab_active_pressed.png');
+            border-image-source: var(--tab-active-pressed) !important;
+        }
+
+        .wmpotify-tab-label {
+            background-color: var(--tab-label-bg-active) !important;
+            color: var(--tab-label-text-active) !important;
         }
     }
 
@@ -376,16 +449,79 @@
     }
 }
 
-#main:has(#wmpvis) {
+:root[data-page^="/wmpvis"] {
     #wmpotify-tabs-container button[data-identifier="now-playing"] {
-        border-image-source: url('resources/topbar/tab_active.png');
+        border-image-source: var(--tab-active);
 
         &:hover {
-            border-image-source: url('resources/topbar/tab_active_hover.png');
+            border-image-source: var(--tab-active-hover);
         }
 
         &:active {
-            border-image-source: url('resources/topbar/tab_active_pressed.png');
+            border-image-source: var(--tab-active-pressed);
+        }
+
+        .wmpotify-tab-label {
+            background-color: var(--tab-label-bg-active) !important;
+            color: var(--tab-label-text-active) !important;
+        }
+    }
+}
+
+@media (max-width: 418px) {
+    .main-topBar-topbarContentRight > button:last-child {
+        display: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+    .wmpotify-user-label {
+        background: var(--window);
+    }
+
+    .wmpotify-tab-label {
+        font-size: 17px !important;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --nav: var(--hcblack-nav);
+            --nav-hover: var(--hcwhite-nav);
+            --nav-pressed: var(--hcwhite-nav);
+            --nav-disabled: var(--hcwhite-nav);
+            --tab: var(--hcblack-tab);
+            --tab-hover: var(--hcwhite-tab);
+            --tab-pressed: var(--hcwhite-tab);
+            --tab-active: var(--hcblack-tab);
+            --tab-active-hover: var(--hcwhite-tab);
+            --tab-active-pressed: var(--hcwhite-tab);
+            --overflow: var(--hcblack-overflow);
+            --overflow-hover: var(--hcwhite-overflow);
+            --tab-label-bg: black;
+            --tab-label-bg-active: white;
+            --tab-label-text: white;
+            --tab-label-text-active: black;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --nav: var(--hcwhite-nav);
+            --nav-hover: var(--hcblack-nav);
+            --nav-pressed: var(--hcblack-nav);
+            --nav-disabled: var(--hcblack-nav);
+            --tab: var(--hcwhite-tab);
+            --tab-hover: var(--hcblack-tab);
+            --tab-pressed: var(--hcblack-tab);
+            --tab-active: var(--hcwhite-tab);
+            --tab-active-hover: var(--hcblack-tab);
+            --tab-active-pressed: var(--hcblack-tab);
+            --overflow: var(--hcwhite-overflow);
+            --overflow-hover: var(--hcblack-overflow);
+            --tab-label-bg: white;
+            --tab-label-bg-active: black;
+            --tab-label-text: black;
+            --tab-label-text-active: white;
         }
     }
 }

@@ -7,6 +7,14 @@
   transform: var(--tippy-force-transform) !important;
 }
 
+#context-menu {
+  button[role="menuitemradio"]:has(svg:not(:first-child)) {
+    svg:first-child {
+      display: none;
+    }
+  }
+}
+
 /* For MadMenu */
 @keyframes fade {
   0% {
@@ -30,6 +38,7 @@
   box-shadow: var(--border-window-outer), var(--border-window-inner), 5px 5px 4px -4px rgba(0, 0, 0, 0.75);
   padding: 3px;
   box-sizing: content-box;
+  forced-color-adjust: none;
 }
 
 .contextMenuBg u {
@@ -89,8 +98,7 @@
   left: 0;
   width: 16px;
   height: 16px;
-  background: url("resources/icon/marlett/check_menu.svg")
-    no-repeat;
+  background: var(--checkmark-menu) no-repeat;
 }
 
 .contextMenuItem[data-active] {

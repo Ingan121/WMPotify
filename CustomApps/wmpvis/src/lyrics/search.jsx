@@ -8,6 +8,7 @@
 import React from "react";
 import Strings from "../strings";
 import MadVisLyrics, { headers } from "./main";
+import { appInstance as App } from "../app";
 
 const SearchDialog = React.memo(({ artist, title, albumTitle }) => {
     return <>
@@ -237,7 +238,7 @@ async function init(currentId) {
             const option = document.createElement('option');
             option.value = item.id;
             option.textContent = item.artistName + ' - ' + item.trackName + ' (' + item.albumName + ')';
-            if (localStorage.madesktopDebugMode) {
+            if (App.state.debugMode) {
                 option.textContent = '[' + item.id + '] ' + option.textContent;
             }
             searchResults.appendChild(option);

@@ -10,9 +10,18 @@ section[data-testid="playlist-page"],
         color: var(--gray-text);
     }
 
+    .main-entityHeader-creatorButton {
+        color: var(--spice-text);
+    }
+
     img.main-entityHeader-image {
         border-radius: 0;
         box-shadow: var(--album-shadow-big);
+    }
+
+    /* Choose column button, 1.2.59-1.2.61 */
+    .main-trackList-trackList + button:has(path[d="m14 6-6 6-6-6h12z"]) {
+        display: none;
     }
 
     .main-trackList-trackListHeader {
@@ -22,6 +31,12 @@ section[data-testid="playlist-page"],
         height: 23.3px;
         box-shadow: var(--wmp11-separator-light) 0 -1px 0 0, var(--wmp11-separator-shadow) 0 -2px 0 0; 
         top: 29px !important;
+        forced-color-adjust: none;
+
+        /* Choose column button, 1.2.57 */
+        > div[role="presentation"]:first-child > button {
+            display: none;
+        }
 
         .main-trackList-trackListHeaderRow {
             height: 25px;
@@ -39,23 +54,35 @@ section[data-testid="playlist-page"],
                 border-image-width: 0 2px 1px 2px;
                 padding-left: 5px;
 
-                &:has(.Svg-img-icon-small-textBrightAccent) {
+                &.selected {
                     border-image-source: url('resources/ui/listview_header_selected.png');
                     [class*=encore-text] {
                         color: black !important;
                     }
-                    .Svg-img-icon-small-textBrightAccent {
+                    svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                    svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                        fill: black !important;
+                    }
+                    svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
                         fill: black !important;
                     }
                 }
 
-                &:has(button) {
+                &.has-button {
+                    > div:empty { /* 1.2.55 */
+                        opacity: 0;
+                    }
+
                     &:hover {
                         border-image-source: url('resources/ui/listview_header_hover.png');
                         [class*=encore-text] {
                             color: black !important;
                         }
-                        .Svg-img-icon-small-textBrightAccent {
+                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                            fill: black !important;
+                        }
+                        svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
                             fill: black !important;
                         }
                     }
@@ -65,7 +92,11 @@ section[data-testid="playlist-page"],
                         [class*=encore-text] {
                             color: black !important;
                         }
-                        .Svg-img-icon-small-textBrightAccent {
+                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                            fill: black !important;
+                        }
+                        svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
                             fill: black !important;
                         }
                     }
@@ -78,7 +109,8 @@ section[data-testid="playlist-page"],
                         width: 100%;
                         justify-content: flex-start;
 
-                        .Svg-img-icon-small-textBrightAccent {
+                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
                             fill: var(--window-text) !important;
                             order: 1;
                             width: 11px;
@@ -105,60 +137,50 @@ section[data-testid="playlist-page"],
         }
     }
 
-    &:has(.main-rootlist-wrapper[style*="row-height: 32"]) {
-        .main-actionBar-ActionBarRow > div:last-child {
-            button.x-sortBox-sortDropdown::before {
-                background-image: url('resources/icon/compact.png');
-            }
-        }
-    }
-
     .main-actionBar-ActionBarRow {
         > div:first-child button {
             width: 42px;
             height: 43px;
-            background: url('resources/playerbar/play.png') no-repeat;
+            background: var(--play) no-repeat;
             transform: none !important;
 
             &:hover {
-                background-image: url('resources/playerbar/play_hover.png');
+                background-image: var(--play-hover);
             }
 
             &:active {
-                background-image: url('resources/playerbar/play_pressed.png');
+                background-image: var(--play-pressed);
             }
 
             span {
                 opacity: 0;
             }
-        }
-    }
 
-    &.playing {
-        .main-actionBar-ActionBarRow > div:first-child button {
-            background-image: url('resources/playerbar/pause.png') !important;
+            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+                background-image: var(--pause) !important;
 
-            &:hover {
-                background-image: url('resources/playerbar/pause_hover.png') !important;
-            }
+                &:hover {
+                    background-image: var(--pause-hover) !important;
+                }
 
-            &:active {
-                background-image: url('resources/playerbar/pause_pressed.png') !important;
+                &:active {
+                    background-image: var(--pause-pressed) !important;
+                }
             }
         }
     }
 }
 
-.Root__main-view:has(.playlist-playlist-playlist),
-.Root__main-view:has(section[data-testid="playlist-page"]),
+:root[data-page^="/playlist/"] .Root__main-view,
 :root[data-page^="/collection/"] .Root__main-view {
     header {
         .main-topBar-background {
             border-radius: 0;
             width: calc(100% - var(--scrollbar-size));
+            background: var(--wmp11-window) !important;
 
             .main-topBar-overlay {
-                background: var(--wmp11-window);
+                background: var(--wmp11-window) !important;
             }
         }
 
@@ -198,33 +220,6 @@ section[data-testid="playlist-page"],
             }
         }
     }
-
-    &:has(.playlist-playlist-playlist.playing) .main-topBar-topbarContent > div:first-child button {
-        background-image: url('resources/playerbar/pause_31.png') !important;
-
-        &:hover {
-            background-image: url('resources/playerbar/pause_31_hover.png') !important;
-        }
-
-        &:active {
-            background-image: url('resources/playerbar/pause_31_pressed.png') !important;
-        }
-    }
-}
-
-/* Sort and view picker in playlist page */
-ul[id*="sortboxlist-"] {
-    li:last-child {
-        button {
-            margin-top: 0 !important;
-        }
-    }
-
-    button:has(svg:not(:first-child)) {
-        svg:first-child {
-            display: none;
-        }
-    }
 }
 
 :root[data-wmpotify-dark-mode] {
@@ -236,6 +231,46 @@ ul[id*="sortboxlist-"] {
         }
         .main-actionBar-ActionBar {
             background-color: #222222;
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    .playlist-playlist-playlist,
+    section[data-testid="playlist-page"],
+    :root[data-page^="/collection/"] main {
+        .main-trackList-trackListHeader {
+            background: var(--surface) !important;
+            border-image: none !important;
+            box-shadow: none !important;
+
+            .main-trackList-trackListHeaderRow {
+
+                > div {
+                    border-image: none !important;
+                    box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+
+                    > div:not(#Prio1) {
+                        color: ButtonText !important;
+                        [class*=encore-text], button {
+                            color: ButtonText !important;
+                        }
+                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                            fill: ButtonText !important;
+                        }
+                        svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
+                            fill: ButtonText !important;
+                        }
+                    }
+
+                    &.has-button {
+                        &:active {
+                            box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset;
+                        }
+                    }
+                }
+            }
         }
     }
 }

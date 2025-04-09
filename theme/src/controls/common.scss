@@ -16,7 +16,8 @@
 }
 
 .main-shelf-shelfGrid {
-    > div {
+    > div,
+    > a > div { /* Blend (Made For Us) in the Made For You genre page */
         border: solid 1px transparent;
         border-radius: 3px;
 
@@ -48,31 +49,43 @@
             button {
                 width: 42px;
                 height: 43px;
-                background: url('resources/playerbar/play.png') no-repeat;
+                background: var(--play) no-repeat;
     
                 &:hover {
-                    background-image: url('resources/playerbar/play_hover.png');
+                    background-image: var(--play-hover);
                 }
     
                 &:active {
-                    background-image: url('resources/playerbar/play_pressed.png');
+                    background-image: var(--play-pressed);
                 }
     
                 span {
                     opacity: 0;
                 }
+
+                &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+                    background-image: var(--pause) !important;
+    
+                    &:hover {
+                        background-image: var(--pause-hover) !important;
+                    }
+    
+                    &:active {
+                        background-image: var(--pause-pressed) !important;
+                    }
+                }
             }
     
             &.main-card-PlayButtonContainerVisible { /* Currently playing playlist - show pause button */
                 button {
-                    background-image: url('resources/playerbar/pause.png') ;
+                    background-image: var(--pause) ;
     
                     &:hover {
-                        background-image: url('resources/playerbar/pause_hover.png');
+                        background-image: var(--pause-hover);
                     }
     
                     &:active {
-                        background-image: url('resources/playerbar/pause_pressed.png');
+                        background-image: var(--pause-pressed);
                     }
                 }
             }
@@ -99,15 +112,9 @@
         .search-searchCategory-carouselButton {
             width: 16px;
             height: 100%;
-            box-sizing: border-box;
-            border: var(--button-border);
-            border-color: var(--button-border-color);
-            border-radius: 0;
-            border-image: none !important;
-            box-shadow: var(--button-shadow) !important;
-            color: var(--button-text-color);
-            background: var(--button-gradient);
-            z-index: 0;
+            border-radius: 0 !important;
+            min-width: 0 !important;
+            padding: 0 !important;
             cursor: default !important;
             top: 0;
             margin-top: 0;
@@ -115,79 +122,6 @@
 
             svg {
                 scale: 0.7;
-            }
-
-            /* Button style on hovered */
-            &::before {
-                content: "";
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                padding: 0;
-                margin: 0;
-                top: 0;
-                left: 0;
-                border-radius: var(--border-radius);
-                box-shadow: var(--button-shadow);
-                background: var(--button-gradient-hovered);
-                opacity: 0;
-                transition: opacity 0.3s;
-                z-index: -1;
-                border: none !important;
-                right: unset;
-                bottom: unset;
-            }
-
-            /* Button style on clicked */
-            &::after {
-                content: "";
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                padding: 0;
-                margin: 0;
-                top: 0;
-                left: 0;
-                box-shadow: var(--button-shadow-active);
-                border-radius: 2px;
-                background: var(--button-gradient-active);
-                opacity: 0;
-                transition: opacity 0.3s;
-                z-index: -1;
-            }
-
-            /* Animation when hovered */
-            &:hover {
-                border-color: var(--button-border-color-hovered);
-                transition: border-color 0.3s;
-
-                &::before {
-                    opacity: 1;
-                    transition: opacity 0.3s;
-                }
-            }
-
-            /* Animation when unhovered */
-            &:not(:hover) {
-                border-color: var(--button-border-color);
-                transition: border-color 1s linear, opacity 0.3s;;
-
-                &::before {
-                    opacity: 0;
-                    transition: opacity 1s linear;
-                }
-            }
-
-            &:active,
-            &[data-active],
-            &.active {
-                border-color: var(--button-border-color-active);
-                transition: border-color 0.3s;
-
-                &::after {
-                    opacity: 1;
-                    transition: opacity 0.3s;
-                }
             }
         }
     }
@@ -215,5 +149,28 @@
 .main-view-container {
     .under-main-view > div > div:last-child {
         --spice-rgb-shadow: 0, 0, 0;
+    }
+}
+
+@media (forced-colors: active) {
+    .main-trackList-trackListRow:hover {
+        * {
+            color: var(--hilight-text) !important;
+        }
+
+        [class*=encore-text], [class*=encore-text] * {
+            background-color: var(--hilight) !important;
+            forced-color-adjust: none !important;
+        }
+    }
+
+    .main-shelf-shelfGrid {
+        > *:hover {
+            .LineClamp, .LineClamp * {
+                color: var(--hilight-text) !important;
+                background-color: var(--hilight) !important;
+                forced-color-adjust: none !important;
+            }
+        }
     }
 }

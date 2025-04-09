@@ -27,11 +27,16 @@
 
   button.wmpotify-aero,
   button.Button-sc-y0gtbx-0,
+  button[class*="0-button-primary"][type="submit"],
   .ReactModalPortal button.Button-sc-qlcn5g-0,
   .ReactModalPortal button.Button-sc-1dqy6lx-0,
+  dialog button.Button-sc-qlcn5g-0,
+  dialog button.Button-sc-1dqy6lx-0,
+  dialog button[class*="0-button-primary"],
   #context-menu button.Button-sc-1dqy6lx-0,
   #context-menu button.Button-sc-qlcn5g-0,
-  .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2) {
+  .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2),
+  .search-searchCategory-carouselButton {
     box-sizing: border-box;
     box-shadow: inset 1px 1px 0 0 var(--button-border-color), inset -1px -1px 0 0 var(--button-border-color);
     border: none;
@@ -132,7 +137,8 @@
 
     &:focus-visible,
     &.focused,
-    &:has(.ButtonInner-medium) {
+    &:has(.ButtonInner-medium),
+    &:has([class*="0-button--medium"]) {
       outline: 1px dotted var(--button-focus-outline-color);
       outline-offset: -4px;
     }
@@ -141,7 +147,9 @@
     &:focus,
     &.focused,
     &:has(.ButtonInner-medium),
-    &:has(.ButtonInner-small) {
+    &:has(.ButtonInner-small),
+    &:has([class*="0-button--medium"]),
+    &:has([class*="0-button--small"]) {
       box-shadow: inset 1px 1px 0 0 var(--button-border-color-hovered), inset -1px -1px 0 0 var(--button-border-color-hovered),
         inset 2px 2px 0 0 var(--button-border-color-inner-focus), inset -2px -2px 0 0 var(--button-border-color-inner-focus);
     }
