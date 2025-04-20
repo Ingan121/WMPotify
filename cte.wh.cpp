@@ -953,8 +953,9 @@ cef_size_t CEF_CALLBACK get_minimum_size_hook(struct _cef_view_delegate_t* self,
             size->height = 600;
         }
     } else {
-        size->width = g_minWidth;
-        size->height = g_minHeight;
+        float dpi = GetDpiForWindow(g_mainHwnd);
+        size->width = g_minWidth / (dpi / 96);
+        size->height = g_minHeight / (dpi / 96);
     }
     return *size;
 }
@@ -984,6 +985,7 @@ _cef_window_t* CEF_EXPORT cef_window_create_top_level_hook(cef_window_delegate_t
             }
         }
         if (g_mainHwnd == NULL) {
+            g_mainHwnd = hWnd;
             if (g_isSpotify) {
                 delegate->base.base.get_minimum_size = get_minimum_size_hook;
                 g_pipeThread = std::thread([=]() {
@@ -991,7 +993,6 @@ _cef_window_t* CEF_EXPORT cef_window_create_top_level_hook(cef_window_delegate_t
                 });
                 g_pipeThread.detach();
             }
-            g_mainHwnd = hWnd;
         }
     } else {
         // Just subclass everything again if get_window_handle is not available

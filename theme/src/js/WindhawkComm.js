@@ -1,10 +1,7 @@
 'use strict';
 
-import { compareVersions } from "./utils/UpdateCheck";
-
 let windhawkModule = null;
 let lastDpi = 1;
-let properMinSize = false;
 
 const WindhawkComm = {
     init() {
@@ -78,9 +75,6 @@ const WindhawkComm = {
     setMinSize(width, height) {
         if (windhawkModule?.setMinSize) {
             [width, height] = [width, height].map(v => Math.round(v * window.devicePixelRatio));
-            if (properMinSize) {
-                [width, height] = [width, height].map(v => Math.round(v / lastDpi));
-            }
             windhawkModule.setMinSize(width, height);
         }
     },
@@ -141,9 +135,6 @@ function testWindhawk() {
         window.addEventListener("resize", () => {
             lastDpi = windhawkModule.query().dpi / 96;
         });
-        if (compareVersions(version, "0.9") >= 0) {
-            properMinSize = true;
-        }
         return { version, initialOptions };
     } catch (e) {
         // query fails if the main browser process has unloaded the mod and thus closed the pipe
