@@ -12,13 +12,16 @@ function toggleMiniMode() {
     if (isMiniMode()) {
         const lastSize = localStorage.wmpotifyPreMiniModeSize?.split(',');
         if (lastSize && lastSize.length === 2) {
-            WindhawkComm.resizeTo(parseInt(lastSize[0]), parseInt(lastSize[1]));
+            window.resizeTo(parseInt(lastSize[0]), parseInt(lastSize[1]));
         }
     } else {
         if (document.fullscreenElement) {
             document.exitFullscreen();
         }
-        localStorage.wmpotifyPreMiniModeSize = [window.innerWidth, window.innerHeight];
+        if (WindhawkComm.query().isMaximized) {
+            WindhawkComm.maximizeRestore();
+        }
+        localStorage.wmpotifyPreMiniModeSize = [window.outerWidth, window.outerHeight];
         WindhawkComm.resizeTo(358, 60);
     }
 }

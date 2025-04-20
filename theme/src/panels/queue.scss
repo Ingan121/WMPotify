@@ -191,7 +191,8 @@ aside[data-identifier="spotify-queue-panel"] > div {
                 background-color: var(--wmp11-queue-hover);
             }
 
-            &:focus-within {
+            &:focus-within,
+            &:has(> div[class*="-tinted-"]) {
                 background-color: var(--hilight);
 
                 * {
@@ -202,6 +203,12 @@ aside[data-identifier="spotify-queue-panel"] > div {
                 p[data-encore-id="listRowSubtitle"]::before {
                     color: var(--hilight-text) !important;
                 }
+            }
+
+            &:focus-within {
+                outline: 1px dotted var(--hilight-text);
+                outline-offset: -1px;
+                border-radius: 0 !important;
             }
 
             div[data-encore-id="listRow"]::after {

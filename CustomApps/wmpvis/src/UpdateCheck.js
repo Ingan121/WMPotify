@@ -1,6 +1,6 @@
 'use strict';
 
-export const ver = '1.0';
+export const ver = '1.1';
 
 export async function checkUpdates() {
     try {

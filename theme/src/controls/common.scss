@@ -152,6 +152,69 @@
     }
 }
 
+.Root__main-view {
+    div[class^="Box__BoxComponent-"][class*="isInteractive"] {
+        border: solid 1px transparent;
+        border-radius: 3px;
+
+        &::after {
+            display: none;
+        }
+
+        > div::after {
+            display: none;
+        }
+
+        &:hover {
+            background: var(--item-hover-background) !important;
+            border-color: var(--item-hover-border);
+        }
+
+        .x-entityImage-imageContainer,
+        .main-card-imageContainer {
+            box-shadow: var(--album-shadow-big);
+            border-radius: 0;
+            background: none;
+
+            div:has(img), img {
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
+
+        button[data-encore-id="buttonPrimary"] {
+            width: 42px;
+            height: 43px;
+            background: var(--play) no-repeat;
+
+            &:hover {
+                background-image: var(--play-hover);
+            }
+
+            &:active {
+                background-image: var(--play-pressed);
+            }
+
+            span {
+                opacity: 0;
+            }
+
+            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]),
+            &:has(path[d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+                background-image: var(--pause) !important;
+
+                &:hover {
+                    background-image: var(--pause-hover) !important;
+                }
+
+                &:active {
+                    background-image: var(--pause-pressed) !important;
+                }
+            }
+        }
+    }
+}
+
 @media (forced-colors: active) {
     .main-trackList-trackListRow:hover {
         * {
@@ -171,6 +234,17 @@
                 background-color: var(--hilight) !important;
                 forced-color-adjust: none !important;
             }
+        }
+    }
+
+    .Root__main-view div[class^="Box__BoxComponent-"][class*="isInteractive"]:hover {
+        background: var(--item-hover-background);
+        border-color: var(--item-hover-border);
+
+        .LineClamp, .LineClamp * {
+            color: var(--hilight-text) !important;
+            background-color: var(--hilight) !important;
+            forced-color-adjust: none !important;
         }
     }
 }

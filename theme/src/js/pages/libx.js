@@ -2,6 +2,7 @@
 
 import Strings from '../strings';
 import DirectUserStorage from '../utils/DirectUserStorage';
+import { compareSpotifyVersion } from '../utils/UpdateCheck';
 
 // This script implements the custom sidebar, header and navigation for the stock Spotify LibraryX
 // It's implemented with parsing and clicking various elements in the DOM, so it's not the most efficient way to do it
@@ -19,8 +20,8 @@ let exittingFolder = false;
 let lastCategories = [];
 let lastCategoriesIdentifier = [];
 
-export const ylxKeyPrefix = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number)[2] >= 58 ? 'left' : 'ylx';
-export const expandedStateKey = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number)[2] >= 58 ? 'left-sidebar-expanded-state-width' : 'ylx-expanded-state-nav-bar-width';
+export const ylxKeyPrefix = compareSpotifyVersion('1.2.58') >= 0 ? 'left' : 'ylx';
+export const expandedStateKey = compareSpotifyVersion('1.2.58') >= 0 ? 'left-sidebar-expanded-state-width' : 'ylx-expanded-state-nav-bar-width';
 
 const CustomLibX = {
     async init() {

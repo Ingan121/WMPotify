@@ -33,10 +33,10 @@
         .main-actionBar-ActionBarRow > div:first-child > button,
         .main-actionBar-ActionBarRow > span:first-child > div:first-child button,
         .main-topBar-topbarContent > div:first-child button,
-        &[data-page^="/content-feed"] .Root__main-view div[role="list"] button[data-encore-id="buttonPrimary"],
         .artist-artistDiscography-cardGrid > div button,
         div[data-testid="top-result-card"] > div > div button,
         .main-yourLibraryX-libraryContainer div[data-encore-id="card"] > div:nth-child(3) > div > div button,
+        div[class^="Box__BoxComponent-"][class*="isInteractive"] button[data-encore-id="buttonPrimary"],
 
         /* Toolbar buttons */
         .wmpotify-toolbar-button:not(#wmpotify-queue-clear-button),

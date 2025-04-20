@@ -148,7 +148,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.0<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 (Pre-release 2025-04-20)<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -179,7 +179,10 @@ function init() {
     elements.whVer = configWindow.querySelector('#wmpotify-about-ctewh-ver');
     elements.autoUpdates = configWindow.querySelector('#wmpotify-config-auto-updates');
 
-    configWindow.style.height = localStorage.wmpotifyConfigHeight || '';
+    const configHeightConf = localStorage.wmpotifyConfigHeight;
+    if (configHeightConf && parseInt(configHeightConf) >= 24) {
+        configWindow.style.height = localStorage.wmpotifyConfigHeight;
+    }
 
     onHCChange(hcQuery);
     hcQuery.addEventListener('change', onHCChange);
@@ -459,13 +462,18 @@ function init() {
     }, true);
 
     document.addEventListener('pointerup', function () {
-        isDown = false;
-        document.body.style.cursor = '';
-        localStorage.wmpotifyConfigHeight = configWindow.style.height;
+        if (isDown) {
+            isDown = false;
+            document.body.style.cursor = '';
+            if (configWindow.offsetHeight < 24) {
+                configWindow.style.height = '24px';
+            }
+            localStorage.wmpotifyConfigHeight = configWindow.style.height;
+        }
     }, true);
 
     document.addEventListener('pointermove', function (event) {
-        if (isDown) {
+        if (isDown && configWindow.offsetHeight >= 24) {
             configWindow.style.height = offset - event.clientY + 'px';
         }
     }, true);
