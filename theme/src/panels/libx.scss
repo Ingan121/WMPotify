@@ -103,6 +103,16 @@
                         border-color: var(--item-hover-border);
                     }
 
+                    &:focus-within {
+                        background: var(--item-selection-background);
+                        border-color: var(--item-active-border);
+                    }
+            
+                    &:hover:focus-within {
+                        background: var(--item-selection-hover-background);
+                        border-color: var(--item-selection-hover-border);
+                    }
+
                     &::after {
                         display: none;
                     }
@@ -189,6 +199,16 @@
         &:hover {
             background: var(--item-hover-background);
             border-color: var(--item-hover-border);
+        }
+
+        &:focus-within {
+            background: var(--item-selection-background);
+            border-color: var(--item-active-border);
+        }
+
+        &:hover:focus-within {
+            background: var(--item-selection-hover-background);
+            border-color: var(--item-selection-hover-border);
         }
 
         > div {
@@ -530,10 +550,6 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
     body[data-wmpotify-lib-page-open] {
         .main-yourLibraryX-libraryRootlist {
             background: #2e2e2e;
-        }
-        .main-yourLibraryX-filterArea,
-        #wmpotify-libx-sidebar {
-            background: #222222;
         }
     }
 }

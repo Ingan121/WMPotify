@@ -52,7 +52,6 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
         document.documentElement.style.setProperty('--hot-tracking-color', tintedAccent);
         document.documentElement.style.setProperty('--menu-hilight', tintedAccent);
 
-        document.documentElement.style.setProperty('--item-active-border', getTintedColor(hue, sat, '#95dbfd'));
         document.documentElement.style.setProperty('--wmp11-header-line', getTintedColor(hue, sat, '#a6b9dd'));
 
         if (document.documentElement.dataset.wmpotifyDarkMode) {
@@ -72,7 +71,41 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
                     `${getTintedColor(hue, sat, '#27282b')} 100%` +
                 ')'
             );
+            document.documentElement.style.setProperty('--item-selection-background',
+                'linear-gradient(' +
+                    'to bottom,' +
+                    `${getTintedColor(hue, sat, '#2d425b')} 0%,` +
+                    `${getTintedColor(hue, sat, '#2d425b')} 10%,` +
+                    `${getTintedColor(hue, sat, '#2d3f58')} 20%,` +
+                    `${getTintedColor(hue, sat, '#2d3f55')} 30%,` +
+                    `${getTintedColor(hue, sat, '#2d3d51')} 40%,` +
+                    `${getTintedColor(hue, sat, '#2d3c4f')} 50%,` +
+                    `${getTintedColor(hue, sat, '#2d3c4c')} 60%,` +
+                    `${getTintedColor(hue, sat, '#2d3949')} 70%,` +
+                    `${getTintedColor(hue, sat, '#2d3946')} 80%,` +
+                    `${getTintedColor(hue, sat, '#2d3643')} 90%,` +
+                    `${getTintedColor(hue, sat, '#2d3440')} 100%` +
+                ')'
+            );
+            document.documentElement.style.setProperty('--item-selection-hover-background',
+                'linear-gradient(' +
+                    'to bottom,' +
+                    `${getTintedColor(hue, sat, '#2e496a')} 0%,` +
+                    `${getTintedColor(hue, sat, '#2e496a')} 10%,` +
+                    `${getTintedColor(hue, sat, '#2e4667')} 20%,` +
+                    `${getTintedColor(hue, sat, '#2e4664')} 30%,` +
+                    `${getTintedColor(hue, sat, '#2e435e')} 40%,` +
+                    `${getTintedColor(hue, sat, '#2e435e')} 50%,` +
+                    `${getTintedColor(hue, sat, '#2e435b')} 60%,` +
+                    `${getTintedColor(hue, sat, '#2e4058')} 70%,` +
+                    `${getTintedColor(hue, sat, '#2e4055')} 80%,` +
+                    `${getTintedColor(hue, sat, '#2e3d52')} 90%,` +
+                    `${getTintedColor(hue, sat, '#2e3d4f')} 100%` +
+                ')'
+            );
             document.documentElement.style.setProperty('--item-hover-border', getTintedColor(hue, sat, '#2f4d73'));
+            document.documentElement.style.setProperty('--item-active-border', getTintedColor(hue, sat, '#5176ac'));
+            document.documentElement.style.setProperty('--item-selection-hover-border', getTintedColor(hue, sat, '#6286b5'));
             document.documentElement.style.setProperty('--menu-item-hover-background',
                 'linear-gradient(' +
                     'to bottom,' +
@@ -144,7 +177,41 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
                     `${getTintedColor(hue, sat, '#def0fc')} 100%` +
                 ')'
             );
+            document.documentElement.style.setProperty('--item-selection-background',
+                'linear-gradient(' +
+                    'to bottom,' +
+                    `${getTintedColor(hue, sat, '#edf5fd')} 0%,` +
+                    `${getTintedColor(hue, sat, '#ebf5fd')} 10%,` +
+                    `${getTintedColor(hue, sat, '#e9f4fd')} 20%,` +
+                    `${getTintedColor(hue, sat, '#e6f3fd')} 30%,` +
+                    `${getTintedColor(hue, sat, '#e4f3fd')} 40%,` +
+                    `${getTintedColor(hue, sat, '#e1f1fd')} 50%,` +
+                    `${getTintedColor(hue, sat, '#daeefc')} 60%,` +
+                    `${getTintedColor(hue, sat, '#d8eefc')} 70%,` +
+                    `${getTintedColor(hue, sat, '#d5edfc')} 80%,` +
+                    `${getTintedColor(hue, sat, '#d3ecfc')} 90%,` +
+                    `${getTintedColor(hue, sat, '#d2ecfc')} 100%` +
+                ')'
+            );
+            document.documentElement.style.setProperty('--item-selection-hover-background',
+                'linear-gradient(' +
+                    'to bottom,' +
+                    `${getTintedColor(hue, sat, '#e4f3fd')} 0%,` +
+                    `${getTintedColor(hue, sat, '#e2f2fd')} 10%,` +
+                    `${getTintedColor(hue, sat, '#dff0fc')} 20%,` +
+                    `${getTintedColor(hue, sat, '#dceffc')} 30%,` +
+                    `${getTintedColor(hue, sat, '#daeefc')} 40%,` +
+                    `${getTintedColor(hue, sat, '#d4ecfb')} 50%,` +
+                    `${getTintedColor(hue, sat, '#cce9fa')} 60%,` +
+                    `${getTintedColor(hue, sat, '#cae8fa')} 70%,` +
+                    `${getTintedColor(hue, sat, '#c6e7fa')} 80%,` +
+                    `${getTintedColor(hue, sat, '#c4e5fa')} 90%,` +
+                    `${getTintedColor(hue, sat, '#c2e5fa')} 100%` +
+                ')'
+            );
             document.documentElement.style.setProperty('--item-hover-border', getTintedColor(hue, sat, '#cde9f8'));
+            document.documentElement.style.setProperty('--item-active-border', getTintedColor(hue, sat, '#95dbfd'));
+            document.documentElement.style.setProperty('--item-selection-hover-border', getTintedColor(hue, sat, '#b2e3fb'));
             document.documentElement.style.setProperty('--menu-item-hover-background',
                 'linear-gradient(' +
                     'to bottom,' +
@@ -220,10 +287,13 @@ function resetTintMoreVars() {
     document.documentElement.style.removeProperty('--hilight');
     document.documentElement.style.removeProperty('--hot-tracking-color');
     document.documentElement.style.removeProperty('--menu-hilight');
-    document.documentElement.style.removeProperty('--item-active-border');
     document.documentElement.style.removeProperty('--wmp11-header-line');
     document.documentElement.style.removeProperty('--item-hover-background');
+    document.documentElement.style.removeProperty('--item-selection-background');
+    document.documentElement.style.removeProperty('--item-selection-hover-background');
     document.documentElement.style.removeProperty('--item-hover-border');
+    document.documentElement.style.removeProperty('--item-active-border');
+    document.documentElement.style.removeProperty('--item-selection-hover-border');
     document.documentElement.style.removeProperty('--menu-item-hover-background');
     document.documentElement.style.removeProperty('--menu-item-hover-border-color');
     document.documentElement.style.removeProperty('--wmp11-separator-shadow');

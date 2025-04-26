@@ -209,8 +209,37 @@
         #dff0fc 90%,
         #def0fc 100%
     );
+    --item-selection-background: linear-gradient(
+        to bottom,
+        #edf5fd 0%,
+        #ebf5fd 10%,
+        #e9f4fd 20%,
+        #e6f3fd 30%,
+        #e4f3fd 40%,
+        #e1f1fd 50%,
+        #daeefc 60%,
+        #d8eefc 70%,
+        #d5edfc 80%,
+        #d3ecfc 90%,
+        #d2ecfc 100%
+    );
+    --item-selection-hover-background: linear-gradient(
+        to bottom,
+        #e4f3fd 0%,
+        #e2f2fd 10%,
+        #dff0fc 20%,
+        #dceffc 30%,
+        #daeefc 40%,
+        #d4ecfb 50%,
+        #cce9fa 60%,
+        #cae8fa 70%,
+        #c6e7fa 80%,
+        #c4e5fa 90%,
+        #c2e5fa 100%
+    );
     --item-hover-border: #cde9f8;
     --item-active-border: #95dbfd;
+    --item-selection-hover-border: #b2e3fb;
     --item-hover-text: var(--spice-text);
 
     --listview-header: url('resources/ui/listview_header.png');
@@ -459,7 +488,37 @@
             #272b2d 90%,
             #27282b 100%
         );
+        --item-selection-background: linear-gradient(
+            to bottom,
+            #2d425b 0%,
+            #2d425b 10%,
+            #2d3f58 20%,
+            #2d3f55 30%,
+            #2d3d51 40%,
+            #2d3c4f 50%,
+            #2d3c4c 60%,
+            #2d3949 70%,
+            #2d3946 80%,
+            #2d3643 90%,
+            #2d3440 100%
+        );
+        --item-selection-hover-background: linear-gradient(
+            to bottom,
+            #2e496a 0%,
+            #2e496a 10%,
+            #2e4667 20%,
+            #2e4664 30%,
+            #2e435e 40%,
+            #2e435e 50%,
+            #2e435b 60%,
+            #2e4058 70%,
+            #2e4055 80%,
+            #2e3d52 90%,
+            #2e3d4f 100%
+        );
         --item-hover-border: #2f4d73;
+        --item-active-border: #5176ac;
+        --item-selection-hover-border: #6286b5;
 
         --listview-header: url('resources/ui/listview_header_dark.png');
 
@@ -578,10 +637,6 @@
         transition-delay: 0s !important;
         -webkit-transition-duration: 0s !important;
         transition-duration: 0s !important;
-    }
-
-    .LineClamp:has(.NUoUlYHQoMKe6r7dL2Hg) {
-        display: none;
     }
 
     /* Placeholder colors for unsupported system colors (from Windows high contrast themes) */

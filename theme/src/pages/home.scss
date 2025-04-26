@@ -20,6 +20,16 @@
             border-color: var(--item-hover-border);
         }
 
+        &:focus-within {
+            background: var(--item-selection-background);
+            border-color: var(--item-active-border);
+        }
+
+        &:hover:focus-within {
+            background: var(--item-selection-hover-background);
+            border-color: var(--item-selection-hover-border);
+        }
+
         .view-homeShortcutsGrid-imageContainer {
             padding: 4px;
             margin-top: -1px;

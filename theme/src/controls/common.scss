@@ -13,6 +13,18 @@
         background: var(--item-hover-background);
         border-color: var(--item-hover-border);
     }
+
+    [aria-selected="true"] &,
+    &:focus-within {
+        background: var(--item-selection-background);
+        border-color: var(--item-active-border);
+    }
+
+    [aria-selected="true"] &:hover,
+    &:hover:focus-within {
+        background: var(--item-selection-hover-background);
+        border-color: var(--item-selection-hover-border);
+    }
 }
 
 .main-shelf-shelfGrid {
@@ -32,6 +44,16 @@
         &:hover {
             background: var(--item-hover-background);
             border-color: var(--item-hover-border);
+        }
+
+        &:focus-within {
+            background: var(--item-selection-background);
+            border-color: var(--item-active-border);
+        }
+
+        &:hover:focus-within {
+            background: var(--item-selection-hover-background);
+            border-color: var(--item-selection-hover-border);
         }
     }
 
@@ -170,6 +192,16 @@
             border-color: var(--item-hover-border);
         }
 
+        &:focus-within {
+            background: var(--item-selection-background) !important;
+            border-color: var(--item-active-border);
+        }
+
+        &:hover:focus-within {
+            background: var(--item-selection-hover-background) !important;
+            border-color: var(--item-selection-hover-border);
+        }
+
         .x-entityImage-imageContainer,
         .main-card-imageContainer {
             box-shadow: var(--album-shadow-big);
@@ -212,6 +244,10 @@
                 }
             }
         }
+
+        [class*=LineClamp]:has(.NUoUlYHQoMKe6r7dL2Hg) {
+            display: none;
+        }
     }
 }
 
@@ -238,10 +274,7 @@
     }
 
     .Root__main-view div[class^="Box__BoxComponent-"][class*="isInteractive"]:hover {
-        background: var(--item-hover-background);
-        border-color: var(--item-hover-border);
-
-        .LineClamp, .LineClamp * {
+        [class*=LineClamp], [class*=LineClamp] * {
             color: var(--hilight-text) !important;
             background-color: var(--hilight) !important;
             forced-color-adjust: none !important;

@@ -22,6 +22,7 @@ header nav li,
   cursor: default !important;
   margin: 0;
   margin-inline: 0 !important;
+  border-radius: 0 !important;
 
   &:hover {
     border-image-source: url("resources/ui/toolbarbutton_hover.png");
