@@ -145,15 +145,15 @@ section[data-testid="album-page"] {
             width: 24px;
             height: 24px;
             border-radius: 0;
-            background: url('resources/playerbar/play_31.png') 0 0 / contain no-repeat;
+            background: var(--play-31) 0 0 / contain no-repeat;
             margin-top: -2px;
 
             &:hover {
-                background-image: url('resources/playerbar/play_31_hover.png');
+                background-image: var(--play-31-hover);
             }
 
             &:active {
-                background-image: url('resources/playerbar/play_31_pressed.png');
+                background-image: var(--play-31-pressed);
             }
 
             span {
@@ -161,14 +161,14 @@ section[data-testid="album-page"] {
             }
 
             &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
-                background-image: var(--pause) !important;
+                background-image: var(--pause-31) !important;
 
                 &:hover {
-                    background-image: var(--pause-hover) !important;
+                    background-image: var(--pause-31-hover) !important;
                 }
 
                 &:active {
-                    background-image: var(--pause-pressed) !important;
+                    background-image: var(--pause-31-pressed) !important;
                 }
             }
         }

@@ -252,19 +252,23 @@
 }
 
 @media (forced-colors: active) {
-    .main-trackList-trackListRow:hover {
-        * {
-            color: var(--hilight-text) !important;
-        }
+    .main-trackList-trackListRow {
+        &:hover,
+        &:focus-within,
+        [aria-selected="true"] & {
+            * {
+                color: var(--hilight-text) !important;
+            }
 
-        [class*=encore-text], [class*=encore-text] * {
-            background-color: var(--hilight) !important;
-            forced-color-adjust: none !important;
+            [class*=encore-text], [class*=encore-text] * {
+                background-color: var(--hilight) !important;
+                forced-color-adjust: none !important;
+            }
         }
     }
 
     .main-shelf-shelfGrid {
-        > *:hover {
+        > *:hover, > *:focus-within {
             .LineClamp, .LineClamp * {
                 color: var(--hilight-text) !important;
                 background-color: var(--hilight) !important;
@@ -273,11 +277,13 @@
         }
     }
 
-    .Root__main-view div[class^="Box__BoxComponent-"][class*="isInteractive"]:hover {
-        [class*=LineClamp], [class*=LineClamp] * {
-            color: var(--hilight-text) !important;
-            background-color: var(--hilight) !important;
-            forced-color-adjust: none !important;
+    .Root__main-view div[class^="Box__BoxComponent-"][class*="isInteractive"] {
+        &:hover, &:focus-within {
+            [class*=LineClamp], [class*=LineClamp] * {
+                color: var(--hilight-text) !important;
+                background-color: var(--hilight) !important;
+                forced-color-adjust: none !important;
+            }
         }
     }
 }

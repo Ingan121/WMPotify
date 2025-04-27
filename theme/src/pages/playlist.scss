@@ -194,15 +194,15 @@ section[data-testid="playlist-page"],
                 width: 24px;
                 height: 24px;
                 border-radius: 0;
-                background: url('resources/playerbar/play_31.png') 0 0 / contain no-repeat;
+                background: var(--play-31) 0 0 / contain no-repeat;
                 margin-top: -2px;
 
                 &:hover {
-                    background-image: url('resources/playerbar/play_31_hover.png');
+                    background-image: var(--play-31-hover);
                 }
 
                 &:active {
-                    background-image: url('resources/playerbar/play_31_pressed.png');
+                    background-image: var(--play-31-pressed);
                 }
 
                 span {

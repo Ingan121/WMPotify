@@ -608,13 +608,16 @@
         --spice-text: CanvasText !important;
         --spice-subtext: GrayText !important;
         --spice-button: ButtonFace !important;
-        --spice-button-active: Highlight !important;
+        --spice-button-active: LinkText !important;
         --spice-accent: Highlight !important;
         --wmp11-text-hilight: LinkText !important;
 
         --item-hover-background: Highlight;
+        --item-selection-background: Highlight;
+        --item-selection-hover-background: Highlight;
         --item-hover-border: ButtonBorder;
         --item-active-border: HighlightText;
+        --item-selection-hover-border: HighlightText;
         --item-hover-text: HighlightText;
 
         --basic-pb-active-bg: ButtonFace;

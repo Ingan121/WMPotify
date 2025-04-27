@@ -11,6 +11,12 @@
     --play-hover: url('resources/playerbar/play_hover.png');
     --play-pressed: url('resources/playerbar/play_pressed.png');
     --play-disabled: url('resources/playerbar/play_disabled.png');
+    --play-31: url('resources/playerbar/play_31.png');
+    --play-31-hover: url('resources/playerbar/play_31_hover.png');
+    --play-31-pressed: url('resources/playerbar/play_31_pressed.png');
+    --pause-31: url('resources/playerbar/pause_31.png');
+    --pause-31-hover: url('resources/playerbar/pause_31_hover.png');
+    --pause-31-pressed: url('resources/playerbar/pause_31_pressed.png');
     --pause: url('resources/playerbar/pause.png');
     --pause-hover: url('resources/playerbar/pause_hover.png');
     --pause-pressed: url('resources/playerbar/pause_pressed.png');
@@ -1204,6 +1210,15 @@ body[data-hide-pb-left-btn] {
 }
 
 @media (forced-colors: active) {
+    :root:not(#Prio1):not(#Prio2) {
+        --play-31: var(--play);
+        --play-31-hover: var(--play-hover);
+        --play-31-pressed: var(--play-pressed);
+        --pause-31: var(--pause);
+        --pause-31-hover: var(--pause-hover);
+        --pause-31-pressed: var(--pause-pressed);
+    }
+
     .progress-bar__slider {
         visibility: visible;
         box-shadow: none;
