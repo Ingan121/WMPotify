@@ -34,6 +34,11 @@ const lang = {
     "MSG_DBG_INFO_COPIED": "디버그 정보가 클립보드에 복사되었습니다.",
 
     "NO_AUD_DATA": "이 트랙에 대한 오디오 데이터를 사용할 수 없습니다.",
+    "SYSAUDIO_SETUP": "데스크탑 오디오를 사용하려면 여기를 클릭하세요.",
+    "SYSAUDIO_GUIDE_TITLE": "데스크탑 오디오 캡처 설정",
+    "SYSAUDIO_GUIDE": "다음 창에서 아래 단계를 진행해 주세요:\n\n1. 'Entire Screen'을 클릭하세요.\n2. 'Also share system audio'를 활성화하세요.\n3. 모니터를 선택하고 'Share' 버튼을 클릭하세요.\n\nWMPotify는 화면이나 오디오에 대한 어떠한 정보도 수집하지 않으며, 오디오 데이터는 로컬에서만 처리됩니다. 비디오 데이터는 단순히 무시되며, 이는 Chromium 브라우저의 제한사항 때문에 요구됩니다.\n\n'확인'을 클릭하여 계속 진행하세요.",
+    "SYSAUDIO_FAIL": "데스크탑 오디오 캡처 시작에 실패했습니다!",
+    "SYSAUDIO_SUCCESS": "데스크탑 오디오 캡쳐 구성을 성공적으로 완료했습니다!\n\nSpotify 제공 오디오 데이터가 있는 트랙에서도 데스크탑 오디오를 사용하려면 '확인', 오디오 데이터가 없는 경우에만 사용하려면 '취소'를 누르십시오.",
 
     "LRC_STATUS_LOADING": "불러오는 중...",
     "LRC_STATUS_NOT_FOUND": "가사를 찾을 수 없습니다.",

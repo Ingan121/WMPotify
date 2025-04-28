@@ -2,13 +2,13 @@
 
 import React from 'react'
 import Strings from './strings';
-import { init, updateVisConfig, uninit } from './wmpvis';
+import { init, updateVisConfig, setupDesktopAudioCapture, uninit } from './wmpvis';
 import ButterchurnAdaptor from './butterchurn/adaptor';
 import MadVisLyrics from './lyrics/main';
 import lrcCache from './lyrics/caching';
 import { checkUpdates } from './UpdateCheck';
 import { openConfigDialog } from './config';
-import { promptModal } from './dialogs';
+import { confirmModal, promptModal } from './dialogs';
 
 let appInstance = null;
 
@@ -57,6 +57,8 @@ class App extends React.Component {
       enableLyricsCache: !localStorage.wmpotifyVisLyricsNoCache,
       isFullscreen: !!document.fullscreenElement,
       noAudioData: false,
+      desktopAudioAvailable: globalThis.wmpvisDesktopAudioCapturer?.stream?.active,
+      desktopAudioOverSpotify: false,
       debugMode: false,
       updateAvailable: false
     };
@@ -573,7 +575,7 @@ class App extends React.Component {
           <p
             className="wmpotify-no-audio-notification"
             style={{
-              display: this.state.noAudioData && ["bars", "milkdrop"].includes(this.state.type) ? "block" : "none",
+              display: this.state.noAudioData && !this.state.desktopAudioAvailable && ["bars", "milkdrop"].includes(this.state.type) ? "block" : "none",
               color:
                 this.state.type !== "milkdrop" ?
                   this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
@@ -589,7 +591,28 @@ class App extends React.Component {
               zIndex: 4
             }}
           >
-            {Strings['NO_AUD_DATA']}
+            {Strings['NO_AUD_DATA']}<br />
+            <a
+              style={{    
+                cursor: 'pointer',
+                textDecoration: 'underline'
+              }}
+              onClick={async () => {
+                if (await confirmModal(Strings["SYSAUDIO_GUIDE_TITLE"], Strings["SYSAUDIO_GUIDE"])) {
+                  try {
+                    await setupDesktopAudioCapture();
+                    this.setState({ desktopAudioAvailable: true });
+                    if (await confirmModal(Strings["SYSAUDIO_GUIDE_TITLE"], Strings["SYSAUDIO_SUCCESS"])) {
+                      this.setState({ desktopAudioOverSpotify: true });
+                    }
+                  } catch {
+                    Spicetify.showNotification(Strings['SYSAUDIO_FAIL']);
+                  }
+                }
+              }}
+            >
+              {Strings['SYSAUDIO_SETUP']}
+            </a>
           </p>
           <div
             className="wmpvis-lyrics-container"

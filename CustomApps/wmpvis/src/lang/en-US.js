@@ -34,6 +34,11 @@ const lang = {
     'MSG_DBG_INFO_COPIED': 'Debug info copied to clipboard.',
 
     'NO_AUD_DATA': 'No audio data available for this track.',
+    'SYSAUDIO_SETUP': 'Click here to use desktop audio instead.',
+    'SYSAUDIO_GUIDE_TITLE': 'Setup Desktop Audio Capture',
+    'SYSAUDIO_GUIDE': "Please do these in the following window:\n\n1. Click 'Entire Screen'\n2. Enable 'Also share system audio'\n3. Select your display and click 'Share'\n\nWMPotify does not collect any information about your screen and audio, and the audio data is processed locally. Video data is simply ignored; it is required due to a Chromium limitation.\n\nClick 'OK' to continue.",
+    'SYSAUDIO_FAIL': 'Failed to initialize the desktop audio capturer!',
+    "SYSAUDIO_SUCCESS": "The desktop audio capture setup has been completed successfully!\n\nClick 'OK' to use desktop audio even for tracks with Spotify-provided audio data, or click 'Cancel' to use it only when no audio data is available.",
 
     "LRC_STATUS_LOADING": "Loading...",
     "LRC_STATUS_NOT_FOUND": "No lyrics found.",
