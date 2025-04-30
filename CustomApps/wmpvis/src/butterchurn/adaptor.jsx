@@ -5,6 +5,7 @@
 import React from "react";
 import Strings from "../strings";
 import { appInstance as App } from "../app";
+import { setupDesktopAudioCapture } from "../DesktopAudio.js";
 
 import butterchurn from './butterchurn.min.js';
 import butterchurnExtraImages from './butterchurnExtraImages.min.js';
@@ -112,6 +113,16 @@ const ConfigDialog = React.memo(() => {
             </div>
             <span id="hardcutTransitionTimeLabel">{Strings["BCCONF_HARDCUT_TRANSITION_TIME"]}</span>
             <input id="hardcutTransitionTimeInput" class="wmpotify-aero" type="number" name="hardcutTransitionTime" defaultValue="0.1" step="0.001" placeholder="0.1" disabled />
+            <hr />
+            <fieldset>
+                <legend>{Strings['VISCONF_SYSAUDIO_TITLE']}</legend>
+                {globalThis.wmpvisDesktopAudioCapturer?.stream?.active ?
+                    <button class="wmpotify-aero" disabled>{Strings['VISCONF_SYSAUDIO_OK']}</button> :
+                    <button class="wmpotify-aero" onClick={setupDesktopAudioCapture}>{Strings['VISCONF_SYSAUDIO_SETUP']}</button>}
+                <br />
+                <input id="sysAudioOverSpotifyChkBox" class="wmpotify-aero" type="checkbox" name="sysAudioOverSpotify" />
+                <label for="sysAudioOverSpotifyChkBox">{Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY"]}</label>
+            </fieldset>
             <section class="bottomButtons field-row">
                 <button id="okBtn" class="wmpotify-aero">{Strings["UI_OK"]}</button>
                 <button id="cancelBtn" class="wmpotify-aero">{Strings["UI_CANCEL"]}</button>
@@ -133,6 +144,7 @@ function openConfigDialog() {
     const randomTimerInput = root.querySelector("#randomTimerInput");
     const transitionTimeInput = root.querySelector("#transitionTimeInput");
     const hardcutTransitionTimeInput = root.querySelector("#hardcutTransitionTimeInput");
+    const sysAudioOverSpotifyChkBox = root.querySelector('#sysAudioOverSpotifyChkBox');
 
     const okBtn = root.querySelector("#okBtn");
     const cancelBtn = root.querySelector("#cancelBtn");
@@ -161,6 +173,10 @@ function openConfigDialog() {
         hardcutTransitionTimeInput.disabled = false;
     }
 
+    if (localStorage.wmpotifyVisSysAudioOverSpotify) {
+        sysAudioOverSpotifyChkBox.checked = true;
+    }
+
     function apply() {
         if (hardcutSelector.value === 0) {
             delete localStorage.wmpotifyVisBCHardcut;
@@ -172,6 +188,12 @@ function openConfigDialog() {
         localStorage.wmpotifyVisBCRandomTimer = randomTimerInput.value;
         localStorage.wmpotifyVisBCTransitionTime = transitionTimeInput.value;
         localStorage.wmpotifyVisBCHardcutTransitionTime = hardcutTransitionTimeInput.value;
+
+        if (sysAudioOverSpotifyChkBox.checked) {
+            localStorage.wmpotifyVisSysAudioOverSpotify = true;
+        } else {
+            delete localStorage.wmpotifyVisSysAudioOverSpotify;
+        }
 
         if (prevRandomTimer !== randomTimerInput.value) {
             beginRandomTimer(transitionTimeInput.value);
@@ -373,14 +395,37 @@ export function init(canvas, debugView) {
                 break;
         }
 
-        visualizer.render({
-            elapsedTime: elapsedTime,
-            audioLevels: {
-                timeByteArray: fft.timeToFrequencyDomain(audioArray),
-                timeByteArrayL: fft.timeToFrequencyDomain(audioArray),
-                timeByteArrayR: fft.timeToFrequencyDomain(audioArray)
-            }
-        });
+        const desktopAudioCapturer = globalThis.wmpvisDesktopAudioCapturer;
+        let isUsingDesktopAudio = (desktopAudioCapturer?.stream?.active &&
+            Spicetify.Platform.ConnectAPI.state.connectionStatus !== 'connected' &&
+            localStorage.wmpotifyVisSysAudioOverSpotify) ||
+            index === -1;
+
+        if (isUsingDesktopAudio && desktopAudioCapturer?.stream?.active) {
+            const audioArray = new Uint8Array(desktopAudioCapturer.analyser.fftSize);
+            const audioArrayL = new Uint8Array(desktopAudioCapturer.analyserL.fftSize);
+            const audioArrayR = new Uint8Array(desktopAudioCapturer.analyserR.fftSize);
+            desktopAudioCapturer.analyser.getByteTimeDomainData(audioArray);
+            desktopAudioCapturer.analyserL.getByteTimeDomainData(audioArrayL);
+            desktopAudioCapturer.analyserR.getByteTimeDomainData(audioArrayR);
+            visualizer.render({
+                elapsedTime: elapsedTime,
+                audioLevels: {
+                    timeByteArray: audioArray,
+                    timeByteArrayL: audioArrayL,
+                    timeByteArrayR: audioArrayR
+                }
+            });
+        } else {
+            visualizer.render({
+                elapsedTime: elapsedTime,
+                audioLevels: {
+                    timeByteArray: fft.timeToFrequencyDomain(audioArray),
+                    timeByteArrayL: fft.timeToFrequencyDomain(audioArray),
+                    timeByteArrayR: fft.timeToFrequencyDomain(audioArray)
+                }
+            });
+        }
 
         renderTimer = setTimeout(() => {
             window.requestAnimationFrame(animationStep);

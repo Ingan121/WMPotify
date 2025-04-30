@@ -9,6 +9,7 @@ import React from "react";
 import Strings from "./strings";
 import { updateVisConfig } from "./wmpvis";
 import { appInstance as App } from "./app";
+import { setupDesktopAudioCapture } from "./DesktopAudio";
 
 const ConfigDialog = React.memo(() => {
     return <>
@@ -164,6 +165,10 @@ const ConfigDialog = React.memo(() => {
                     padding: 0 12px;
                     text-align: center;
                 }
+
+                .main-trackCreditsModal-container {
+                    max-height: calc(100vh - 50px);
+                }
                 `}
         </style>
         <div style={{ fontSize: "11px" }} id="wmpvis-config">
@@ -264,6 +269,15 @@ const ConfigDialog = React.memo(() => {
                 <p id="diffScaleInfo">
                     {Strings["VISCONF_SCALE_INFO"]}
                 </p>
+            </fieldset><hr />
+            <fieldset>
+                <legend>{Strings['VISCONF_SYSAUDIO_TITLE']}</legend>
+                {globalThis.wmpvisDesktopAudioCapturer?.stream?.active ?
+                    <button class="wmpotify-aero" disabled>{Strings['VISCONF_SYSAUDIO_OK']}</button> :
+                    <button class="wmpotify-aero" onClick={setupDesktopAudioCapture}>{Strings['VISCONF_SYSAUDIO_SETUP']}</button>}
+                <br />
+                <input id="sysAudioOverSpotifyChkBox" class="wmpotify-aero" type="checkbox" name="sysAudioOverSpotify" />
+                <label for="sysAudioOverSpotifyChkBox">{Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY"]}</label>
             </fieldset>
             <section class="bottomButtons field-row">
                 <button id="okBtn" class="wmpotify-aero">{Strings["UI_OK"]}</button>
@@ -291,10 +305,8 @@ function init(root) {
     const bgColorPicker = root.querySelector("#bgColorPicker");
     const bgColorPickerColor = bgColorPicker.querySelector(".colorPicker-color");
     const barColorPicker = root.querySelector("#barColorPicker");
-    const barColorPickerLabel = root.querySelector("#barColorPickerLabel");
     const barColorPickerColor = barColorPicker.querySelector(".colorPicker-color");
     const topColorPicker = root.querySelector("#topColorPicker");
-    const topColorPickerLabel = root.querySelector("#topColorPickerLabel");
     const topColorPickerColor = topColorPicker.querySelector(".colorPicker-color");
 
     const albumArtChkBox = root.querySelector("#albumArtChkBox");
@@ -317,6 +329,7 @@ function init(root) {
     const diffScaleInfo = root.querySelector("#diffScaleInfo");
     const fpsInput = root.querySelector("#fpsInput");
     const reduceBarsChkBox = root.querySelector("#reduceBarsChkBox");
+    const sysAudioOverSpotifyChkBox = root.querySelector('#sysAudioOverSpotifyChkBox');
 
     const okBtn = root.querySelector("#okBtn");
     const cancelBtn = root.querySelector("#cancelBtn");
@@ -453,6 +466,12 @@ function init(root) {
             localStorage.wmpotifyVisDontReduceBars = true;
         }
 
+        if (sysAudioOverSpotifyChkBox.checked) {
+            localStorage.wmpotifyVisSysAudioOverSpotify = true;
+        } else {
+            delete localStorage.wmpotifyVisSysAudioOverSpotify;
+        }
+
         App.setState({
             bgColor:
                 ((localStorage.wmpotifyVisType === "albumArt" || localStorage.wmpotifyVisUseSchemeColors) && !localStorage.wmpotifyVisBgColor) ?
@@ -546,6 +565,10 @@ function init(root) {
     }
     if (localStorage.wmpotifyVisDontReduceBars) {
         reduceBarsChkBox.checked = false;
+    }
+
+    if (localStorage.wmpotifyVisSysAudioOverSpotify) {
+        sysAudioOverSpotifyChkBox.checked = true;
     }
 
     if (["none", "albumArt"].includes(localStorage.wmpotifyVisType)) {

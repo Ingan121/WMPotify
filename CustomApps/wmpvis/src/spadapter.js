@@ -97,7 +97,6 @@ function smoothstep(x) {
 }
 
 export async function spAudioDataToFrequencies() {
-	throw new Error('test');
     const audioData = await Spicetify.getAudioData();
 
     const segments = audioData.segments;

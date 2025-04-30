@@ -34,11 +34,11 @@ const lang = {
     'MSG_DBG_INFO_COPIED': 'Debug info copied to clipboard.',
 
     'NO_AUD_DATA': 'No audio data available for this track.',
-    'SYSAUDIO_SETUP': 'Click here to use desktop audio instead.',
+    'AUDIO_RETRY': 'Click here to retry loading the audio data',
+    'SYSAUDIO_SETUP': 'or click here to use desktop audio instead.',
     'SYSAUDIO_GUIDE_TITLE': 'Setup Desktop Audio Capture',
     'SYSAUDIO_GUIDE': "Please do these in the following window:\n\n1. Click 'Entire Screen'\n2. Enable 'Also share system audio'\n3. Select your display and click 'Share'\n\nWMPotify does not collect any information about your screen and audio, and the audio data is processed locally. Video data is simply ignored; it is required due to a Chromium limitation.\n\nClick 'OK' to continue.",
     'SYSAUDIO_FAIL': 'Failed to initialize the desktop audio capturer!',
-    "SYSAUDIO_SUCCESS": "The desktop audio capture setup has been completed successfully!\n\nClick 'OK' to use desktop audio even for tracks with Spotify-provided audio data, or click 'Cancel' to use it only when no audio data is available.",
 
     "LRC_STATUS_LOADING": "Loading...",
     "LRC_STATUS_NOT_FOUND": "No lyrics found.",
@@ -101,6 +101,11 @@ const lang = {
     "VISCONF_DIFF_SCALE": "Difference scale:",
     'VISCONF_REDUCE_BARS': 'Reduce the number of bars to make it look like WMP',
     "VISCONF_SCALE_INFO": "* Adjust the scale values if you think the bars reach the top too fast.",
+
+    "VISCONF_SYSAUDIO_TITLE": "Desktop Audio Capture",
+    'VISCONF_SYSAUDIO_SETUP': 'Setup desktop audio capture',
+    'VISCONF_SYSAUDIO_OK': 'Desktop audio capture is set up successfully',
+    "VISCONF_SYSAUDIO_OVER_SPOTIFY": "Prefer desktop audio over Spotify-provided audio data",
 
     "BCCONF_TITLE": "MilkDrop Properties",
     "BCCONF_HARDCUT_TYPE": "Hard cut type",

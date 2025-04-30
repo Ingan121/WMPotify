@@ -9,7 +9,6 @@ import ButterchurnAdaptor from './butterchurn/adaptor';
 import MadVisLyrics from './lyrics/main';
 import { spAudioDataToFrequencies } from './spadapter';
 import { appInstance as App } from './app';
-import { getDesktopAudioCapturer } from './DesktopAudio';
 
 let initedOnce = false;
 
@@ -90,15 +89,15 @@ async function wallpaperAudioListener() {
         return;
     }
 
-    let isUsingDesktopAudio = globalThis.wmpvisDesktopAudioCapturer?.stream?.active && App.state.desktopAudioOverSpotify;
+    let isUsingDesktopAudio = globalThis.wmpvisDesktopAudioCapturer?.stream?.active &&
+        Spicetify.Platform.ConnectAPI.state.connectionStatus !== 'connected' &&
+        visConfig.sysAudioOverSpotify;
     let audioArray;
 
     if (!isUsingDesktopAudio) {
         const index = findAudioArray(lastIndex);
         if (index < 0) { // No Spotify-provided audio data available
             if (globalThis.wmpvisDesktopAudioCapturer?.stream?.active) {
-                audioArray = new Uint8Array(arraySizeDesktop);
-                globalThis.wmpvisDesktopAudioCapturer.analyser.getByteFrequencyData(audioArray);
                 isUsingDesktopAudio = true;
             } else {
                 audioArray = new Array(arraySizeOrig).fill(0);
@@ -112,9 +111,13 @@ async function wallpaperAudioListener() {
             }
             lastIndex = index;
         }
-    } else if (globalThis.wmpvisDesktopAudioCapturer?.stream?.active) {
-        audioArray = new Uint8Array(arraySizeDesktop);
-        globalThis.wmpvisDesktopAudioCapturer.analyser.getByteFrequencyData(audioArray);
+    }
+    if (isUsingDesktopAudio) {
+        const audioArrayL = new Uint8Array(arraySizeDesktop / 2);
+        const audioArrayR = new Uint8Array(arraySizeDesktop / 2);
+        globalThis.wmpvisDesktopAudioCapturer.analyserL.getByteFrequencyData(audioArrayL);
+        globalThis.wmpvisDesktopAudioCapturer.analyserR.getByteFrequencyData(audioArrayR);
+        audioArray = Array.from(audioArrayL.reverse()).concat(Array.from(audioArrayR)).map(i => i / 256);
     }
 
     // Optimization
@@ -147,13 +150,6 @@ async function wallpaperAudioListener() {
         }
     } else {
         arraySize = isUsingDesktopAudio ? arraySizeDesktop : arraySizeOrig;
-    }
-    if (isUsingDesktopAudio) {
-        const newAudioArray = new Array(arraySize);
-        for (let i = 0; i <= arraySize; i++) {
-            newAudioArray[i] = audioArray[i] / 256;
-        }
-        audioArray = newAudioArray;
     }
 
     // Clear the canvas
@@ -256,6 +252,7 @@ export function updateVisConfig() {
         diffScale: parseFloat(localStorage.wmpotifyVisDiffScale || 0.07),
         reduceBars: !localStorage.wmpotifyVisDontReduceBars,
         fpsSet: !!localStorage.wmpotifyVisFPS,
+        sysAudioOverSpotify: !!localStorage.wmpotifyVisSysAudioOverSpotify
     };
     if (localStorage.wmpotifyVisAutoSizeBars) {
         delete visConfig.barWidth;
@@ -391,6 +388,16 @@ function updateAlbumArtSize() {
     App.setState({ albumArtSizeProps: props, albumArtSize: mode });
 }
 
+export async function loadAudioData() {
+    try {
+        audioData = await spAudioDataToFrequencies();
+        App.setState({ noAudioData: false });
+    } catch {
+        audioData = null;
+        App.setState({ noAudioData: true });
+    }
+}
+
 async function setupListeners() {
     console.log('Setting up listeners');
     try {
@@ -452,10 +459,6 @@ async function setupListeners() {
         debugViewFps.innerText = 'FPS: ' + actualFps;
         updatesPerSecond = 0;
     }, 1000);
-}
-
-export async function setupDesktopAudioCapture() {
-    globalThis.wmpvisDesktopAudioCapturer = await getDesktopAudioCapturer();
 }
 
 window.addEventListener('resize', updateSize);

@@ -2,13 +2,14 @@
 
 import React from 'react'
 import Strings from './strings';
-import { init, updateVisConfig, setupDesktopAudioCapture, uninit } from './wmpvis';
+import { init, updateVisConfig, loadAudioData, uninit } from './wmpvis';
 import ButterchurnAdaptor from './butterchurn/adaptor';
 import MadVisLyrics from './lyrics/main';
 import lrcCache from './lyrics/caching';
 import { checkUpdates } from './UpdateCheck';
 import { openConfigDialog } from './config';
-import { confirmModal, promptModal } from './dialogs';
+import { promptModal } from './dialogs';
+import { setupDesktopAudioCapture } from './DesktopAudio';
 
 let appInstance = null;
 
@@ -58,7 +59,6 @@ class App extends React.Component {
       isFullscreen: !!document.fullscreenElement,
       noAudioData: false,
       desktopAudioAvailable: globalThis.wmpvisDesktopAudioCapturer?.stream?.active,
-      desktopAudioOverSpotify: false,
       debugMode: false,
       updateAvailable: false
     };
@@ -568,7 +568,7 @@ class App extends React.Component {
               position: "absolute",
               top: 0,
               left: 0,
-              zIndex: 3
+              zIndex: 4
             }}
             ref={this.elemRefs.debug}
           ></p>
@@ -577,39 +577,38 @@ class App extends React.Component {
             style={{
               display: this.state.noAudioData && !this.state.desktopAudioAvailable && ["bars", "milkdrop"].includes(this.state.type) ? "block" : "none",
               color:
-                this.state.type !== "milkdrop" ?
+                this.state.type !== "milkdrop" && !this.state.showLyrics ?
                   this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
                     this.state.albumArtTopColor :
                     localStorage.wmpotifyVisUseSchemeColors ?
                       this.state.schemeTopColor :
                         localStorage.wmpotifyVisTopColor || "white"
                   : "white",
-              backgroundColor: this.state.type !== "milkdrop" ? "transparent" : "rgba(0, 0, 0, 0.5)",
+              backgroundColor: this.state.type !== "milkdrop" && !this.state.showLyrics ? "transparent" : "rgba(0, 0, 0, 0.5)",
               position: "absolute",
               left: 0,
               bottom: 0,
-              zIndex: 4
+              zIndex: 6
             }}
           >
             {Strings['NO_AUD_DATA']}<br />
             <a
               style={{    
                 cursor: 'pointer',
-                textDecoration: 'underline'
+                textDecoration: 'underline',
+                whiteSpace: 'nowrap'
               }}
-              onClick={async () => {
-                if (await confirmModal(Strings["SYSAUDIO_GUIDE_TITLE"], Strings["SYSAUDIO_GUIDE"])) {
-                  try {
-                    await setupDesktopAudioCapture();
-                    this.setState({ desktopAudioAvailable: true });
-                    if (await confirmModal(Strings["SYSAUDIO_GUIDE_TITLE"], Strings["SYSAUDIO_SUCCESS"])) {
-                      this.setState({ desktopAudioOverSpotify: true });
-                    }
-                  } catch {
-                    Spicetify.showNotification(Strings['SYSAUDIO_FAIL']);
-                  }
-                }
+              onClick={loadAudioData}
+            >
+              {Strings['AUDIO_RETRY']}
+            </a><span>, </span>
+            <a
+              style={{    
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                whiteSpace: 'nowrap'
               }}
+              onClick={setupDesktopAudioCapture}
             >
               {Strings['SYSAUDIO_SETUP']}
             </a>
@@ -622,7 +621,7 @@ class App extends React.Component {
               position: "absolute",
               top: 0,
               left: 0,
-              zIndex: 4,
+              zIndex: 5,
               width: "100%",
               height: "100%",
               backgroundColor: this.state.type === "none" ? "transparent" : "rgba(0, 0, 0, 0.5)",
@@ -645,7 +644,7 @@ class App extends React.Component {
         </section>
       </Spicetify.ReactComponent.ContextMenu>
     </>
-  } 
+  }
 }
 
 export default App;
