@@ -29,6 +29,12 @@ export async function getDesktopAudioCapturer(fftSize = 256) {
     if (audioTracks.length === 0) {
         throw new Error("No audio track available in the display media stream.");
     }
+    if (audioTracks[0].label.toLowerCase().includes('tab')) {
+        for (const track of stream.getAudioTracks()) {
+            track.stop();
+        }
+        throw new Error("Incorrect audio selected.");
+    }
     audioTracks[0].addEventListener('ended', () => {
         updateVisConfig();
         App.setState({ desktopAudioAvailable: false });
@@ -60,8 +66,16 @@ export async function setupDesktopAudioCapture(event) {
     if (event) {
         event.stopPropagation(); // workaround for spicetifyWrapper.js PopupModal behavior
     }
+    Spicetify.PopupModal.hide();
+    if (globalThis.wmpvisDesktopAudioCapturer?.stream?.active) {
+        for (const track of globalThis.wmpvisDesktopAudioCapturer.stream.getTracks()) {
+            track.stop();
+        }
+        updateVisConfig();
+        App.setState({ desktopAudioAvailable: false });
+        return;
+    }
     if (event?.shiftKey || await confirmModal(Strings["SYSAUDIO_GUIDE_TITLE"], Strings["SYSAUDIO_GUIDE"])) {
-        Spicetify.PopupModal.hide();
         try {
             globalThis.wmpvisDesktopAudioCapturer = await getDesktopAudioCapturer();
             App.setState({ desktopAudioAvailable: true });

@@ -212,6 +212,15 @@ body.sidebar-open .Root {
     }
 }
 
+.BeautifulLyricsBackground {
+    border-radius: 0 !important;
+    overflow: hidden !important;
+
+    &-Container {
+        border-radius: 0 !important;
+    }
+}
+
 :root[data-wmpotify-style="xp"] {
     /* Add panel gaps again to show frames there */
     /* And extra 8px on the left if LibX is shown */

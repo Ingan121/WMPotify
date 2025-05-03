@@ -1,6 +1,6 @@
 # <img src="https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/theme/src/resources/icon/wmpotify_48.png"> WMPotify
 * A Windows Media Player 11 inspired Spicetify theme for Spotify
-* Supported versions: 1.2.45 - 1.2.62
+* Supported versions: 1.2.45 - 1.2.63
     * Primarily tested on 1.2.52 and 1.2.61
     * 1.2.45: `Show Global nav bar with home button, search input and user avatar` must be set to `home-next-to-search` in the experimental features
     * 1.2.44 and below are not supported
@@ -111,7 +111,7 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
     * Note that Chrome extensions only work if DevTools is enabled. Spotify will randomly disable DevTools after a while and all extensions will stop working. To permanently enable DevTools and extensions, hex-patch the Spotify executable to fill the `disable-extensions` string to something invalid.
 4. **Q:** This theme is too slow!
     * **A1:** Make sure hardware acceleration is enabled in Spotify settings. 
-    * **A2:** Remove the Beautiful Lyrics extension if you have it installed. This extension is known to slow down Spotify. This theme doesn't really support the extension either. Use WMPotify NowPlaying instead.
+    * **A2:** Remove the Beautiful Lyrics extension if you have it installed. This extension is known to slow down Spotify. Use WMPotify NowPlaying instead.
 
 ## Switching Between Custom and Native Title Bar
 * This only applies to Windows users with the CEF/Spotify Tweaks mod installed.

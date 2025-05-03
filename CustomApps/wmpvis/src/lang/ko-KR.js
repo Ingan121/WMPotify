@@ -38,7 +38,7 @@ const lang = {
     "SYSAUDIO_SETUP": "여기를 클릭하여 데스크탑 오디오를 대신 사용하세요.",
     "SYSAUDIO_GUIDE_TITLE": "데스크탑 오디오 캡처 설정",
     "SYSAUDIO_GUIDE": "다음 창에서 아래 단계를 진행해 주세요:\n\n1. 'Entire Screen'을 클릭하세요.\n2. 'Also share system audio'를 활성화하세요.\n3. 모니터를 선택하고 'Share' 버튼을 클릭하세요.\n\nWMPotify는 화면이나 오디오에 대한 어떠한 정보도 수집하지 않으며, 오디오 데이터는 로컬에서만 처리됩니다. 비디오 데이터는 단순히 무시되며, 이는 Chromium 브라우저의 제한사항 때문에 요구될 뿐입니다.\n\n'확인'을 클릭하여 계속 진행하세요.",
-    "SYSAUDIO_FAIL": "데스크탑 오디오 캡처 시작에 실패했습니다!",
+    "SYSAUDIO_FAIL": "데스크탑 오디오 캡처 시작에 실패했습니다! 절차를 잘 진행했는지 다시 한 번 확인해 주십시오.",
 
     "LRC_STATUS_LOADING": "불러오는 중...",
     "LRC_STATUS_NOT_FOUND": "가사를 찾을 수 없습니다.",
@@ -104,7 +104,7 @@ const lang = {
 
     "VISCONF_SYSAUDIO_TITLE": "데스크탑 오디오 캡처",
     'VISCONF_SYSAUDIO_SETUP': "데스크탑 오디오 캡처 설정",
-    'VISCONF_SYSAUDIO_OK': "데스크탑 오디오 캡처가 성공적으로 설정되었습니다.",
+    'VISCONF_SYSAUDIO_STOP': "데스크탑 오디오 캡처 중지",
     "VISCONF_SYSAUDIO_OVER_SPOTIFY": "Spotify 제공 오디오보다 데스크탑 오디오 우선",
 
     "BCCONF_TITLE": "MilkDrop 속성",

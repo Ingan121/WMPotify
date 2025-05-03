@@ -272,10 +272,7 @@ const ConfigDialog = React.memo(() => {
             </fieldset><hr />
             <fieldset>
                 <legend>{Strings['VISCONF_SYSAUDIO_TITLE']}</legend>
-                {globalThis.wmpvisDesktopAudioCapturer?.stream?.active ?
-                    <button class="wmpotify-aero" disabled>{Strings['VISCONF_SYSAUDIO_OK']}</button> :
-                    <button class="wmpotify-aero" onClick={setupDesktopAudioCapture}>{Strings['VISCONF_SYSAUDIO_SETUP']}</button>}
-                <br />
+                <button class="wmpotify-aero" onClick={setupDesktopAudioCapture}>{Strings[globalThis.wmpvisDesktopAudioCapturer?.stream?.active ? 'VISCONF_SYSAUDIO_STOP' : 'VISCONF_SYSAUDIO_SETUP']}</button><br />
                 <input id="sysAudioOverSpotifyChkBox" class="wmpotify-aero" type="checkbox" name="sysAudioOverSpotify" />
                 <label for="sysAudioOverSpotifyChkBox">{Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY"]}</label>
             </fieldset>

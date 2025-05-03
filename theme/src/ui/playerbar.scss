@@ -582,7 +582,8 @@ div[data-testid='now-playing-widget'] {
         }
     }
 
-    button[data-testid='fullscreen-mode-button'] {
+    button[data-testid='fullscreen-mode-button'],
+    #BeautifulLyricsFullscreenButton {
         display: none;
     }
 

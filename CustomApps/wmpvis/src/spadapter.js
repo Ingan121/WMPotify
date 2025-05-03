@@ -97,7 +97,15 @@ function smoothstep(x) {
 }
 
 export async function spAudioDataToFrequencies() {
-    const audioData = await Spicetify.getAudioData();
+    let audioData = await Spicetify.getAudioData();
+	if (audioData.code) {
+		if (audioData.code === 401) {
+			await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken()
+			audioData = await Spicetify.getAudioData();
+		} else {
+			throw new Error('Failed to fetch');
+		}
+	}
 
     const segments = audioData.segments;
     const rhythm = parseRhythmString(audioData.track.rhythmstring);

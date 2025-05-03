@@ -38,7 +38,7 @@ const lang = {
     'SYSAUDIO_SETUP': 'or click here to use desktop audio instead.',
     'SYSAUDIO_GUIDE_TITLE': 'Setup Desktop Audio Capture',
     'SYSAUDIO_GUIDE': "Please do these in the following window:\n\n1. Click 'Entire Screen'\n2. Enable 'Also share system audio'\n3. Select your display and click 'Share'\n\nWMPotify does not collect any information about your screen and audio, and the audio data is processed locally. Video data is simply ignored; it is required due to a Chromium limitation.\n\nClick 'OK' to continue.",
-    'SYSAUDIO_FAIL': 'Failed to initialize the desktop audio capturer!',
+    'SYSAUDIO_FAIL': 'Failed to initialize the desktop audio capturer! Please make sure you have followed the instructions correctly.',
 
     "LRC_STATUS_LOADING": "Loading...",
     "LRC_STATUS_NOT_FOUND": "No lyrics found.",
@@ -104,7 +104,7 @@ const lang = {
 
     "VISCONF_SYSAUDIO_TITLE": "Desktop Audio Capture",
     'VISCONF_SYSAUDIO_SETUP': 'Setup desktop audio capture',
-    'VISCONF_SYSAUDIO_OK': 'Desktop audio capture is set up successfully',
+    'VISCONF_SYSAUDIO_STOP': 'Stop desktop audio capture',
     "VISCONF_SYSAUDIO_OVER_SPOTIFY": "Prefer desktop audio over Spotify-provided audio data",
 
     "BCCONF_TITLE": "MilkDrop Properties",
