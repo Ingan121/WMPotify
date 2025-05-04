@@ -472,6 +472,12 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
             height: calc(100% - 55px);
         }
 
+        &:has(div[role="gridcell"]) {
+            > div:last-child {
+                height: calc(100% - 29px);
+            }
+        }
+
         &:has(ul[role="treegrid"]) {
             > div:last-child {
                 height: 100%;
