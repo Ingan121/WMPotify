@@ -40,7 +40,8 @@
     }
 
     /* listview header */
-    .main-yourLibraryX-filterArea + div {
+    .main-yourLibraryX-filterArea + div,
+    .main-yourLibraryX-libraryRootlist div[role="grid"] > div[role="row"] {
         background: none !important;
         border-image: var(--listview-header) 0 0 1 2 fill stretch;
         border-image-width: 0 0 1px 2px;
@@ -50,7 +51,8 @@
         padding: 0 32px 0 8px;
         margin-top: 1px;
 
-        > span {
+        > span,
+        div[role="gridcell"] {
             height: 25px;
             border-image: var(--listview-header) 0 2 1 2 fill stretch;
             border-image-width: 0 2px 1px 2px;
@@ -64,6 +66,10 @@
                 justify-self: start;
             }
         }
+    }
+
+    .main-yourLibraryX-libraryRootlist div[role="grid"] > div[role="row"] {
+        margin: 0 -7px;
     }
 
     .main-rootlist-wrapper {
@@ -467,6 +473,8 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
     }
 
     .main-yourLibraryX-libraryContainer {
+        overflow: hidden !important;
+
         > div:last-child {
             overflow: visible !important;
             height: calc(100% - 55px);

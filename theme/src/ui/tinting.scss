@@ -21,7 +21,8 @@
     .main-nowPlayingBar-nowPlayingBar.tinted .playback-bar,
     .main-nowPlayingBar-nowPlayingBar.tinted .main-nowPlayingBar-right,
     .main-trackList-trackListHeader,
-    .main-yourLibraryX-filterArea + div {
+    .main-yourLibraryX-filterArea + div,
+    .main-yourLibraryX-libraryRootlist div[role="grid"] > div[role="row"] {
         filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
     }
 
