@@ -136,10 +136,10 @@ class App extends React.Component {
 
   changeVisType = (type) => {
     localStorage.wmpotifyVisType = type;
-    updateVisConfig();
     this.setState({
       type: type
     });
+    updateVisConfig();
     if (!localStorage.wmpotifyVisUseSchemeColors && !localStorage.wmpotifyVisBgColor && !(this.state.followAlbumArt && this.state.bgColorFromAlbumArt)) {
       this.setState({
         bgColor: type === "albumArt" ? "var(--spice-main)" : "black"
@@ -596,18 +596,8 @@ class App extends React.Component {
               style={{    
                 cursor: 'pointer',
                 textDecoration: 'underline',
-                whiteSpace: 'nowrap'
               }}
-              onClick={loadAudioData}
-            >
-              {Strings['AUDIO_RETRY']}
-            </a><span>, </span>
-            <a
-              style={{    
-                cursor: 'pointer',
-                textDecoration: 'underline',
-                whiteSpace: 'nowrap'
-              }}
+              title={Strings["VISCONF_SYSAUDIO_SETUP_DESC"]}
               onClick={setupDesktopAudioCapture}
             >
               {Strings['SYSAUDIO_SETUP']}

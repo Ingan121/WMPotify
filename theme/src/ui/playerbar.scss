@@ -388,7 +388,8 @@ div[data-testid='now-playing-widget'] {
         }
     }
 
-    button[data-testid='control-button-repeat'] {
+    button[data-testid='control-button-repeat'],
+    #wmpotify-repeat-button {
         position: relative;
         width: 25px;
         height: 25px;
@@ -398,6 +399,9 @@ div[data-testid='now-playing-widget'] {
         transform: none !important;
         margin-right: 12px;
         will-change: unset; /* 1.2.61, prevent image going below ::after */
+
+        display: inline-flex;
+        border: none;
 
         &::before {
             display: none;
@@ -496,11 +500,16 @@ div[data-testid='now-playing-widget'] {
             }
         }
     }
+
+    button[data-testid='control-button-repeat'] {
+        display: none;
+    }
 }
 
 .player-controls__left > div:first-child button::before,
 .player-controls__left > button:first-child::before,
 .player-controls__buttons button[data-testid='control-button-repeat']::after,
+#wmpotify-repeat-button::after,
 #wmpotify-stop-button::before,
 .volume-bar__icon-button::before {
     content: '';
@@ -515,6 +524,7 @@ div[data-testid='now-playing-widget'] {
 .player-controls__left > div:first-child button:hover::before,
 .player-controls__left > button:first-child:hover::before,
 .player-controls__buttons button[data-testid='control-button-repeat']:hover::after,
+#wmpotify-repeat-button:hover::after,
 #wmpotify-stop-button:hover::before,
 .volume-bar__icon-button:hover::before {
     background-image: var(--btn-hover);
@@ -523,6 +533,7 @@ div[data-testid='now-playing-widget'] {
 .player-controls__left > div:first-child button:active::before,
 .player-controls__left > button:first-child:active::before,
 .player-controls__buttons button[data-testid='control-button-repeat']:active::after,
+#wmpotify-repeat-button:hover::after,
 #wmpotify-stop-button:active::before,
 .volume-bar__icon-button:active::before {
     background-image: var(--btn-pressed);
@@ -542,6 +553,11 @@ div[data-testid='now-playing-widget'] {
             border-radius: 0;
             transform: none !important;
             background: var(--btn-21-bg) no-repeat center;
+
+            &::after {
+                /* prevent double tinting for active dots */
+                --spice-button: #0067d0 !important;
+            }
 
             &:hover {
                 background-image: var(--btn-21-hover);
@@ -1070,7 +1086,8 @@ body[data-hide-pb-left-btn] {
         margin-right: 6px;
     }
 
-    button[data-testid='control-button-repeat'] {
+    button[data-testid='control-button-repeat'],
+    #wmpotify-repeat-button {
         display: none;
     }
 

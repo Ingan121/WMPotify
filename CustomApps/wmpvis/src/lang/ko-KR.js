@@ -34,7 +34,6 @@ const lang = {
     "MSG_DBG_INFO_COPIED": "디버그 정보가 클립보드에 복사되었습니다.",
 
     "NO_AUD_DATA": "이 트랙에 대한 오디오 데이터를 사용할 수 없습니다.",
-    "AUDIO_RETRY": "여기를 클릭하여 오디오 데이터 불러오기를 다시 시도해 보거나",
     "SYSAUDIO_SETUP": "여기를 클릭하여 데스크탑 오디오를 대신 사용하세요.",
     "SYSAUDIO_GUIDE_TITLE": "데스크탑 오디오 캡처 설정",
     "SYSAUDIO_GUIDE": "다음 창에서 아래 단계를 진행해 주세요:\n\n1. 'Entire Screen'을 클릭하세요.\n2. 'Also share system audio'를 활성화하세요.\n3. 모니터를 선택하고 'Share' 버튼을 클릭하세요.\n\nWMPotify는 화면이나 오디오에 대한 어떠한 정보도 수집하지 않으며, 오디오 데이터는 로컬에서만 처리됩니다. 비디오 데이터는 단순히 무시되며, 이는 Chromium 브라우저의 제한사항 때문에 요구될 뿐입니다.\n\n'확인'을 클릭하여 계속 진행하세요.",
@@ -104,15 +103,18 @@ const lang = {
 
     "VISCONF_SYSAUDIO_TITLE": "데스크탑 오디오 캡처",
     'VISCONF_SYSAUDIO_SETUP': "데스크탑 오디오 캡처 설정",
+    'VISCONF_SYSAUDIO_SETUP_DESC': 'Shift 키와 함께 눌러 도움말 대화 상자를 건너뛰세요.',
     'VISCONF_SYSAUDIO_STOP': "데스크탑 오디오 캡처 중지",
-    "VISCONF_SYSAUDIO_OVER_SPOTIFY": "Spotify 제공 오디오보다 데스크탑 오디오 우선",
+    "VISCONF_SYSAUDIO_OVER_SPOTIFY": "Spotify 제공 오디오 데이터보다 데스크탑 오디오 우선",
+    "VISCONF_SYSAUDIO_OVER_SPOTIFY_DESC": "다른 기기에서 재생하는 동안에는 여전히 Spotify 제공 오디오가 우선됩니다.",
 
     "BCCONF_TITLE": "MilkDrop 속성",
     "BCCONF_HARDCUT_TYPE": "하드 컷 유형",
     "BCCONF_HARDCUT_NONE": "없음",
     "BCCONF_RANDOM_TIMER": "랜덤 프리셋 전환 간격:",
     "BCCONF_TRANSITION_TIME": "전환 시간:",
-    "BCCONF_HARDCUT_TRANSITION_TIME": "하드 컷 전환 시간:"
+    "BCCONF_HARDCUT_TRANSITION_TIME": "하드 컷 전환 시간:",
+    "BCCONF_SHOW_SONG_TITLE": "곡 제목 표시"
 };
 
 export default lang;

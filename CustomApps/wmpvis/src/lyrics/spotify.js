@@ -30,6 +30,10 @@ export async function getSpotifyNowPlaying(lang) {
                     item: json
                 };
             } else {
+                if (response.status === 401) {
+                    await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken();
+                    return await getSpotifyNowPlaying(lang);
+                }
                 return {
                     item: null,
                     errorCode: response.status

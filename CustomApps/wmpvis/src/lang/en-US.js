@@ -34,8 +34,7 @@ const lang = {
     'MSG_DBG_INFO_COPIED': 'Debug info copied to clipboard.',
 
     'NO_AUD_DATA': 'No audio data available for this track.',
-    'AUDIO_RETRY': 'Click here to retry loading the audio data',
-    'SYSAUDIO_SETUP': 'or click here to use desktop audio instead.',
+    'SYSAUDIO_SETUP': 'Click here to use desktop audio instead.',
     'SYSAUDIO_GUIDE_TITLE': 'Setup Desktop Audio Capture',
     'SYSAUDIO_GUIDE': "Please do these in the following window:\n\n1. Click 'Entire Screen'\n2. Enable 'Also share system audio'\n3. Select your display and click 'Share'\n\nWMPotify does not collect any information about your screen and audio, and the audio data is processed locally. Video data is simply ignored; it is required due to a Chromium limitation.\n\nClick 'OK' to continue.",
     'SYSAUDIO_FAIL': 'Failed to initialize the desktop audio capturer! Please make sure you have followed the instructions correctly.',
@@ -104,8 +103,10 @@ const lang = {
 
     "VISCONF_SYSAUDIO_TITLE": "Desktop Audio Capture",
     'VISCONF_SYSAUDIO_SETUP': 'Setup desktop audio capture',
+    'VISCONF_SYSAUDIO_SETUP_DESC': 'Press with shift key to skip the guide dialog.',
     'VISCONF_SYSAUDIO_STOP': 'Stop desktop audio capture',
     "VISCONF_SYSAUDIO_OVER_SPOTIFY": "Prefer desktop audio over Spotify-provided audio data",
+    "VISCONF_SYSAUDIO_OVER_SPOTIFY_DESC": "Spotify-provided audio data is still preferred while playing on another device.",
 
     "BCCONF_TITLE": "MilkDrop Properties",
     "BCCONF_HARDCUT_TYPE": "Hard cut type",
@@ -113,6 +114,7 @@ const lang = {
     "BCCONF_RANDOM_TIMER": "Random preset switch interval:",
     "BCCONF_TRANSITION_TIME": "Transition time:",
     "BCCONF_HARDCUT_TRANSITION_TIME": "Hard cut transition time:",
+    "BCCONF_SHOW_SONG_TITLE": "Display song title"
 };
 
 export default lang;

@@ -406,7 +406,7 @@ async function setupListeners() {
     } catch {
         // Retry after 1 second
         initAttempts++;
-        if (initAttempts > 5) {
+        if (initAttempts > 3) {
             App.setState({ noAudioData: true });
         } else {
             setTimeout(setupListeners, 1000);
@@ -445,8 +445,10 @@ async function setupListeners() {
             updateAlbumArtColor();
         }
         ButterchurnAdaptor.setAudioData(audioData || []);
+        ButterchurnAdaptor.launchSongTitleAnim();
     });
     ButterchurnAdaptor.setAudioData(audioData || []);
+    ButterchurnAdaptor.launchSongTitleAnim();
     if (interval) {
         clearInterval(interval);
     }
@@ -487,6 +489,7 @@ export async function init(elemRefs) {
 
     if (visConfig.type === 'milkdrop') {
         ButterchurnAdaptor.init(visBC, debugView);
+        ButterchurnAdaptor.launchSongTitleAnim();
     }
 
     MadVisLyrics.init(elemRefs.lyrics.current);

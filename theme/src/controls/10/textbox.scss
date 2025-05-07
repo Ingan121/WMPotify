@@ -11,6 +11,7 @@
 
     input.wmpotify-aero,
     input.search,
+    input.x-settings-input,
     .main-trackCreditsModal-originalCredits input {
         &[type="text"],
         &[type="email"],
@@ -22,6 +23,9 @@
     
     input.wmpotify-aero[type="text"],
     input.search[type="text"],
+    input.x-settings-input[type="text"],
+    input.x-settings-input[type="number"],
+    input.x-settings-input[type="password"],
     .main-trackCreditsModal-originalCredits input[type="text"],
     input.wmpotify-aero[type="email"],
     .main-trackCreditsModal-originalCredits input[type="email"],

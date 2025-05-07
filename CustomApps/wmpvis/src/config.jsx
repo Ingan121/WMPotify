@@ -272,9 +272,9 @@ const ConfigDialog = React.memo(() => {
             </fieldset><hr />
             <fieldset>
                 <legend>{Strings['VISCONF_SYSAUDIO_TITLE']}</legend>
-                <button class="wmpotify-aero" onClick={setupDesktopAudioCapture}>{Strings[globalThis.wmpvisDesktopAudioCapturer?.stream?.active ? 'VISCONF_SYSAUDIO_STOP' : 'VISCONF_SYSAUDIO_SETUP']}</button><br />
+                <button id="sysAudioSetupBtn" class="wmpotify-aero" title={Strings["VISCONF_SYSAUDIO_SETUP_DESC"]} onClick={setupDesktopAudioCapture}>{Strings[globalThis.wmpvisDesktopAudioCapturer?.stream?.active ? 'VISCONF_SYSAUDIO_STOP' : 'VISCONF_SYSAUDIO_SETUP']}</button><br />
                 <input id="sysAudioOverSpotifyChkBox" class="wmpotify-aero" type="checkbox" name="sysAudioOverSpotify" />
-                <label for="sysAudioOverSpotifyChkBox">{Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY"]}</label>
+                <label for="sysAudioOverSpotifyChkBox" title={Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY_DESC"]}>{Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY"]}</label>
             </fieldset>
             <section class="bottomButtons field-row">
                 <button id="okBtn" class="wmpotify-aero">{Strings["UI_OK"]}</button>
@@ -324,8 +324,11 @@ function init(root) {
     const diffScaleLabel = root.querySelector("#diffScaleLabel");
     const diffScaleInput = root.querySelector("#diffScaleInput");
     const diffScaleInfo = root.querySelector("#diffScaleInfo");
+    const fpsLabel = root.querySelector("#fpsLabel")
     const fpsInput = root.querySelector("#fpsInput");
     const reduceBarsChkBox = root.querySelector("#reduceBarsChkBox");
+
+    const sysAudioSetupBtn = root.querySelector("#sysAudioSetupBtn");
     const sysAudioOverSpotifyChkBox = root.querySelector('#sysAudioOverSpotifyChkBox');
 
     const okBtn = root.querySelector("#okBtn");
@@ -580,6 +583,12 @@ function init(root) {
         diffScaleLabel.classList.add("disabled");
         diffScaleInput.disabled = true;
         diffScaleInfo.classList.add("disabled");
+        if (fpsInput) {
+            fpsLabel.classList.add("disabled");
+            fpsInput.disabled = true;
+        }
         reduceBarsChkBox.disabled = true;
+        sysAudioSetupBtn.disabled = true;
+        sysAudioOverSpotifyChkBox.disabled = true;
     }
 }

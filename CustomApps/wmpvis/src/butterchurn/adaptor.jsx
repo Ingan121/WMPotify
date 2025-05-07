@@ -112,13 +112,15 @@ const ConfigDialog = React.memo(() => {
                 </select>
             </div>
             <span id="hardcutTransitionTimeLabel">{Strings["BCCONF_HARDCUT_TRANSITION_TIME"]}</span>
-            <input id="hardcutTransitionTimeInput" class="wmpotify-aero" type="number" name="hardcutTransitionTime" defaultValue="0.1" step="0.001" placeholder="0.1" disabled />
+            <input id="hardcutTransitionTimeInput" class="wmpotify-aero" type="number" name="hardcutTransitionTime" defaultValue="0.1" step="0.001" placeholder="0.1" disabled /><br />
+            <input id="showSongTitleChkBox" class="wmpotify-aero" type="checkbox" name="showSongTitle" />
+            <label for="showSongTitleChkBox">{Strings["BCCONF_SHOW_SONG_TITLE"]}</label>
             <hr />
             <fieldset>
                 <legend>{Strings['VISCONF_SYSAUDIO_TITLE']}</legend>
-                <button class="wmpotify-aero" onClick={setupDesktopAudioCapture}>{Strings[globalThis.wmpvisDesktopAudioCapturer?.stream?.active ? 'VISCONF_SYSAUDIO_STOP' : 'VISCONF_SYSAUDIO_SETUP']}</button><br />
+                <button class="wmpotify-aero" title={Strings["VISCONF_SYSAUDIO_SETUP_DESC"]} onClick={setupDesktopAudioCapture}>{Strings[globalThis.wmpvisDesktopAudioCapturer?.stream?.active ? 'VISCONF_SYSAUDIO_STOP' : 'VISCONF_SYSAUDIO_SETUP']}</button><br />
                 <input id="sysAudioOverSpotifyChkBox" class="wmpotify-aero" type="checkbox" name="sysAudioOverSpotify" />
-                <label for="sysAudioOverSpotifyChkBox">{Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY"]}</label>
+                <label for="sysAudioOverSpotifyChkBox" title={Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY_DESC"]}>{Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY"]}</label>
             </fieldset>
             <section class="bottomButtons field-row">
                 <button id="okBtn" class="wmpotify-aero">{Strings["UI_OK"]}</button>
@@ -141,6 +143,7 @@ function openConfigDialog() {
     const randomTimerInput = root.querySelector("#randomTimerInput");
     const transitionTimeInput = root.querySelector("#transitionTimeInput");
     const hardcutTransitionTimeInput = root.querySelector("#hardcutTransitionTimeInput");
+    const showSongTitleChkBox = root.querySelector("#showSongTitleChkBox");
     const sysAudioOverSpotifyChkBox = root.querySelector('#sysAudioOverSpotifyChkBox');
 
     const okBtn = root.querySelector("#okBtn");
@@ -152,6 +155,8 @@ function openConfigDialog() {
     randomTimerInput.value = localStorage.wmpotifyVisBCRandomTimer || 10;
     transitionTimeInput.value = localStorage.wmpotifyVisBCTransitionTime || 10;
     hardcutTransitionTimeInput.value = localStorage.wmpotifyVisBCHardcutTransitionTime || 0.1;
+    showSongTitleChkBox.checked = !!localStorage.wmpotifyVisBCShowSongTitle;
+    sysAudioOverSpotifyChkBox.checked = !!localStorage.wmpotifyVisSysAudioOverSpotify;
 
     hardcutSelector.addEventListener("change", () => {
         if (hardcutSelector.value === "0") {
@@ -170,10 +175,6 @@ function openConfigDialog() {
         hardcutTransitionTimeInput.disabled = false;
     }
 
-    if (localStorage.wmpotifyVisSysAudioOverSpotify) {
-        sysAudioOverSpotifyChkBox.checked = true;
-    }
-
     function apply() {
         if (hardcutSelector.value === 0) {
             delete localStorage.wmpotifyVisBCHardcut;
@@ -186,6 +187,15 @@ function openConfigDialog() {
         localStorage.wmpotifyVisBCTransitionTime = transitionTimeInput.value;
         localStorage.wmpotifyVisBCHardcutTransitionTime = hardcutTransitionTimeInput.value;
 
+        if (showSongTitleChkBox.checked) {
+            const prev = localStorage.wmpotifyVisBCShowSongTitle;
+            localStorage.wmpotifyVisBCShowSongTitle = true;
+            if (!prev) {
+                launchSongTitleAnim();
+            }
+        } else {
+            delete localStorage.wmpotifyVisBCShowSongTitle;
+        }
         if (sysAudioOverSpotifyChkBox.checked) {
             localStorage.wmpotifyVisSysAudioOverSpotify = true;
         } else {
@@ -393,7 +403,7 @@ export function init(canvas, debugView) {
         }
 
         const desktopAudioCapturer = globalThis.wmpvisDesktopAudioCapturer;
-        let isUsingDesktopAudio = (desktopAudioCapturer?.stream?.active &&
+        const isUsingDesktopAudio = (desktopAudioCapturer?.stream?.active &&
             Spicetify.Platform.ConnectAPI.state.connectionStatus !== 'connected' &&
             localStorage.wmpotifyVisSysAudioOverSpotify) ||
             index === -1;
@@ -455,11 +465,23 @@ function random(blend) {
     console.debug(`Random preset: ${randomPreset}`);
 }
 
+function launchSongTitleAnim() {
+    try {
+        const trackInfo = Spicetify.Player.data?.item.metadata;
+        if (visualizer && trackInfo && localStorage.wmpotifyVisBCShowSongTitle) {
+            visualizer.launchSongTitleAnim(trackInfo.artist_name + ' - ' + trackInfo.title);
+        }
+    } catch {
+        // usually canvas not ready yet
+    }
+}
+
 const ButterchurnAdaptor = {
     init,
     setAudioData: (data) => {
         audioData = data;
     },
+    launchSongTitleAnim,
     setPaused: (value) => {
         pause = value;
     },

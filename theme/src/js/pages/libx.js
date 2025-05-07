@@ -154,7 +154,10 @@ function renderHeader() {
     });
 
     if (inFolder) {
-        const folderName = document.querySelector('.main-yourLibraryX-collapseButton [class*=encore-text]').textContent;
+        const folderName = (
+            document.querySelector('.main-yourLibraryX-collapseButton h2') ||
+            document.querySelector('.main-yourLibraryX-collapseButton [class*=encore-text]')
+        ).textContent;
         const folderText = document.createElement('button');
         folderText.classList.add('wmpotify-libx-header-category-text');
         folderText.classList.add('wmpotify-toolbar-button');

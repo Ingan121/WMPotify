@@ -33,7 +33,6 @@ const elementsRequired = [
     '.main-view-container__scroll-node-child main',
     '.main-nowPlayingBar-nowPlayingBar',
     '.player-controls__left',
-    '.player-controls__buttons button[data-testid="control-button-repeat"]',
     '.player-controls__buttons button[data-testid="control-button-playpause"]',
     '.player-controls__right',
     '.playback-bar [class*=encore-text]',

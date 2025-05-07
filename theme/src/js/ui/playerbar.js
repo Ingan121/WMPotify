@@ -17,7 +17,23 @@ export function setupPlayerbar() {
 
     const playerControlsLeft = document.querySelector('.player-controls__left');
     const nextButton = document.querySelector('.player-controls__buttons button[data-testid="control-button-skip-forward"]');
-    const repeatButton = document.querySelector('.player-controls__buttons button[data-testid="control-button-repeat"]');
+    let repeatButton = document.querySelector('.player-controls__buttons button[data-testid="control-button-repeat"]');
+    if (!repeatButton) {
+        // Replacement button just in case the repeat button is somehow missing
+        repeatButton = document.createElement('button');
+        repeatButton.setAttribute('aria-label', 'Repeat');
+        repeatButton.setAttribute('aria-checked', 'false');
+        repeatButton.id = 'wmpotify-repeat-button';
+        repeatButton.addEventListener('click', () => {
+            const current = Spicetify.Player.getRepeat();
+            Spicetify.Player.setRepeat(current + 1);
+            if (current < 2) {
+                repeatButton.setAttribute('aria-checked', 'true');
+            } else {
+                repeatButton.setAttribute('aria-checked', 'false');
+            }
+        });
+    }
     playerControlsLeft.appendChild(repeatButton);
 
     const whStatus = WindhawkComm.query();
@@ -33,7 +49,7 @@ export function setupPlayerbar() {
                 Spicetify.Player.play();
             }, 1000);
         });
-        nextButton.addEventListener('click', (event) => {
+        document.addEventListener('pointerup', (event) => {
             clearTimeout(longPressTimer);
             if (nextButton.dataset.fastForward) {
                 delete nextButton.dataset.fastForward;
