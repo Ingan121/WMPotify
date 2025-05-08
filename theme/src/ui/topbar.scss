@@ -108,7 +108,7 @@
 
         &:nth-child(2) {
             width: 29px;
-            background: var(-nav) -100% 0 / 200% 100%;
+            background: var(--nav) -100% 0 / 200% 100%;
 
             &:hover {
                 background: var(--nav-hover) -100% 0 / 200% 100%;

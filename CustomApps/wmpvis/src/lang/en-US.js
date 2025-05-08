@@ -38,6 +38,7 @@ const lang = {
     'SYSAUDIO_GUIDE_TITLE': 'Setup Desktop Audio Capture',
     'SYSAUDIO_GUIDE': "Please do these in the following window:\n\n1. Click 'Entire Screen'\n2. Enable 'Also share system audio'\n3. Select your display and click 'Share'\n\nWMPotify does not collect any information about your screen and audio, and the audio data is processed locally. Video data is simply ignored; it is required due to a Chromium limitation.\n\nClick 'OK' to continue.",
     'SYSAUDIO_FAIL': 'Failed to initialize the desktop audio capturer! Please make sure you have followed the instructions correctly.',
+    'SYSAUDIO_ALLOY': 'Chrome runtime is not enabled! Please relaunch Spotify.exe with the --enable-chrome-runtime argument to use this feature.',
 
     "LRC_STATUS_LOADING": "Loading...",
     "LRC_STATUS_NOT_FOUND": "No lyrics found.",

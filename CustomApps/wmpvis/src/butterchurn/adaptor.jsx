@@ -202,7 +202,7 @@ function openConfigDialog() {
             delete localStorage.wmpotifyVisSysAudioOverSpotify;
         }
 
-        if (prevRandomTimer !== randomTimerInput.value) {
+        if (prevRandomTimer !== randomTimerInput.value && !localStorage.wmpotifyVisBCPreset) {
             beginRandomTimer(transitionTimeInput.value);
         }
     }

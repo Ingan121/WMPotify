@@ -9,7 +9,7 @@ import Strings from '../strings';
 import LRC from "./lrcparse";
 import madIdb from "./MadIdb";
 import lrcCache from "./caching";
-import { getSpotifyNowPlaying } from "./spotify";
+import { ensureSpotifyToken, getSpotifyNowPlaying } from "./spotify";
 import { openSearchDialog } from "./search";
 import { ver } from "../UpdateCheck";
 import { appInstance as App } from "../app";
@@ -148,6 +148,7 @@ async function findLyrics(id) {
 
     let unsyncedSpotifyLyrics = null;
     if (!localStorage.wmpotifyVisLyricsNoSpotify && Spicetify.Player.data?.item?.uri?.startsWith('spotify:')) {
+        await ensureSpotifyToken();
         const spotifyData = await Spicetify.CosmosAsync?.get(`https://spclient.wg.spotify.com/color-lyrics/v2/track/${Spicetify.Player.data?.item?.uri?.split(':').pop()}?format=json&vocalRemoval=false&market=from_token`);
         if (spotifyData?.lyrics) {
             if (spotifyData.lyrics.syncType === "LINE_SYNCED") {

@@ -16,6 +16,7 @@ export async function getSpotifyNowPlaying(lang) {
         if (!lang) {
             return Spicetify.Player.data;
         } else {
+            await ensureSpotifyToken();
             const headers = {
                 'Authorization': 'Bearer ' + Spicetify.Platform.AuthorizationAPI.getState().token.accessToken
             }
@@ -30,10 +31,6 @@ export async function getSpotifyNowPlaying(lang) {
                     item: json
                 };
             } else {
-                if (response.status === 401) {
-                    await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken();
-                    return await getSpotifyNowPlaying(lang);
-                }
                 return {
                     item: null,
                     errorCode: response.status
@@ -46,5 +43,11 @@ export async function getSpotifyNowPlaying(lang) {
             item: null,
             errorCode: -1
         }
+    }
+}
+
+export async function ensureSpotifyToken() {
+    if (Spicetify.Platform.AuthorizationAPI.getState().token.accessTokenExpirationTimestampMs < Date.now()) {
+        await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken();
     }
 }

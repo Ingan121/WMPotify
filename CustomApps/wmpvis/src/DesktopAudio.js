@@ -67,6 +67,14 @@ export async function setupDesktopAudioCapture(event) {
         event.stopPropagation(); // workaround for spicetifyWrapper.js PopupModal behavior
     }
     Spicetify.PopupModal.hide();
+    if (!globalThis.documentPictureInPicture) {
+        // This feature requires Chrome runtime
+        // documentPictureInPicture also needs it and is undefined in Alloy mode
+        // So runtime is detected with it
+        Spicetify.showNotification(Strings["SYSAUDIO_ALLOY"]);
+        return;
+    }
+
     if (globalThis.wmpvisDesktopAudioCapturer?.stream?.active) {
         for (const track of globalThis.wmpvisDesktopAudioCapturer.stream.getTracks()) {
             track.stop();
