@@ -16,9 +16,9 @@ export async function getSpotifyNowPlaying(lang) {
         if (!lang) {
             return Spicetify.Player.data;
         } else {
-            await ensureSpotifyToken();
+            const token = await ensureSpotifyToken();
             const headers = {
-                'Authorization': 'Bearer ' + Spicetify.Platform.AuthorizationAPI.getState().token.accessToken
+                'Authorization': 'Bearer ' + (token || Spicetify.Platform.AuthorizationAPI.getState().token.accessToken)
             }
             headers['Accept-Language'] = lang;
             const response = await fetch('https://api.spotify.com/v1/tracks/' + Spicetify.Player.data.item.uri.split(':')[2], {
@@ -48,6 +48,6 @@ export async function getSpotifyNowPlaying(lang) {
 
 export async function ensureSpotifyToken() {
     if (Spicetify.Platform.AuthorizationAPI.getState().token.accessTokenExpirationTimestampMs < Date.now()) {
-        await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken();
+        return (await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken()).accessToken;
     }
 }

@@ -22,7 +22,7 @@ export function setupPlayerbar() {
         // Replacement button just in case the repeat button is somehow missing
         repeatButton = document.createElement('button');
         repeatButton.setAttribute('aria-label', 'Repeat');
-        repeatButton.setAttribute('aria-checked', 'false');
+        repeatButton.setAttribute('aria-checked', !!Spicetify.Player.getRepeat());
         repeatButton.id = 'wmpotify-repeat-button';
         repeatButton.addEventListener('click', () => {
             const current = Spicetify.Player.getRepeat();

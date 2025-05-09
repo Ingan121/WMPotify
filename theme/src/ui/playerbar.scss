@@ -1088,7 +1088,7 @@ body[data-hide-pb-left-btn] {
 
     button[data-testid='control-button-repeat'],
     #wmpotify-repeat-button {
-        display: none;
+        display: none !important;
     }
 
     .volume-bar {
