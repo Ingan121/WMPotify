@@ -347,6 +347,9 @@ class App extends React.Component {
             label="Adjust Sync"
             onClick={async () => {
               const syncDelay = await promptModal(Strings["MENU_LRC_ADJUST_SYNC"], Strings["UI_PROMPT_ENTER_VALUE"], "", this.state.syncDelay);
+              if (syncDelay === null) {
+                return;
+              }
               if (syncDelay) {
                 localStorage.wmpotifyVisLyricsSyncDelay = syncDelay;
               } else {

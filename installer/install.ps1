@@ -8,7 +8,8 @@ param (
     [string]$Version = 'latest',
 
     [switch]$GetFromGit,
-    [switch]$NoAskCTEWH
+    [switch]$NoAskCTEWH,
+    [switch]$BypassAdmin
 )
 begin {
     $ErrorActionPreference = 'Stop'
@@ -59,6 +60,26 @@ process {
     
     $currentPrincipal = New-Object -TypeName System.Security.Principal.WindowsPrincipal -ArgumentList ([System.Security.Principal.WindowsIdentity]::GetCurrent())
     $isAdmin = $currentPrincipal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+    $isUacDisabled = (Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System).EnableLUA -eq 0
+
+    if ($isAdmin -and -not $isUacDisabled -and -not $BypassAdmin) {
+        Write-Host 'This script should not be started as administrator, as this can cause problems with Spicetify. Continue only if you know what you are doing.'
+        do {
+            $choice = $Host.UI.PromptForChoice(
+                '',
+                'Do you want to abort the installation process?',
+                ('&Yes', '&No'),
+                0
+            )
+            if ($choice -notin 0, 1) {
+                Write-Host "Invalid choice. Please select Yes or No." -ForegroundColor Yellow
+            }
+        } until ($choice -in 0, 1)
+
+        if ($choice -eq 0) {
+            Write-Error -Message 'Installation aborted.'
+        }
+    }
 
     switch ($Action) {
         'Uninstall' {
