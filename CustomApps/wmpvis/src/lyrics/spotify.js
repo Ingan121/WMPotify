@@ -47,7 +47,19 @@ export async function getSpotifyNowPlaying(lang) {
 }
 
 export async function ensureSpotifyToken() {
-    if (Spicetify.Platform.AuthorizationAPI.getState().token.accessTokenExpirationTimestampMs < Date.now()) {
-        return (await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken()).accessToken;
+    const expiry = Spicetify.Platform.AuthorizationAPI.getState().token.accessTokenExpirationTimestampMs;
+    const now = Date.now();
+    if (expiry < now) {
+        const oldToken = Spicetify.Platform.AuthorizationAPI.getState().token.accessToken;
+        const newToken = await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken();
+        console.log('WMPotifyNowplaying: ensureSpotifyToken:', {
+            stack: new Error().stack,
+            expiry,
+            now,
+            oldToken,
+            newToken
+        });
+        Spicetify.Platform.AuthorizationAPI._state.token.accessToken = newToken.accessToken;
+        return newToken.accessToken;
     }
 }
