@@ -2,7 +2,8 @@
     input.wmpotify-aero,
     input.search,
     input.x-settings-input,
-    .main-trackCreditsModal-originalCredits input {
+    .main-trackCreditsModal-originalCredits input,
+    .main-playlistEditDetailsModal-content input {
         &[type="text"],
         &[type="email"],
         &[type="number"],
@@ -15,6 +16,7 @@
     input.wmpotify-aero[type="email"],
     input.wmpotify-aero[type="number"],
     input.wmpotify-aero[type="password"],
+    textarea.wmpotify-aero,
     input.search[type="text"],
     input.x-settings-input[type="text"],
     input.x-settings-input[type="number"],
@@ -23,8 +25,9 @@
     .main-trackCreditsModal-originalCredits input[type="email"],
     .main-trackCreditsModal-originalCredits input[type="number"],
     .main-trackCreditsModal-originalCredits input[type="password"],
-    textarea.wmpotify-aero,
-    .main-trackCreditsModal-originalCredits textarea {
+    .main-trackCreditsModal-originalCredits textarea,
+    .main-playlistEditDetailsModal-content input[type="text"],
+    .main-playlistEditDetailsModal-content textarea {
         font: var(--font);
         padding: 3px 4px 5px;
         border: 1px solid var(--textbox-border-color);

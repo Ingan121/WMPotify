@@ -18,56 +18,6 @@ section[data-testid="album-page"] {
         display: none;
     }
 
-    .main-trackList-trackListHeader {
-        background: none !important;
-        border-image: var(--listview-header) 0 0 1 2 fill stretch;
-        border-image-width: 0 0 1px 2px;
-        height: 23.3px;
-        box-shadow: var(--wmp11-separator-light) 0 -1px 0 0, var(--wmp11-separator-shadow) 0 -2px 0 0; 
-        top: 29px !important;
-        forced-color-adjust: none;
-
-        /* Choose column button, 1.2.57 */
-        > div[role="presentation"]:first-child > button {
-            display: none;
-        }
-
-        .main-trackList-trackListHeaderRow {
-            height: 25px;
-            grid-gap: 0;
-
-            .main-trackList-sortable,
-            .main-trackList-rowSectionIndex > div {
-                color: var(--wmp11-subtext);
-            }
-
-            > div {
-                border-image: var(--listview-header) 0 2 1 2 fill stretch;
-                border-image-width: 0 2px 1px 2px;
-                padding-left: 5px;
-
-                > div {
-                    width: 100%;
-                    span {
-                        text-align: left;
-                    }
-                }
-            }
-
-            .main-trackList-column {
-                justify-content: flex-start;
-            }
-
-            .main-trackList-rowSectionIndex {
-                min-width: 30px;
-            }
-
-            .main-trackList-rowSectionEnd .main-trackList-durationHeader {
-                justify-content: flex-start;
-            }
-        }
-    }
-
     div[style*="--text-subdued"] span {
         color: var(--gray-text);
     }
@@ -190,40 +140,6 @@ section[data-testid="album-page"] {
         }
         .main-actionBar-ActionBar {
             background-color: #222222;
-        }
-    }
-}
-
-@media (forced-colors: active) {
-    section[data-testid="album-page"] {
-        .main-trackList-trackListHeader {
-            background: var(--surface) !important;
-            border-image: none !important;
-            box-shadow: none !important;
-
-            .main-trackList-trackListHeaderRow {
-                > div {
-                    border-image: none !important;
-                    box-shadow: var(--border-raised-outer), var(--border-raised-inner);
-
-                    > div:not(#Prio1) {
-                        color: ButtonText !important;
-                        [class*=encore-text], button {
-                            color: ButtonText !important;
-                        }
-                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
-                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
-                            fill: ButtonText !important;
-                        }
-                    }
-
-                    &.has-button {
-                        &:active {
-                            box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset;
-                        }
-                    }
-                }
-            }
         }
     }
 }

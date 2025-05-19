@@ -27,6 +27,123 @@
     }
 }
 
+.main-trackList-trackListHeader {
+    background: none !important;
+    border-image: var(--listview-header) 0 0 1 2 fill stretch;
+    border-image-width: 0 0 1px 2px;
+    height: 23.3px;
+    box-shadow: var(--wmp11-separator-light) 0 -1px 0 0, var(--wmp11-separator-shadow) 0 -2px 0 0; 
+    forced-color-adjust: none;
+
+    &[style*="top: 64px"] {
+        top: 29px !important;
+    }
+
+    /* Choose column button, 1.2.57 */
+    > div[role="presentation"]:first-child > button {
+        display: none;
+    }
+
+    .main-trackList-trackListHeaderRow {
+        height: 25px;
+        grid-gap: 0;
+
+        .main-trackList-sortable,
+        .main-trackList-rowSectionIndex > div {
+            color: var(--wmp11-subtext);
+            [class*=encore-text] {
+                color: var(--wmp11-subtext) !important;
+            }
+        }
+
+        > div {
+            border-image: var(--listview-header) 0 2 1 2 fill stretch;
+            border-image-width: 0 2px 1px 2px;
+            padding-left: 5px;
+
+            &.selected {
+                border-image-source: url('resources/ui/listview_header_selected.png');
+                [class*=encore-text] {
+                    color: black !important;
+                }
+                svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                    fill: black !important;
+                }
+                svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
+                    fill: black !important;
+                }
+            }
+
+            &.has-button {
+                > div:empty { /* 1.2.55 */
+                    opacity: 0;
+                }
+
+                &:hover {
+                    border-image-source: url('resources/ui/listview_header_hover.png');
+                    [class*=encore-text] {
+                        color: black !important;
+                    }
+                    svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                    svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                        fill: black !important;
+                    }
+                    svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
+                        fill: black !important;
+                    }
+                }
+
+                &:active {
+                    border-image-source: url('resources/ui/listview_header_pressed.png');
+                    [class*=encore-text] {
+                        color: black !important;
+                    }
+                    svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                    svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                        fill: black !important;
+                    }
+                    svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
+                        fill: black !important;
+                    }
+                }
+            }
+
+            > div {
+                width: 100%;
+                button,
+                div {
+                    width: 100%;
+                    justify-content: flex-start;
+
+                    svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                    svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                        fill: var(--window-text) !important;
+                        order: 1;
+                        width: 11px;
+                        margin-top: -2px;
+                    }
+                }
+                span {
+                    text-align: left;
+                }
+            }
+        }
+
+        .main-trackList-column {
+            justify-content: flex-start;
+        }
+
+        .main-trackList-rowSectionIndex {
+            min-width: 30px;
+        }
+
+        .main-trackList-rowSectionEnd .main-trackList-durationHeader {
+            justify-content: flex-start;
+        }
+    }
+}
+
 .main-shelf-shelfGrid {
     > div,
     > a > div { /* Blend (Made For Us) in the Made For You genre page */
@@ -263,6 +380,39 @@
             [class*=encore-text], [class*=encore-text] * {
                 background-color: var(--hilight) !important;
                 forced-color-adjust: none !important;
+            }
+        }
+    }
+
+    .main-trackList-trackListHeader {
+        background: var(--surface) !important;
+        border-image: none !important;
+        box-shadow: none !important;
+
+        .main-trackList-trackListHeaderRow {
+            > div {
+                border-image: none !important;
+                box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+
+                > div:not(#Prio1) {
+                    color: ButtonText !important;
+                    [class*=encore-text], button {
+                        color: ButtonText !important;
+                    }
+                    svg:has(path[d="m14 6-6 6-6-6h12z"]),
+                    svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
+                        fill: ButtonText !important;
+                    }
+                    svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
+                        fill: ButtonText !important;
+                    }
+                }
+
+                &.has-button {
+                    &:active {
+                        box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset;
+                    }
+                }
             }
         }
     }

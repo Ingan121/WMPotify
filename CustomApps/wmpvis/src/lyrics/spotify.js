@@ -52,12 +52,12 @@ export async function ensureSpotifyToken() {
     if (expiry < now) {
         const oldToken = Spicetify.Platform.AuthorizationAPI.getState().token.accessToken;
         const newToken = await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken();
-        console.log('WMPotifyNowplaying: ensureSpotifyToken:', {
-            stack: new Error().stack,
+        console.log('WMPotifyNowPlaying: Refreshing AuthorizationAPI token...', {
             expiry,
             now,
             oldToken,
-            newToken
+            newToken,
+            stack: new Error().stack
         });
         Spicetify.Platform.AuthorizationAPI._state.token.accessToken = newToken.accessToken;
         return newToken.accessToken;

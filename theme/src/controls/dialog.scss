@@ -40,31 +40,13 @@ dialog {
     max-height: calc(100vh - 50px);
   }
 
-  .main-trackCreditsModal-header {
+  .main-trackCreditsModal-header,
+  .main-playlistEditDetailsModal-header {
     padding: 8px;
     border-bottom: none;
 
     h1 {
       font: var(--caption-font);
-    }
-
-    .main-trackCreditsModal-closeBtn {
-      width: 25px;
-      height: 15px;
-      background: url("resources/icon/close.png") no-repeat;
-      transform: none !important;
-
-      &:hover {
-        background: url("resources/icon/close_hover.png") no-repeat;
-      }
-
-      &:active {
-        background: url("resources/icon/close_pressed.png") no-repeat;
-      }
-
-      svg {
-        display: none;
-      }
     }
   }
 
@@ -79,6 +61,66 @@ dialog {
 
   .main-trackCreditsModal-originalCredits {
     padding-bottom: 0;
+  }
+
+  .main-playlistEditDetailsModal-container {
+    min-height: 0;
+  }
+
+  .main-playlistEditDetailsModal-content {
+    padding-top: 24px;
+
+    .main-playlistEditDetailsModal-textElementLabel {
+      left: 0;
+      transform: translateY(-130%);
+      opacity: 1;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    .main-entityHeader-image {
+      border-radius: 0;
+
+      img {
+        border-radius: 0;
+        box-shadow: var(--album-shadow-big);
+      }
+    }
+  }
+
+  .main-trackCreditsModal-closeBtn,
+  .main-playlistEditDetailsModal-closeBtn,
+  .desktopmodals-aboutSpotifyModal-closeButton {
+    width: 25px;
+    height: 15px;
+    background: url("resources/icon/close.png") no-repeat;
+    transform: none !important;
+    border-radius: 0;
+    cursor: auto;
+
+    &:hover {
+      background: url("resources/icon/close_hover.png") no-repeat;
+    }
+
+    &:active {
+      background: url("resources/icon/close_pressed.png") no-repeat;
+    }
+
+    svg {
+      display: none;
+    }
+  }
+
+  .main-playlistEditDetailsModal-closeBtn {
+    position: relative;
+    right: 8px;
+  }
+
+  .desktopmodals-aboutSpotifyModal-closeButton {
+    top: 8px;
+    right: 1px;
   }
 
   .wmpotify-modal-bottom-buttons {

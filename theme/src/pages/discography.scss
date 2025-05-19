@@ -226,11 +226,6 @@ section[data-test-uri^="spotify:artist:"] {
 
             .main-trackList-trackListHeader {
                 display: block;
-                background: none !important;
-                border-image: var(--listview-header) 0 0 1 2 fill stretch;
-                border-image-width: 0 0 1px 2px;
-                height: 23.3px;
-                box-shadow: var(--wmp11-separator-light) 0 -1px 0 0, var(--wmp11-separator-shadow) 0 -2px 0 0; 
                 top: 0 !important;
                 left: 0;
                 margin: 0;
@@ -239,45 +234,8 @@ section[data-test-uri^="spotify:artist:"] {
                 margin-bottom: 30px;
                 opacity: 1 !important;
 
-                /* Choose column button, 1.2.57 */
-                > div[role="presentation"]:first-child > button {
-                    display: none;
-                }
-
                 .main-trackList-trackListHeaderRow {
                     margin-left: 240px;
-                    height: 25px;
-                    grid-gap: 0;
-
-                    .main-trackList-sortable,
-                    .main-trackList-rowSectionIndex > div {
-                        color: var(--wmp11-subtext);
-                    }
-
-                    > div {
-                        border-image: var(--listview-header) 0 2 1 2 fill stretch;
-                        border-image-width: 0 2px 1px 2px;
-                        padding-left: 5px;
-        
-                        > div {
-                            width: 100%;
-                            span {
-                                text-align: left;
-                            }
-                        }
-                    }
-
-                    .main-trackList-column {
-                        justify-content: flex-start;
-                    }
-
-                    .main-trackList-rowSectionIndex {
-                        min-width: 30px;
-                    }
-        
-                    .main-trackList-rowSectionEnd .main-trackList-durationHeader {
-                        justify-content: flex-start;
-                    }
                 }
             }
         }
@@ -299,43 +257,6 @@ section[data-test-uri^="spotify:artist:"] {
             &::after {
                 top: 3px !important;
                 left: 4px !important;
-            }
-        }
-    }
-
-    section[data-testid="artist-page"],
-    section[data-test-uri^="spotify:artist:"] {
-        .artist-artistDiscography-firstAlbum {
-            & + .artist-artistDiscography-tracklist {
-                .main-trackList-trackListHeader {
-                    background: var(--surface) !important;
-                    border-image: none !important;
-                    box-shadow: none !important;
-
-                    .main-trackList-trackListHeaderRow {
-                        > div {
-                            border-image: none !important;
-                            box-shadow: var(--border-raised-outer), var(--border-raised-inner);
-
-                            > div:not(#Prio1) {
-                                color: ButtonText !important;
-                                [class*=encore-text], button {
-                                    color: ButtonText !important;
-                                }
-                                svg:has(path[d="m14 6-6 6-6-6h12z"]),
-                                svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
-                                    fill: ButtonText !important;
-                                }
-                            }
-
-                            &.has-button {
-                                &:active {
-                                    box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset;
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }
