@@ -300,9 +300,9 @@ function loadAlbumArt() {
         const size = localStorage.wmpotifyVisAlbumArtSrcSize || 'standard';
         const image = images.find((img) => img.label === size || img.label === 'large' || img.label === 'xlarge');
         if (image) {
-            albumArt.src = image.url.replace('spotify:image:', 'https://i.scdn.co/image/');
+            albumArt.src = image.url;
         } else {
-            albumArt.src = images[0].url.replace('spotify:image:', 'https://i.scdn.co/image/');
+            albumArt.src = images[0].url;
         }
     } else {
         albumArt.src = '';

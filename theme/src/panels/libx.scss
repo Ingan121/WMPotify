@@ -221,7 +221,8 @@
             background: none;
         }
 
-        div[class^="Box__BoxComponent-"][class*="isInteractive"]::after {
+        div[class^="Box__BoxComponent-"][class*="isInteractive"]::after,
+        div[class*="e-"][class*="-box--interactive"]::after {
             display: none;
         }
 
@@ -570,7 +571,7 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
 
 @media (forced-colors: active) {
     .main-yourLibraryX-libraryContainer {
-        li[role="listitem"]:hover {
+        .main-yourLibraryX-listItem:hover {
             [class*=encore-text], [class*=encore-text] * {
                 color: var(--hilight-text) !important;
                 background-color: var(--hilight) !important;
@@ -583,7 +584,8 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
             color: unset;
         }
 
-        .main-yourLibraryX-filterArea + div {
+        .main-yourLibraryX-filterArea + div,
+        .main-yourLibraryX-libraryRootlist div[role="grid"] > div[role="row"] {
             background: var(--surface) !important;
             border-image: none !important;
 

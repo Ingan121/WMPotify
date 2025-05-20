@@ -366,6 +366,7 @@ div[data-testid='now-playing-widget'] {
     /* Shuffle button, wrapped in a div only if it's enabled */
     > div:first-child button,
     > button:first-child {
+        position: relative;
         width: 25px;
         height: 25px;
         border-radius: 0;
@@ -518,6 +519,7 @@ div[data-testid='now-playing-widget'] {
     width: 25px;
     height: 25px;
     background: var(--btn-bg) no-repeat;
+    border-radius: 0 !important;
     z-index: -1;
 }
 
@@ -756,7 +758,8 @@ div[data-testid='now-playing-widget'] {
                 }
             }
 
-            .main-contextMenu-tippyWrapper button { /* connect button */
+            .main-contextMenu-tippyWrapper button,
+            button[aria-describedby*="connect-message-nudge"] { /* connect button */
                 background: url('resources/playerbar/connect.png') no-repeat center;
 
                 svg {

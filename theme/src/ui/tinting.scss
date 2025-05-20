@@ -38,6 +38,7 @@
         div[data-testid="top-result-card"] > div > div button,
         .main-yourLibraryX-libraryContainer div[data-encore-id="card"] > div:nth-child(3) > div > div button,
         div[class^="Box__BoxComponent-"][class*="isInteractive"] button[data-encore-id="buttonPrimary"],
+        div[class*="e-"][class*="-box--interactive"] button[data-encore-id="buttonPrimary"],
 
         /* Toolbar buttons */
         .wmpotify-toolbar-button:not(#wmpotify-queue-clear-button),
@@ -53,7 +54,9 @@
         div[data-testid="PanelHeader_CloseButton"] > button,
         #wmpotify-config-prev,
         #wmpotify-config-next,
-        &[data-page^="/user/"] main > section .main-entityHeader-imageContainer .main-entityHeader-image:after {
+        &[data-page^="/user/"] main > section .main-entityHeader-imageContainer .main-entityHeader-image:after,
+        .profile-userEditDetails-content .main-entityHeader-image:after,
+        #searchPage div[aria-labelledby^="card-title-spotify:user:"] .main-card-imageContainer::after {
             filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
         }
     }

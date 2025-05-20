@@ -2,7 +2,7 @@
 // @id              cef-titlebar-enabler-universal
 // @name            CEF/Spotify Tweaks
 // @description     Various tweaks for Spotify, including native frames, transparent windows, and more
-// @version         0.9
+// @version         1.0
 // @author          Ingan121
 // @github          https://github.com/Ingan121
 // @twitter         https://twitter.com/Ingan121
@@ -67,32 +67,66 @@
 /*
 - showframe: true
   $name: Enable native frames and title bars on the main window*
+  $name:ko-KR: 메인 창에 시스템 제목 표시줄 및 테두리 사용
   $description: "(*): Requires a restart to take effect"
+  $description:ko-KR: "(*): 다시 시작해야 적용됩니다"
 - showframeonothers: false
   $name: Enable native frames and title bars on other windows
+  $name:ko-KR: 다른 창에 시스템 제목 표시줄 및 테두리 사용
   $description: Includes Miniplayer, DevTools, etc.
 - showmenu: true
   $name: Show the menu button*
+  $name:ko-KR: 메뉴 버튼 표시*
   $description: Disabling this also prevents opening the Spotify menu with the Alt key
+  $description:ko-KR: 이 옵션을 사용하지 않으면 알트 키를 이용하여 Spotify 메뉴를 열 수 없게 됩니다
 - showcontrols: false
   $name: Show Spotify's custom window controls*
+  $name:ko-KR: Spotify의 자체 창 제어 버튼 표시*
 - transparentcontrols: false
   $name: Make Spotify's custom window controls transparent
+  $name:ko-KR: Spotify의 자체 창 제어 버튼을 투명하게 표시
 - transparentrendering: true
   $name: Enable transparent rendering*
-  $description: "Make the transparent parts of the web contents transparent\nWill use the ButtonFace color instead if the classic theme is being used and native frames are enabled\nChrome runtime is required for this to work"
+  $name:ko-KR: 투명 렌더링 사용
+  $description: "Make the transparent parts of the web contents transparent\n
+    Will use the ButtonFace color instead if the classic theme is being used and native frames are enabled\n
+    Chrome runtime is required for this to work"
+  $description:ko-KR: "웹 컨텐츠의 투명한 영역을 투명하게 표시합니다\n
+    고전 테마를 사용중이고 시스템 제목 표시줄이 활성화되어있을 경우 버튼 색상을 대신 사용합니다\n
+    이 기능은 Chrome 런타임이 필요합니다"
 - noforceddarkmode: false
   $name: Disable forced dark mode*
+  $name:ko-KR: 강제 다크 모드 비활성화*
   $description: Prevents Spotify from forcing dark mode on the CEF UI & web contents
+  $description:ko-KR: Spotify가 CEF UI와 웹 컨텐츠에 다크 모드를 강제하는 것을 방지합니다
 - forceextensions: true
   $name: Force enable Chrome extensions*
+  $name:ko-KR: Chrome 확장 프로그램 강제 활성화*
   $description: Always enable Chrome extension support, regardless of the DevTools status
+  $description:ko-KR: 개발자 도구 상태에 관계 없이 항상 크롬 확장 프로그램 지원을 활성화합니다
+- playbackspeed: "1"
+  $name: Playback speed
+  $name:ko-KR: 재생 속도
+  $description: "Enter a decimal number. Value 1.0 represents a normal speed\n
+    Requires a x64 version of the Spotify client newer than 1.2.36\n
+    Spotify 1.2.36-1.2.44: The change will take effect from the next track\n
+    Spotify 1.2.45+: The change will be applied immediately\n
+    This feature is not available while playing on another device"
+  $description:ko-KR: "소수 값을 입력하세요. 1.0이 보통 재생 속도입니다\n
+    이 기능은 1.2.36 버전 이상의 x64 Spotify 클라이언트가 필요합니다\n
+    Spotify 1.2.36-1.2.44: 변경 사항은 다음 트랙부터 적용됩니다\n
+    Spotify 1.2.45+: 변경 사항은 즉시 적용됩니다\n
+    다른 기기에서 재생하는 동안에는 사용할 수 없습니다"
 - ignoreminsize: false
   $name: Ignore minimum window size
+  $name:ko-KR: 최소 창 크기 무시
   $description: Allows resizing the window below the minimum size set by Spotify
+  $description:ko-KR: Spotify가 정한 최소 크기 이하로 창의 크기를 조절하는 것을 허용합니다
 - allowuntested: false
   $name: (Advanced) Use unsafe methods on untested CEF versions*
+  $name:ko-KR: (고급) 검증되지 않은 CEF 버전에서 안전하지 않은 메서드 사용*
   $description: Allows calling unsafe functions on untested CEF versions. May cause crashes or other issues. If disabled, an inefficient alternative method will be used on untested versions. JS API will also be disabled on untested versions
+  $description:ko-KR: 검증되지 않은 CEF 버전에서 안전하지 않은 함수를 호출하는 것을 허용합니다. 충돌이나 다른 문제가 발생할 수 있습니다. 비활성화된 경우, 비효율적인 대체 방식이 대신 사용됩니다. JS API 또한 비활성화됩니다
 */
 // ==/WindhawkModSettings==
 
@@ -135,6 +169,7 @@
 #include <libloaderapi.h>
 #include <windhawk_api.h>
 #include <windhawk_utils.h>
+#include <cmath>
 #include <condition_variable>
 #include <cstdint>
 #include <thread>
@@ -885,6 +920,12 @@ const std::string_view CreateTrackPlayer_instructions =
     "\x48\x8B\x01"sv // mov rax, [rcx]
     "\xFF\x50\x38"sv // call qword ptr [rax+38h]
     "\x48\x8D"sv;    // lea rdx, (followed by address of "yes" in .rdata)
+const std::string_view CreateTrackPlayer_instructions_2 = // Spotify 1.2.63+
+    "\x01"sv             // just a single byte before the instructions below, to distinguish from another match
+    "\x49\x8B\x0C\x24"sv // mov rcx, [r12]
+    "\x48\x8B\x01"sv     // mov rax, [rcx]
+    "\xFF\x50\x38"sv     // call qword ptr [rax+38h]
+    "\x48\x8D"sv;        // lea rdx, (followed by address of "yes" in .rdata)
 const std::string_view CreateTrackPlayer_prologue = "\x48\x8B\xC4USVWATAUAVAWH"sv;
 
 typedef char __fastcall (*SetPlaybackSpeed_t)(int64_t trackPlayer, double speed);
@@ -913,6 +954,17 @@ BOOL HookCreateTrackPlayer(char* pbExecutable, BOOL shouldFindSetPlaybackSpeed) 
         },
         L"CreateTrackPlayer"
     );
+    if (addr == NULL) {
+        addr = search_function_instructions(
+            code_section,
+            {
+                .search = CreateTrackPlayer_instructions_2,
+                .prologue = CreateTrackPlayer_prologue,
+                .instr_offset = 0xBA0
+            },
+            L"CreateTrackPlayer"
+        );
+    }
     if (addr == NULL) return FALSE;
     Wh_Log(L"Hooking CreateTrackPlayer at %p", addr);
     Wh_SetFunctionHook((void*)addr, (void*)CreateTrackPlayer_hook, (void**)&CreateTrackPlayer_original);
@@ -2064,6 +2116,59 @@ void LoadSettings() {
     cte_settings.allowuntested = Wh_GetIntSetting(L"allowuntested");
 }
 
+void ApplySpeedFromSettings(BOOL notifyInvalid = FALSE) {
+    PCWSTR newSpeedStr = Wh_GetStringSetting(L"playbackspeed");
+    Wh_Log(L"ApplySpeedFromSettings: %s", newSpeedStr);
+    if (*newSpeedStr == L'\0') {
+        g_playbackSpeed = 1;
+        #ifdef _WIN64
+            if (SetPlaybackSpeed != NULL && g_currentTrackPlayer != NULL) {
+                SetPlaybackSpeed(g_currentTrackPlayer, 1);
+            }
+        #endif
+        Wh_FreeStringSetting(newSpeedStr);
+        return;
+    }
+    try {
+        double newSpeed = std::stod(newSpeedStr);
+        Wh_FreeStringSetting(newSpeedStr);
+        if (fabs(newSpeed - g_playbackSpeed) > 1e-6) {
+            #ifdef _WIN64
+                if (CreateTrackPlayer_original == NULL) {
+                    if (notifyInvalid) {
+                        MessageBoxW(NULL, L"Changing the playback speed is not supported in this version of Spotify client", L"CEF/Spotify Tweaks", MB_OK);
+                    }
+                    return;
+                }
+                if (newSpeed <= 0 || newSpeed > 5.0) {
+                    if (notifyInvalid) {
+                        MessageBoxW(NULL, L"Playback speed must be faster than 0 and less than or equal to 5.0", L"CEF/Spotify Tweaks", MB_OK);
+                    }
+                    return;
+                }
+                g_playbackSpeed = newSpeed;
+                if (SetPlaybackSpeed != NULL && g_currentTrackPlayer != NULL) {
+                    SetPlaybackSpeed(g_currentTrackPlayer, newSpeed);
+                }
+            #else
+                if (notifyInvalid) {
+                    MessageBoxW(NULL, L"Changing the playback speed requires a x86-64 version of Spotify", L"CEF/Spotify Tweaks", MB_OK);
+                }
+            #endif
+        }
+    } catch (const std::invalid_argument& e) {
+        if (notifyInvalid) {
+            MessageBoxW(NULL, L"Playback speed must be entered as a decimal number like 0.25, 1.0, or 1.5", L"CEF/Spotify Tweaks", MB_OK);
+        }
+        Wh_FreeStringSetting(newSpeedStr);
+    } catch (const std::out_of_range& e) {
+        if (notifyInvalid) {
+            MessageBoxW(NULL, L"Playback speed must be faster than 0 and less than or equal to 5.0", L"CEF/Spotify Tweaks", MB_OK);
+        }
+        Wh_FreeStringSetting(newSpeedStr);
+    }
+}
+
 int FindOffset(int major, int minor, cte_offset_t offsets[], int offsets_size, BOOL allow_untested = TRUE) {
     int prev_major = offsets[0].ver_major;
     for (int i = 0; i < offsets_size; i++) {
@@ -2214,6 +2319,7 @@ BOOL Wh_ModInit() {
         #ifdef _WIN64
         if (major >= 122 && isTestedVersion) {
             HookCreateTrackPlayer(pbExecutable, major >= 127);
+            ApplySpeedFromSettings(FALSE);
         }
         #endif
     }
@@ -2269,5 +2375,6 @@ void Wh_ModSettingsChanged() {
     }
     BOOL prev_transparentcontrols = cte_settings.transparentcontrols;
     LoadSettings();
+    ApplySpeedFromSettings(TRUE);
     EnumWindows(UpdateEnumWindowsProc, prev_transparentcontrols != cte_settings.transparentcontrols);
 }

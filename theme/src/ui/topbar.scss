@@ -228,12 +228,14 @@
             height: 36px !important;
         }
 
-        &:hover {
-            border-image-source: var(--tab-hover);
-        }
+        &:not(:disabled) {
+            &:hover {
+                border-image-source: var(--tab-hover);
+            }
 
-        &:active {
-            border-image-source: var(--tab-pressed);
+            &:active {
+                border-image-source: var(--tab-pressed);
+            }
         }
 
         &.main-globalNav-navLinkActive,

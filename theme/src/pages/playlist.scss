@@ -19,9 +19,10 @@ section[data-testid="playlist-page"],
         box-shadow: var(--album-shadow-big);
     }
 
-    /* Choose column button, 1.2.59-1.2.61 */
-    .main-trackList-trackList + button:has(path[d="m14 6-6 6-6-6h12z"]) {
-        display: none;
+    button[data-testid="edit-image-button"] {
+        border-radius: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
     }
 
     div[style*="--text-subdued"] span {

@@ -3,7 +3,8 @@
     input.search,
     input.x-settings-input,
     .main-trackCreditsModal-originalCredits input,
-    .main-playlistEditDetailsModal-content input {
+    .main-playlistEditDetailsModal-content input,
+    .profile-userEditDetails-content input {
         &[type="text"],
         &[type="email"],
         &[type="number"],
@@ -27,7 +28,8 @@
     .main-trackCreditsModal-originalCredits input[type="password"],
     .main-trackCreditsModal-originalCredits textarea,
     .main-playlistEditDetailsModal-content input[type="text"],
-    .main-playlistEditDetailsModal-content textarea {
+    .main-playlistEditDetailsModal-content textarea,
+    .profile-userEditDetails-content input[type="text"] {
         font: var(--font);
         padding: 3px 4px 5px;
         border: 1px solid var(--textbox-border-color);

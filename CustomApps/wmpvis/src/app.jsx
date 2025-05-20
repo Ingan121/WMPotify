@@ -599,6 +599,7 @@ class App extends React.Component {
               style={{    
                 cursor: 'pointer',
                 textDecoration: 'underline',
+                color: 'inherit' // 1.2.64
               }}
               title={Strings["VISCONF_SYSAUDIO_SETUP_DESC"]}
               onClick={setupDesktopAudioCapture}

@@ -41,7 +41,8 @@ dialog {
   }
 
   .main-trackCreditsModal-header,
-  .main-playlistEditDetailsModal-header {
+  .main-playlistEditDetailsModal-header,
+  .profile-userEditDetails-header {
     padding: 8px;
     border-bottom: none;
 
@@ -63,16 +64,17 @@ dialog {
     padding-bottom: 0;
   }
 
-  .main-playlistEditDetailsModal-container {
+  .main-playlistEditDetailsModal-container,
+  .profile-userEditDetails-container {
     min-height: 0;
   }
 
-  .main-playlistEditDetailsModal-content {
+  .main-playlistEditDetailsModal-content,
+  .profile-userEditDetails-content {
     padding-top: 24px;
 
-    .main-playlistEditDetailsModal-textElementLabel {
+    label {
       left: 0;
-      transform: translateY(-130%);
       opacity: 1;
 
       &::before {
@@ -88,10 +90,69 @@ dialog {
         box-shadow: var(--album-shadow-big);
       }
     }
+
+    button[data-testid="edit-image-button"] {
+      border-radius: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+    }
+
+    .main-playlistEditDetailsModal-imageDropDownButton {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+    }
+  }
+
+  .main-playlistEditDetailsModal-textElementLabel {
+    transform: translateY(-130%);
+  }
+
+  .profile-userEditDetails-label {
+    transform: translateY(-12px);
+  }
+
+  .profile-userEditDetails-content {
+    .main-entityHeader-image {
+      border-radius: 0;
+
+      img {
+        border-radius: 0;
+
+        /* userframe.png: 190x190, picture area: center 126x126, 32px frame in each side */
+        position: relative;
+        top: 16.84%;
+        left: 16.84%;
+        width: 66.32%;
+        height: 66.32%;
+      }
+
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--userframe) 0 0 / cover no-repeat;
+      }
+
+      + div {
+        position: absolute;
+        top: 16.84%;
+        left: 16.84%;
+        width: 66.32%;
+        height: 66.32%;
+        border-radius: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+      }
+    }
   }
 
   .main-trackCreditsModal-closeBtn,
   .main-playlistEditDetailsModal-closeBtn,
+  .profile-userEditDetails-closeButton,
   .desktopmodals-aboutSpotifyModal-closeButton {
     width: 25px;
     height: 15px;
@@ -113,7 +174,8 @@ dialog {
     }
   }
 
-  .main-playlistEditDetailsModal-closeBtn {
+  .main-playlistEditDetailsModal-closeBtn,
+  .profile-userEditDetails-closeButton {
     position: relative;
     right: 8px;
   }

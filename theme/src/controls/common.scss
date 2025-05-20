@@ -39,9 +39,11 @@
         top: 29px !important;
     }
 
-    /* Choose column button, 1.2.57 */
-    > div[role="presentation"]:first-child > button {
-        display: none;
+    > div[role="presentation"]:first-child {
+        & > button, /* Choose column button, 1.2.57 */
+        & + button { /* Choose column button, 1.2.64 */
+            display: none;
+        }
     }
 
     .main-trackList-trackListHeaderRow {
@@ -142,6 +144,11 @@
             justify-content: flex-start;
         }
     }
+}
+
+/* Choose column button, 1.2.59-1.2.61 */
+.main-trackList-trackList + button:has(path[d="m14 6-6 6-6-6h12z"]) {
+    display: none;
 }
 
 .main-shelf-shelfGrid {
@@ -292,7 +299,8 @@
 }
 
 .Root__main-view {
-    div[class^="Box__BoxComponent-"][class*="isInteractive"] {
+    div[class^="Box__BoxComponent-"][class*="isInteractive"],
+    div[class*="e-"][class*="-box--interactive"] {
         border: solid 1px transparent;
         border-radius: 3px;
 
@@ -419,7 +427,7 @@
 
     .main-shelf-shelfGrid {
         > *:hover, > *:focus-within {
-            .LineClamp, .LineClamp * {
+            [class*=LineClamp], [class*=LineClamp] * {
                 color: var(--hilight-text) !important;
                 background-color: var(--hilight) !important;
                 forced-color-adjust: none !important;
@@ -427,7 +435,8 @@
         }
     }
 
-    .Root__main-view div[class^="Box__BoxComponent-"][class*="isInteractive"] {
+    .Root__main-view div[class^="Box__BoxComponent-"][class*="isInteractive"],
+    .Root__main-view div[class*="e-"][class*="-box--interactive"] {
         &:hover, &:focus-within {
             [class*=LineClamp], [class*=LineClamp] * {
                 color: var(--hilight-text) !important;
