@@ -9,7 +9,7 @@
 // @homepage        https://www.ingan121.com/
 // @include         spotify.exe
 // @include         cefclient.exe
-// @compilerOptions -lcomctl32 -luxtheme -ldwmapi -lgdi32 -DWINVER=0x0A00
+// @compilerOptions -lcomctl32 -luxtheme -ldwmapi -lgdi32
 // ==/WindhawkMod==
 
 // ==WindhawkModReadme==
@@ -26,6 +26,7 @@
 * Hide the menu button or Spotify's custom window controls
 * Make Spotify's custom window controls transparent
 * Ignore the minimum window size set by Spotify
+* Change the playback speed
 * Enable transparent rendering to make the transparent parts of the web contents transparent
 * Disable forced dark mode to prevent Spotify from forcing dark mode on the CEF UI & web contents
 * Force enable Chrome extension support
@@ -37,7 +38,7 @@
     * Variant of this mod using copy-pasted CEF structs instead of hardcoded offsets is available at [here](https://github.com/Ingan121/files/tree/master/cte)
     * Copy required structs/definitions from your wanted CEF version (available [here](https://cef-builds.spotifycdn.com/index.html)) and paste them to the above variant to calculate the offsets
     * Testing with cefclient: `cefclient.exe --use-views --hide-frame --hide-controls`
-* Supported Spotify versions: 1.1.60 to 1.2.62 (newer versions may work)
+* Supported Spotify versions: 1.1.60 to 1.2.64 (newer versions may work)
 * Spotify notes:
     * Old releases are available [here](https://loadspot.pages.dev/)
     * 1.1.60-1.1.67: Use [SpotifyNoControl](https://github.com/JulienMaille/SpotifyNoControl) to remove the window controls
@@ -163,7 +164,7 @@
 129: 1.2.49-1.2.50
 130: 1.2.51-1.2.52
 131: 1.2.53, 1.2.55-1.2.61
-134: 1.2.62
+134: 1.2.62-1.2.64
 */
 
 #include <libloaderapi.h>
@@ -284,6 +285,7 @@ BOOL g_titleLocked = FALSE;
 double g_playbackSpeed = 1.0;
 int64_t g_currentTrackPlayer = NULL;
 
+DWORD g_lastRendererPid = NULL;
 HANDLE g_hPipe = INVALID_HANDLE_VALUE;
 BOOL g_shouldClosePipe = FALSE;
 std::thread g_pipeThread;
@@ -506,6 +508,7 @@ cef_string_t* FormatCefString(const wchar_t* format, ...) {
 int AddFunctionToObj(cef_v8value_t* obj, std::u16string name, cef_v8handler_t* handler) {
     cef_string_t* cefName = GenerateCefString(name);
     cef_v8value_t* func = cef_v8value_create_function_original(cefName, handler);
+    handler->base.release((cef_base_ref_counted_t*)handler);
     int result = obj->set_value_bykey(obj, cefName, func, V8_PROPERTY_ATTRIBUTE_NONE);
     free(cefName->str);
     free(cefName);
@@ -549,6 +552,41 @@ BOOL IsDwmEnabled() {
         return dwmEnabled;
     }
     return dwmEnabled && dwmFrameEnabled;
+}
+
+// From various Windhawk mods by m417z
+UINT GetDpiForWindowWithFallback(HWND hWnd) {
+    using GetDpiForWindow_t = UINT(WINAPI*)(HWND hwnd);
+    static GetDpiForWindow_t pGetDpiForWindow = []() {
+        HMODULE hUser32 = GetModuleHandle(L"user32.dll");
+        if (hUser32) {
+            return (GetDpiForWindow_t)GetProcAddress(hUser32,
+                                                     "GetDpiForWindow");
+        }
+
+        return (GetDpiForWindow_t) nullptr;
+    }();
+
+    UINT dpi = 96;
+    if (pGetDpiForWindow) {
+        dpi = pGetDpiForWindow(hWnd);
+    } else {
+        HDC hdc = GetDC(nullptr);
+        if (hdc) {
+            dpi = GetDeviceCaps(hdc, LOGPIXELSX);
+            ReleaseDC(nullptr, hdc);
+        }
+    }
+
+    return dpi;
+}
+
+BOOL IsWindows7OrEarlier() {
+    OSVERSIONINFOEXW osvi = { sizeof(osvi), 6, 1 }; // Windows 7 is 6.1
+    DWORDLONG mask = VerSetConditionMask(
+        VerSetConditionMask(0, VER_MAJORVERSION, VER_LESS_EQUAL),
+                             VER_MINORVERSION, VER_LESS_EQUAL);
+    return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION, mask);
 }
 
 #pragma region Subclassing
@@ -1003,7 +1041,7 @@ cef_size_t CEF_CALLBACK get_minimum_size_hook(struct _cef_view_delegate_t* self,
             size->height = 600;
         }
     } else {
-        float dpi = GetDpiForWindow(g_mainHwnd);
+        float dpi = GetDpiForWindowWithFallback(g_mainHwnd);
         size->width = g_minWidth / (dpi / 96);
         size->height = g_minHeight / (dpi / 96);
     }
@@ -1191,9 +1229,14 @@ BOOL WINAPI CreateProcessW_hook(
         lpProcessInformation
     );
 
-    if (result && lpCommandLine && wcsstr(lpCommandLine, L"--type=gpu-process")) {
-        g_hwAccelerated = TRUE;
-        Wh_Log(L"GPU process detected, hardware acceleration enabled");
+    if (result && lpCommandLine) {
+        if (wcsstr(lpCommandLine, L"--type=gpu-process")) {
+            g_hwAccelerated = TRUE;
+            Wh_Log(L"GPU process detected, hardware acceleration enabled");
+        } else if (wcsstr(lpCommandLine, L"--type=renderer")) {
+            g_lastRendererPid = lpProcessInformation->dwProcessId;
+            Wh_Log(L"Renderer process detected");
+        }
     }
     Wh_Log(L"lpCommandLine: %s", lpCommandLine);
 
@@ -1220,6 +1263,7 @@ BOOL WINAPI CreateProcessAsUserW_hook(
 
     // Inject %PROGRAMDATA% to get Windhawk 1.5.1 and below to work with sandboxed renderers
     const wchar_t* lpEnvironmentCopy = (wchar_t*)lpEnvironment;
+    wchar_t* newEnv = NULL;
     if (lpCommandLine && wcsstr(lpCommandLine, L"--type=renderer")) {
         if (lpEnvironment) {
             const wchar_t* env = (const wchar_t*)lpEnvironment;
@@ -1246,7 +1290,7 @@ BOOL WINAPI CreateProcessAsUserW_hook(
                 std::wstring append = append1 + append2 + append3;
                 size_t appendLen = append.size();
 
-                wchar_t* newEnv = new wchar_t[envLen + appendLen];
+                newEnv = new wchar_t[envLen + appendLen];
                 memcpy(newEnv, lpEnvironment, envLen * sizeof(wchar_t));
                 memcpy(newEnv + envLen, append.c_str(), appendLen * sizeof(wchar_t));
 
@@ -1269,14 +1313,26 @@ BOOL WINAPI CreateProcessAsUserW_hook(
         lpProcessInformation
     );
 
-    if (result && lpCommandLine && wcsstr(lpCommandLine, L"--type=gpu-process")) {
-        g_hwAccelerated = TRUE;
-        Wh_Log(L"GPU process detected, hardware acceleration enabled");
+    if (newEnv) {
+        delete newEnv;
+    }
+
+    if (result && lpCommandLine) {
+        if (wcsstr(lpCommandLine, L"--type=gpu-process")) {
+            g_hwAccelerated = TRUE;
+            Wh_Log(L"GPU process detected, hardware acceleration enabled");
+        } else if (wcsstr(lpCommandLine, L"--type=renderer")) {
+            g_lastRendererPid = lpProcessInformation->dwProcessId;
+            Wh_Log(L"Renderer process detected");
+        }
     }
     Wh_Log(L"lpCommandLine: %s", lpCommandLine);
 
     return result;
 }
+
+typedef BOOL WINAPI (*GetNamedPipeClientProcessId_t)(HANDLE Pipe, PULONG ClientProcessId);
+GetNamedPipeClientProcessId_t pGetNamedPipeClientProcessId;
 #pragma endregion
 
 #pragma region Renderer JS API injection + IPC
@@ -1447,7 +1503,7 @@ void HandleWindhawkComm(LPCWSTR command) {
             g_minWidth,
             g_minHeight,
             g_titleLocked,
-            GetDpiForWindow(g_mainHwnd),
+            GetDpiForWindowWithFallback(g_mainHwnd),
             CreateTrackPlayer_original != NULL,
             g_playbackSpeed,
             SetPlaybackSpeed != NULL
@@ -1502,8 +1558,10 @@ const void* GetSecurityDescriptorForNamedPipeInstance(size_t* size) {
     // APPLICATION PACKAGES SID (S-1-15-2-1). Finally add an Untrusted Mandatory
     // Label for non-AppContainer sandboxed users.
     static size_t sd_size;
-    static void* sec_desc = GetSecurityDescriptorWithUser(
-        L"D:(A;;GA;;;SY)(A;;GWGR;;;S-1-15-2-1)(A;;GA;;;LW)S:(ML;;;;;S-1-16-0)", &sd_size);
+    const wchar_t* sddl = IsWindows7OrEarlier() ?
+        L"D:(A;;GA;;;SY)(A;;GRGW;;;WD)S:(ML;;NW;;;LW)" : // Lacks some SIDs such as AppContainer
+        L"D:(A;;GA;;;SY)(A;;GWGR;;;S-1-15-2-1)(A;;GA;;;LW)S:(ML;;;;;S-1-16-0)";
+    static void* sec_desc = GetSecurityDescriptorWithUser(sddl, &sd_size);
 
     if (size)
         *size = sd_size;
@@ -1544,6 +1602,19 @@ void CreateNamedPipeServer() {
         BOOL connected = ConnectNamedPipe(g_hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
 
         if (connected) {
+            if (pGetNamedPipeClientProcessId != NULL) {
+                DWORD clientPid = 0;
+                if (pGetNamedPipeClientProcessId(g_hPipe, &clientPid)) {
+                    if (clientPid != g_lastRendererPid) {
+                        Wh_Log(L"Rejected pipe connection from unexpected PID: %lu (expected %lu)", clientPid, g_lastRendererPid);
+                        CloseHandle(g_hPipe);
+                        continue;
+                    }
+                }
+            } else {
+                Wh_Log(L"Skipping pipe client PID validation on Windows 7...");
+            }
+
             Wh_Log(L"Client connected, waiting for message...");
             wchar_t buffer[512];
             DWORD bytesRead;
@@ -1572,6 +1643,7 @@ void CreateNamedPipeServer() {
         Wh_Log(L"Closing pipe...");
         CloseHandle(g_hPipe);
         g_hPipe = INVALID_HANDLE_VALUE;
+        g_lastRendererPid = NULL;
     }
 
     LocalFree(pSecurityDescriptor);
@@ -1963,34 +2035,33 @@ int CEF_CALLBACK WindhawkCommV8Handler(cef_v8handler_t* self, const cef_string_t
     return TRUE;
 }
 
+cef_v8handler_t* cancelCosmosRequest_v8handler;
 typedef int CEF_CALLBACK (*v8func_exec_t)(cef_v8handler_t* self, const cef_string_t* name, cef_v8value_t* object, size_t argumentsCount, cef_v8value_t* const* arguments, cef_v8value_t** retval, cef_string_t* exception);
+v8func_exec_t CEF_CALLBACK cancelCosmosRequest_original;
 v8func_exec_t CEF_CALLBACK cancelEsperantoCall_original;
 v8func_exec_t CEF_CALLBACK _getSpotifyModule_original;
 
 int InjectCTEV8Handler(cef_v8value_t* const* arguments, cef_v8value_t** retval) {
     cef_string_t* arg = arguments[0]->get_string_value(arguments[0]); // NULL when it's an empty string
-    if (arg != NULL && u"ctewh" == std::u16string(arg->str, arg->length)) {
+    if (arg != NULL && cancelCosmosRequest_v8handler != NULL && u"ctewh" == std::u16string(arg->str, arg->length)) {
         Wh_Log(L"CTEWH is being requested");
-        cef_v8handler_t* ctewh = (cef_v8handler_t*)calloc(1, sizeof(cef_v8handler_t));
-        ctewh->base.size = sizeof(cef_v8handler_t);
-        ctewh->execute = WindhawkCommV8Handler;
         cef_v8value_t* retobj = cef_v8value_create_object(NULL, NULL);
-        AddFunctionToObj(retobj, u"query", ctewh);
-        AddFunctionToObj(retobj, u"extendFrame", ctewh);
-        AddFunctionToObj(retobj, u"minimize", ctewh);
-        AddFunctionToObj(retobj, u"maximizeRestore", ctewh);
-        AddFunctionToObj(retobj, u"close", ctewh);
-        AddFunctionToObj(retobj, u"focus", ctewh);
-        AddFunctionToObj(retobj, u"setLayered", ctewh);
-        AddFunctionToObj(retobj, u"setBackdrop", ctewh);
-        AddFunctionToObj(retobj, u"resizeTo", ctewh);
-        AddFunctionToObj(retobj, u"setMinSize", ctewh);
-        AddFunctionToObj(retobj, u"setTopMost", ctewh);
-        AddFunctionToObj(retobj, u"setTitle", ctewh);
-        AddFunctionToObj(retobj, u"lockTitle", ctewh);
-        AddFunctionToObj(retobj, u"openSpotifyMenu", ctewh);
+        AddFunctionToObj(retobj, u"query", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"extendFrame", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"minimize", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"maximizeRestore", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"close", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"focus", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"setLayered", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"setBackdrop", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"resizeTo", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"setMinSize", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"setTopMost", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"setTitle", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"lockTitle", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"openSpotifyMenu", cancelCosmosRequest_v8handler);
         #ifdef _WIN64
-        AddFunctionToObj(retobj, u"setPlaybackSpeed", ctewh);
+        AddFunctionToObj(retobj, u"setPlaybackSpeed", cancelCosmosRequest_v8handler);
         #endif
         cef_v8value_t* initialConfigObj = cef_v8value_create_object(NULL, NULL);
         AddValueToObj(initialConfigObj, u"showframe", cef_v8value_create_bool(cte_settings.showframe));
@@ -2011,6 +2082,20 @@ int InjectCTEV8Handler(cef_v8value_t* const* arguments, cef_v8value_t** retval) 
         return TRUE;
     }
     return FALSE;
+}
+
+int CEF_CALLBACK cancelCosmosRequest_hook(cef_v8handler_t* self, const cef_string_t* name, cef_v8value_t* object, size_t argumentsCount, cef_v8value_t* const* arguments, cef_v8value_t** retval, cef_string_t* exception) {
+    Wh_Log(L"cancelCosmosRequest_hook called with name: %s", name->str);
+    std::u16string nameStr(name->str, name->length);
+    if (nameStr != u"cancelCosmosRequest") {
+        return WindhawkCommV8Handler(self, name, object, argumentsCount, arguments, retval, exception);
+    }
+    if (argumentsCount == 1) {
+        if (InjectCTEV8Handler(arguments, retval)) { // why not?
+            return TRUE;
+        }
+    }
+    return cancelCosmosRequest_original(self, name, object, argumentsCount, arguments, retval, exception);
 }
 
 int CEF_CALLBACK cancelEsperantoCall_hook(cef_v8handler_t* self, const cef_string_t* name, cef_v8value_t* object, size_t argumentsCount, cef_v8value_t* const* arguments, cef_v8value_t** retval, cef_string_t* exception) {
@@ -2035,6 +2120,23 @@ int CEF_CALLBACK _getSpotifyModule_hook(cef_v8handler_t* self, const cef_string_
 
 cef_v8value_create_function_t CEF_EXPORT cef_v8value_create_function_hook = [](const cef_string_t* name, cef_v8handler_t* handler) -> cef_v8value_t* {
     Wh_Log(L"cef_v8value_create_function called with name: %s", name->str);
+    // This function exists on all Spotify versions supported by this mod
+    // Reuse this function as a mod JS API's handler instead of allocating a new cef_v8handler_t* everytime
+    // As this function's memory allocation is internally managed by Spotify
+    // And libcef.dll does not expose a function to create a internally managed V8 handlers
+
+    // ... Yes, I should've used this function for API access from the beginning, obviously
+    if (u"cancelCosmosRequest" == std::u16string(name->str, name->length)) {
+        Wh_Log(L"cancelCosmosRequest is being created");
+        if (g_hPipe == INVALID_HANDLE_VALUE) {
+            // API won't be available if the pipe is not connected
+            return cef_v8value_create_function_original(name, handler);
+        }
+        cancelCosmosRequest_original = handler->execute;
+        handler->execute = cancelCosmosRequest_hook;
+        cancelCosmosRequest_v8handler = handler;
+        return cef_v8value_create_function_original(name, handler);
+    }
     // Originally _getSpotifyModule was hooked but that function was removed in Spotify 1.2.56, which was released while this mod was in development
     // So, we're hooking cancelEsperantoCall instead. The function choice and arguments are odd, as it was originally intended for _getSpotifyModule. Deal with it.
     if (u"cancelEsperantoCall" == std::u16string(name->str, name->length)) {
@@ -2297,6 +2399,11 @@ BOOL Wh_ModInit() {
                            (void**)&CreateProcessW_original);
         Wh_SetFunctionHook((void*)CreateProcessAsUserW, (void*)CreateProcessAsUserW_hook,
                            (void**)&CreateProcessAsUserW_original);
+
+        HMODULE hKernel32 = GetModuleHandle(L"kernel32.dll");
+        if (hKernel32) {
+            pGetNamedPipeClientProcessId = (GetNamedPipeClientProcessId_t)GetProcAddress(hKernel32, "GetNamedPipeClientProcessId");
+        }
 
         // Patch the executable in memory to enable transparent rendering, disable forced dark mode, or force enable extensions
         // (Pointless if done after CEF initialization though)
