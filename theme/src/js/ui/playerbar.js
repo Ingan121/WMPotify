@@ -17,23 +17,16 @@ export function setupPlayerbar() {
 
     const playerControlsLeft = document.querySelector('.player-controls__left');
     const nextButton = document.querySelector('.player-controls__buttons button[data-testid="control-button-skip-forward"]');
-    let repeatButton = document.querySelector('.player-controls__buttons button[data-testid="control-button-repeat"]');
-    if (!repeatButton) {
-        // Replacement button just in case the repeat button is somehow missing
-        repeatButton = document.createElement('button');
-        repeatButton.setAttribute('aria-label', 'Repeat');
-        repeatButton.setAttribute('aria-checked', !!Spicetify.Player.getRepeat());
-        repeatButton.id = 'wmpotify-repeat-button';
-        repeatButton.addEventListener('click', () => {
-            const current = Spicetify.Player.getRepeat();
-            Spicetify.Player.setRepeat(current + 1);
-            if (current < 2) {
-                repeatButton.setAttribute('aria-checked', 'true');
-            } else {
-                repeatButton.setAttribute('aria-checked', 'false');
-            }
-        });
-    }
+    const repeatButton = document.createElement('button');
+    repeatButton.setAttribute('aria-label', 'Repeat');
+    repeatButton.setAttribute('aria-checked', !!Spicetify.Player.getRepeat());
+    repeatButton.id = 'wmpotify-repeat-button';
+    repeatButton.addEventListener('click', () => {
+        Spicetify.Player.toggleRepeat();
+    });
+    Spicetify.Platform.PlayerAPI._events.addListener("update", ({ data }) => {
+        repeatButton.setAttribute('aria-checked', !!data.repeat);
+    });
     playerControlsLeft.appendChild(repeatButton);
 
     const whStatus = WindhawkComm.query();

@@ -278,7 +278,6 @@ BOOL g_isSpotifyRenderer = FALSE;
 HWND g_mainHwnd = NULL;
 int g_minWidth = -1;
 int g_minHeight = -1;
-BOOL g_hwAccelerated = FALSE;
 BOOL g_dwmBackdropEnabled = FALSE;
 BOOL g_titleLocked = FALSE;
 
@@ -508,7 +507,6 @@ cef_string_t* FormatCefString(const wchar_t* format, ...) {
 int AddFunctionToObj(cef_v8value_t* obj, std::u16string name, cef_v8handler_t* handler) {
     cef_string_t* cefName = GenerateCefString(name);
     cef_v8value_t* func = cef_v8value_create_function_original(cefName, handler);
-    handler->base.release((cef_base_ref_counted_t*)handler);
     int result = obj->set_value_bykey(obj, cefName, func, V8_PROPERTY_ATTRIBUTE_NONE);
     free(cefName->str);
     free(cefName);
@@ -602,7 +600,7 @@ LRESULT CALLBACK SubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
             break;
         case WM_NCPAINT:
-            if (hWnd == g_mainHwnd && g_hwAccelerated && cte_settings.transparentrendering && !cte_settings.showframe && !IsDwmEnabled()) {
+            if (hWnd == g_mainHwnd && FindWindowExW(g_mainHwnd, NULL, L"Intermediate D3D Window", NULL) != NULL && cte_settings.transparentrendering && !cte_settings.showframe && !IsDwmEnabled()) {
                 // Do not draw anything
                 return 0;
             }
@@ -621,7 +619,7 @@ LRESULT CALLBACK SubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
             break;
         case WM_PAINT:
-            if (hWnd == g_mainHwnd && g_hwAccelerated && cte_settings.transparentrendering) {
+            if (hWnd == g_mainHwnd && FindWindowExW(g_mainHwnd, NULL, L"Intermediate D3D Window", NULL) != NULL && cte_settings.transparentrendering) {
                 if (!cte_settings.showframe) {
                     // Do not draw anything
                     ValidateRect(hWnd, NULL);
@@ -709,12 +707,12 @@ std::string ReplaceAll(std::string str, const std::string& from, const std::stri
 }
 
 // Pass an empty targetPatch to use it as a regex search
-int64_t PatchMemory(char* pbExecutable, const std::string& targetRegex, const std::vector<uint8_t>& targetPatch, int expectedSection = -1, int maxMatch = -1) {
+int64_t PatchMemory(std::wstring identifier, char* pbExecutable, const std::string& targetRegex, const std::vector<uint8_t>& targetPatch, int expectedSection = -1, int maxMatch = -1) {
     IMAGE_DOS_HEADER* pDosHeader = (IMAGE_DOS_HEADER*)pbExecutable;
     IMAGE_NT_HEADERS* pNtHeader = (IMAGE_NT_HEADERS*)((char*)pDosHeader + pDosHeader->e_lfanew);
     IMAGE_SECTION_HEADER* pSectionHeader = (IMAGE_SECTION_HEADER*)((char*)&pNtHeader->OptionalHeader + pNtHeader->FileHeader.SizeOfOptionalHeader);
 
-    std::regex regex(ReplaceAll(targetRegex, ".", R"([\s\S])"));
+    std::regex regex(targetRegex, std::regex::optimize);
     std::match_results<std::string_view::const_iterator> match;
     bool foundAnyMatch = false;
 
@@ -723,17 +721,96 @@ int64_t PatchMemory(char* pbExecutable, const std::string& targetRegex, const st
             continue;
         }
 
+        int matchCount = 0;
+
+        // One or more cache was invalidated; prevent further caching with invalid indexes
+        bool noCachingForThisSession = false;
+
+        size_t moduleSize = pSectionHeader[i].VirtualAddress + pSectionHeader[i].SizeOfRawData;
+
+        std::wstring keyPrefix = identifier + L"_offset_";
+        if (targetPatch.size() == 0) {
+            std::wstring key = keyPrefix + L"0";
+            int64_t cachedOffset = Wh_GetIntValue(key.c_str(), -1);
+            if (cachedOffset != -1) {
+                if (cachedOffset < 0 || static_cast<size_t>(cachedOffset + targetRegex.size()) > moduleSize) {
+                    Wh_Log(L"Cache offset out of bounds; invalidating...");
+                    Wh_DeleteValue(key.c_str());
+                } else {
+                    std::string_view candidate(pbExecutable + cachedOffset, targetRegex.size());
+                    if (std::regex_search(candidate.begin(), candidate.end(), regex)) {
+                        char* addr = pbExecutable + cachedOffset;
+                        Wh_Log(L"Returning cached offset for function %s", identifier.c_str());
+                        return (int64_t)addr;
+                    } else {
+                        Wh_Log(L"Match not found at the cached offset; invalidating the cache...");
+                        Wh_DeleteValue(key.c_str());
+                    }
+                }
+            }
+        } else {
+            std::wstring key = keyPrefix + L"cnt";
+            int64_t cachedCount = Wh_GetIntValue(key.c_str(), -1);
+            if (cachedCount > 0) {
+                bool allOk = true;
+                for (int i = 0; i < cachedCount; i++) {
+                    std::wstring key = keyPrefix + std::to_wstring(i);
+                    int64_t cachedOffset = Wh_GetIntValue(key.c_str(), -1);
+                    if (cachedOffset != -1) {
+                        if (cachedOffset < 0 || static_cast<size_t>(cachedOffset + targetRegex.size()) > moduleSize) {
+                            Wh_Log(L"Cache offset out of bounds; invalidating...");
+                            Wh_DeleteValue(key.c_str());
+                            allOk = false;
+                            continue;
+                        }
+                        std::string_view candidate(pbExecutable + cachedOffset, targetPatch.size());
+                        if (std::regex_search(candidate.begin(), candidate.end(), regex)) {
+                            char* addr = pbExecutable + cachedOffset;
+                            DWORD oldProtect;
+                            if (VirtualProtect(addr, targetPatch.size(), PAGE_EXECUTE_READWRITE, &oldProtect)) {
+                                memcpy(addr, targetPatch.data(), targetPatch.size());
+                                VirtualProtect(addr, targetPatch.size(), oldProtect, &oldProtect);
+                                Wh_Log(L"Patched cached offset for memory %s", identifier.c_str());
+                                foundAnyMatch = TRUE;
+                                matchCount++;
+                            }
+                        } else {
+                            Wh_Log(L"Match #%d not found at the cached offset; invalidating the cache...", i);
+                            Wh_DeleteValue(key.c_str());
+                            allOk = false;
+                        }
+                    } else {
+                        Wh_Log(L"Missing cached key: %s", key.c_str());
+                        allOk = false;
+                    }
+                }
+                if (allOk) {
+                    Wh_Log(L"Successfully patched all %d cached offsets for memory %s", cachedCount, identifier.c_str());
+                    return 1;
+                } else {
+                    // Invalidate everything for this - as match number is messed up when the offsets are partially missing
+                    Wh_Log(L"Failed to patch all %d cached offsets for memory %s; invalidating the cache...", cachedCount, identifier.c_str());
+                    Wh_DeleteValue(key.c_str());
+                    noCachingForThisSession = true;
+                }
+            } else if (cachedCount == 0) {
+                Wh_Log(L"Invalid cache count for memory %s!", identifier.c_str());
+                Wh_DeleteValue(key.c_str());
+                noCachingForThisSession = true;
+            }
+        }
+
         char* from = pbExecutable + pSectionHeader[i].VirtualAddress;
         char* to = from + pSectionHeader[i].SizeOfRawData;
 
         std::string_view search(from, to - from);
 
-        int matchCount = 0;
-
         while (std::regex_search(search.begin(), search.end(), match, regex)) {
             auto pos = from + match.position(0);
 
-            Wh_Log(L"Match found in section %d at position: %p", i, pos);
+            Wh_Log(L"Match #%d found in section %d at position: %p", matchCount, i, pos);
+            std::wstring key = keyPrefix + std::to_wstring(matchCount);
+            Wh_SetIntValue(key.c_str(), static_cast<int>(pos - pbExecutable));
 
             if (targetPatch.size() == 0) {
                 // Just return the address of the first match
@@ -756,7 +833,7 @@ int64_t PatchMemory(char* pbExecutable, const std::string& targetRegex, const st
             if (VirtualProtect(pos, targetPatch.size(), PAGE_EXECUTE_READWRITE, &dwOldProtect)) {
                 memcpy(pos, targetPatch.data(), targetPatch.size());
                 VirtualProtect(pos, targetPatch.size(), dwOldProtect, &dwOldProtect);
-                Wh_Log(L"Patch applied successfully.");
+                Wh_Log(L"Patch applied successfully for memory %s", identifier.c_str());
 
                 // // Log the bytes after patching
                 // std::string afterPatch(pos, targetPatch.size());
@@ -781,13 +858,18 @@ int64_t PatchMemory(char* pbExecutable, const std::string& targetRegex, const st
             from = pos + targetPatch.size();
             search = std::string_view(from, to - from);
         }
+
+        if (!noCachingForThisSession) {
+            std::wstring key = keyPrefix + L"cnt";
+            Wh_SetIntValue(key.c_str(), matchCount);
+        }
     }
 
     if (!foundAnyMatch) {
         Wh_Log(L"No match found for the regex pattern.");
     }
 
-    return foundAnyMatch;
+    return foundAnyMatch ? 1 : 0;
 }
 
 BOOL EnableTransparentRendering(char* pbExecutable) {
@@ -810,21 +892,21 @@ BOOL EnableTransparentRendering(char* pbExecutable) {
         targetPatch[5] = 0x8b;
     #endif
 
-    return PatchMemory(pbExecutable, targetRegex, targetPatch, 0, 4);
+    return PatchMemory(L"BgColor", pbExecutable, targetRegex, targetPatch, 0, 4);
 }
 
 BOOL DisableForcedDarkMode(char* pbExecutable) {
     std::string targetRegex = R"(force-dark-mode)";
     std::string targetPatch = "some-invalidarg";
     std::vector<uint8_t> targetPatchBytes(targetPatch.begin(), targetPatch.end());
-    return PatchMemory(pbExecutable, targetRegex, targetPatchBytes, 1, 1);
+    return PatchMemory(L"ForceDarkMode", pbExecutable, targetRegex, targetPatchBytes, 1, 1);
 }
 
 BOOL ForceEnableExtensions(char* pbExecutable) {
     std::string targetRegex = R"(disable-extensions)";
     std::string targetPatch = "enable-extensions!";
     std::vector<uint8_t> targetPatchBytes(targetPatch.begin(), targetPatch.end());
-    return PatchMemory(pbExecutable, targetRegex, targetPatchBytes, 1, 1);
+    return PatchMemory(L"DisableExtensions", pbExecutable, targetRegex, targetPatchBytes, 1, 1);
 }
 #pragma endregion
 
@@ -879,12 +961,27 @@ std::string_view getCodeSection(HMODULE chromeModule) {
 // We search the entire code section once per function,
 // to ensure we aren't hooking the wrong location.
 // Better safe than sorry, and it shouldn't cause noticeable delay on startup.
-const char* search_function_instructions(std::string_view code_section, function_search fsearch, LPCWSTR symbol_name) {
+const char* search_function_instructions(std::wstring identifier, std::string_view code_section, function_search fsearch) {
     if (code_section.size()==0) return 0;
-    Wh_Log(L"Searching for function %s", symbol_name);
-    const char* addr = unique_search(code_section, fsearch.search, symbol_name);
+
+    std::wstring key = identifier + L"_offset";
+    int cached_offset = Wh_GetIntValue(key.c_str(), -1);
+    auto prologue = fsearch.prologue;
+    if (cached_offset >= 0 && static_cast<size_t>(cached_offset + prologue.size()) < code_section.size()) {
+        std::string_view match_view = code_section.substr(cached_offset, prologue.size());
+        if (match_view == prologue) {
+            Wh_Log(L"Returning cached offset for function %s", identifier.c_str());
+            return code_section.data() + cached_offset;
+        } else {
+            Wh_Log(L"Match not found at the cached offset; invalidating the cache...");
+            Wh_DeleteValue(key.c_str());
+        }
+    }
+
+    Wh_Log(L"Searching for function %s", identifier.c_str());
+    const char* addr = unique_search(code_section, fsearch.search, identifier.c_str());
     if (addr == NULL) {
-        Wh_Log(L"Could not find function %s; is the mod up to date?", symbol_name);
+        Wh_Log(L"Could not find function %s; is the mod up to date?", identifier.c_str());
         return NULL;
     }
     Wh_Log(L"Instructions were found at address: %p", addr);
@@ -892,7 +989,6 @@ const char* search_function_instructions(std::string_view code_section, function
     const char* entry = addr - offset;
     // verify the prologue is what we expect; otherwise search for it
     // and verify it is preceded by 0xcc INT3 or 0xc3 RET (or ?? JMP)
-    auto prologue = fsearch.prologue;
     if (prologue != std::string_view{entry, prologue.size()}) {
         Wh_Log(L"Prologue not found where expected, searching...");
         // maybe function length changed due to different compilation
@@ -905,13 +1001,14 @@ const char* search_function_instructions(std::string_view code_section, function
         }
     }
     if (entry) {
-        Wh_Log(L"Found entrypoint for function %s at addr %p", symbol_name, entry);
+        Wh_Log(L"Found entrypoint for function %s at addr %p", identifier.c_str(), entry);
         if (entry[-1]!=(char)0xcc && entry[-1]!=(char)0xc3) {
             Wh_Log(L"Warn: prologue not preceded by INT3 or RET");
         }
+        Wh_SetIntValue(key.c_str(), static_cast<int>(entry - code_section.data()));
         return entry;
     } else {
-        Wh_Log(L"Err: Couldn't locate function entry point for symbol %s", symbol_name);
+        Wh_Log(L"Err: Couldn't locate function entry point for symbol %s", identifier.c_str());
         // log_hexdump(addr - 0x40, 0x5);
         return NULL;
     }
@@ -984,23 +1081,23 @@ BOOL HookCreateTrackPlayer(char* pbExecutable, BOOL shouldFindSetPlaybackSpeed) 
     std::string_view code_section = getCodeSection((HMODULE)pbExecutable);
     if (code_section.size() == 0) return FALSE;
     const char* addr = search_function_instructions(
+        L"CreateTrackPlayer",
         code_section,
         {
             .search = CreateTrackPlayer_instructions,
             .prologue = CreateTrackPlayer_prologue,
             .instr_offset = 0xBA0
-        },
-        L"CreateTrackPlayer"
+        }
     );
     if (addr == NULL) {
         addr = search_function_instructions(
+            L"CreateTrackPlayer",
             code_section,
             {
                 .search = CreateTrackPlayer_instructions_2,
                 .prologue = CreateTrackPlayer_prologue,
                 .instr_offset = 0xBA0
-            },
-            L"CreateTrackPlayer"
+            }
         );
     }
     if (addr == NULL) return FALSE;
@@ -1010,7 +1107,7 @@ BOOL HookCreateTrackPlayer(char* pbExecutable, BOOL shouldFindSetPlaybackSpeed) 
     // This only works on Spotify x64 1.2.45 and newer
     // Don't find SetPlaybackSpeed on a known unsupported version, as finding non-existent instructions will delay startup
     if (shouldFindSetPlaybackSpeed) {
-        SetPlaybackSpeed = (SetPlaybackSpeed_t)PatchMemory(pbExecutable, SetPlaybackSpeed_instructions, {}, 0, 1);
+        SetPlaybackSpeed = (SetPlaybackSpeed_t)PatchMemory(L"SetPlaybackSpeed", pbExecutable, SetPlaybackSpeed_instructions, {}, 0, 1);
         Wh_Log(L"SetPlaybackSpeed at %p", SetPlaybackSpeed);
     }
     return TRUE;
@@ -1067,7 +1164,7 @@ _cef_window_t* CEF_EXPORT cef_window_create_top_level_hook(cef_window_delegate_t
         WindhawkUtils::RemoveWindowSubclassFromAnyThread(hWnd, SubclassProc);
         if (WindhawkUtils::SetWindowSubclassFromAnyThread(hWnd, SubclassProc, is_frameless_hooked ? 2 : 1)) {
             Wh_Log(L"Subclassed %p", hWnd);
-            if (g_hwAccelerated && cte_settings.transparentrendering) {
+            if (FindWindowExW(g_mainHwnd, NULL, L"Intermediate D3D Window", NULL) != NULL && cte_settings.transparentrendering) {
                 InvalidateRect(hWnd, NULL, TRUE);
                 RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
             }
@@ -1230,10 +1327,7 @@ BOOL WINAPI CreateProcessW_hook(
     );
 
     if (result && lpCommandLine) {
-        if (wcsstr(lpCommandLine, L"--type=gpu-process")) {
-            g_hwAccelerated = TRUE;
-            Wh_Log(L"GPU process detected, hardware acceleration enabled");
-        } else if (wcsstr(lpCommandLine, L"--type=renderer")) {
+        if (wcsstr(lpCommandLine, L"--type=renderer")) {
             g_lastRendererPid = lpProcessInformation->dwProcessId;
             Wh_Log(L"Renderer process detected");
         }
@@ -1318,10 +1412,7 @@ BOOL WINAPI CreateProcessAsUserW_hook(
     }
 
     if (result && lpCommandLine) {
-        if (wcsstr(lpCommandLine, L"--type=gpu-process")) {
-            g_hwAccelerated = TRUE;
-            Wh_Log(L"GPU process detected, hardware acceleration enabled");
-        } else if (wcsstr(lpCommandLine, L"--type=renderer")) {
+        if (wcsstr(lpCommandLine, L"--type=renderer")) {
             g_lastRendererPid = lpProcessInformation->dwProcessId;
             Wh_Log(L"Renderer process detected");
         }
@@ -1330,9 +1421,6 @@ BOOL WINAPI CreateProcessAsUserW_hook(
 
     return result;
 }
-
-typedef BOOL WINAPI (*GetNamedPipeClientProcessId_t)(HANDLE Pipe, PULONG ClientProcessId);
-GetNamedPipeClientProcessId_t pGetNamedPipeClientProcessId;
 #pragma endregion
 
 #pragma region Renderer JS API injection + IPC
@@ -1499,7 +1587,7 @@ void HandleWindhawkComm(LPCWSTR command) {
             IsAppThemed() && IsThemeActive(),
             IsDwmEnabled(),
             g_dwmBackdropEnabled,
-            g_hwAccelerated,
+            FindWindowExW(g_mainHwnd, NULL, L"Intermediate D3D Window", NULL) != NULL,
             g_minWidth,
             g_minHeight,
             g_titleLocked,
@@ -1602,17 +1690,13 @@ void CreateNamedPipeServer() {
         BOOL connected = ConnectNamedPipe(g_hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
 
         if (connected) {
-            if (pGetNamedPipeClientProcessId != NULL) {
-                DWORD clientPid = 0;
-                if (pGetNamedPipeClientProcessId(g_hPipe, &clientPid)) {
-                    if (clientPid != g_lastRendererPid) {
-                        Wh_Log(L"Rejected pipe connection from unexpected PID: %lu (expected %lu)", clientPid, g_lastRendererPid);
-                        CloseHandle(g_hPipe);
-                        continue;
-                    }
+            DWORD clientPid = 0;
+            if (GetNamedPipeClientProcessId(g_hPipe, &clientPid)) {
+                if (clientPid != g_lastRendererPid) {
+                    Wh_Log(L"Rejected pipe connection from unexpected PID: %lu (expected %lu)", clientPid, g_lastRendererPid);
+                    CloseHandle(g_hPipe);
+                    continue;
                 }
-            } else {
-                Wh_Log(L"Skipping pipe client PID validation on Windows 7...");
             }
 
             Wh_Log(L"Client connected, waiting for message...");
@@ -2399,11 +2483,6 @@ BOOL Wh_ModInit() {
                            (void**)&CreateProcessW_original);
         Wh_SetFunctionHook((void*)CreateProcessAsUserW, (void*)CreateProcessAsUserW_hook,
                            (void**)&CreateProcessAsUserW_original);
-
-        HMODULE hKernel32 = GetModuleHandle(L"kernel32.dll");
-        if (hKernel32) {
-            pGetNamedPipeClientProcessId = (GetNamedPipeClientProcessId_t)GetProcAddress(hKernel32, "GetNamedPipeClientProcessId");
-        }
 
         // Patch the executable in memory to enable transparent rendering, disable forced dark mode, or force enable extensions
         // (Pointless if done after CEF initialization though)
