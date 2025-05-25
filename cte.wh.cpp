@@ -186,6 +186,8 @@
 
 using namespace std::string_view_literals;
 
+#define NO_RENDERER_INJECTION FALSE
+
 #define CEF_CALLBACK __stdcall
 #define CEF_EXPORT __cdecl
 #define cef_window_handle_t HWND
@@ -1173,10 +1175,12 @@ _cef_window_t* CEF_EXPORT cef_window_create_top_level_hook(cef_window_delegate_t
             g_mainHwnd = hWnd;
             if (g_isSpotify) {
                 delegate->base.base.get_minimum_size = get_minimum_size_hook;
-                g_pipeThread = std::thread([=]() {
-                    CreateNamedPipeServer();
-                });
-                g_pipeThread.detach();
+                if (!NO_RENDERER_INJECTION) {
+                    g_pipeThread = std::thread([=]() {
+                        CreateNamedPipeServer();
+                    });
+                    g_pipeThread.detach();
+                }
             }
         }
     } else {
@@ -2442,7 +2446,7 @@ BOOL Wh_ModInit() {
     LPWSTR args = GetCommandLineW();
     if (wcsstr(args, L"--type=") != NULL) {
         if (g_isSpotify && isInitialThread &&
-            major >= 108 && isTestedVersion &&
+            major >= 108 && isTestedVersion && !NO_RENDERER_INJECTION &&
             wcsstr(args, L"--type=renderer") != NULL &&
             wcsstr(args, L"--extension-process") == NULL
         ) {
