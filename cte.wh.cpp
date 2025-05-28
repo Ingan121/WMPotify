@@ -581,14 +581,6 @@ UINT GetDpiForWindowWithFallback(HWND hWnd) {
     return dpi;
 }
 
-BOOL IsWindows7OrEarlier() {
-    OSVERSIONINFOEXW osvi = { sizeof(osvi), 6, 1 }; // Windows 7 is 6.1
-    DWORDLONG mask = VerSetConditionMask(
-        VerSetConditionMask(0, VER_MAJORVERSION, VER_LESS_EQUAL),
-                             VER_MINORVERSION, VER_LESS_EQUAL);
-    return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION, mask);
-}
-
 #pragma region Subclassing
 LRESULT CALLBACK SubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, DWORD_PTR dwRefData) {
     // dwRefData is 1 if the window is created by cef_window_create_top_level
@@ -697,6 +689,13 @@ BOOL CALLBACK UninitEnumWindowsProc(HWND hWnd, LPARAM lParam) {
 #pragma endregion
 
 #pragma region Memory patches
+// Windhawk 1.4 fallback (it targets Windows 7 by default)
+#if _WIN32_WINNT < 0x0A00
+inline void Wh_DeleteValue(const wchar_t* key) {
+    Wh_SetIntValue(key, -1);
+}
+#endif
+
 // From https://windhawk.net/mods/visual-studio-anti-rich-header
 std::string ReplaceAll(std::string str, const std::string& from, const std::string& to)
 {
@@ -753,7 +752,7 @@ int64_t PatchMemory(std::wstring identifier, char* pbExecutable, const std::stri
         } else {
             std::wstring key = keyPrefix + L"cnt";
             int64_t cachedCount = Wh_GetIntValue(key.c_str(), -1);
-            if (cachedCount > 0) {
+            if (cachedCount >= 0) {
                 bool allOk = true;
                 for (int i = 0; i < cachedCount; i++) {
                     std::wstring key = keyPrefix + std::to_wstring(i);
@@ -795,10 +794,6 @@ int64_t PatchMemory(std::wstring identifier, char* pbExecutable, const std::stri
                     Wh_DeleteValue(key.c_str());
                     noCachingForThisSession = true;
                 }
-            } else if (cachedCount == 0) {
-                Wh_Log(L"Invalid cache count for memory %s!", identifier.c_str());
-                Wh_DeleteValue(key.c_str());
-                noCachingForThisSession = true;
             }
         }
 
@@ -1644,15 +1639,27 @@ void* GetSecurityDescriptorWithUser(const wchar_t* sddl_string, size_t* size) {
     return user_sec_desc;
 }
 
+// Note: VxKex somehow passes this, but sandboxed pipe connection won't work at all (even with hardcoded Win7 SDDL)
+// --no-sandbox is still necessary for Windows 7 users with VxKex
+bool SupportsWin10SIDs() {
+    const wchar_t* testSddl = L"D:(A;;GA;;;SY)(A;;GA;;;S-1-15-2-1)"; // AppContainer
+    PSECURITY_DESCRIPTOR psd = nullptr;
+    if (ConvertStringSecurityDescriptorToSecurityDescriptorW(testSddl, SDDL_REVISION_1, &psd, nullptr)) {
+        LocalFree(psd);
+        return true;
+    }
+    return false;
+}
+
 const void* GetSecurityDescriptorForNamedPipeInstance(size_t* size) {
     // Get a security descriptor which grants the current user and SYSTEM full
     // access to the named pipe. Also grant AppContainer RW access through the ALL
     // APPLICATION PACKAGES SID (S-1-15-2-1). Finally add an Untrusted Mandatory
     // Label for non-AppContainer sandboxed users.
     static size_t sd_size;
-    const wchar_t* sddl = IsWindows7OrEarlier() ?
-        L"D:(A;;GA;;;SY)(A;;GRGW;;;WD)S:(ML;;NW;;;LW)" : // Lacks some SIDs such as AppContainer
-        L"D:(A;;GA;;;SY)(A;;GWGR;;;S-1-15-2-1)(A;;GA;;;LW)S:(ML;;;;;S-1-16-0)";
+    const wchar_t* sddl = SupportsWin10SIDs() ?
+        L"D:(A;;GA;;;SY)(A;;GWGR;;;S-1-15-2-1)(A;;GA;;;LW)S:(ML;;;;;S-1-16-0)" :
+        L"D:(A;;GA;;;SY)(A;;GRGW;;;WD)S:(ML;;NW;;;LW)"; // Lacks some SIDs such as AppContainer
     static void* sec_desc = GetSecurityDescriptorWithUser(sddl, &sd_size);
 
     if (size)
