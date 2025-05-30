@@ -16,7 +16,6 @@ export function setupPlayerbar() {
     new MutationObserver(setupTrackInfoWidget).observe(document.querySelector('.main-nowPlayingBar-left'), { childList: true });
 
     const playerControlsLeft = document.querySelector('.player-controls__left');
-    const nextButton = document.querySelector('.player-controls__buttons button[data-testid="control-button-skip-forward"]');
     const repeatButton = document.createElement('button');
     repeatButton.setAttribute('aria-label', 'Repeat');
     repeatButton.setAttribute('aria-checked', !!Spicetify.Player.getRepeat());
@@ -30,27 +29,45 @@ export function setupPlayerbar() {
     playerControlsLeft.appendChild(repeatButton);
 
     const whStatus = WindhawkComm.query();
-    if (whStatus?.speedModSupported && whStatus.immediateSpeedChange) {
-        nextButton.addEventListener('pointerdown', () => {
-            // Speed control won't work when using Spotify Connect (playing on another device)
-            if (nextButton.disabled || Spicetify.Platform.ConnectAPI.state.connectionStatus === 'connected') {
-                return;
-            }
-            longPressTimer = setTimeout(() => {
-                nextButton.dataset.fastForward = true;
-                WindhawkComm.setPlaybackSpeed(5);
-                Spicetify.Player.play();
-            }, 1000);
+
+    const prevButton = document.querySelector('.player-controls__buttons button[data-testid="control-button-skip-back"]');
+    const nextButton = document.querySelector('.player-controls__buttons button[data-testid="control-button-skip-forward"]');
+    if (prevButton) {
+        prevButton.addEventListener('contextmenu', (event) => {
+            Spicetify.Player.seek(Spicetify.Player.getProgress() - 15000);
+            event.preventDefault();
         });
-        document.addEventListener('pointerup', (event) => {
-            clearTimeout(longPressTimer);
-            if (nextButton.dataset.fastForward) {
-                delete nextButton.dataset.fastForward;
-                WindhawkComm.setPlaybackSpeed(1);
-                event.preventDefault();
-                event.stopPropagation();
-            }
+        Spicetify.Platform.Translations['playback-control.skip-back'] += '\n' + Strings['PB_TOOLTIP_SEEK_BK'];
+    }
+    if (nextButton) {
+        nextButton.addEventListener('contextmenu', (event) => {
+            Spicetify.Player.seek(Spicetify.Player.getProgress() + 15000);
+            event.preventDefault();
         });
+        Spicetify.Platform.Translations['playback-control.skip-forward'] += '\n' + Strings['PB_TOOLTIP_SEEK_FWD'];
+        if (whStatus?.speedModSupported && whStatus.immediateSpeedChange) {
+            nextButton.addEventListener('pointerdown', () => {
+                // Speed control won't work when using Spotify Connect (playing on another device)
+                if (nextButton.disabled || Spicetify.Platform.ConnectAPI.state.connectionStatus === 'connected') {
+                    return;
+                }
+                longPressTimer = setTimeout(() => {
+                    nextButton.dataset.fastForward = true;
+                    WindhawkComm.setPlaybackSpeed(5);
+                    Spicetify.Player.play();
+                }, 1000);
+            });
+            document.addEventListener('pointerup', (event) => {
+                clearTimeout(longPressTimer);
+                if (nextButton.dataset.fastForward) {
+                    delete nextButton.dataset.fastForward;
+                    WindhawkComm.setPlaybackSpeed(1);
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+            Spicetify.Platform.Translations['playback-control.skip-forward'] += '\n' + Strings['PB_TOOLTIP_FF'];
+        }
     }
 
     // Shuffle button is often re-added to right before the prev button

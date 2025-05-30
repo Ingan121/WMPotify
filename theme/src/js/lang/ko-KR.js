@@ -20,6 +20,9 @@ const lang = {
     'TAB_LIBRARY': '라이브러리',
     'TAB_RESET_ORDER': '탭 순서 초기화',
 
+    'PB_TOOLTIP_SEEK_BK': '오른쪽 클릭: 15초 뒤로 건너뛰기',
+    'PB_TOOLTIP_SEEK_FWD': '오른쪽 클릭: 15초 앞으로 건너뛰기',
+    'PB_TOOLTIP_FF': '길게 클릭: 빨리 감기',
     'PB_BTN_MINI_MODE': '미니 모드',
     'PB_BTN_FULLSCREEN': '전체 화면',
 

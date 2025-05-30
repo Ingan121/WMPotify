@@ -268,7 +268,8 @@ function isReady() {
         window.Spicetify.Platform.History?.listen &&
         window.Spicetify.Platform.LocalStorageAPI &&
         window.Spicetify.Platform.Translations &&
-        window.Spicetify.Platform.PlatformData
+        window.Spicetify.Platform.PlatformData &&
+        window.Spicetify.Player.origin?._state?.repeat != undefined // Spicetify.Player.getRepeat()
     ) {
         if (elementsRequired.every(selector => document.querySelector(selector))) {
             return true;
@@ -328,6 +329,7 @@ function waitForReady() {
                             'Spicetify.Platform.LocalStorageAPI': window.Spicetify.Platform.LocalStorageAPI,
                             'Spicetify.Platform.Translations': window.Spicetify.Platform.Translations,
                             'Spicetify.Platform.PlatformData': window.Spicetify.Platform.PlatformData,
+                            'Spicetify.Player.origin._state.repeat': window.Spicetify.Player.origin?._state?.repeat != undefined
                         }).filter(([_, obj]) => !obj).map(([key, _]) => key).join('\n');
                     }
                     if (window.confirm(msg + extraMsg)) {
