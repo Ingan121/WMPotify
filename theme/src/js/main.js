@@ -42,6 +42,8 @@ const elementsRequired = [
     '.main-nowPlayingBar-left',
 ];
 
+const loadStartTime = performance.now();
+
 let style = 'xp';
 let titleStyle = 'spotify';
 
@@ -193,6 +195,8 @@ function earlyInit() {
     } else if (darkMode === 'follow_scheme') {
         ThemeManager.addMarketplaceSchemeObserver();
     }
+    
+    logTimed('WMPotify: earlyInit end');
 }
 
 earlyInit();
@@ -261,6 +265,21 @@ async function init() {
     }
 }
 
+async function doInit() {
+    try {
+        await init();
+        logTimed('WMPotify: Theme loaded');
+        document.documentElement.dataset.wmpotifyInitComplete = true;
+    } catch (e) {
+        console.error('WMPotify: Error during init:', e);
+        let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_INIT'] + '\n\n' + e.stack;
+        if (window.confirm(msg)) {
+            window.location.reload();
+        }
+        document.documentElement.dataset.wmpotifyJsFail = true;
+    }
+}
+
 function isReady() {
     if (window.Spicetify?.Platform?.PlayerAPI &&
         window.Spicetify.AppTitle &&
@@ -291,65 +310,69 @@ window.addEventListener('load', () => {
 
 function waitForReady() {
     let cnt = 0;
-    const interval = setInterval(async () => {
-        const ready = isReady();
-        if (ready) {
-            clearInterval(interval);
-            try {
-                await init();
-                console.log('WMPotify: Theme loaded');
-                document.documentElement.dataset.wmpotifyInitComplete = true;
-            } catch (e) {
-                console.error('WMPotify: Error during init:', e);
-                let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_INIT'] + '\n\n' + e.stack;
-                if (window.confirm(msg)) {
-                    window.location.reload();
-                }
-                document.documentElement.dataset.wmpotifyJsFail = true;
-            }
-        } else if (cnt++ > 80) {
-            if (compareSpotifyVersion('1.2.45') < 0) {
-                (window.Spicetify?.showNotification || window.alert)('[WMPotify] ' + Strings['MAIN_MSG_ERROR_OLD_SPOTIFY']);
+    if (isReady()) {
+        doInit();
+    } else {
+        Spicetify.Events.platformLoaded.on(() => {
+            if (isReady()) {
+                doInit();
             } else {
-                if (compareSpotifyVersion('1.2.45') === 0 && !document.querySelector('.Root__globalNav')) {
-                    if (window.confirm('[WMPotify] ' + Strings['MAIN_MSG_ERROR_LOAD_FAIL_GLOBALNAV'])) {
-                        window.location.reload();
+                const interval = setInterval(() => {
+                    const ready = isReady();
+                    if (ready) {
+                        clearInterval(interval);
+                        doInit();
+                    } else if (cnt++ > 80) {
+                        if (compareSpotifyVersion('1.2.45') < 0) {
+                            (window.Spicetify?.showNotification || window.alert)('[WMPotify] ' + Strings['MAIN_MSG_ERROR_OLD_SPOTIFY']);
+                        } else {
+                            if (compareSpotifyVersion('1.2.45') === 0 && !document.querySelector('.Root__globalNav')) {
+                                if (window.confirm('[WMPotify] ' + Strings['MAIN_MSG_ERROR_LOAD_FAIL_GLOBALNAV'])) {
+                                    window.location.reload();
+                                }
+                            } else {
+                                let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_LOAD_FAIL'] + '\n\n';
+                                let extraMsg = '';
+                                if (ready === false) {
+                                    extraMsg += 'Missing elements:\n' + elementsRequired.filter(selector => !document.querySelector(selector)).join('\n');
+                                } else {
+                                    extraMsg += 'Missing API objects:\n' + Object.entries({
+                                        'Spicetify.Platform.PlayerAPI': window.Spicetify?.Platform?.PlayerAPI,
+                                        'Spicetify.AppTitle': window.Spicetify.AppTitle,
+                                        'Spicetify.Menu': window.Spicetify.Menu,
+                                        'Spicetify.Platform.History.listen': window.Spicetify.Platform.History?.listen,
+                                        'Spicetify.Platform.LocalStorageAPI': window.Spicetify.Platform.LocalStorageAPI,
+                                        'Spicetify.Platform.Translations': window.Spicetify.Platform.Translations,
+                                        'Spicetify.Platform.PlatformData': window.Spicetify.Platform.PlatformData,
+                                        'Spicetify.Player.origin._state.repeat': window.Spicetify.Player.origin?._state?.repeat != undefined
+                                    }).filter(([_, obj]) => !obj).map(([key, _]) => key).join('\n');
+                                }
+                                if (window.confirm(msg + extraMsg)) {
+                                    window.location.reload();
+                                }
+                                console.error('WMPotify:', extraMsg);
+                            }
+                        }
+                        if (!document.querySelector('.Root__globalNav')) {
+                            // Show headers and sidebar when global nav is missing
+                            // To allow users to access experimental features, marketplace, etc.
+                            document.documentElement.dataset.wmpotifyNoGlobalNav = true;
+                            delete document.body.dataset.hideLibx;
+                            console.error('WMPotify: Global nav not found');
+                        }
+                        clearInterval(interval);
                     }
-                } else {
-                    let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_LOAD_FAIL'] + '\n\n';
-                    let extraMsg = '';
-                    if (ready === false) {
-                        extraMsg += 'Missing elements:\n' + elementsRequired.filter(selector => !document.querySelector(selector)).join('\n');
-                    } else {
-                        extraMsg += 'Missing API objects:\n' + Object.entries({
-                            'Spicetify.Platform.PlayerAPI': window.Spicetify?.Platform?.PlayerAPI,
-                            'Spicetify.AppTitle': window.Spicetify.AppTitle,
-                            'Spicetify.Menu': window.Spicetify.Menu,
-                            'Spicetify.Platform.History.listen': window.Spicetify.Platform.History?.listen,
-                            'Spicetify.Platform.LocalStorageAPI': window.Spicetify.Platform.LocalStorageAPI,
-                            'Spicetify.Platform.Translations': window.Spicetify.Platform.Translations,
-                            'Spicetify.Platform.PlatformData': window.Spicetify.Platform.PlatformData,
-                            'Spicetify.Player.origin._state.repeat': window.Spicetify.Player.origin?._state?.repeat != undefined
-                        }).filter(([_, obj]) => !obj).map(([key, _]) => key).join('\n');
-                    }
-                    if (window.confirm(msg + extraMsg)) {
-                        window.location.reload();
-                    }
-                    console.error('WMPotify:', extraMsg);
-                }
+                }, 100);
             }
-            if (!document.querySelector('.Root__globalNav')) {
-                // Show headers and sidebar when global nav is missing
-                // To allow users to access experimental features, marketplace, etc.
-                document.documentElement.dataset.wmpotifyNoGlobalNav = true;
-                delete document.body.dataset.hideLibx;
-                console.error('WMPotify: Global nav not found');
-            }
-            clearInterval(interval);
-        }
-    }, 100);
+        });
+    }
 }
 
 document.addEventListener('scroll', function () {
     document.documentElement.scrollTo(0, 0);
 });
+
+function logTimed(str) {
+    const time = performance.now() - loadStartTime;
+    console.log(`[${time.toFixed(6)}ms] ${str}`);
+}

@@ -68,6 +68,106 @@ section[data-testid="playlist-page"],
             }
         }
     }
+
+    [role="search"] {
+        .playlist-inlineSearchBox-filterInput {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 1px;
+            width: calc(100% - 2px);
+            height: 20px;
+            border: solid 1px var(--wmp11-search-border-inner);
+            background-color: var(--wmp11-search-face);
+            font-size: 12px;
+            border-radius: 0;
+            min-height: 0;
+            padding-inline: 4px;
+            box-shadow: none;
+            color: var(--spice-text);
+            opacity: 1;
+            padding-top: 0;
+            padding-bottom: 0;
+
+            &::placeholder {
+                color: var(--gray-text);
+                font-style: italic;
+            }
+        }
+
+        .playlist-inlineSearchBox-overlay {
+            opacity: 1;
+            left: 0;
+            right: 0;
+
+            .playlist-inlineSearchBox-searchIconContainer {
+                position: absolute;
+                top: 1px;
+                right: 0px;
+                width: 26px;
+                height: 20px;
+                border: none;
+                background: url('resources/topbar/search.png') no-repeat;
+            }
+
+            &:has(.playlist-inlineSearchBox-clearButton) .playlist-inlineSearchBox-searchIconContainer {
+                display: none;
+            }
+
+            .playlist-inlineSearchBox-clearButton {
+                position: absolute;
+                top: 1px;
+                right: 0px;
+                width: 26px;
+                height: 20px;
+                border: none;
+                background: url('resources/topbar/clear.png') no-repeat;
+
+                &:hover {
+                    background: url('resources/topbar/clear_hover.png') no-repeat;
+                }
+
+                &:active {
+                    background: url('resources/topbar/clear_pressed.png') no-repeat;
+                }
+            }
+
+            svg {
+                display: none;
+            }
+        }
+
+        .playlist-inlineSearchBox-expandButton {
+            display: none;
+        }
+    }
+
+    .playlist-playlist-playlistInlineCurationBackButton {
+        [class*=encore-text], svg {
+            color: var(--spice-text);
+        }
+    }
+
+    .ENWs3JxcqtD98_8fbPz2 {
+        border: solid 1px transparent;
+
+        &:hover {
+            background: var(--item-hover-background);
+            border-color: var(--item-hover-border);
+        }
+
+        [aria-selected="true"] &,
+        &:focus-within {
+            background: var(--item-selection-background);
+            border-color: var(--item-active-border);
+        }
+
+        [aria-selected="true"] &:hover,
+        &:hover:focus-within {
+            background: var(--item-selection-hover-background);
+            border-color: var(--item-selection-hover-border);
+        }
+    }
 }
 
 :root[data-page^="/playlist/"] .Root__main-view,
