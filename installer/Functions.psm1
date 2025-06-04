@@ -218,9 +218,9 @@ function Get-SpicetifyFoldersPaths {
     }
     process {
         @{
-            configPath = (spicetify path -c)
-            visAppPath = "$(spicetify path userdata)\CustomApps\wmpvis"
-            themePath  = "$(spicetify path userdata)\Themes\WMPotify"
+            configPath = (spicetify path -c --bypass-admin)
+            visAppPath = "$(spicetify path userdata --bypass-admin)\CustomApps\wmpvis"
+            themePath  = "$(spicetify path userdata --bypass-admin)\Themes\WMPotify"
         }
     }
 }
@@ -236,10 +236,10 @@ function Submit-SpicetifyConfig {
     }
     process {
         if (Test-SpotifyBackup -Path $Path) {
-            spicetify apply
+            spicetify apply --bypass-admin
         }
         else {
-            spicetify backup apply
+            spicetify backup apply --bypass-admin
         }
     }
 }
@@ -342,6 +342,7 @@ function Get-WindhawkPaths {
 
         @{
             WindhawkPath = $windhawkDir
+            EnginePath = $enginePath
             AppDataPath = $appDataPath
             RegistryKey = $registryKey
             EngineAppDataPath = $engineAppDataPath
@@ -367,6 +368,9 @@ function Initialize-WindhawkBasePaths {
 
             Write-Verbose -Message 'Copying base libraries to the x86 directory...'
             Copy-Item -Path "$($windhawkPaths.WindhawkPath)\Compiler\i686-w64-mingw32\bin\*.dll" -Destination $x86Path -Force
+
+            Copy-Item -Path "$x86Path\libc++.dll" -Destination "$x86Path\libc++.whl"
+            Copy-Item -Path "$x86Path\libunwind.dll" -Destination "$x86Path\libunwind.whl"
         }
 
         if (-not (Test-Path -Path $x64Path)) {
@@ -375,6 +379,9 @@ function Initialize-WindhawkBasePaths {
 
             Write-Verbose -Message 'Copying base libraries to the x64 directory...'
             Copy-Item -Path "$($windhawkPaths.WindhawkPath)\Compiler\x86_64-w64-mingw32\bin\*.dll" -Destination $x64Path -Force
+
+            Copy-Item -Path "$x64Path\libc++.dll" -Destination "$x64Path\libc++.whl"
+            Copy-Item -Path "$x64Path\libunwind.dll" -Destination "$x64Path\libunwind.whl"
         }
     }
 }
@@ -583,6 +590,12 @@ function Install-WindhawkMod {
             # should not be reachable i think
             Write-Error -Message 'Windhawk is not installed or running.'
         }
+
+        $whVer = (Get-Item "$((Get-WindhawkPaths).WindhawkPath)\windhawk.exe").VersionInfo.ProductVersion
+        if ($whVer -lt [Version]$LatestVersions.WH) {
+            Write-Host -Object 'Your copy of Windhawk is currently outdated. Please update Windhawk if the mod is not functioning properly.' -ForegroundColor Yellow
+            Wait-Input
+        }
     }
 }
 #endregion Windhawk
@@ -604,12 +617,14 @@ function Get-LatestVersions {
         $themeVer = foreach ($line in $verContent | Select-String -Pattern 'wmpotify\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
         $visVer = foreach ($line in $verContent | Select-String -Pattern 'wmpvis\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
         $cteVer = foreach ($line in $verContent | Select-String -Pattern 'cte\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
+        $whVer = foreach ($line in $verContent | Select-String -Pattern 'wh\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
     }
     end {
         @{
             Theme = $themeVer
             Vis = $visVer
             CTE = $cteVer
+            WH = $whVer
         }
     }
 }
@@ -814,16 +829,16 @@ function Install-WMPotify {
 
         Write-Verbose -Message 'Configuring Spicetify...'
         if (-not $SkipTheme) {
-            spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1
-            spicetify config current_theme 'WMPotify'
+            spicetify config inject_css 1 replace_colors 1 overwrite_assets 1 inject_theme_js 1 --bypass-admin
+            spicetify config current_theme 'WMPotify' --bypass-admin
             
             if ($ColorScheme) {
-                spicetify config color_scheme $ColorScheme
+                spicetify config color_scheme $ColorScheme --bypass-admin
             }
         }
 
         if ($GetWMPVis) {
-            spicetify config custom_apps wmpvis
+            spicetify config custom_apps wmpvis --bypass-admin
         }
 
         Submit-SpicetifyConfig -Path $Config
@@ -867,8 +882,8 @@ function Uninstall-WMPotify {
     }
     process {
         Write-Verbose -Message 'Resetting Spicetify configurations...'
-        spicetify config current_theme $Value color_scheme $Value
-        spicetify config custom_apps wmpvis-
+        spicetify config current_theme $Value color_scheme $Value --bypass-admin
+        spicetify config custom_apps wmpvis- --bypass-admin
         Submit-SpicetifyConfig -Path $Config
     }
     end {
