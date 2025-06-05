@@ -53,8 +53,8 @@
     * Or try my [WMPotify](https://github.com/Ingan121/WMPotify) theme for Windows Media Player 11-like look
     * Enable Chrome runtime to get a proper window icon. Use `--enable-chrome-runtime` flag or put `app.enable-chrome-runtime=true` in `%appdata%\Spotify\prefs`
 * Notes for transparent Spotify windows
-    * When the `Enable native frames and title bars on the main window` option is disabled, this mod is not compatible with the [Translucent Windows](https://windhawk.net/mods/translucent-windows) Windhawk mod lower than version 1.5
-    * Please update the mod, or use [MicaForEveryone](https://github.com/MicaForEveryone/MicaForEveryone) instead, when the native frames are disabled
+    * When the `Enable native frames and title bars on the main window` option is disabled, this mod is not compatible with the [Translucent Windows](https://windhawk.net/mods/translucent-windows) Windhawk mod older than version 1.5
+    * Please update the mod to 1.5+, or use [MicaForEveryone](https://github.com/MicaForEveryone/MicaForEveryone) instead, when the native frames are disabled
 * Notes for Spicetify extension/theme developers
     * Use `window.outerHeight - window.innerHeight > 0` to detect if the window has a native title bar
     * This mod exposes a JavaScript API that can be used to interact with the main window and this mod
