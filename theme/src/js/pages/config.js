@@ -15,6 +15,7 @@ const configWindow = document.createElement('div');
 let tabs = null;
 let currentTab = 0;
 let speedApplyTimer = null;
+let whSpeedModSupported = false;
 
 let activeBasicColor = null;
 let inactiveBasicColor = null;
@@ -112,7 +113,6 @@ function init() {
             <label>${Strings['CONF_COLOR_SAT']}</label><br>
             <input type="range" id="wmpotify-config-sat" class="wmpotify-aero no-track" min="0" max="354" step="1" value="121"><br>
         </section>
-        ${whStatus?.speedModSupported ? `
         <section id="wmpotify-config-tab-speed" class="wmpotify-config-tab-content" data-tab-title="${Strings['CONF_SPEED_TITLE']}" data-wh-speedmod-required="true">
             <a href="#" id="wmpotify-config-speed-slow">${Strings['CONF_SPEED_SLOW']}</a>
             <a href="#" id="wmpotify-config-speed-normal">${Strings['CONF_SPEED_NORMAL']}</a>
@@ -120,7 +120,6 @@ function init() {
             <input type="range" id="wmpotify-config-speed" class="wmpotify-aero" min="0.5" max="2.0" step="0.1" value="1"><br>
             ${Strings['CONF_SPEED_CURRENT_LABEL']}: <span id="wmpotify-config-speed-value">1.0</span>
         </section>
-        ` : ''}
         <section id="wmpotify-config-tab-about" class="wmpotify-config-tab-content" data-tab-title="${Strings['CONF_ABOUT_TITLE']}">
             <div id="wmpotify-about-logo"></div>
             <p id="wmpotify-about-title">WMPotify</p>
@@ -148,7 +147,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 (Pre-release 2025-05-31)<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 (Pre-release 2025-06-24)<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -374,22 +373,21 @@ function init() {
         elements.whMessage.style.display = 'none';
         elements.whVer.textContent = ', ' + Strings.getString('CONF_ABOUT_CTEWH_VERSION', WindhawkComm.getModule().version);
 
-        if (whStatus.speedModSupported) {
-            elements.speed = configWindow.querySelector('#wmpotify-config-speed');
-            elements.speedValue = configWindow.querySelector('#wmpotify-config-speed-value');
-            elements.speed.addEventListener('pointerup', onSpeedChange);
-            configWindow.querySelector('#wmpotify-config-speed-slow').addEventListener('click', setSpeed.bind(null, 0.5));
-            configWindow.querySelector('#wmpotify-config-speed-normal').addEventListener('click', setSpeed.bind(null, 1));
-            configWindow.querySelector('#wmpotify-config-speed-fast').addEventListener('click', setSpeed.bind(null, 1.4));
-            const playbackSpeed = whStatus.playbackSpeed || 1;
-            elements.speedValue.textContent = Number.isInteger(playbackSpeed) ? playbackSpeed + '.0' : playbackSpeed;
-            elements.speedValue.addEventListener('click', async () => {
-                const speed = await promptModal(Strings['CONF_SPEED_CUSTOM_DLG_TITLE'], Strings['CONF_SPEED_CUSTOM_MSG'], playbackSpeed.toString(), '1.0');
-                if (speed) {
-                    setSpeed(speed);
-                }
-            });
-        }
+        whSpeedModSupported = whStatus?.speedModSupported;
+        elements.speed = configWindow.querySelector('#wmpotify-config-speed');
+        elements.speedValue = configWindow.querySelector('#wmpotify-config-speed-value');
+        elements.speed.addEventListener('pointerup', onSpeedChange);
+        configWindow.querySelector('#wmpotify-config-speed-slow').addEventListener('click', setSpeed.bind(null, 0.5));
+        configWindow.querySelector('#wmpotify-config-speed-normal').addEventListener('click', setSpeed.bind(null, 1));
+        configWindow.querySelector('#wmpotify-config-speed-fast').addEventListener('click', setSpeed.bind(null, 1.4));
+        const playbackSpeed = Spicetify.Player.origin.getState().speed || 1;
+        elements.speedValue.textContent = Number.isInteger(playbackSpeed) ? playbackSpeed + '.0' : playbackSpeed;
+        elements.speedValue.addEventListener('click', async () => {
+            const speed = await promptModal(Strings['CONF_SPEED_CUSTOM_DLG_TITLE'], Strings['CONF_SPEED_CUSTOM_MSG'], playbackSpeed.toString(), '1.0');
+            if (speed) {
+                setSpeed(speed);
+            }
+        });
     }
     if (!isWin11) {
         elements.backdrop.style.display = 'none';
@@ -535,11 +533,19 @@ function openTab(index) {
 }
 
 function prevTab() {
-    openTab((currentTab - 1 + tabs.length) % tabs.length);
+    let newTab = (currentTab - 1 + tabs.length) % tabs.length;
+    if (tabs[newTab].dataset.whSpeedmodRequired && !whSpeedModSupported && !document.querySelector('button[data-testid="control-button-playback-speed"]')) {
+        newTab--;
+    }
+    openTab(newTab);
 }
 
 function nextTab() {
-    openTab((currentTab + 1) % tabs.length);
+    let newTab = (currentTab + 1) % tabs.length;
+    if (tabs[newTab].dataset.whSpeedmodRequired && !whSpeedModSupported && !document.querySelector('button[data-testid="control-button-playback-speed"]')) {
+        newTab++;
+    }
+    openTab(newTab);
 }
 
 function onColorChange() {
@@ -568,19 +574,32 @@ function onSpeedChange() {
 }
 
 function setSpeed(speed) {
-    if (Spicetify.Platform.ConnectAPI.state.connectionStatus === 'connected') {
+    const isPlayingPodcast = document.querySelector('button[data-testid="control-button-playback-speed"]');
+    if (!whSpeedModSupported && !isPlayingPodcast) {
+        Spicetify.showNotification(Strings['CONF_SPEED_UNSUPPORTED_MSG_' + (navigator.userAgent.includes('Windows') ? 'WIN' : 'UNIX')]);
+        return;
+    }
+    if (Spicetify.Platform.ConnectAPI.state.connectionStatus === 'connected' && !isPlayingPodcast) {
         Spicetify.showNotification(Strings['CONF_SPEED_NO_CONNECT_MSG']);
         return;
     }
     speed = parseFloat(speed);
-    const prevSpeed = WindhawkComm.query().playbackSpeed || 1;
+    const prevSpeed = Spicetify.Player.origin.getState().speed || 1;
     if (speed === prevSpeed) {
+        return;
+    }
+    if (speed <= 0 || speed > 5) {
+        Spicetify.showNotification(Strings['CONF_SPEED_OUT_OF_RANGE_MSG']);
         return;
     }
     elements.speed.value = speed;
     elements.speedValue.textContent = Number.isInteger(speed) ? speed + '.0' : speed;
     try {
-        WindhawkComm.setPlaybackSpeed(speed);
+        if (isPlayingPodcast) {
+            Spicetify.Player.origin.setSpeed(speed);
+        } else {
+            WindhawkComm.setPlaybackSpeed(speed);
+        }
     } catch (e) {
         Spicetify.showNotification(e.message);
     }

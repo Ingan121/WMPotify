@@ -25,7 +25,10 @@ const strings = {
     'ko-KR': koKR,
 };
 
-const currentStrings = strings[lang] || strings['en-US'];
+const currentStrings = strings['en-US'];
+if (lang !== 'en-US') {
+    Object.assign(currentStrings, strings[lang]);
+}
 currentStrings.getString = getString;
 
 export default currentStrings;
