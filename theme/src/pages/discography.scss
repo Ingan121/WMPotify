@@ -16,6 +16,7 @@ header:has(div[data-identifier="discography-topbar"]) {
             left: 0;
             border-bottom: solid 1px var(--wmp11-separator-shadow);
             box-shadow: none !important;
+            padding-inline: 0;
 
             div[data-encore-id="text"] {
                 margin-left: 8px;

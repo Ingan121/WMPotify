@@ -25,6 +25,10 @@
             z-index: 1;
             grid-gap: 0; /* fix for 1.2.60 */
         }
+
+        .Pdw_sPQYAnkCFPFIs6Vd { /* 1.2.66 */
+            margin-left: -8px;
+        }
     }
 
     button[role="combobox"] {
@@ -136,11 +140,13 @@
                             > :first-child {
                                 border-radius: 0;
 
-                                &:has(path[d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5v-1.5z"]) {
+                                &:has(path[d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5v-1.5z"]),
+                                &:has(path[d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5z"]) {
                                     background: url('resources/library/playlist_192.png') 0 0 / cover no-repeat;
                                 }
 
-                                &:has(path[d="M1 4a2 2 0 0 1 2-2h5.155a3 3 0 0 1 2.598 1.5l.866 1.5H21a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4zm7.155 0H3v16h18V7H10.464L9.021 4.5a1 1 0 0 0-.866-.5z"]) {
+                                &:has(path[d="M1 4a2 2 0 0 1 2-2h5.155a3 3 0 0 1 2.598 1.5l.866 1.5H21a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4zm7.155 0H3v16h18V7H10.464L9.021 4.5a1 1 0 0 0-.866-.5z"]),
+                                &:has(path[d="M1 4a2 2 0 0 1 2-2h5.155a3 3 0 0 1 2.598 1.5l.866 1.5H21a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2zm7.155 0H3v16h18V7H10.464L9.021 4.5a1 1 0 0 0-.866-.5"]) {
                                     background: url('resources/library/folder_192.png') 0 0 / cover no-repeat;
                                 }
 
@@ -226,6 +232,10 @@
             display: none;
         }
 
+        div[style*="--box-padding"] { /* 1.2.66 */
+            padding: var(--box-padding);
+        }
+
         .x-entityImage-imageContainer {
             box-shadow: none;
             border-radius: 0;
@@ -238,11 +248,13 @@
             .x-entityImage-imagePlaceholder {
                 background-color: transparent;
 
-                &:has(path[d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5v-1.5z"]) {
+                &:has(path[d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5v-1.5z"]),
+                &:has(path[d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5z"]) {
                     background: url('resources/library/playlist_192.png') 0 0 / cover no-repeat;
                 }
 
-                &:has(path[d="M1 4a2 2 0 0 1 2-2h5.155a3 3 0 0 1 2.598 1.5l.866 1.5H21a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4zm7.155 0H3v16h18V7H10.464L9.021 4.5a1 1 0 0 0-.866-.5z"]) {
+                &:has(path[d="M1 4a2 2 0 0 1 2-2h5.155a3 3 0 0 1 2.598 1.5l.866 1.5H21a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4zm7.155 0H3v16h18V7H10.464L9.021 4.5a1 1 0 0 0-.866-.5z"]),
+                &:has(path[d="M1 4a2 2 0 0 1 2-2h5.155a3 3 0 0 1 2.598 1.5l.866 1.5H21a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2zm7.155 0H3v16h18V7H10.464L9.021 4.5a1 1 0 0 0-.866-.5"]) {
                     background: url('resources/library/folder_192.png') 0 0 / cover no-repeat;
                 }
 
@@ -264,14 +276,14 @@
                 display: none;
             }
         }
+    }
 
-        /* Local files playlist */
-        div[id*="spotify:collection:local-files"] + div > div > div > div {
-            background: url('resources/library/download_192.png') 0 0 / cover no-repeat;
+    /* Local files playlist */
+    div[id*="spotify:collection:local-files"] + div > div > div > div {
+        background: url('resources/library/download_192.png') 0 0 / cover no-repeat;
 
-            svg {
-                display: none;
-            }
+        svg {
+            display: none;
         }
     }
 
@@ -324,6 +336,10 @@
 
         > div {
             pointer-events: none;
+        }
+
+        + div {
+            z-index: inherit;
         }
     }
 
