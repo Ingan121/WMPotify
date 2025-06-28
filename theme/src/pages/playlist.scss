@@ -36,7 +36,7 @@ section[data-testid="playlist-page"],
         }
     }
 
-    .main-actionBar-ActionBarRow {
+    .main-actionBar-ActionBarRow:first-child {
         > div:first-child button {
             width: 42px;
             height: 43px;

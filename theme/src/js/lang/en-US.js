@@ -20,6 +20,7 @@ const lang = {
     'TAB_LIBRARY': 'Library',
     'TAB_RESET_ORDER': 'Reset Tab Order',
 
+    'PB_TOOLTIP_STOP': 'Stop',
     'PB_TOOLTIP_SEEK_BK': 'Right click: Skip back 15 seconds',
     'PB_TOOLTIP_SEEK_FWD': 'Right click: Skip forward 15 seconds',
     'PB_TOOLTIP_FF': 'Long click: Fast forward',

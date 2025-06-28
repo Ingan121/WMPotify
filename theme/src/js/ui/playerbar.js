@@ -17,14 +17,24 @@ export function setupPlayerbar() {
 
     const playerControlsLeft = document.querySelector('.player-controls__left');
     const repeatButton = document.createElement('button');
-    repeatButton.setAttribute('aria-label', 'Repeat');
-    repeatButton.setAttribute('aria-checked', !!Spicetify.Player.getRepeat());
+    const repeatLabels = ['playback-control.enable-repeat', 'playback-control.enable-repeat-one', 'playback-control.disable-repeat'];
+    const currentRepeat = Spicetify.Player.getRepeat();
+    const currentLabel = Spicetify.Platform.Translations[repeatLabels[currentRepeat]];
+    repeatButton.setAttribute('aria-label', currentLabel);
+    repeatButton.setAttribute('aria-checked', !!currentRepeat);
     repeatButton.id = 'wmpotify-repeat-button';
     repeatButton.addEventListener('click', () => {
         Spicetify.Player.toggleRepeat();
     });
+    Spicetify.Tippy(repeatButton, {
+        ...Spicetify.TippyProps,
+        content: currentLabel
+    });
     Spicetify.Platform.PlayerAPI._events.addListener("update", ({ data }) => {
         repeatButton.setAttribute('aria-checked', !!data.repeat);
+        const newLabel = Spicetify.Platform.Translations[repeatLabels[data.repeat]];
+        repeatButton.setAttribute('aria-label', newLabel);
+        repeatButton._tippy.setContent(newLabel);
     });
     playerControlsLeft.appendChild(repeatButton);
 
@@ -73,11 +83,15 @@ export function setupPlayerbar() {
     // Shuffle button is often re-added to right before the prev button
     // so keep shuffle and prev at the first of the left controls in DOM and re-order our modified/custom buttons with CSS flex order
     const stopButton = document.createElement('button');
-    stopButton.setAttribute('aria-label', 'Stop');
+    stopButton.setAttribute('aria-label', Strings['PB_TOOLTIP_STOP']);
     stopButton.id = 'wmpotify-stop-button';
     stopButton.addEventListener('click', () => {
         Spicetify.Platform.PlayerAPI.clearQueue();
         Spicetify.Player.playUri("");
+    });
+    Spicetify.Tippy(stopButton, {
+        ...Spicetify.TippyProps,
+        content: Strings['PB_TOOLTIP_STOP']
     });
     playerControlsLeft.appendChild(stopButton);
 

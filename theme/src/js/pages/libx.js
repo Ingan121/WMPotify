@@ -37,6 +37,10 @@ const CustomLibX = {
                 'value': value
             };
         });
+        categoryLocalizations['podcasts'] = {
+            'loc_id': 'search.title.shows', // what an inconsistency
+            'value': Spicetify.Platform.Translations['search.title.shows']
+        };
 
         if (categoryButtonsHierarchy.length === 0) {
             categoryButtonsHierarchy.push({

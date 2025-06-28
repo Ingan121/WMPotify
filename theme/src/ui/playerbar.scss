@@ -381,6 +381,18 @@ div[data-testid='now-playing-widget'] {
             background-image: var(--shuffle-active);
         }
 
+        /* Use the speed button as a placeholder shuffle button while playing podcasts */
+        /* Real speed changer is replaced with the one in WMPotify Properties */
+        /* (It works without CTE/WH while playing podcasts) */
+        &[data-testid="control-button-playback-speed"] {
+            opacity: 0.5;
+            pointer-events: none;
+
+            svg { /* somehow the speed text is also a svg path lol */
+                display: none;
+            }
+        }
+
         &::after {
             display: none;
         }
@@ -432,7 +444,6 @@ div[data-testid='now-playing-widget'] {
     }
 
     /* Podcast controls */
-    button[data-testid="control-button-playback-speed"],
     button[data-testid="control-button-seek-back-15"] {
         display: none;
     }

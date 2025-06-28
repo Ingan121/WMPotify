@@ -132,7 +132,7 @@
                         border-radius: 0;
                         background: none;
 
-                        &:has(img:not([src*="liked-songs"])) {
+                        &:has(img:not([src*="liked-songs"]):not([src*="your-episodes"])) {
                             box-shadow: var(--album-shadow-big);
                         }
 
@@ -166,6 +166,11 @@
                                 &[src*="liked-songs"] {
                                     object-position: -999px;
                                     background: url('resources/library/liked_192.png') 0 0 / cover no-repeat;
+                                }
+
+                                &[src*="your-episodes"] {
+                                    object-position: -999px;
+                                    background: url('resources/library/podcast_192.png') 0 0 / cover no-repeat;
                                 }
                             }
 
@@ -241,7 +246,7 @@
             border-radius: 0;
             background: none;
 
-            &:has(img:not([src*="liked-songs"])) {
+            &:has(img:not([src*="liked-songs"]):not([src*="your-episodes"])) {
                 box-shadow: var(--album-shadow-small);
             }
 
@@ -270,6 +275,11 @@
             img[src*="liked-songs"] {
                 object-position: -999px;
                 background: url('resources/library/liked_192.png') 0 0 / cover no-repeat;
+            }
+
+            img[src*="your-episodes"] {
+                object-position: -999px;
+                background: url('resources/library/podcast_192.png') 0 0 / cover no-repeat;
             }
 
             & + div {
@@ -400,6 +410,10 @@
 
             &[data-identifier="album"]::before {
                 background-image: url('resources/library/album.png');
+            }
+
+            &[data-identifier="podcasts"]::before {
+                background-image: url('resources/library/podcast.png');
             }
 
             &[data-identifier="downloaded"]::before {

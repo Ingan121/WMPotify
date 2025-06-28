@@ -147,7 +147,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 (Pre-release 2025-06-26)<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 (Pre-release 2025-06-29)<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -331,6 +331,22 @@ function init() {
         }
     });
 
+    whSpeedModSupported = whStatus?.speedModSupported;
+    elements.speed = configWindow.querySelector('#wmpotify-config-speed');
+    elements.speedValue = configWindow.querySelector('#wmpotify-config-speed-value');
+    elements.speed.addEventListener('pointerup', onSpeedChange);
+    configWindow.querySelector('#wmpotify-config-speed-slow').addEventListener('click', setSpeed.bind(null, 0.5));
+    configWindow.querySelector('#wmpotify-config-speed-normal').addEventListener('click', setSpeed.bind(null, 1));
+    configWindow.querySelector('#wmpotify-config-speed-fast').addEventListener('click', setSpeed.bind(null, 1.4));
+    const playbackSpeed = Spicetify.Player.origin.getState().speed || 1;
+    elements.speedValue.textContent = Number.isInteger(playbackSpeed) ? playbackSpeed + '.0' : playbackSpeed;
+    elements.speedValue.addEventListener('click', async () => {
+        const speed = await promptModal(Strings['CONF_SPEED_CUSTOM_DLG_TITLE'], Strings['CONF_SPEED_CUSTOM_MSG'], playbackSpeed.toString(), '1.0');
+        if (speed) {
+            setSpeed(speed);
+        }
+    });
+
     const isWin11 = Spicetify.Platform.PlatformData.os_version.split('.')[2] >= 22000;
     if (whStatus) {
         elements.topmost.disabled = false;
@@ -372,22 +388,6 @@ function init() {
 
         elements.whMessage.style.display = 'none';
         elements.whVer.textContent = ', ' + Strings.getString('CONF_ABOUT_CTEWH_VERSION', WindhawkComm.getModule().version);
-
-        whSpeedModSupported = whStatus?.speedModSupported;
-        elements.speed = configWindow.querySelector('#wmpotify-config-speed');
-        elements.speedValue = configWindow.querySelector('#wmpotify-config-speed-value');
-        elements.speed.addEventListener('pointerup', onSpeedChange);
-        configWindow.querySelector('#wmpotify-config-speed-slow').addEventListener('click', setSpeed.bind(null, 0.5));
-        configWindow.querySelector('#wmpotify-config-speed-normal').addEventListener('click', setSpeed.bind(null, 1));
-        configWindow.querySelector('#wmpotify-config-speed-fast').addEventListener('click', setSpeed.bind(null, 1.4));
-        const playbackSpeed = Spicetify.Player.origin.getState().speed || 1;
-        elements.speedValue.textContent = Number.isInteger(playbackSpeed) ? playbackSpeed + '.0' : playbackSpeed;
-        elements.speedValue.addEventListener('click', async () => {
-            const speed = await promptModal(Strings['CONF_SPEED_CUSTOM_DLG_TITLE'], Strings['CONF_SPEED_CUSTOM_MSG'], playbackSpeed.toString(), '1.0');
-            if (speed) {
-                setSpeed(speed);
-            }
-        });
     }
     if (!isWin11) {
         elements.backdrop.style.display = 'none';
