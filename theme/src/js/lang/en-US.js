@@ -66,6 +66,8 @@ const lang = {
     'CONF_GENERAL_DARK_MODE_NEVER': 'Never',
     'CONF_GENERAL_FONT': 'UI font',
     'CONF_GENERAL_FONT_RELOAD': 'Reload font list',
+    'CONF_GENERAL_FONT_LOADSYS': 'Load system font list',
+    'CONF_GENERAL_FONT_LOADSYS_DENIED_MSG': "It seems that the local font access permission has been denied. Please delete the Spotify CEF user data, or open the Spotify's Chromium settings UI and change xpui.app.spotify.com's Fonts permission to Allow in the Site settings.",
     'CONF_GENERAL_CUSTOM_FONT_DLG_TITLE': 'Set custom font',
     'CONF_GENERAL_CUSTOM_FONT_MSG': 'Enter a valid CSS font-family name',
     'CONF_GENERAL_HIDE_PBLEFTBTN': 'Hide the like button in the now playing bar',

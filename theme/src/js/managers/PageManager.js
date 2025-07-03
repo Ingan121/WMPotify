@@ -23,7 +23,7 @@ const PageManager = {
         });
     },
 
-    async handleLocChange(location) {
+    async onLocChange(location) {
         if (!location?.pathname) {
             return;
         }
@@ -74,20 +74,22 @@ const PageManager = {
 
         if (location.pathname.match('/artist/.*/discography.*')) {
             initDiscographyPage(true);
-        } else if (location.pathname.startsWith('/playlist/')) {
-            if (!document.querySelector('.playlist-playlist-playlist')) {
-                await PageManager.waitForPageRender();
-            }
         }
+    },
 
+    async onMainContentMount() {
+        console.debug('WMPotify: onMainContentMount');
         initPlaylistPage(true);
     },
 
     init() {
-        PageManager.handleLocChange(Spicetify.Platform.History.location);
+        PageManager.onLocChange(Spicetify.Platform.History.location);
         initTime = Date.now();
-        Spicetify.Platform.History.listen((location) => PageManager.handleLocChange(location));
-    }
+        Spicetify.Platform.History.listen((location) => PageManager.onLocChange(location));
+        new MutationObserver(PageManager.onMainContentMount).observe(document.querySelector('main'), { childList: true });
+    },
+
+    initPlaylistPage
 };
 
 export default PageManager;

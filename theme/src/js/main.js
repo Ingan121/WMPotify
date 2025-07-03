@@ -207,6 +207,7 @@ globalThis.WMPotify = {
     Config,
     WindowManager,
     ThemeManager,
+    PageManager,
     WindhawkComm,
     CustomLibX,
     Dialog: {
