@@ -79,7 +79,7 @@ function init() {
                 <option value="default">${Strings['UI_DEFAULT']}</option>
                 <option value="custom">${Strings['UI_CUSTOM']}</option>
                 <option value="reload">${Strings['CONF_GENERAL_FONT_RELOAD']}</option>
-                ${window.queryLocalFonts ? `
+                ${globalThis.documentPictureInPicture /* Chrome runtime check for 1.2.45 */ ? `
                     <option value="loadsys">${Strings['CONF_GENERAL_FONT_LOADSYS']}</option>
                 ` : ''}
             </select><br>
@@ -150,7 +150,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 Release Candidate<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 Release Candidate 2<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -288,7 +288,7 @@ function init() {
             elements.fontCustom.textContent = Strings['UI_CUSTOM'];
             if (elements.fontSelector.value === 'reload' || elements.fontSelector.value === 'loadsys') {
                 let systemFonts;
-                if (elements.fontSelector.value === 'loadsys' && window.queryLocalFonts) {
+                if (elements.fontSelector.value === 'loadsys' && globalThis.documentPictureInPicture) {
                     systemFonts = await window.queryLocalFonts();
                     if (systemFonts.length === 0) {
                         Spicetify.showNotification(Strings['CONF_GENERAL_FONT_LOADSYS_DENIED_MSG']);
@@ -296,9 +296,9 @@ function init() {
                     }
                 }
                 delete localStorage.wmpotifyFontCache;
-                const cnt = elements.fontSelector.options.length - 2 - (+!!window.queryLocalFonts) - (+configWindow.contains(elements.fontReload));
+                const cnt = elements.fontSelector.options.length - 2 - (+!!globalThis.documentPictureInPicture) - (+configWindow.contains(elements.fontReload));
                 for (let i = 0; i < cnt; i++) {
-                    elements.fontSelector.options[2].remove();
+                    elements.fontSelector.options[2 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload))].remove();
                 }
                 if (elements.fontSelector.value === 'loadsys') {
                     loadSystemFonts(systemFonts);
@@ -657,9 +657,9 @@ function loadFonts() {
                 option.selected = true;
             }
             if (font === 'Segoe UI') {
-                elements.fontSelector.insertBefore(option, elements.fontCustom.nextElementSibling);
+                elements.fontSelector.insertBefore(option, elements.fontSelector.options[2 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload))])
             } else {
-                elements.fontSelector.insertBefore(option, elements.fontReload);
+                elements.fontSelector.appendChild(option);
             }
         });
         if (!fonts.includes(localStorage.wmpotifyFont)) {
@@ -679,9 +679,9 @@ function loadFonts() {
                 option.selected = true;
             }
             if (font.name === 'Segoe UI') {
-                elements.fontSelector.insertBefore(option, elements.fontCustom.nextElementSibling);
+                elements.fontSelector.insertBefore(option, elements.fontSelector.options[2 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload))])
             } else {
-                elements.fontSelector.insertBefore(option, elements.fontReload);
+                elements.fontSelector.appendChild(option);
             }
             fonts.push(font.name);
         });
@@ -713,9 +713,9 @@ async function loadSystemFonts(fonts) {
             option.selected = true;
         }
         if (family === 'Segoe UI') {
-            elements.fontSelector.insertBefore(option, elements.fontCustom.nextElementSibling);
+            elements.fontSelector.insertBefore(option, elements.fontSelector.options[2 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload))]);
         } else {
-            elements.fontSelector.insertBefore(option, elements.fontLoadSys);
+            elements.fontSelector.appendChild(option);
         }
     }
     

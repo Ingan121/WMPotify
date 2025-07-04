@@ -8,6 +8,7 @@ import { initPlaylistPage } from "../pages/playlist";
 import { ylxKeyPrefix, expandedStateKey } from "../pages/libx";
 
 let initTime = 0;
+let headerWrapperObserver = null;
 
 const PageManager = {
     waitForPageRender() {
@@ -80,6 +81,13 @@ const PageManager = {
     async onMainContentMount() {
         console.debug('WMPotify: onMainContentMount');
         initPlaylistPage(true);
+        if (headerWrapperObserver) {
+            headerWrapperObserver.disconnect();
+        }
+        const headerWrapper = document.querySelector('div[data-testid="topbar-content-wrapper"]');
+        if (headerWrapper) {
+            headerWrapperObserver = new MutationObserver(PageManager.onMainContentMount).observe(headerWrapper, { childList: true });
+        }
     },
 
     init() {
@@ -87,6 +95,7 @@ const PageManager = {
         initTime = Date.now();
         Spicetify.Platform.History.listen((location) => PageManager.onLocChange(location));
         new MutationObserver(PageManager.onMainContentMount).observe(document.querySelector('main'), { childList: true });
+        new MutationObserver(PageManager.onMainContentMount).observe(document.querySelector('.Root__main-view'), { childList: true });
     },
 
     initPlaylistPage

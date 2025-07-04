@@ -86,6 +86,16 @@
             margin-top: 0;
             height: calc(100% + 26px);
         }
+
+        div[role="gridcell"]:first-child {
+            div[class*="Areas__TrailingSlot"] {
+                position: absolute;
+                top: 5px;
+                right: 50%;
+                transform: translateX(50%);
+                line-height: 1;
+            }
+        }
     }
 
     &:has(ul[role="treegrid"]) {
@@ -619,7 +629,8 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
             background: var(--surface) !important;
             border-image: none !important;
 
-            > span {
+            > span,
+            div[role="gridcell"] {
                 border-image: none !important;
                 color: ButtonText !important;
             }
