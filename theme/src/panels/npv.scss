@@ -70,11 +70,11 @@
                             color: lightgray !important;
                         }
                     }
-                }
-            }
 
-            .main-nowPlayingView-contextItemInfo button svg:not(.Svg-img-icon-small-textBrightAccent):not([style*="--encore-icon-fill"]) {
-                fill: white !important;
+                    button svg:not(.Svg-img-icon-small-textBrightAccent):not([style*="--encore-icon-fill"]) {
+                        fill: white !important;
+                    }
+                }
             }
 
             video {
@@ -85,5 +85,23 @@
 
     div[style*="i.scdn.co"] .main-nowPlayingView-sectionHeaderText {
         color: white !important;
+    }
+}
+
+@media (max-height: 704px) {
+    .Root__right-sidebar aside.NowPlayingView:has(.canvasVideoContainerNPV) {
+        .main-nowPlayingView-trackInfo {
+            a, span {
+                color: white !important;
+            }
+
+            .main-trackInfo-artists a {
+                color: lightgray !important;
+            }
+        }
+
+        .main-nowPlayingView-contextItemInfo button svg:not(.Svg-img-icon-small-textBrightAccent):not([style*="--encore-icon-fill"]) {
+            fill: white !important;
+        }
     }
 }

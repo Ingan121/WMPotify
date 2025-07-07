@@ -1,7 +1,7 @@
 # <img src="https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/theme/src/resources/icon/wmpotify_48.png"> WMPotify
 * A Windows Media Player 11 inspired Spicetify theme for Spotify
 * Supported versions: 1.2.45 - 1.2.67
-    * Primarily tested on 1.2.52 and 1.2.61
+    * Primarily tested on 1.2.61
     * 1.2.45: `Show Global nav bar with home button, search input and user avatar` must be set to `home-next-to-search` in the experimental features
     * 1.2.44 and below are not supported
 
@@ -239,6 +239,17 @@ Either enable the transparency option in the CEF/Spotify Tweaks mod settings and
 
 * Discography
 ![discography_aero](screenshots/discography_aero.png)
+
+## TODO
+* More customizable lyrics options
+    * Colors, fonts, etc.
+    * Probably gotta just bring the MADVis Lyrics config window code
+* More skins
+    * WMP10-ish one from [this wmploc mod](https://www.deviantart.com/fediafedia/art/WMP-11-Vista-Beta-76164120)
+    * Bitmap-less skin with colors and SVG icons only (WMPotify Lite?)
+* Custom Miniplayer implementation with XP WMP11 mini mode look, based on documentPictureInPicture
+* Make the bars visualization more smoother
+    * Weighted interpolation?
 
 ## Credits
 * [Spicetify](https://spicetify.app/)

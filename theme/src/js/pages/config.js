@@ -78,6 +78,7 @@ function init() {
             <select id="wmpotify-config-font" class="wmpotify-aero">
                 <option value="default">${Strings['UI_DEFAULT']}</option>
                 <option value="custom">${Strings['UI_CUSTOM']}</option>
+                <option value="external">${Strings['CONF_GENERAL_FONT_EXTERNAL']}</option>
                 <option value="reload">${Strings['CONF_GENERAL_FONT_RELOAD']}</option>
                 ${globalThis.documentPictureInPicture /* Chrome runtime check for 1.2.45 */ ? `
                     <option value="loadsys">${Strings['CONF_GENERAL_FONT_LOADSYS']}</option>
@@ -96,8 +97,12 @@ function init() {
                 <option value="acrylic">${Strings['CONF_GENERAL_BACKDROP_ACRYLIC']}</option>
                 <option value="tabbed">${Strings['CONF_GENERAL_BACKDROP_TABBED']}</option>
             </select><br>
-            <input type="checkbox" id="wmpotify-config-hide-pbleftbtn" class="wmpotify-aero">
-            <label for="wmpotify-config-hide-pbleftbtn">${Strings['CONF_GENERAL_HIDE_PBLEFTBTN']}</label><br>
+            <label for="wmpotify-config-pbleftbtn">${Strings['CONF_GENERAL_PBLEFTBTN']}</label>
+            <select id="wmpotify-config-pbleftbtn" class="wmpotify-aero">
+                <option value="hide">${Strings['CONF_GENERAL_PBLEFTBTN_HIDE']}</option>
+                <option value="left" selected>${Strings['CONF_GENERAL_PBLEFTBTN_LEFTALIGN']}</option>
+                <option value="right">${Strings['CONF_GENERAL_PBLEFTBTN_RIGHTALIGN']}</option>
+            </select><br>
             <input type="checkbox" id="wmpotify-config-show-libx" class="wmpotify-aero">
             <label for="wmpotify-config-show-libx">${Strings['CONF_GENERAL_SHOW_LIBX']}</label><br>
             <input type="checkbox" id="wmpotify-config-lock-title" class="wmpotify-aero" disabled>
@@ -150,7 +155,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 Release Candidate 2<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 Release Candidate 3<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -169,13 +174,12 @@ function init() {
     elements.controlStyle = configWindow.querySelector('#wmpotify-config-control-style');
     elements.darkMode = configWindow.querySelector('#wmpotify-config-dark-mode');
     elements.fontSelector = configWindow.querySelector('#wmpotify-config-font');
-    elements.fontDefault = configWindow.querySelector('#wmpotify-config-font option[value="default"]');
     elements.fontCustom = configWindow.querySelector('#wmpotify-config-font option[value="custom"]');
     elements.fontReload = configWindow.querySelector('#wmpotify-config-font option[value="reload"]');
-    elements.fontLoadSys = configWindow.querySelector('#wmpotify-config-font option[value="loadsys"]');
-    elements.hidePbLeftBtn = configWindow.querySelector('#wmpotify-config-hide-pbleftbtn');
+    elements.defaultFontOptionsCount = 3 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload));
     elements.topmost = configWindow.querySelector('#wmpotify-config-topmost');
     elements.backdrop = configWindow.querySelector('#wmpotify-config-backdrop');
+    elements.pbLeftBtn = configWindow.querySelector('#wmpotify-config-pbleftbtn');
     elements.showLibX = configWindow.querySelector('#wmpotify-config-show-libx');
     elements.lockTitle = configWindow.querySelector('#wmpotify-config-lock-title');
     elements.whMessage = configWindow.querySelector('#wmpotify-config-wh-message');
@@ -276,14 +280,32 @@ function init() {
         }
     });
     elements.fontSelector.addEventListener('change', async () => {
+        delete localStorage.wmpotifyExternalFont;
         if (elements.fontSelector.value === 'custom') {
             const fontName = await promptModal(Strings['CONF_GENERAL_CUSTOM_FONT_DLG_TITLE'], Strings['CONF_GENERAL_CUSTOM_FONT_MSG'], '', localStorage.wmpotifyFont || 'Segoe UI');
             if (!fontName) {
-                elements.fontSelector.value = localStorage.wmpotifyFont || 'default';
+                selectCurrentFont();
                 return;
             }
             elements.fontCustom.textContent = fontName;
             localStorage.wmpotifyFont = fontName;
+        } else if (elements.fontSelector.value === 'external') {
+            const url = await promptModal(Strings['CONF_GENERAL_EXTERNAL_FONT_DLG_TITLE'], Strings['CONF_GENERAL_EXTERNAL_FONT_URL_MSG'], '', '');
+            if (!url) {
+                selectCurrentFont();
+                return;
+            }
+            const fontNameFromUrl = url.match(/family=([^:@&]+)/)?.[1].replaceAll('+', ' ');
+            const fontName = await promptModal(Strings['CONF_GENERAL_EXTERNAL_FONT_DLG_TITLE'], Strings['CONF_GENERAL_EXTERNAL_FONT_NAME_MSG'], fontNameFromUrl || '', fontNameFromUrl || '');
+            if (!fontName) {
+                selectCurrentFont();
+                return;
+            }
+            applyExternalFont(url);
+            elements.fontCustom.textContent = fontName;
+            elements.fontSelector.value = 'custom';
+            localStorage.wmpotifyFont = fontName;
+            localStorage.wmpotifyExternalFont = url;
         } else {
             elements.fontCustom.textContent = Strings['UI_CUSTOM'];
             if (elements.fontSelector.value === 'reload' || elements.fontSelector.value === 'loadsys') {
@@ -291,14 +313,15 @@ function init() {
                 if (elements.fontSelector.value === 'loadsys' && globalThis.documentPictureInPicture) {
                     systemFonts = await window.queryLocalFonts();
                     if (systemFonts.length === 0) {
-                        Spicetify.showNotification(Strings['CONF_GENERAL_FONT_LOADSYS_DENIED_MSG']);
+                        showFontsPermRecoveryGuide();
+                        selectCurrentFont();
                         return;
                     }
                 }
                 delete localStorage.wmpotifyFontCache;
-                const cnt = elements.fontSelector.options.length - 2 - (+!!globalThis.documentPictureInPicture) - (+configWindow.contains(elements.fontReload));
+                const cnt = elements.fontSelector.options.length - elements.defaultFontOptionsCount;
                 for (let i = 0; i < cnt; i++) {
-                    elements.fontSelector.options[2 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload))].remove();
+                    elements.fontSelector.options[elements.defaultFontOptionsCount].remove();
                 }
                 if (elements.fontSelector.value === 'loadsys') {
                     loadSystemFonts(systemFonts);
@@ -317,13 +340,25 @@ function init() {
             document.documentElement.style.removeProperty('--ui-font');
         }
     });
-    elements.hidePbLeftBtn.addEventListener('change', () => {
-        if (elements.hidePbLeftBtn.checked) {
-            localStorage.wmpotifyHidePbLeftBtn = true;
-            document.body.dataset.hidePbLeftBtn = true;
-        } else {
-            delete localStorage.wmpotifyHidePbLeftBtn;
-            delete document.body.dataset.hidePbLeftBtn;
+    elements.pbLeftBtn.addEventListener('change', () => {
+        switch (elements.pbLeftBtn.value) {
+            case 'hide':
+                localStorage.wmpotifyHidePbLeftBtn = true;
+                document.body.dataset.hidePbLeftBtn = true;
+                delete localStorage.wmpotifyRightAlignPbLeftBtn;
+                delete document.body.dataset.rightAlignPbLeftBtn;
+                break;
+            case 'left':
+                delete localStorage.wmpotifyHidePbLeftBtn;
+                delete document.body.dataset.hidePbLeftBtn;
+                delete localStorage.wmpotifyRightAlignPbLeftBtn;
+                delete document.body.dataset.rightAlignPbLeftBtn;
+                break;
+            case 'right':
+                delete localStorage.wmpotifyHidePbLeftBtn;
+                delete document.body.dataset.hidePbLeftBtn;
+                localStorage.wmpotifyRightAlignPbLeftBtn = true;
+                document.body.dataset.rightAlignPbLeftBtn = true;
         }
     });
     elements.showLibX.addEventListener('change', () => {
@@ -458,7 +493,9 @@ function init() {
         }
     }
     if (localStorage.wmpotifyHidePbLeftBtn) {
-        elements.hidePbLeftBtn.checked = true;
+        elements.pbLeftBtn.value = 'hide';
+    } else if (localStorage.wmpotifyRightAlignPbLeftBtn) {
+        elements.pbLeftBtn.value = 'right';
     }
     if (localStorage.wmpotifyShowLibX) {
         configWindow.querySelector('#wmpotify-config-show-libx').checked = true;
@@ -657,7 +694,7 @@ function loadFonts() {
                 option.selected = true;
             }
             if (font === 'Segoe UI') {
-                elements.fontSelector.insertBefore(option, elements.fontSelector.options[2 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload))])
+                elements.fontSelector.insertBefore(option, elements.fontSelector.options[elements.defaultFontOptionsCount])
             } else {
                 elements.fontSelector.appendChild(option);
             }
@@ -679,7 +716,7 @@ function loadFonts() {
                 option.selected = true;
             }
             if (font.name === 'Segoe UI') {
-                elements.fontSelector.insertBefore(option, elements.fontSelector.options[2 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload))])
+                elements.fontSelector.insertBefore(option, elements.fontSelector.options[elements.defaultFontOptionsCount]);
             } else {
                 elements.fontSelector.appendChild(option);
             }
@@ -699,6 +736,7 @@ function loadFonts() {
             // FD will just return the same fonts if called again, so remove the reload option
             // Refresh the page and select reload to reload the fonts
             elements.fontReload.remove();
+            elements.defaultFontOptionsCount--;
         });
     }
 }
@@ -713,7 +751,7 @@ async function loadSystemFonts(fonts) {
             option.selected = true;
         }
         if (family === 'Segoe UI') {
-            elements.fontSelector.insertBefore(option, elements.fontSelector.options[2 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload))]);
+            elements.fontSelector.insertBefore(option, elements.fontSelector.options[elements.defaultFontOptionsCount]);
         } else {
             elements.fontSelector.appendChild(option);
         }
@@ -728,6 +766,71 @@ async function loadSystemFonts(fonts) {
         }
     }
     localStorage.wmpotifyFontCache = families.join(',');
+}
+
+function applyExternalFont(url) {
+    let style = document.getElementById('wmpotify-external-font');
+    if (!style) {
+        style = document.createElement('link');
+        style.rel = 'stylesheet';
+        document.body.appendChild(style);
+    }
+    style.href = url;
+}
+
+async function showFontsPermRecoveryGuide() {
+    if (window.documentPictureInPicture) {
+        const dpipWin = await documentPictureInPicture.requestWindow({
+            width: 1000,
+            height: 650
+        });
+        if (dpipWin) {
+            dpipWin.document.body.innerHTML = `
+                <style>
+                    html { background-color: white }
+                    body { color: black; margin: 8px !important }
+                    * { font-family: sans-serif }
+                    p { max-width: calc(100% - 20px); -webkit-app-region: drag }
+                    a { color: LinkText; text-decoration: none }
+                    a:hover { text-decoration: underline }
+                    button { color: black; position: fixed; top: 5px; right: 5px; padding-inline: 6px }
+                    @media (prefers-color-scheme: dark) {
+                        html { background-color: black }
+                        body { color: white }
+                        a { color: dodgerblue }
+                    }
+                </style>
+                <button onclick="window.popup?.close();window.close()">X</button>
+                <p>${Strings['CONF_GENERAL_FONT_PERM_RECOVERY_DESC']}</p>
+                <div style="display: flex">
+                    <!-- https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/screenshots/fonts_perm_recovery.png -->
+                    <img src="https://www.ingan121.com/wmpotify/fonts_perm_recovery.png">
+                    <div style="margin-left: 5px">
+                        1. <a href="javascript:window.popup=open('https://xpui.app.spotify.com/', 'popup', 'width=700,height=650,top=0,left='+screen.width)">${Strings['CONF_GENERAL_FONT_PERM_RECOVERY_STEP1']}</a><br>
+                        2. ${Strings['CONF_GENERAL_FONT_PERM_RECOVERY_STEP2']}<br>
+                        3. ${Strings['CONF_GENERAL_FONT_PERM_RECOVERY_STEP3']}<br>
+                        4. <a href="javascript:window.popup?.close();window.close();">${Strings['CONF_GENERAL_FONT_PERM_RECOVERY_STEP4']}</a><br>
+                        5. ${Strings['CONF_GENERAL_FONT_PERM_RECOVERY_STEP5']}<br>
+                    </div>
+                </div>
+            `
+        }
+    }
+}
+
+function selectCurrentFont() {
+    const current = localStorage.wmpotifyFont;
+    if (!current) {
+        elements.fontSelector.value = 'default';
+        return;
+    }
+    for (const option of elements.fontSelector.options) {
+        if (option.value === current) {
+            elements.fontSelector.value = current;
+            return;
+        }
+    }
+    elements.fontSelector.value = 'custom';
 }
 
 function onHCChange(event) {
@@ -790,7 +893,9 @@ const Config = {
     prevTab,
     nextTab,
     apply,
-    isOpen: () => configWindow.style.display === 'block'
+    isOpen: () => configWindow.style.display === 'block',
+    applyExternalFont,
+    elements
 };
 
 export default Config;

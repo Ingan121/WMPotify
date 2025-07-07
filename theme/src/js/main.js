@@ -165,12 +165,18 @@ function earlyInit() {
         WindhawkComm.setMinSize(358, titleStyle === 'native' ? 60 : 90);
     });
 
+    if (localStorage.wmpotifyExternalFont) {
+        Config.applyExternalFont(localStorage.wmpotifyExternalFont);
+    }
     if (localStorage.wmpotifyFont) {
         document.documentElement.style.setProperty('--ui-font', localStorage.wmpotifyFont);
     }
 
     if (localStorage.wmpotifyHidePbLeftBtn) {
         document.body.dataset.hidePbLeftBtn = true;
+    }
+    if (localStorage.wmpotifyRightAlignPbLeftBtn) {
+        document.body.dataset.rightAlignPbLeftBtn = true;
     }
 
     if (whStatus && localStorage.wmpotifyLockTitle) {

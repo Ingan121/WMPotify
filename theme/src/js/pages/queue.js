@@ -108,7 +108,7 @@ export function initQueuePanel() {
         playlistButton.textContent = Spicetify.Player.data?.context?.metadata?.context_description || Strings['QUEUE_CURRENT_PLAYLIST_PLACEHOLDER'];
         playlistButton.innerHTML += '<span class="expandMark">⏷</span>';
         albumArt.src = Spicetify.Player.data?.item?.album?.images?.[0]?.url || placeholderImage;
-        songTitle.textContent = Spicetify.Player.data?.item?.name || 'No items';
+        songTitle.textContent = Spicetify.Player.data?.item?.name || Strings['QUEUE_CURRENT_PLAYLIST_PLACEHOLDER'];
     });
 }
 

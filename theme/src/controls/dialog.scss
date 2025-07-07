@@ -69,6 +69,20 @@ dialog {
     min-height: 0;
   }
 
+  .main-confirmDialog-container {
+    padding: 8px;
+    min-height: 0;
+    --text-base: var(--button-text);
+
+    h1 {
+      font: var(--caption-font);
+    }
+
+    * {
+      font: var(--message-font);
+    }
+  }
+
   .main-playlistEditDetailsModal-content,
   .profile-userEditDetails-content {
     padding-top: 24px;
@@ -185,12 +199,14 @@ dialog {
     right: 1px;
   }
 
-  .wmpotify-modal-bottom-buttons {
+  .wmpotify-modal-bottom-buttons,
+  .main-confirmDialog-buttonContainer {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     margin-top: 8px;
     margin-bottom: 5px;
+    gap: 0;
 
     button + button {
       margin-left: 6px;

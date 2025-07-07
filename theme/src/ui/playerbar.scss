@@ -165,10 +165,15 @@ button[data-testid="cover-art-button"] {
 
 .main-nowPlayingBar-left {
     display: flex;
-    
+    width: 50%;
+
     .likeControl-wrapper {
         margin-top: 16px;
     }
+}
+
+.main-nowPlayingBar-center {
+    width: 500px;
 }
 
 div[data-testid='now-playing-widget'] {
@@ -557,6 +562,7 @@ div[data-testid='now-playing-widget'] {
 }
 
 .main-nowPlayingBar-right {
+    width: 50%;
     margin-top: 10px;
 
     .main-nowPlayingBar-extraControls {
@@ -951,6 +957,18 @@ body[data-hide-pb-left-btn] {
     }
 }
 
+body[data-right-align-pb-left-btn] {
+    .main-nowPlayingBar-left {
+        [data-testid="now-playing-widget"] {
+            width: 100%;
+
+            .main-nowPlayingWidget-trackInfo + div {
+                margin-left: auto;
+            }
+        }
+    }
+}
+
 @media (max-width: 1024px) {
     :root[data-wmpotify-style="xp"] {
         .main-nowPlayingBar-left {
@@ -1198,6 +1216,10 @@ body[data-hide-pb-left-btn] {
     .main-nowPlayingBar-left,
     .main-nowPlayingBar-right {
         width: 40px;
+    }
+
+    .main-nowPlayingBar-center {
+        width: unset;
     }
 
     .main-nowPlayingBar-right {
