@@ -165,7 +165,7 @@ button[data-testid="cover-art-button"] {
 
 .main-nowPlayingBar-left {
     display: flex;
-    width: 50%;
+    width: 42%;
 
     .likeControl-wrapper {
         margin-top: 16px;
@@ -562,7 +562,7 @@ div[data-testid='now-playing-widget'] {
 }
 
 .main-nowPlayingBar-right {
-    width: 50%;
+    width: 42%;
     margin-top: 10px;
 
     .main-nowPlayingBar-extraControls {

@@ -292,54 +292,61 @@
     }
 }
 
-/* User button */
-.main-topBar-topbarContentRight > button:last-child {
-    min-width: 64px;
-    width: auto;
-    height: 36px;
-    min-height: 0;
-    background: none !important;
-    color: white !important;
-    font-weight: normal !important;
-    display: block !important;
-    transform: none !important;
-    cursor: default !important;
-    font-size: 11px;
-    line-height: 1;
-
-    figure,
-    > span:not(.wmpotify-user-label) {
-        display: none;
+.main-topBar-topbarContentRight {
+    /* Explore Premium button */
+    > button:first-child {
+        display: none !important;
     }
 
-    .wmpotify-user-label {
-        position: relative;
-        margin: 10px;
-    }
-
-    /* Spotify update alert */
-    svg {
-        display: none;
-    }
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
+    /* User button */
+    > button:last-child {
+        min-width: 64px;
+        width: auto;
         height: 36px;
-        border-image: url('resources/topbar/user.png') 10 5 10 5 fill stretch;
-        border-image-width: 10px 5px 10px 5px;
-        border-radius: 0 !important;
-    }
+        min-height: 0;
+        background: none !important;
+        color: white !important;
+        font-weight: normal !important;
+        display: block !important;
+        transform: none !important;
+        cursor: default !important;
+        font-size: 11px;
+        line-height: 1;
 
-    &:hover::before {
-        border-image-source: url('resources/topbar/user_hover.png');
-    }
+        figure,
+        > span:not(.wmpotify-user-label) {
+            display: none;
+        }
 
-    &:active::before {
-        border-image-source: url('resources/topbar/user_pressed.png');
+        .wmpotify-user-label {
+            position: relative;
+            margin: 10px;
+        }
+
+        /* Spotify update alert */
+        svg {
+            display: none;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 36px;
+            border-image: url('resources/topbar/user.png') 10 5 10 5 fill stretch;
+            border-image-width: 10px 5px 10px 5px;
+            border-radius: 0 !important;
+        }
+
+        &:hover::before {
+            border-image-source: url('resources/topbar/user_hover.png');
+        }
+
+        &:active::before {
+            border-image-source: url('resources/topbar/user_pressed.png');
+        }
     }
 }
 
