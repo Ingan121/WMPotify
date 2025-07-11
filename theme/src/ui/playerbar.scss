@@ -165,7 +165,7 @@ button[data-testid="cover-art-button"] {
 
 .main-nowPlayingBar-left {
     display: flex;
-    width: 42%;
+    flex-grow: 1;
 
     .likeControl-wrapper {
         margin-top: 16px;
@@ -562,7 +562,7 @@ div[data-testid='now-playing-widget'] {
 }
 
 .main-nowPlayingBar-right {
-    width: 42%;
+    flex-grow: 1;
     margin-top: 10px;
 
     .main-nowPlayingBar-extraControls {
@@ -972,6 +972,8 @@ body[data-right-align-pb-left-btn] {
 @media (max-width: 1024px) {
     :root[data-wmpotify-style="xp"] {
         .main-nowPlayingBar-left {
+            flex-grow: 0;
+
             [data-testid="now-playing-widget"] {
                 button:not([data-testid="cover-art-button"]) {
                     display: none;
@@ -982,11 +984,17 @@ body[data-right-align-pb-left-btn] {
                 display: none;
             }
         }
+
+        .main-nowPlayingBar-right {
+            flex-grow: 0;
+        }
     }
 }
 
 @media (max-width: 980px) {
     .main-nowPlayingBar-left {
+        flex-grow: 0;
+
         [data-testid="now-playing-widget"] {
             button:not([data-testid="cover-art-button"]) {
                 display: none;
@@ -996,6 +1004,10 @@ body[data-right-align-pb-left-btn] {
         .likeControl-wrapper {
             display: none;
         }
+    }
+
+    .main-nowPlayingBar-right {
+        flex-grow: 0;
     }
 }
 
@@ -1042,6 +1054,10 @@ body[data-right-align-pb-left-btn] {
         }
     }
 
+    .main-nowPlayingBar-center {
+        width: 40%;
+    }
+
     .main-nowPlayingBar-extraControls {
         > * {
             margin: 0 2px !important;
@@ -1081,7 +1097,7 @@ body[data-right-align-pb-left-btn] {
     }
 }
 
-@media (max-width: 636px) {
+@media (max-width: 650px) {
     .player-controls__buttons {
         width: 268px;
 

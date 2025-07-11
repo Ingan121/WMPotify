@@ -2,15 +2,11 @@
 
 import Strings from '../strings';
 
-let controlHeight = 1;
-
-const ControlManager = {
-	setControlHeight(height) {
-		controlHeight = height || 1;
-	},
-
+class ControlManager {
 	// From https://github.com/ohitstom/spicetify-extensions/tree/main/noControls
-	init() {
+	constructor(controlHeight = 1) {
+		this.controlHeight = controlHeight;
+
 		if (Spicetify.Config.extensions.includes("noControls.js")) {
 			Spicetify.showNotification("[WMPotify] " + Strings.getString("MAIN_MSG_ERROR_INCOMPAT_EXT", "No Controls"));
 			return;
@@ -20,10 +16,10 @@ const ControlManager = {
 		const checkAndApplyTitlebar = API => {
 			if (API) {
 				if (API._updateUiClient?.updateTitlebarHeight) {
-					API._updateUiClient.updateTitlebarHeight({ height: controlHeight });
+					API._updateUiClient.updateTitlebarHeight({ height: this.controlHeight });
 				}
 
-				if (API._updateUiClient?.setButtonsVisibility && (controlHeight <= 1)) {
+				if (API._updateUiClient?.setButtonsVisibility && (this.controlHeight <= 1)) {
 					API._updateUiClient.setButtonsVisibility(false);
 				}
 
@@ -36,7 +32,7 @@ const ControlManager = {
 
 			Spicetify.CosmosAsync?.post("sp://messages/v1/container/control", {
 				type: "update_titlebar",
-				height: controlHeight + "px",
+				height: this.controlHeight + "px",
 			});
 		};
 
@@ -69,6 +65,10 @@ const ControlManager = {
 				handleFullscreenChange();
 			}, 100);
 		});
+	}
+
+	setControlHeight(height) {
+		this.controlHeight = height || 1;
 	}
 };
 

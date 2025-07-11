@@ -1,10 +1,9 @@
 'use strict';
 
 import Strings from './strings'
-import ControlManager from './managers/ControlManager';
 import CustomTitlebar from './ui/titlebar';
-import { setupTopbar } from './ui/topbar';
-import { setupPlayerbar } from './ui/playerbar';
+import Topbar from './ui/topbar';
+import PlayerBar from './ui/playerbar';
 import Config from './pages/config';
 import SidebarManager from './managers/SidebarManager';
 import { initQueuePanel } from './pages/queue';
@@ -246,14 +245,13 @@ async function init() {
         WindhawkComm.setBackdrop(localStorage.wmpotifyBackdrop || 'mica');
     }
 
-    ControlManager.init();
     PageManager.init();
-    SidebarManager.init();
+    new SidebarManager();
 
     Config.init();
 
-    setupTopbar();
-    setupPlayerbar();
+    globalThis.WMPotify.topbar = new Topbar();
+    globalThis.WMPotify.playerBar = new PlayerBar();
 
     initQueuePanel();
     new MutationObserver(initQueuePanel).observe(

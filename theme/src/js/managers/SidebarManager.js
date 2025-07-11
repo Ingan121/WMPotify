@@ -4,8 +4,8 @@ const widthObserver = new MutationObserver(updateSidebarWidth);
 const widthObserver2 = new ResizeObserver(updateSidebarWidth.bind(null, true));
 const leftWidthObserver = new MutationObserver(updateLeftSidebarWidth);
 
-const SidebarManager = {
-    init() {
+class SidebarManager {
+    constructor() {
         widthObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
         widthObserver2.observe(document.querySelector('.Root__right-sidebar'));
         leftWidthObserver.observe(document.querySelector('#Desktop_LeftSidebar_Id'), { attributes: true, attributeFilter: ['style'] });
@@ -13,8 +13,9 @@ const SidebarManager = {
         window.addEventListener('load', updateSidebarWidth);
         updateSidebarWidth(true);
         updateLeftSidebarWidth();
-    },
-    updateSidebarWidth,
+    }
+
+    static updateSidebarWidth = updateSidebarWidth;
 };
 
 function updateSidebarWidth(force) {
