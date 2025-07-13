@@ -155,7 +155,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 Release Candidate 5<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1 Release Candidate 6<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -803,8 +803,7 @@ async function showFontsPermRecoveryGuide() {
                 <button onclick="window.popup?.close();window.close()">X</button>
                 <p>${Strings['CONF_GENERAL_FONT_PERM_RECOVERY_DESC']}</p>
                 <div style="display: flex">
-                    <!-- https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/screenshots/fonts_perm_recovery.png -->
-                    <img src="https://www.ingan121.com/wmpotify/fonts_perm_recovery.png">
+                    <img src="https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/screenshots/fonts_perm_recovery.png">
                     <div style="margin-left: 5px">
                         1. <a href="javascript:window.popup=open('https://xpui.app.spotify.com/', 'popup', 'width=700,height=650,top=0,left='+screen.width)">${Strings['CONF_GENERAL_FONT_PERM_RECOVERY_STEP1']}</a><br>
                         2. ${Strings['CONF_GENERAL_FONT_PERM_RECOVERY_STEP2']}<br>

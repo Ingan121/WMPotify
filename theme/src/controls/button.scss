@@ -7,7 +7,8 @@
 div[data-identifier="discography-topbar"] [role="switch"],
 button[role="combobox"],
 header nav li,
-[class*="LegacyChipComponent-checkbox-chip-sm-"] {
+[class*="LegacyChipComponent-checkbox-chip-sm-"],
+[class*="LegacyChipComponent-presentation-chip-sm-"] /* 1.2.68 */ {
   appearance: none;
   background: transparent;
   border: none;
@@ -52,6 +53,16 @@ header nav li,
     color: var(--spice-text) !important;
     height: 100%;
     cursor: default !important;
+  }
+}
+
+/* 1.2.68 */
+.f5yairu2OwqKcOecHnkA {
+  align-items: center;
+  gap: 0;
+
+  div[role="option"] {
+    margin-left: 0 !important;
   }
 }
 
@@ -159,7 +170,8 @@ dialog button[class*="e-"][class*="-button-primary"],
   div[data-identifier="discography-topbar"] [role="switch"],
   button[role="combobox"],
   header nav li,
-  [class*="LegacyChipComponent-checkbox-chip-sm-"] {
+  [class*="LegacyChipComponent-checkbox-chip-sm-"],
+  [class*="LegacyChipComponent-presentation-chip-sm-"] /* 1.2.68 */ {
     border: none;
     padding: 3px;
     border-image: none !important;

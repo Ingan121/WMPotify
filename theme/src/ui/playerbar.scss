@@ -122,8 +122,10 @@
     position: relative;
     margin: calc(var(--panel-gap) * -1);
     width: calc(100% + var(--panel-gap) * 2);
+    padding: 0; /* 1.2.68 */
     padding-right: calc(var(--panel-gap) * 2);
     z-index: 10;
+    background-color: transparent; /* 1.2.68 */
 }
 
 .main-nowPlayingBar-nowPlayingBar {

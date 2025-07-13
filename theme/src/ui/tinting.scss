@@ -46,6 +46,7 @@
         button[role="combobox"],
         header nav li,
         [class*="LegacyChipComponent-checkbox-chip-sm-"],
+        [class*="LegacyChipComponent-presentation-chip-sm-"] /* 1.2.68 */,
 
         /* Misc */
         .x-filterBox-searchIconContainer,
