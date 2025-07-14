@@ -48,25 +48,33 @@
                     color: white !important;
                 }
 
-                svg:has(path[d="M3 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm6.5 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM16 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"]),
-                svg:has(path[d="M15 16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14Zm-8.5-1.5v-13h8v13h-8Zm-1.5 0H1.5v-13H5v13Z"]),
-                svg:has(path[d="M6.53 9.47a.75.75 0 0 1 0 1.06l-2.72 2.72h1.018a.75.75 0 0 1 0 1.5H1.25v-3.579a.75.75 0 0 1 1.5 0v1.018l2.72-2.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l2.72-2.72h-1.018a.75.75 0 1 1 0-1.5h3.578v3.579a.75.75 0 0 1-1.5 0V3.81l-2.72 2.72a.75.75 0 0 1-1.06 0z"]) {
+                svg:has(path[d="M3 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm6.5 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM16 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"]), /* Menu button */
+                svg:has(path[d="M15 16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14Zm-8.5-1.5v-13h8v13h-8Zm-1.5 0H1.5v-13H5v13Z"]), /* Collapse NPV button */
+                svg:has(path[d="M6.53 9.47a.75.75 0 0 1 0 1.06l-2.72 2.72h1.018a.75.75 0 0 1 0 1.5H1.25v-3.579a.75.75 0 0 1 1.5 0v1.018l2.72-2.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l2.72-2.72h-1.018a.75.75 0 1 1 0-1.5h3.578v3.579a.75.75 0 0 1-1.5 0V3.81l-2.72 2.72a.75.75 0 0 1-1.06 0z"]), /* Cinema button */
+                /* 1.2.66 */
+                svg:has(path[d="M3 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m6.5 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0M16 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"]), /* Menu button */
+                svg:has(path[d="M15 16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1zm-8.5-1.5v-13h8v13zm-1.5 0H1.5v-13H5z"]), /* Collapse NPV button */
+                svg:has(path[d="M6.53 9.47a.75.75 0 0 1 0 1.06l-2.72 2.72h1.018a.75.75 0 0 1 0 1.5H1.25v-3.579a.75.75 0 0 1 1.5 0v1.018l2.72-2.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l2.72-2.72h-1.018a.75.75 0 1 1 0-1.5h3.578v3.579a.75.75 0 0 1-1.5 0V3.81l-2.72 2.72a.75.75 0 0 1-1.06 0"]) { /* Cinema button */
                     fill: white !important;
                 }
             }
 
-            .main-nowPlayingView-trackInfo {
-                a, span {
-                    color: white !important;
-                }
+            .pUIBQ9cykHKYx2A2ZIPA {
+                + div, + div + div {
+                    .main-nowPlayingView-trackInfo {
+                        a, span {
+                            color: white !important;
+                        }
 
-                .main-trackInfo-artists a {
-                    color: lightgray !important;
-                }
-            }
+                        .main-trackInfo-artists a {
+                            color: lightgray !important;
+                        }
+                    }
 
-            .main-nowPlayingView-contextItemInfo button svg:not(.Svg-img-icon-small-textBrightAccent):not([style*="--encore-icon-fill"]) {
-                fill: white !important;
+                    button svg:not(.Svg-img-icon-small-textBrightAccent):not([style*="--encore-icon-fill"]) {
+                        fill: white !important;
+                    }
+                }
             }
 
             video {
@@ -77,5 +85,23 @@
 
     div[style*="i.scdn.co"] .main-nowPlayingView-sectionHeaderText {
         color: white !important;
+    }
+}
+
+@media (max-height: 704px) {
+    .Root__right-sidebar aside.NowPlayingView:has(.canvasVideoContainerNPV) {
+        .main-nowPlayingView-trackInfo {
+            a, span {
+                color: white !important;
+            }
+
+            .main-trackInfo-artists a {
+                color: lightgray !important;
+            }
+        }
+
+        .main-nowPlayingView-contextItemInfo button svg:not(.Svg-img-icon-small-textBrightAccent):not([style*="--encore-icon-fill"]) {
+            fill: white !important;
+        }
     }
 }

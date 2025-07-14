@@ -5,54 +5,61 @@ import WindhawkComm from "../WindhawkComm";
 
 let fullscreenHideControlTimer = null;
 
-function toggleMiniMode() {
-    if (!WindhawkComm.available()) {
-        return;
-    }
-    if (isMiniMode()) {
-        const lastSize = localStorage.wmpotifyPreMiniModeSize?.split(',');
-        if (lastSize && lastSize.length === 2) {
-            WindhawkComm.resizeTo(parseInt(lastSize[0]), parseInt(lastSize[1]));
+class WindowManager {
+    static toggleMiniMode() {
+        if (!WindhawkComm.available()) {
+            return;
         }
-    } else {
+        if (isMiniMode()) {
+            const lastSize = localStorage.wmpotifyPreMiniModeSize?.split(',');
+            if (lastSize && lastSize.length === 2) {
+                window.resizeTo(parseInt(lastSize[0]), parseInt(lastSize[1]));
+            }
+        } else {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+            if (WindhawkComm.query().isMaximized) {
+                WindhawkComm.maximizeRestore();
+            }
+            localStorage.wmpotifyPreMiniModeSize = [window.outerWidth, window.outerHeight];
+            WindhawkComm.resizeTo(358, 60);
+        }
+    }
+
+    static toggleFullscreen() {
         if (document.fullscreenElement) {
             document.exitFullscreen();
-        }
-        localStorage.wmpotifyPreMiniModeSize = [window.innerWidth, window.innerHeight];
-        WindhawkComm.resizeTo(358, 60);
-    }
-}
-
-function toggleFullscreen() {
-    if (document.fullscreenElement) {
-        document.exitFullscreen();
-        exitFullscreen();
-    } else {
-        if (Spicetify.Config.custom_apps.includes('wmpvis')) {
-            Spicetify.Platform.History.push({ pathname: '/wmpvis' });
-        } else {
-            const lyricsButton = document.querySelector('.main-nowPlayingBar-extraControls button[data-testid="lyrics-button"]');
-            if (lyricsButton) {
-                lyricsButton.click();
-            }
-        }
-        Config.close();
-        document.documentElement.requestFullscreen();
-        document.body.classList.add('wmpotify-playerbar-visible');
-        setTimeout(() => {
-            document.addEventListener('pointermove', fullscreenMouseMoveListener);
-            fullscreenMouseMoveListener();
-        }, 200);
-    }
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement) {
             exitFullscreen();
+        } else {
+            if (Spicetify.Config.custom_apps.includes('wmpvis')) {
+                Spicetify.Platform.History.push({ pathname: '/wmpvis' });
+            } else {
+                const lyricsButton = document.querySelector('.main-nowPlayingBar-extraControls button[data-testid="lyrics-button"]');
+                if (lyricsButton) {
+                    lyricsButton.click();
+                }
+            }
+            Config.close();
+            document.documentElement.requestFullscreen();
+            document.body.classList.add('wmpotify-playerbar-visible');
+            setTimeout(() => {
+                document.addEventListener('pointermove', fullscreenMouseMoveListener);
+                fullscreenMouseMoveListener();
+            }, 200);
         }
-    }, { once: true });
-    // Somehow fullscreenchange event doesn't fire when exiting fullscreen with Esc key in Spotify
-    document.addEventListener('resize', () => {
-        exitFullscreen();
-    }, { once: true });
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                exitFullscreen();
+            }
+        }, { once: true });
+        // Somehow fullscreenchange event doesn't fire when exiting fullscreen with Esc key in Spotify
+        document.addEventListener('resize', () => {
+            exitFullscreen();
+        }, { once: true });
+    }
+
+    static isMiniMode = isMiniMode;
 }
 
 function isMiniMode() {
@@ -82,11 +89,5 @@ window.addEventListener('resize', () => {
         WindhawkComm.setTopMost(isMiniMode());
     }
 });
-
-const WindowManager = {
-    toggleMiniMode,
-    toggleFullscreen,
-    isMiniMode,
-}
 
 export default WindowManager;

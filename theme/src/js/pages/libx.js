@@ -2,6 +2,7 @@
 
 import Strings from '../strings';
 import DirectUserStorage from '../utils/DirectUserStorage';
+import { compareSpotifyVersion } from '../utils/UpdateCheck';
 
 // This script implements the custom sidebar, header and navigation for the stock Spotify LibraryX
 // It's implemented with parsing and clicking various elements in the DOM, so it's not the most efficient way to do it
@@ -15,12 +16,12 @@ const categoryLocalizations = {};
 const categoryButtonsObserver = new MutationObserver(parseCategoryButtons);
 const folderObserver = new MutationObserver(onFolderChange);
 let inFolder = false;
-let exittingFolder = false;
+let exitingFolder = false;
 let lastCategories = [];
 let lastCategoriesIdentifier = [];
 
-export const ylxKeyPrefix = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number)[2] >= 58 ? 'left' : 'ylx';
-export const expandedStateKey = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number)[2] >= 58 ? 'left-sidebar-expanded-state-width' : 'ylx-expanded-state-nav-bar-width';
+export const ylxKeyPrefix = compareSpotifyVersion('1.2.58') >= 0 ? 'left' : 'ylx';
+export const expandedStateKey = compareSpotifyVersion('1.2.58') >= 0 ? 'left-sidebar-expanded-state-width' : 'ylx-expanded-state-nav-bar-width';
 
 const CustomLibX = {
     async init() {
@@ -36,6 +37,10 @@ const CustomLibX = {
                 'value': value
             };
         });
+        categoryLocalizations['podcasts'] = {
+            'loc_id': 'search.title.shows', // what an inconsistency
+            'value': Spicetify.Platform.Translations['search.title.shows']
+        };
 
         if (categoryButtonsHierarchy.length === 0) {
             categoryButtonsHierarchy.push({
@@ -66,6 +71,10 @@ const CustomLibX = {
         await waitForLibXLoad();
 
         categoryButtons = document.querySelector('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]');
+        const categoryButtonsInner = categoryButtons.querySelector('div[role="listbox"]'); // 1.2.68
+        if (categoryButtonsInner) {
+            categoryButtons = categoryButtonsInner;
+        }
         parseCategoryButtons();
         categoryButtonsObserver.observe(categoryButtons, { childList: true });
 
@@ -153,7 +162,10 @@ function renderHeader() {
     });
 
     if (inFolder) {
-        const folderName = document.querySelector('.main-yourLibraryX-collapseButton > div').textContent;
+        const folderName = (
+            document.querySelector('.main-yourLibraryX-collapseButton h2') ||
+            document.querySelector('.main-yourLibraryX-collapseButton [class*=encore-text]')
+        ).textContent;
         const folderText = document.createElement('button');
         folderText.classList.add('wmpotify-libx-header-category-text');
         folderText.classList.add('wmpotify-toolbar-button');
@@ -170,7 +182,7 @@ function parseCategoryButtons() {
         const folderId = Spicetify.Platform.LocalStorageAPI.getItem('opened-folder-uri');
         currentCategories.push(folderId);
     }
-    if (!exittingFolder) {
+    if (!exitingFolder) {
         const pathname = '/wmpotify-standalone-libx/' + currentCategories.join('/');
         if (Spicetify.Platform.History.location.pathname === '/wmpotify-standalone-libx') {
             Spicetify.Platform.History.location.pathname = pathname;
@@ -186,8 +198,8 @@ function parseCategoryButtons() {
         renderHeader();
         return;
     }
-    const isInitial = !categoryButtons.querySelector('button[class*="ChipClear"]:first-child');
-    const buttons = Array.from(categoryButtons.querySelectorAll('button'));
+    const isInitial = !categoryButtons.querySelector('button[class*="ChipClear"]:first-child, div[role="option"]:has(div[class*="ChipClear"]):first-child');
+    const buttons = Array.from(categoryButtons.querySelectorAll('button, div[role="option"]'));
     if (isInitial) {
         buttons.forEach((button, index) => {
             const category = {};
@@ -231,6 +243,10 @@ function parseCategoryButtons() {
 function onFolderChange() {
     categoryButtonsObserver.disconnect();
     categoryButtons = document.querySelector('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]');
+    const categoryButtonsInner = categoryButtons.querySelector('div[role="listbox"]'); // 1.2.68
+    if (categoryButtonsInner) {
+        categoryButtons = categoryButtonsInner;
+    }
     parseCategoryButtons();
     categoryButtonsObserver.observe(categoryButtons, { childList: true });
 }
@@ -238,7 +254,7 @@ function onFolderChange() {
 // Refresh the element reference in the category object
 function refreshElement(category) {
     if (!document.contains(category.elem)) {
-        for (const button of categoryButtons.querySelectorAll('button')) {
+        for (const button of categoryButtons.querySelectorAll('button, div[role="option"]')) {
             if (button.textContent === category.localized) {
                 category.elem = button;
                 break;
@@ -248,14 +264,14 @@ function refreshElement(category) {
 }
 
 function isInRootCategory() {
-    return !categoryButtons.querySelector('button[class*="ChipClear"]:first-child');
+    return !categoryButtons.querySelector('button[class*="ChipClear"]:first-child, div[role="option"]:has(div[class*="ChipClear"]):first-child');
 }
 
 function isInParentCategory(parentCategory) {
     if (isInRootCategory()) {
         return false;
     }
-    const buttons = Array.from(categoryButtons.querySelectorAll('button'));
+    const buttons = Array.from(categoryButtons.querySelectorAll('button, div[role="option"]'));
     return buttons[1].textContent === parentCategory.localized;
 }
 
@@ -264,11 +280,11 @@ async function goToRootCategory() {
         exitFolder();
         await waitForFolderChange();
     }
-    categoryButtons.querySelector('button[class*="ChipClear"]:first-child')?.click();
+    categoryButtons.querySelector('button[class*="ChipClear"]:first-child, div[role="option"]:has(div[class*="ChipClear"]):first-child')?.click();
 };
 
 function exitFolder() {
-    exittingFolder = true;
+    exitingFolder = true;
     document.querySelectorAll('.main-yourLibraryX-collapseButton button')?.[1]?.click();
 }
 
@@ -285,13 +301,13 @@ function getCurrentCategories(identifier = false) {
         lastCategoriesIdentifier = [];
         return currentCategories;
     } else {
-        const buttons = Array.from(categoryButtons.querySelectorAll('button')).slice(1);
+        const buttons = Array.from(categoryButtons.querySelectorAll('button, div[role="option"]')).slice(1);
         let currentParent = buttons[0].textContent;
         if (identifier) {
             currentParent = Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === currentParent);
         }
         currentCategories.push(currentParent);
-        const activeChild = categoryButtons.querySelector('button[class*="secondary-selected"]');
+        const activeChild = categoryButtons.querySelector('button[class*="secondary-selected"], div[role="option"]:has(div[class*="secondary-selected"])');
         if (activeChild) {
             if (identifier) {
                 currentCategories.push(Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === activeChild.textContent));
@@ -471,7 +487,7 @@ function waitForLibXLoad() {
 function waitForCategoryButtonsUpdate() {
     return new Promise((resolve) => {
         const observer = new MutationObserver(() => {
-            if (categoryButtons.querySelector('button')) {
+            if (categoryButtons.querySelector('button, div[role="option"]')) {
                 resolve();
                 observer.disconnect();
             }
@@ -483,7 +499,7 @@ function waitForCategoryButtonsUpdate() {
 function waitForFolderChange() {
     return new Promise((resolve) => {
         const observer = new MutationObserver(() => {
-            exittingFolder = false;
+            exitingFolder = false;
             resolve();
             observer.disconnect();
         });

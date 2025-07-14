@@ -33,10 +33,10 @@ async function initTitlebar(mode) {
 
     switch (mode) {
         case 'native':
-            ControlManager.setControlHeight(0);
+            new ControlManager(0);
             break;
         case 'custom':
-            ControlManager.setControlHeight(0);
+            new ControlManager(0);
         case 'keepmenu':
             const titleButtons = document.createElement('div');
             titleButtons.id = 'wmpotify-title-buttons';
@@ -102,7 +102,7 @@ async function initTitlebar(mode) {
                 titleBar.appendChild(titleButtons);
             }
             if (mode === 'keepmenu' || mode === 'spotify') {
-                ControlManager.setControlHeight(25);
+                new ControlManager(25);
             }
             Spicetify.AppTitle.sub((title) => {
                 if (title?.trim()) {
@@ -121,9 +121,9 @@ async function closeWindow() {
     }
 }
 
-const CustomTitlebar = {
-    earlyInit: createTitlebarSkeleton,
-    init: initTitlebar,
+class CustomTitlebar {
+    static earlyInit = createTitlebarSkeleton;
+    static init = initTitlebar;
 };
 
 export default CustomTitlebar;

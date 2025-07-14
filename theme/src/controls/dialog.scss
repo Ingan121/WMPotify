@@ -40,31 +40,14 @@ dialog {
     max-height: calc(100vh - 50px);
   }
 
-  .main-trackCreditsModal-header {
+  .main-trackCreditsModal-header,
+  .main-playlistEditDetailsModal-header,
+  .profile-userEditDetails-header {
     padding: 8px;
     border-bottom: none;
 
     h1 {
       font: var(--caption-font);
-    }
-
-    .main-trackCreditsModal-closeBtn {
-      width: 25px;
-      height: 15px;
-      background: url("resources/icon/close.png") no-repeat;
-      transform: none !important;
-
-      &:hover {
-        background: url("resources/icon/close_hover.png") no-repeat;
-      }
-
-      &:active {
-        background: url("resources/icon/close_pressed.png") no-repeat;
-      }
-
-      svg {
-        display: none;
-      }
     }
   }
 
@@ -81,12 +64,149 @@ dialog {
     padding-bottom: 0;
   }
 
-  .wmpotify-modal-bottom-buttons {
+  .main-playlistEditDetailsModal-container,
+  .profile-userEditDetails-container {
+    min-height: 0;
+  }
+
+  .main-confirmDialog-container {
+    padding: 8px;
+    min-height: 0;
+    --text-base: var(--button-text);
+
+    h1 {
+      font: var(--caption-font);
+    }
+
+    * {
+      font: var(--message-font);
+    }
+  }
+
+  .main-playlistEditDetailsModal-content,
+  .profile-userEditDetails-content {
+    padding-top: 24px;
+
+    label {
+      left: 0;
+      opacity: 1;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    .main-entityHeader-image {
+      border-radius: 0;
+
+      img {
+        border-radius: 0;
+        box-shadow: var(--album-shadow-big);
+      }
+    }
+
+    button[data-testid="edit-image-button"] {
+      border-radius: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+    }
+
+    .main-playlistEditDetailsModal-imageDropDownButton {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+    }
+  }
+
+  .main-playlistEditDetailsModal-textElementLabel {
+    transform: translateY(-130%);
+  }
+
+  .profile-userEditDetails-label {
+    transform: translateY(-12px);
+  }
+
+  .profile-userEditDetails-content {
+    .main-entityHeader-image {
+      border-radius: 0;
+
+      img {
+        border-radius: 0;
+
+        /* userframe.png: 190x190, picture area: center 126x126, 32px frame in each side */
+        position: relative;
+        top: 16.84%;
+        left: 16.84%;
+        width: 66.32%;
+        height: 66.32%;
+      }
+
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--userframe) 0 0 / cover no-repeat;
+      }
+
+      + div {
+        position: absolute;
+        top: 16.84%;
+        left: 16.84%;
+        width: 66.32%;
+        height: 66.32%;
+        border-radius: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+      }
+    }
+  }
+
+  .main-trackCreditsModal-closeBtn,
+  .main-playlistEditDetailsModal-closeBtn,
+  .profile-userEditDetails-closeButton,
+  .desktopmodals-aboutSpotifyModal-closeButton {
+    width: 25px;
+    height: 15px;
+    background: url("resources/icon/close.png") no-repeat;
+    transform: none !important;
+    border-radius: 0;
+    cursor: auto;
+
+    &:hover {
+      background: url("resources/icon/close_hover.png") no-repeat;
+    }
+
+    &:active {
+      background: url("resources/icon/close_pressed.png") no-repeat;
+    }
+
+    svg {
+      display: none;
+    }
+  }
+
+  .main-playlistEditDetailsModal-closeBtn,
+  .profile-userEditDetails-closeButton {
+    position: relative;
+    right: 8px;
+  }
+
+  .desktopmodals-aboutSpotifyModal-closeButton {
+    top: 8px;
+    right: 1px;
+  }
+
+  .wmpotify-modal-bottom-buttons,
+  .main-confirmDialog-buttonContainer {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     margin-top: 8px;
     margin-bottom: 5px;
+    gap: 0;
 
     button + button {
       margin-left: 6px;

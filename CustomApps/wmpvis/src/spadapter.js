@@ -1,6 +1,7 @@
 'use strict';
 
 import { unzlibSync } from 'fflate';
+import { ensureSpotifyToken } from './lyrics/spotify';
 
 // mostly from https://github.com/Konsl/spicetify-visualizer
 
@@ -97,7 +98,11 @@ function smoothstep(x) {
 }
 
 export async function spAudioDataToFrequencies() {
-    const audioData = await Spicetify.getAudioData();
+	await ensureSpotifyToken();
+    let audioData = await Spicetify.getAudioData();
+	if (audioData.code) {
+		throw new Error('Failed to fetch');
+	}
 
     const segments = audioData.segments;
     const rhythm = parseRhythmString(audioData.track.rhythmstring);

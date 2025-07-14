@@ -8,6 +8,7 @@ import { initPlaylistPage } from "../pages/playlist";
 import { ylxKeyPrefix, expandedStateKey } from "../pages/libx";
 
 let initTime = 0;
+let headerWrapperObserver = null;
 
 const PageManager = {
     waitForPageRender() {
@@ -23,7 +24,7 @@ const PageManager = {
         });
     },
 
-    async handleLocChange(location) {
+    async onLocChange(location) {
         if (!location?.pathname) {
             return;
         }
@@ -74,20 +75,30 @@ const PageManager = {
 
         if (location.pathname.match('/artist/.*/discography.*')) {
             initDiscographyPage(true);
-        } else if (location.pathname.startsWith('/playlist/')) {
-            if (!document.querySelector('.playlist-playlist-playlist')) {
-                await PageManager.waitForPageRender();
-            }
         }
+    },
 
+    async onMainContentMount() {
+        console.debug('WMPotify: onMainContentMount');
         initPlaylistPage(true);
+        if (headerWrapperObserver) {
+            headerWrapperObserver.disconnect();
+        }
+        const headerWrapper = document.querySelector('div[data-testid="topbar-content-wrapper"]');
+        if (headerWrapper) {
+            headerWrapperObserver = new MutationObserver(PageManager.onMainContentMount).observe(headerWrapper, { childList: true });
+        }
     },
 
     init() {
-        PageManager.handleLocChange(Spicetify.Platform.History.location);
+        PageManager.onLocChange(Spicetify.Platform.History.location);
         initTime = Date.now();
-        Spicetify.Platform.History.listen((location) => PageManager.handleLocChange(location));
-    }
+        Spicetify.Platform.History.listen((location) => PageManager.onLocChange(location));
+        new MutationObserver(PageManager.onMainContentMount).observe(document.querySelector('main'), { childList: true });
+        new MutationObserver(PageManager.onMainContentMount).observe(document.querySelector('.Root__main-view'), { childList: true });
+    },
+
+    initPlaylistPage
 };
 
 export default PageManager;

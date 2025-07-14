@@ -16,8 +16,9 @@ export async function getSpotifyNowPlaying(lang) {
         if (!lang) {
             return Spicetify.Player.data;
         } else {
+            const token = await ensureSpotifyToken();
             const headers = {
-                'Authorization': 'Bearer ' + Spicetify.Platform.AuthorizationAPI.getState().token.accessToken
+                'Authorization': 'Bearer ' + (token || Spicetify.Platform.AuthorizationAPI.getState().token.accessToken)
             }
             headers['Accept-Language'] = lang;
             const response = await fetch('https://api.spotify.com/v1/tracks/' + Spicetify.Player.data.item.uri.split(':')[2], {
@@ -42,5 +43,23 @@ export async function getSpotifyNowPlaying(lang) {
             item: null,
             errorCode: -1
         }
+    }
+}
+
+export async function ensureSpotifyToken() {
+    const expiry = Spicetify.Platform.AuthorizationAPI.getState().token.accessTokenExpirationTimestampMs;
+    const now = Date.now();
+    if (expiry < now) {
+        const oldToken = Spicetify.Platform.AuthorizationAPI.getState().token.accessToken;
+        const newToken = await Spicetify.Platform.AuthorizationAPI._tokenProvider.loadToken();
+        console.log('WMPotifyNowPlaying: Refreshing AuthorizationAPI token...', {
+            expiry,
+            now,
+            oldToken,
+            newToken,
+            stack: new Error().stack
+        });
+        Spicetify.Platform.AuthorizationAPI._state.token.accessToken = newToken.accessToken;
+        return newToken.accessToken;
     }
 }

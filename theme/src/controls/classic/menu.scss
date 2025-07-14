@@ -142,12 +142,15 @@
               content: none;
             }
 
-            span:not(:first-child) svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
-              /* submenu mark */
-              left: auto;
-              top: 0;
-              right: -3px;
-              transform: scale(0.6) rotate(90deg);
+            span:not(:first-child) {
+              svg:has(path[d="M14 10 8 4l-6 6h12z"]),
+              svg:has(path[d="M14 10 8 4l-6 6z"]) {
+                /* submenu mark */
+                left: auto;
+                top: 0;
+                right: -3px;
+                transform: scale(0.6) rotate(90deg);
+              }
             }
 
             &.vvMORUKtQKpQcpQ992bR { /* Top separator */

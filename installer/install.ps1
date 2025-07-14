@@ -61,8 +61,9 @@ process {
     $currentPrincipal = New-Object -TypeName System.Security.Principal.WindowsPrincipal -ArgumentList ([System.Security.Principal.WindowsIdentity]::GetCurrent())
     $isAdmin = $currentPrincipal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
     $isUacDisabled = (Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System).EnableLUA -eq 0
+    $isBuiltinAdmin = ([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value -match '-500$')
 
-    if ($isAdmin -and -not $isUacDisabled -and -not $BypassAdmin) {
+    if ($isAdmin -and -not $isUacDisabled -and -not $BypassAdmin -and -not $isBuiltinAdmin) {
         Write-Host 'This script should not be started as administrator, as this can cause problems with Spicetify. Continue only if you know what you are doing.'
         do {
             $choice = $Host.UI.PromptForChoice(

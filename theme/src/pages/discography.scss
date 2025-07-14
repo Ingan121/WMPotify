@@ -16,6 +16,7 @@ header:has(div[data-identifier="discography-topbar"]) {
             left: 0;
             border-bottom: solid 1px var(--wmp11-separator-shadow);
             box-shadow: none !important;
+            padding-inline: 0;
 
             div[data-encore-id="text"] {
                 margin-left: 8px;
@@ -157,6 +158,16 @@ section[data-test-uri^="spotify:artist:"] {
                 border-color: var(--item-hover-border);
             }
 
+            &:focus-within {
+                background: var(--item-selection-background);
+                border-color: var(--item-active-border);
+            }
+    
+            &:hover:focus-within {
+                background: var(--item-selection-hover-background);
+                border-color: var(--item-selection-hover-border);
+            }
+
             &::after {
                 content: '';
                 display: block;
@@ -209,18 +220,8 @@ section[data-test-uri^="spotify:artist:"] {
             margin-top: 46px;
             margin-bottom: 44px;
 
-            /* Choose column button, 1.2.59-1.2.61 */
-            .main-trackList-trackList + button:has(path[d="m14 6-6 6-6-6h12z"]) {
-                display: none;
-            }
-
             .main-trackList-trackListHeader {
                 display: block;
-                background: none !important;
-                border-image: var(--listview-header) 0 0 1 2 fill stretch;
-                border-image-width: 0 0 1px 2px;
-                height: 23.3px;
-                box-shadow: var(--wmp11-separator-light) 0 -1px 0 0, var(--wmp11-separator-shadow) 0 -2px 0 0; 
                 top: 0 !important;
                 left: 0;
                 margin: 0;
@@ -229,45 +230,8 @@ section[data-test-uri^="spotify:artist:"] {
                 margin-bottom: 30px;
                 opacity: 1 !important;
 
-                /* Choose column button, 1.2.57 */
-                > div[role="presentation"]:first-child > button {
-                    display: none;
-                }
-
                 .main-trackList-trackListHeaderRow {
                     margin-left: 240px;
-                    height: 25px;
-                    grid-gap: 0;
-
-                    .main-trackList-sortable,
-                    .main-trackList-rowSectionIndex > div {
-                        color: var(--wmp11-subtext);
-                    }
-
-                    > div {
-                        border-image: var(--listview-header) 0 2 1 2 fill stretch;
-                        border-image-width: 0 2px 1px 2px;
-                        padding-left: 5px;
-        
-                        > div {
-                            width: 100%;
-                            span {
-                                text-align: left;
-                            }
-                        }
-                    }
-
-                    .main-trackList-column {
-                        justify-content: flex-start;
-                    }
-
-                    .main-trackList-rowSectionIndex {
-                        min-width: 30px;
-                    }
-        
-                    .main-trackList-rowSectionEnd .main-trackList-durationHeader {
-                        justify-content: flex-start;
-                    }
                 }
             }
         }
@@ -280,60 +244,6 @@ section[data-test-uri^="spotify:artist:"] {
     .artist-artistDiscography-cardGrid.main-gridContainer-gridContainer,
     .artist-artistDiscography-cardGrid .main-gridContainer-gridContainer {
         margin-top: 0;
-
-        > div {
-            border: solid 1px transparent;
-            border-radius: 3px;
-
-            &::after {
-                display: none;
-            }
-
-            &:hover {
-                background: var(--item-hover-background);
-                border-color: var(--item-hover-border);
-            }
-
-            .main-card-imageContainer > div:first-child {
-                box-shadow: var(--album-shadow-big);
-                border-radius: 0;
-                background: none;
-
-                img {
-                    border-radius: 0;
-                }
-            }
-
-            button {
-                width: 42px;
-                height: 43px;
-                background: var(--play) no-repeat;
-
-                &:hover {
-                    background-image: var(--play-hover);
-                }
-
-                &:active {
-                    background-image: var(--play-pressed);
-                }
-
-                span {
-                    opacity: 0;
-                }
-
-                &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
-                    background-image: var(--pause) !important;
-
-                    &:hover {
-                        background-image: var(--pause-hover) !important;
-                    }
-
-                    &:active {
-                        background-image: var(--pause-pressed) !important;
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -343,43 +253,6 @@ section[data-test-uri^="spotify:artist:"] {
             &::after {
                 top: 3px !important;
                 left: 4px !important;
-            }
-        }
-    }
-
-    section[data-testid="artist-page"],
-    section[data-test-uri^="spotify:artist:"] {
-        .artist-artistDiscography-firstAlbum {
-            & + .artist-artistDiscography-tracklist {
-                .main-trackList-trackListHeader {
-                    background: var(--surface) !important;
-                    border-image: none !important;
-                    box-shadow: none !important;
-
-                    .main-trackList-trackListHeaderRow {
-                        > div {
-                            border-image: none !important;
-                            box-shadow: var(--border-raised-outer), var(--border-raised-inner);
-
-                            > div:not(#Prio1) {
-                                color: ButtonText !important;
-                                [class*=encore-text], button {
-                                    color: ButtonText !important;
-                                }
-                                svg:has(path[d="m14 6-6 6-6-6h12z"]),
-                                svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
-                                    fill: ButtonText !important;
-                                }
-                            }
-
-                            &.has-button {
-                                &:active {
-                                    box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset;
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }

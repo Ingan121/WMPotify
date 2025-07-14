@@ -75,10 +75,7 @@ async function getCache(hash) {
     }
     const db = await madIdb.init();
     if (!db.objectStoreNames.contains("lrccache")) {
-        // Not gonna handle this case more than this, versions with old DB structure did not officially release (existed for pretty long time though)
-        madAlert("Outdated DB structure from pre-release version detected. Caching will be disabled. Please export the current config, reset hard, and re-import it to fix this issue.", null, "error", { title: "locid:VISLRC_TITLE" });
         localStorage.wmpotifyVisLyricsNoCache = true;
-        madOpenConfig('misc');
         return null;
     }
     const expiryDays = parseInt(localStorage.wmpotifyVisLyricsCacheExpiry) || 21;

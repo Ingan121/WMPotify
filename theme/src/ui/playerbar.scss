@@ -11,6 +11,12 @@
     --play-hover: url('resources/playerbar/play_hover.png');
     --play-pressed: url('resources/playerbar/play_pressed.png');
     --play-disabled: url('resources/playerbar/play_disabled.png');
+    --play-31: url('resources/playerbar/play_31.png');
+    --play-31-hover: url('resources/playerbar/play_31_hover.png');
+    --play-31-pressed: url('resources/playerbar/play_31_pressed.png');
+    --pause-31: url('resources/playerbar/pause_31.png');
+    --pause-31-hover: url('resources/playerbar/pause_31_hover.png');
+    --pause-31-pressed: url('resources/playerbar/pause_31_pressed.png');
     --pause: url('resources/playerbar/pause.png');
     --pause-hover: url('resources/playerbar/pause_hover.png');
     --pause-pressed: url('resources/playerbar/pause_pressed.png');
@@ -116,8 +122,10 @@
     position: relative;
     margin: calc(var(--panel-gap) * -1);
     width: calc(100% + var(--panel-gap) * 2);
+    padding: 0; /* 1.2.68 */
     padding-right: calc(var(--panel-gap) * 2);
     z-index: 10;
+    background-color: transparent; /* 1.2.68 */
 }
 
 .main-nowPlayingBar-nowPlayingBar {
@@ -159,10 +167,15 @@ button[data-testid="cover-art-button"] {
 
 .main-nowPlayingBar-left {
     display: flex;
-    
+    flex-grow: 1;
+
     .likeControl-wrapper {
         margin-top: 16px;
     }
+}
+
+.main-nowPlayingBar-center {
+    width: 500px;
 }
 
 div[data-testid='now-playing-widget'] {
@@ -296,7 +309,8 @@ div[data-testid='now-playing-widget'] {
                 background-image: var(--play-pressed);
             }
 
-            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]),
+            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]) {
                 background-image: var(--pause);
 
                 &:disabled {
@@ -360,6 +374,7 @@ div[data-testid='now-playing-widget'] {
     /* Shuffle button, wrapped in a div only if it's enabled */
     > div:first-child button,
     > button:first-child {
+        position: relative;
         width: 25px;
         height: 25px;
         border-radius: 0;
@@ -373,6 +388,18 @@ div[data-testid='now-playing-widget'] {
             background-image: var(--shuffle-active);
         }
 
+        /* Use the speed button as a placeholder shuffle button while playing podcasts */
+        /* Real speed changer is replaced with the one in WMPotify Properties */
+        /* (It works without CTE/WH while playing podcasts) */
+        &[data-testid="control-button-playback-speed"] {
+            opacity: 0.5;
+            pointer-events: none;
+
+            svg { /* somehow the speed text is also a svg path lol */
+                display: none;
+            }
+        }
+
         &::after {
             display: none;
         }
@@ -382,7 +409,7 @@ div[data-testid='now-playing-widget'] {
         }
     }
 
-    button[data-testid='control-button-repeat'] {
+    #wmpotify-repeat-button {
         position: relative;
         width: 25px;
         height: 25px;
@@ -392,6 +419,9 @@ div[data-testid='now-playing-widget'] {
         transform: none !important;
         margin-right: 12px;
         will-change: unset; /* 1.2.61, prevent image going below ::after */
+
+        display: inline-flex;
+        border: none;
 
         &::before {
             display: none;
@@ -418,6 +448,11 @@ div[data-testid='now-playing-widget'] {
         &:disabled {
             background-image: var(--stop-disabled);
         }
+    }
+
+    /* Podcast controls */
+    button[data-testid="control-button-seek-back-15"] {
+        display: none;
     }
 }
 
@@ -490,11 +525,16 @@ div[data-testid='now-playing-widget'] {
             }
         }
     }
+
+    button[data-testid='control-button-repeat'],
+    button[data-testid="control-button-seek-forward-15"] { /* Podcast control */
+        display: none;
+    }
 }
 
 .player-controls__left > div:first-child button::before,
 .player-controls__left > button:first-child::before,
-.player-controls__buttons button[data-testid='control-button-repeat']::after,
+#wmpotify-repeat-button::after,
 #wmpotify-stop-button::before,
 .volume-bar__icon-button::before {
     content: '';
@@ -503,12 +543,13 @@ div[data-testid='now-playing-widget'] {
     width: 25px;
     height: 25px;
     background: var(--btn-bg) no-repeat;
+    border-radius: 0 !important;
     z-index: -1;
 }
 
 .player-controls__left > div:first-child button:hover::before,
 .player-controls__left > button:first-child:hover::before,
-.player-controls__buttons button[data-testid='control-button-repeat']:hover::after,
+#wmpotify-repeat-button:hover::after,
 #wmpotify-stop-button:hover::before,
 .volume-bar__icon-button:hover::before {
     background-image: var(--btn-hover);
@@ -516,13 +557,14 @@ div[data-testid='now-playing-widget'] {
 
 .player-controls__left > div:first-child button:active::before,
 .player-controls__left > button:first-child:active::before,
-.player-controls__buttons button[data-testid='control-button-repeat']:active::after,
+#wmpotify-repeat-button:active::after,
 #wmpotify-stop-button:active::before,
 .volume-bar__icon-button:active::before {
     background-image: var(--btn-pressed);
 }
 
 .main-nowPlayingBar-right {
+    flex-grow: 1;
     margin-top: 10px;
 
     .main-nowPlayingBar-extraControls {
@@ -536,6 +578,11 @@ div[data-testid='now-playing-widget'] {
             border-radius: 0;
             transform: none !important;
             background: var(--btn-21-bg) no-repeat center;
+
+            &::after {
+                /* prevent double tinting for active dots */
+                --spice-button: #0067d0 !important;
+            }
 
             &:hover {
                 background-image: var(--btn-21-hover);
@@ -576,7 +623,8 @@ div[data-testid='now-playing-widget'] {
         }
     }
 
-    button[data-testid='fullscreen-mode-button'] {
+    button[data-testid='fullscreen-mode-button'],
+    #BeautifulLyricsFullscreenButton {
         display: none;
     }
 
@@ -733,7 +781,8 @@ div[data-testid='now-playing-widget'] {
                 }
             }
 
-            .main-contextMenu-tippyWrapper button { /* connect button */
+            .main-contextMenu-tippyWrapper button,
+            button[aria-describedby*="connect-message-nudge"] { /* connect button */
                 background: url('resources/playerbar/connect.png') no-repeat center;
 
                 svg {
@@ -910,9 +959,23 @@ body[data-hide-pb-left-btn] {
     }
 }
 
+body[data-right-align-pb-left-btn] {
+    .main-nowPlayingBar-left {
+        [data-testid="now-playing-widget"] {
+            width: 100%;
+
+            .main-nowPlayingWidget-trackInfo + div {
+                margin-left: auto;
+            }
+        }
+    }
+}
+
 @media (max-width: 1024px) {
     :root[data-wmpotify-style="xp"] {
         .main-nowPlayingBar-left {
+            flex-grow: 0;
+
             [data-testid="now-playing-widget"] {
                 button:not([data-testid="cover-art-button"]) {
                     display: none;
@@ -923,11 +986,17 @@ body[data-hide-pb-left-btn] {
                 display: none;
             }
         }
+
+        .main-nowPlayingBar-right {
+            flex-grow: 0;
+        }
     }
 }
 
 @media (max-width: 980px) {
     .main-nowPlayingBar-left {
+        flex-grow: 0;
+
         [data-testid="now-playing-widget"] {
             button:not([data-testid="cover-art-button"]) {
                 display: none;
@@ -937,6 +1006,10 @@ body[data-hide-pb-left-btn] {
         .likeControl-wrapper {
             display: none;
         }
+    }
+
+    .main-nowPlayingBar-right {
+        flex-grow: 0;
     }
 }
 
@@ -983,6 +1056,10 @@ body[data-hide-pb-left-btn] {
         }
     }
 
+    .main-nowPlayingBar-center {
+        width: 40%;
+    }
+
     .main-nowPlayingBar-extraControls {
         > * {
             margin: 0 2px !important;
@@ -1022,7 +1099,7 @@ body[data-hide-pb-left-btn] {
     }
 }
 
-@media (max-width: 636px) {
+@media (max-width: 650px) {
     .player-controls__buttons {
         width: 268px;
 
@@ -1063,8 +1140,8 @@ body[data-hide-pb-left-btn] {
         margin-right: 6px;
     }
 
-    button[data-testid='control-button-repeat'] {
-        display: none;
+    #wmpotify-repeat-button {
+        display: none !important;
     }
 
     .volume-bar {
@@ -1159,6 +1236,10 @@ body[data-hide-pb-left-btn] {
         width: 40px;
     }
 
+    .main-nowPlayingBar-center {
+        width: unset;
+    }
+
     .main-nowPlayingBar-right {
         margin-right: -21px;
         margin-bottom: -7px;
@@ -1204,6 +1285,15 @@ body[data-hide-pb-left-btn] {
 }
 
 @media (forced-colors: active) {
+    :root:not(#Prio1):not(#Prio2) {
+        --play-31: var(--play);
+        --play-31-hover: var(--play-hover);
+        --play-31-pressed: var(--play-pressed);
+        --pause-31: var(--pause);
+        --pause-31-hover: var(--pause-hover);
+        --pause-31-pressed: var(--pause-pressed);
+    }
+
     .progress-bar__slider {
         visibility: visible;
         box-shadow: none;

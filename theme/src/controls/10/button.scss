@@ -27,12 +27,13 @@
 
   button.wmpotify-aero,
   button.Button-sc-y0gtbx-0,
-  button[class*="0-button-primary"][type="submit"],
+  button[class*="e-"][class*="-button-primary"][type="submit"],
   .ReactModalPortal button.Button-sc-qlcn5g-0,
   .ReactModalPortal button.Button-sc-1dqy6lx-0,
+  .ReactModalPortal button[class*="e-"][class*="-button-primary"],
   dialog button.Button-sc-qlcn5g-0,
   dialog button.Button-sc-1dqy6lx-0,
-  dialog button[class*="0-button-primary"],
+  dialog button[class*="e-"][class*="-button-primary"],
   #context-menu button.Button-sc-1dqy6lx-0,
   #context-menu button.Button-sc-qlcn5g-0,
   .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2),
@@ -138,7 +139,7 @@
     &:focus-visible,
     &.focused,
     &:has(.ButtonInner-medium),
-    &:has([class*="0-button--medium"]) {
+    &:has([class*="e-"][class*="-button--medium"]) {
       outline: 1px dotted var(--button-focus-outline-color);
       outline-offset: -4px;
     }
@@ -148,8 +149,8 @@
     &.focused,
     &:has(.ButtonInner-medium),
     &:has(.ButtonInner-small),
-    &:has([class*="0-button--medium"]),
-    &:has([class*="0-button--small"]) {
+    &:has([class*="e-"][class*="-button--medium"]),
+    &:has([class*="e-"][class*="-button--small"]) {
       box-shadow: inset 1px 1px 0 0 var(--button-border-color-hovered), inset -1px -1px 0 0 var(--button-border-color-hovered),
         inset 2px 2px 0 0 var(--button-border-color-inner-focus), inset -2px -2px 0 0 var(--button-border-color-inner-focus);
     }

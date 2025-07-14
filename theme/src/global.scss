@@ -48,6 +48,11 @@ body {
     margin-top: var(--grouped-element-spacing);
 }
 
+*:focus-visible {
+    outline: 1px dotted var(--button-text);
+    outline-offset: -4px;
+}
+
 /* Performance optimizations */
 div[role="tablist"],
 .StyledTabList-tablist-tabList,

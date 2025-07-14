@@ -11,7 +11,10 @@
 
     input.wmpotify-aero,
     input.search,
-    .main-trackCreditsModal-originalCredits input {
+    input.x-settings-input,
+    .main-trackCreditsModal-originalCredits input,
+    .main-playlistEditDetailsModal-content input,
+    .profile-userEditDetails-content input {
         &[type="text"],
         &[type="email"],
         &[type="number"],
@@ -21,16 +24,22 @@
     }
     
     input.wmpotify-aero[type="text"],
-    input.search[type="text"],
-    .main-trackCreditsModal-originalCredits input[type="text"],
     input.wmpotify-aero[type="email"],
-    .main-trackCreditsModal-originalCredits input[type="email"],
     input.wmpotify-aero[type="number"],
-    .main-trackCreditsModal-originalCredits input[type="number"],
     input.wmpotify-aero[type="password"],
-    .main-trackCreditsModal-originalCredits input[type="password"],
     textarea.wmpotify-aero,
-    .main-trackCreditsModal-originalCredits textarea {
+    input.search[type="text"],
+    input.x-settings-input[type="text"],
+    input.x-settings-input[type="number"],
+    input.x-settings-input[type="password"],
+    .main-trackCreditsModal-originalCredits input[type="text"],
+    .main-trackCreditsModal-originalCredits input[type="email"],
+    .main-trackCreditsModal-originalCredits input[type="number"],
+    .main-trackCreditsModal-originalCredits input[type="password"],
+    .main-trackCreditsModal-originalCredits textarea,
+    .main-playlistEditDetailsModal-content input[type="text"],
+    .main-playlistEditDetailsModal-content textarea,
+    .profile-userEditDetails-content input[type="text"] {
         font: var(--font);
         padding: 3px 4px 5px;
         border: 1px solid var(--textbox-border-color);

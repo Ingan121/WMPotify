@@ -107,8 +107,8 @@ export function initQueuePanel() {
     Spicetify.Player.addEventListener('songchange', () => {
         playlistButton.textContent = Spicetify.Player.data?.context?.metadata?.context_description || Strings['QUEUE_CURRENT_PLAYLIST_PLACEHOLDER'];
         playlistButton.innerHTML += '<span class="expandMark">⏷</span>';
-        albumArt.src = Spicetify.Player.data?.item?.album?.images?.[0]?.url?.replace('spotify:image:', 'https://i.scdn.co/image/') || placeholderImage;
-        songTitle.textContent = Spicetify.Player.data?.item?.name || 'No items';
+        albumArt.src = Spicetify.Player.data?.item?.album?.images?.[0]?.url || placeholderImage;
+        songTitle.textContent = Spicetify.Player.data?.item?.name || Strings['QUEUE_CURRENT_PLAYLIST_PLACEHOLDER'];
     });
 }
 

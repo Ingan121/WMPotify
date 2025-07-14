@@ -9,6 +9,7 @@ import React from "react";
 import Strings from "./strings";
 import { updateVisConfig } from "./wmpvis";
 import { appInstance as App } from "./app";
+import { setupDesktopAudioCapture } from "./DesktopAudio";
 
 const ConfigDialog = React.memo(() => {
     return <>
@@ -164,6 +165,10 @@ const ConfigDialog = React.memo(() => {
                     padding: 0 12px;
                     text-align: center;
                 }
+
+                .main-trackCreditsModal-container {
+                    max-height: calc(100vh - 50px);
+                }
                 `}
         </style>
         <div style={{ fontSize: "11px" }} id="wmpvis-config">
@@ -264,6 +269,12 @@ const ConfigDialog = React.memo(() => {
                 <p id="diffScaleInfo">
                     {Strings["VISCONF_SCALE_INFO"]}
                 </p>
+            </fieldset><hr />
+            <fieldset>
+                <legend>{Strings['VISCONF_SYSAUDIO_TITLE']}</legend>
+                <button id="sysAudioSetupBtn" class="wmpotify-aero" title={Strings["VISCONF_SYSAUDIO_SETUP_DESC"]} onClick={setupDesktopAudioCapture}>{Strings[globalThis.wmpvisDesktopAudioCapturer?.stream?.active ? 'VISCONF_SYSAUDIO_STOP' : 'VISCONF_SYSAUDIO_SETUP']}</button><br />
+                <input id="sysAudioOverSpotifyChkBox" class="wmpotify-aero" type="checkbox" name="sysAudioOverSpotify" />
+                <label for="sysAudioOverSpotifyChkBox" title={Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY_DESC"]}>{Strings["VISCONF_SYSAUDIO_OVER_SPOTIFY"]}</label>
             </fieldset>
             <section class="bottomButtons field-row">
                 <button id="okBtn" class="wmpotify-aero">{Strings["UI_OK"]}</button>
@@ -291,10 +302,8 @@ function init(root) {
     const bgColorPicker = root.querySelector("#bgColorPicker");
     const bgColorPickerColor = bgColorPicker.querySelector(".colorPicker-color");
     const barColorPicker = root.querySelector("#barColorPicker");
-    const barColorPickerLabel = root.querySelector("#barColorPickerLabel");
     const barColorPickerColor = barColorPicker.querySelector(".colorPicker-color");
     const topColorPicker = root.querySelector("#topColorPicker");
-    const topColorPickerLabel = root.querySelector("#topColorPickerLabel");
     const topColorPickerColor = topColorPicker.querySelector(".colorPicker-color");
 
     const albumArtChkBox = root.querySelector("#albumArtChkBox");
@@ -315,8 +324,12 @@ function init(root) {
     const diffScaleLabel = root.querySelector("#diffScaleLabel");
     const diffScaleInput = root.querySelector("#diffScaleInput");
     const diffScaleInfo = root.querySelector("#diffScaleInfo");
+    const fpsLabel = root.querySelector("#fpsLabel")
     const fpsInput = root.querySelector("#fpsInput");
     const reduceBarsChkBox = root.querySelector("#reduceBarsChkBox");
+
+    const sysAudioSetupBtn = root.querySelector("#sysAudioSetupBtn");
+    const sysAudioOverSpotifyChkBox = root.querySelector('#sysAudioOverSpotifyChkBox');
 
     const okBtn = root.querySelector("#okBtn");
     const cancelBtn = root.querySelector("#cancelBtn");
@@ -453,6 +466,12 @@ function init(root) {
             localStorage.wmpotifyVisDontReduceBars = true;
         }
 
+        if (sysAudioOverSpotifyChkBox.checked) {
+            localStorage.wmpotifyVisSysAudioOverSpotify = true;
+        } else {
+            delete localStorage.wmpotifyVisSysAudioOverSpotify;
+        }
+
         App.setState({
             bgColor:
                 ((localStorage.wmpotifyVisType === "albumArt" || localStorage.wmpotifyVisUseSchemeColors) && !localStorage.wmpotifyVisBgColor) ?
@@ -548,6 +567,10 @@ function init(root) {
         reduceBarsChkBox.checked = false;
     }
 
+    if (localStorage.wmpotifyVisSysAudioOverSpotify) {
+        sysAudioOverSpotifyChkBox.checked = true;
+    }
+
     if (["none", "albumArt"].includes(localStorage.wmpotifyVisType)) {
         albumArtChkBox.disabled = true;
         dimAlbumArtChkBox.disabled = true;
@@ -560,6 +583,12 @@ function init(root) {
         diffScaleLabel.classList.add("disabled");
         diffScaleInput.disabled = true;
         diffScaleInfo.classList.add("disabled");
+        if (fpsInput) {
+            fpsLabel.classList.add("disabled");
+            fpsInput.disabled = true;
+        }
         reduceBarsChkBox.disabled = true;
+        sysAudioSetupBtn.disabled = true;
+        sysAudioOverSpotifyChkBox.disabled = true;
     }
 }

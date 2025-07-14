@@ -34,6 +34,11 @@ const lang = {
     'MSG_DBG_INFO_COPIED': 'Debug info copied to clipboard.',
 
     'NO_AUD_DATA': 'No audio data available for this track.',
+    'SYSAUDIO_SETUP': 'Click here to use desktop audio instead.',
+    'SYSAUDIO_GUIDE_TITLE': 'Setup Desktop Audio Capture',
+    'SYSAUDIO_GUIDE': "Please do these in the following window:\n\n1. Click 'Entire Screen'\n2. Enable 'Also share system audio'\n3. Select your display and click 'Share'\n\nWMPotify does not collect any information about your screen and audio, and the audio data is processed locally. Video data is simply ignored; it is required due to a Chromium limitation.\n\nClick 'OK' to continue.",
+    'SYSAUDIO_FAIL': 'Failed to initialize the desktop audio capturer! Please make sure you have followed the instructions correctly.',
+    'SYSAUDIO_ALLOY': 'Chrome runtime is not enabled! Please relaunch Spotify.exe with the --enable-chrome-runtime argument to use this feature.',
 
     "LRC_STATUS_LOADING": "Loading...",
     "LRC_STATUS_NOT_FOUND": "No lyrics found.",
@@ -97,12 +102,20 @@ const lang = {
     'VISCONF_REDUCE_BARS': 'Reduce the number of bars to make it look like WMP',
     "VISCONF_SCALE_INFO": "* Adjust the scale values if you think the bars reach the top too fast.",
 
+    "VISCONF_SYSAUDIO_TITLE": "Desktop Audio Capture",
+    'VISCONF_SYSAUDIO_SETUP': 'Setup desktop audio capture',
+    'VISCONF_SYSAUDIO_SETUP_DESC': 'Press with shift key to skip the guide dialog.',
+    'VISCONF_SYSAUDIO_STOP': 'Stop desktop audio capture',
+    "VISCONF_SYSAUDIO_OVER_SPOTIFY": "Prefer desktop audio over Spotify-provided audio data",
+    "VISCONF_SYSAUDIO_OVER_SPOTIFY_DESC": "Spotify-provided audio data is still preferred while playing on another device.",
+
     "BCCONF_TITLE": "MilkDrop Properties",
     "BCCONF_HARDCUT_TYPE": "Hard cut type",
     "BCCONF_HARDCUT_NONE": "None",
     "BCCONF_RANDOM_TIMER": "Random preset switch interval:",
     "BCCONF_TRANSITION_TIME": "Transition time:",
     "BCCONF_HARDCUT_TRANSITION_TIME": "Hard cut transition time:",
+    "BCCONF_SHOW_SONG_TITLE": "Display song title"
 };
 
 export default lang;

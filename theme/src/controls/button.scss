@@ -7,7 +7,8 @@
 div[data-identifier="discography-topbar"] [role="switch"],
 button[role="combobox"],
 header nav li,
-[class*="LegacyChipComponent-checkbox-chip-sm-"] {
+[class*="LegacyChipComponent-checkbox-chip-sm-"],
+[class*="LegacyChipComponent-presentation-chip-sm-"] /* 1.2.68 */ {
   appearance: none;
   background: transparent;
   border: none;
@@ -22,6 +23,7 @@ header nav li,
   cursor: default !important;
   margin: 0;
   margin-inline: 0 !important;
+  border-radius: 0 !important;
 
   &:hover {
     border-image-source: url("resources/ui/toolbarbutton_hover.png");
@@ -82,13 +84,17 @@ button[aria-controls="sort-and-view-picker"] {
     background: url('resources/icon/list.png') no-repeat;
   }
 
-  &:has(path[d="M15.5 13.5H.5V12h15v1.5zm0-4.75H.5v-1.5h15v1.5zm0-4.75H.5V2.5h15V4z"]) {
+  &:has(path[d="M15.5 13.5H.5V12h15v1.5zm0-4.75H.5v-1.5h15v1.5zm0-4.75H.5V2.5h15V4z"]),
+  &:has(path[d="M15.5 13.5H.5V12h15zm0-4.75H.5v-1.5h15zm0-4.75H.5V2.5h15z"]) { /* 1.2.66 */
     &::before {
       background-image: url('resources/icon/compact.png');
     }
   }
 
-  &:has(path[d="M1 1h6v6H1V1zm1.5 1.5v3h3v-3h-3zM1 9h6v6H1V9zm1.5 1.5v3h3v-3h-3zM9 1h6v6H9V1zm1.5 1.5v3h3v-3h-3zM9 9h6v6H9V9zm1.5 1.5v3h3v-3h-3z"]) {
+  &:has(path[d="M1 1h6v6H1V1zm1.5 1.5v3h3v-3h-3zM1 9h6v6H1V9zm1.5 1.5v3h3v-3h-3zM9 1h6v6H9V1zm1.5 1.5v3h3v-3h-3zM9 9h6v6H9V9zm1.5 1.5v3h3v-3h-3z"]),
+  &:has(path[d="M1 1h3v3H1V1Zm0 5.5h3v3H1v-3ZM4 12H1v3h3v-3ZM6.5 1h3v3h-3V1Zm3 5.5h-3v3h3v-3Zm-3 5.5h3v3h-3v-3ZM15 1h-3v3h3V1Zm-3 5.5h3v3h-3v-3Zm3 5.5h-3v3h3v-3Z"]), /* compact grid */
+  &:has(path[d="M1 1h6v6H1zm1.5 1.5v3h3v-3zM1 9h6v6H1zm1.5 1.5v3h3v-3zM9 1h6v6H9zm1.5 1.5v3h3v-3zM9 9h6v6H9zm1.5 1.5v3h3v-3z"]), /* 1.2.66 */
+  &:has(path[d="M1 1h3v3H1zm0 5.5h3v3H1zM4 12H1v3h3zM6.5 1h3v3h-3zm3 5.5h-3v3h3zm-3 5.5h3v3h-3zM15 1h-3v3h3zm-3 5.5h3v3h-3zm3 5.5h-3v3h3z"]) { /* compact grid, 1.2.66 */
     &::before {
       background-image: url('resources/icon/grid.png');
     }
@@ -116,12 +122,13 @@ button[aria-controls="sort-and-view-picker"] {
 
 button.wmpotify-aero,
 button.Button-sc-y0gtbx-0,
-button[class*="0-button-primary"][type="submit"],
+button[class*="e-"][class*="-button-primary"][type="submit"],
 .ReactModalPortal button.Button-sc-qlcn5g-0,
 .ReactModalPortal button.Button-sc-1dqy6lx-0,
+.ReactModalPortal button[class*="e-"][class*="-button-primary"],
 dialog button.Button-sc-qlcn5g-0,
 dialog button.Button-sc-1dqy6lx-0,
-dialog button[class*="0-button-primary"],
+dialog button[class*="e-"][class*="-button-primary"],
 #context-menu button.Button-sc-1dqy6lx-0,
 #context-menu button.Button-sc-qlcn5g-0,
 .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2) {
@@ -136,8 +143,8 @@ dialog button[class*="0-button-primary"],
 
   .ButtonInner-small,
   .ButtonInner-medium,
-  [class*="0-button--small"],
-  [class*="0-button--medium"] {
+  [class*="e-"][class*="-button--small"],
+  [class*="e-"][class*="-button--medium"] {
     display: block;
     background: none !important;
     color: var(--spice-text);
@@ -153,7 +160,8 @@ dialog button[class*="0-button-primary"],
   div[data-identifier="discography-topbar"] [role="switch"],
   button[role="combobox"],
   header nav li,
-  [class*="LegacyChipComponent-checkbox-chip-sm-"] {
+  [class*="LegacyChipComponent-checkbox-chip-sm-"],
+  [class*="LegacyChipComponent-presentation-chip-sm-"] /* 1.2.68 */ {
     border: none;
     padding: 3px;
     border-image: none !important;

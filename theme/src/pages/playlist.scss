@@ -19,111 +19,10 @@ section[data-testid="playlist-page"],
         box-shadow: var(--album-shadow-big);
     }
 
-    /* Choose column button, 1.2.59-1.2.61 */
-    .main-trackList-trackList + button:has(path[d="m14 6-6 6-6-6h12z"]) {
-        display: none;
-    }
-
-    .main-trackList-trackListHeader {
-        background: none !important;
-        border-image: var(--listview-header) 0 0 1 2 fill stretch;
-        border-image-width: 0 0 1px 2px;
-        height: 23.3px;
-        box-shadow: var(--wmp11-separator-light) 0 -1px 0 0, var(--wmp11-separator-shadow) 0 -2px 0 0; 
-        top: 29px !important;
-        forced-color-adjust: none;
-
-        /* Choose column button, 1.2.57 */
-        > div[role="presentation"]:first-child > button {
-            display: none;
-        }
-
-        .main-trackList-trackListHeaderRow {
-            height: 25px;
-            grid-gap: 0;
-
-            .main-trackList-sortable,
-            .main-trackList-rowSectionIndex > div {
-                [class*=encore-text] {
-                    color: var(--wmp11-subtext) !important;
-                }
-            }
-
-            > div {
-                border-image: var(--listview-header) 0 2 1 2 fill stretch;
-                border-image-width: 0 2px 1px 2px;
-                padding-left: 5px;
-
-                &.selected {
-                    border-image-source: url('resources/ui/listview_header_selected.png');
-                    [class*=encore-text] {
-                        color: black !important;
-                    }
-                    svg:has(path[d="m14 6-6 6-6-6h12z"]),
-                    svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
-                        fill: black !important;
-                    }
-                    svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
-                        fill: black !important;
-                    }
-                }
-
-                &.has-button {
-                    > div:empty { /* 1.2.55 */
-                        opacity: 0;
-                    }
-
-                    &:hover {
-                        border-image-source: url('resources/ui/listview_header_hover.png');
-                        [class*=encore-text] {
-                            color: black !important;
-                        }
-                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
-                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
-                            fill: black !important;
-                        }
-                        svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
-                            fill: black !important;
-                        }
-                    }
-
-                    &:active {
-                        border-image-source: url('resources/ui/listview_header_pressed.png');
-                        [class*=encore-text] {
-                            color: black !important;
-                        }
-                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
-                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
-                            fill: black !important;
-                        }
-                        svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
-                            fill: black !important;
-                        }
-                    }
-                }
-
-                > div {
-                    width: 100%;
-                    button,
-                    div {
-                        width: 100%;
-                        justify-content: flex-start;
-
-                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
-                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
-                            fill: var(--window-text) !important;
-                            order: 1;
-                            width: 11px;
-                            margin-top: -2px;
-                        }
-                    }
-                }
-            }
-
-            .main-trackList-rowSectionIndex {
-                min-width: 30px;
-            }
-        }
+    button[data-testid="edit-image-button"] {
+        border-radius: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
     }
 
     div[style*="--text-subdued"] span {
@@ -137,7 +36,7 @@ section[data-testid="playlist-page"],
         }
     }
 
-    .main-actionBar-ActionBarRow {
+    .main-actionBar-ActionBarRow:first-child {
         > div:first-child button {
             width: 42px;
             height: 43px;
@@ -156,7 +55,10 @@ section[data-testid="playlist-page"],
                 opacity: 0;
             }
 
-            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]),
+            &:has(path[d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"]),
+            &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]),
+            &:has(path[d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7z"]) {
                 background-image: var(--pause) !important;
 
                 &:hover {
@@ -167,6 +69,106 @@ section[data-testid="playlist-page"],
                     background-image: var(--pause-pressed) !important;
                 }
             }
+        }
+    }
+
+    [role="search"] {
+        .playlist-inlineSearchBox-filterInput {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 1px;
+            width: calc(100% - 2px);
+            height: 20px;
+            border: solid 1px var(--wmp11-search-border-inner);
+            background-color: var(--wmp11-search-face);
+            font-size: 12px;
+            border-radius: 0;
+            min-height: 0;
+            padding-inline: 4px;
+            box-shadow: none;
+            color: var(--spice-text);
+            opacity: 1;
+            padding-top: 0;
+            padding-bottom: 0;
+
+            &::placeholder {
+                color: var(--gray-text);
+                font-style: italic;
+            }
+        }
+
+        .playlist-inlineSearchBox-overlay {
+            opacity: 1;
+            left: 0;
+            right: 0;
+
+            .playlist-inlineSearchBox-searchIconContainer {
+                position: absolute;
+                top: 1px;
+                right: 0px;
+                width: 26px;
+                height: 20px;
+                border: none;
+                background: url('resources/topbar/search.png') no-repeat;
+            }
+
+            &:has(.playlist-inlineSearchBox-clearButton) .playlist-inlineSearchBox-searchIconContainer {
+                display: none;
+            }
+
+            .playlist-inlineSearchBox-clearButton {
+                position: absolute;
+                top: 1px;
+                right: 0px;
+                width: 26px;
+                height: 20px;
+                border: none;
+                background: url('resources/topbar/clear.png') no-repeat;
+
+                &:hover {
+                    background: url('resources/topbar/clear_hover.png') no-repeat;
+                }
+
+                &:active {
+                    background: url('resources/topbar/clear_pressed.png') no-repeat;
+                }
+            }
+
+            svg {
+                display: none;
+            }
+        }
+
+        .playlist-inlineSearchBox-expandButton {
+            display: none;
+        }
+    }
+
+    .playlist-playlist-playlistInlineCurationBackButton {
+        [class*=encore-text], svg {
+            color: var(--spice-text);
+        }
+    }
+
+    .ENWs3JxcqtD98_8fbPz2 {
+        border: solid 1px transparent;
+
+        &:hover {
+            background: var(--item-hover-background);
+            border-color: var(--item-hover-border);
+        }
+
+        [aria-selected="true"] &,
+        &:focus-within {
+            background: var(--item-selection-background);
+            border-color: var(--item-active-border);
+        }
+
+        [aria-selected="true"] &:hover,
+        &:hover:focus-within {
+            background: var(--item-selection-hover-background);
+            border-color: var(--item-selection-hover-border);
         }
     }
 }
@@ -194,15 +196,28 @@ section[data-testid="playlist-page"],
                 width: 24px;
                 height: 24px;
                 border-radius: 0;
-                background: url('resources/playerbar/play_31.png') 0 0 / contain no-repeat;
+                background: var(--play-31) 0 0 / contain no-repeat;
                 margin-top: -2px;
 
                 &:hover {
-                    background-image: url('resources/playerbar/play_31_hover.png');
+                    background-image: var(--play-31-hover);
                 }
 
                 &:active {
-                    background-image: url('resources/playerbar/play_31_pressed.png');
+                    background-image: var(--play-31-pressed);
+                }
+
+                &:has(path[d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"]),
+                &:has(path[d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7z"]) {
+                    background-image: var(--pause-31) !important;
+
+                    &:hover {
+                        background-image: var(--pause-31-hover) !important;
+                    }
+
+                    &:active {
+                        background-image: var(--pause-31-pressed) !important;
+                    }
                 }
 
                 span {
@@ -231,46 +246,6 @@ section[data-testid="playlist-page"],
         }
         .main-actionBar-ActionBar {
             background-color: #222222;
-        }
-    }
-}
-
-@media (forced-colors: active) {
-    .playlist-playlist-playlist,
-    section[data-testid="playlist-page"],
-    :root[data-page^="/collection/"] main {
-        .main-trackList-trackListHeader {
-            background: var(--surface) !important;
-            border-image: none !important;
-            box-shadow: none !important;
-
-            .main-trackList-trackListHeaderRow {
-
-                > div {
-                    border-image: none !important;
-                    box-shadow: var(--border-raised-outer), var(--border-raised-inner);
-
-                    > div:not(#Prio1) {
-                        color: ButtonText !important;
-                        [class*=encore-text], button {
-                            color: ButtonText !important;
-                        }
-                        svg:has(path[d="m14 6-6 6-6-6h12z"]),
-                        svg:has(path[d="M14 10 8 4l-6 6h12z"]) {
-                            fill: ButtonText !important;
-                        }
-                        svg:has(path[d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"]) {
-                            fill: ButtonText !important;
-                        }
-                    }
-
-                    &.has-button {
-                        &:active {
-                            box-shadow: var(--button-shadow-color) -1px -1px inset, var(--button-shadow-color) 1px 1px inset;
-                        }
-                    }
-                }
-            }
         }
     }
 }

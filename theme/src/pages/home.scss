@@ -20,6 +20,16 @@
             border-color: var(--item-hover-border);
         }
 
+        &:focus-within {
+            background: var(--item-selection-background);
+            border-color: var(--item-active-border);
+        }
+
+        &:hover:focus-within {
+            background: var(--item-selection-hover-background);
+            border-color: var(--item-selection-hover-border);
+        }
+
         .view-homeShortcutsGrid-imageContainer {
             padding: 4px;
             margin-top: -1px;
@@ -47,7 +57,10 @@
                     opacity: 0;
                 }
 
-                &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]) {
+                &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"]),
+                &:has(path[d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7H5.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7h-2.6z"]),
+                &:has(path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]),
+                &:has(path[d="M5.7 3a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7zm10 0a.7.7 0 0 0-.7.7v16.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V3.7a.7.7 0 0 0-.7-.7z"]) {
                     background-image: var(--pause) !important;
     
                     &:hover {
@@ -120,86 +133,12 @@
             }
         }
     }
-
-    .main-shelf-shelfGrid > div,
-    .search-searchCategory-categoryGrid > div[role="presentation"] > div { /* home carousel */
-        border: solid 1px transparent;
-        border-radius: 3px;
-
-        &::after {
-            display: none;
-        }
-
-        &:hover {
-            background: var(--item-hover-background);
-            border-color: var(--item-hover-border);
-        }
-    }
-
-    .main-card-imageContainer {
-        > div:first-child {
-            border-radius: 0;
-            box-shadow: var(--album-shadow-big);
-
-            img {
-                border-radius: 0;
-            }
-        }
-
-        .main-card-PlayButtonContainer {
-            button {
-                width: 42px;
-                height: 43px;
-                background: var(--play) no-repeat;
-
-                &:hover {
-                    background-image: var(--play-hover);
-                }
-
-                &:active {
-                    background-image: var(--play-pressed);
-                }
-
-                span {
-                    opacity: 0;
-                }
-            }
-
-            &.main-card-PlayButtonContainerVisible { /* Currently playing playlist - show pause button */
-                button {
-                    background-image: var(--pause) ;
-
-                    &:hover {
-                        background-image: var(--pause-hover);
-                    }
-
-                    &:active {
-                        background-image: var(--pause-pressed);
-                    }
-                }
-            }
-        }
-    }
 }
 
 @media (forced-colors: active) {
     .main-home-content {
         .view-homeShortcutsGrid-shortcut:hover a {
             color: var(--hilight-text);
-        }
-
-        .main-shelf-shelfGrid > div,
-        .search-searchCategory-categoryGrid > div[role="presentation"] > div { /* home carousel */
-            &:hover {
-                background: var(--item-hover-background);
-                border-color: var(--item-hover-border);
-
-                .LineClamp, .LineClamp * {
-                    color: var(--hilight-text) !important;
-                    background-color: var(--hilight) !important;
-                    forced-color-adjust: none !important;
-                }
-            }
         }
 
         section:not(.main-shelf-shelfGrid):not(.view-homeShortcutsGrid-shortcuts) {

@@ -21,7 +21,8 @@
     .main-nowPlayingBar-nowPlayingBar.tinted .playback-bar,
     .main-nowPlayingBar-nowPlayingBar.tinted .main-nowPlayingBar-right,
     .main-trackList-trackListHeader,
-    .main-yourLibraryX-filterArea + div {
+    .main-yourLibraryX-filterArea + div,
+    .main-yourLibraryX-libraryRootlist div[role="grid"] > div[role="row"] {
         filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
     }
 
@@ -33,10 +34,11 @@
         .main-actionBar-ActionBarRow > div:first-child > button,
         .main-actionBar-ActionBarRow > span:first-child > div:first-child button,
         .main-topBar-topbarContent > div:first-child button,
-        &[data-page^="/content-feed"] .Root__main-view div[role="list"] button[data-encore-id="buttonPrimary"],
         .artist-artistDiscography-cardGrid > div button,
         div[data-testid="top-result-card"] > div > div button,
         .main-yourLibraryX-libraryContainer div[data-encore-id="card"] > div:nth-child(3) > div > div button,
+        div[class^="Box__BoxComponent-"][class*="isInteractive"] button[data-encore-id="buttonPrimary"],
+        div[class*="e-"][class*="-box--interactive"] button[data-encore-id="buttonPrimary"],
 
         /* Toolbar buttons */
         .wmpotify-toolbar-button:not(#wmpotify-queue-clear-button),
@@ -44,15 +46,20 @@
         button[role="combobox"],
         header nav li,
         [class*="LegacyChipComponent-checkbox-chip-sm-"],
+        [class*="LegacyChipComponent-presentation-chip-sm-"] /* 1.2.68 */,
 
         /* Misc */
         .x-filterBox-searchIconContainer,
         .x-filterBox-clearButton,
+        .playlist-inlineSearchBox-searchIconContainer,
+        .playlist-inlineSearchBox-clearButton,
         #wmpotify-search-clear-button,
         div[data-testid="PanelHeader_CloseButton"] > button,
         #wmpotify-config-prev,
         #wmpotify-config-next,
-        &[data-page^="/user/"] main > section .main-entityHeader-imageContainer .main-entityHeader-image:after {
+        &[data-page^="/user/"] main > section .main-entityHeader-imageContainer .main-entityHeader-image:after,
+        .profile-userEditDetails-content .main-entityHeader-image:after,
+        #searchPage div[aria-labelledby^="card-title-spotify:user:"] .main-card-imageContainer::after {
             filter: hue-rotate(var(--wmpotify-tint-hue)) saturate(var(--wmpotify-tint-sat));
         }
     }

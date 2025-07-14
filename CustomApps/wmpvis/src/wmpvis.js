@@ -29,6 +29,7 @@ let idle = false;
 let visConfig = {};
 
 const arraySizeOrig = 96;
+const arraySizeDesktop = 128;
 const arraySizeReduced = 49;
 let arraySize = localStorage.wmpotifyVisDontReduceBars ? arraySizeOrig : arraySizeReduced;
 
@@ -37,10 +38,10 @@ let interval, fpsDetectorInterval;
 let updatesPerSecond = 0;
 let actualFps = fps;
 
-const lastAud = new Array(96).fill(0);
-const lastBar = new Array(96).fill(0);
-const lastTop = new Array(96).fill(0);
-const topSpeed = new Array(96).fill(0);
+const lastAud = new Array(128).fill(0);
+const lastBar = new Array(128).fill(0);
+const lastTop = new Array(128).fill(0);
+const topSpeed = new Array(128).fill(0);
 
 let lastIndex = 0;
 
@@ -88,22 +89,39 @@ async function wallpaperAudioListener() {
         return;
     }
 
-    const index = findAudioArray(lastIndex);
+    let isUsingDesktopAudio = globalThis.wmpvisDesktopAudioCapturer?.stream?.active &&
+        Spicetify.Platform.ConnectAPI.state.connectionStatus !== 'connected' &&
+        visConfig.sysAudioOverSpotify;
     let audioArray;
-    if (index < 0) {
-        audioArray = new Array(arraySizeOrig).fill(0);
-        lastIndex = 0;
-    } else {
-        audioArray = audioData[index]?.slice(1) || new Array(arraySizeOrig).fill(0);
-        const same = index === lastIndex;
-        if (same) {
-            audioArray = new Array(arraySizeOrig).fill(0);
+
+    if (!isUsingDesktopAudio) {
+        const index = findAudioArray(lastIndex);
+        if (index < 0) { // No Spotify-provided audio data available
+            if (globalThis.wmpvisDesktopAudioCapturer?.stream?.active) {
+                isUsingDesktopAudio = true;
+            } else {
+                audioArray = new Array(arraySizeOrig).fill(0);
+            }
+            lastIndex = 0;
+        } else {
+            audioArray = audioData[index]?.slice(1) || new Array(arraySizeOrig).fill(0);
+            const same = index === lastIndex;
+            if (same) {
+                audioArray = new Array(arraySizeOrig).fill(0);
+            }
+            lastIndex = index;
         }
-        lastIndex = index;
+    }
+    if (isUsingDesktopAudio) {
+        const audioArrayL = new Uint8Array(arraySizeDesktop / 2);
+        const audioArrayR = new Uint8Array(arraySizeDesktop / 2);
+        globalThis.wmpvisDesktopAudioCapturer.analyserL.getByteFrequencyData(audioArrayL);
+        globalThis.wmpvisDesktopAudioCapturer.analyserR.getByteFrequencyData(audioArrayR);
+        audioArray = Array.from(audioArrayL.reverse()).concat(Array.from(audioArrayR)).map(i => i / 256);
     }
 
     // Optimization
-    if (idle) {
+    if (idle && !isUsingDesktopAudio) {
         if (audioArray[Math.round(Math.random() * (arraySize - 1))] <= 0.0001) {
             return;
         }
@@ -115,13 +133,23 @@ async function wallpaperAudioListener() {
     // Reduce the number of bars to make it look like WMP
     if (visConfig.reduceBars) {
         arraySize = arraySizeReduced;
-        for (let i = 0; i < audioArray.length - 2; i += 2) {
-            audioArray[i / 2] = (audioArray[i] + audioArray[i + 1]) / 2;
+        if (isUsingDesktopAudio) {
+            const step = (arraySizeDesktop - 2) / (arraySizeReduced - 2);
+            for (let i = 0; i < arraySizeReduced - 2; i++) {
+                const idx = Math.floor(i * step);
+                audioArray[i] = (audioArray[idx] + audioArray[idx + 1]) / 2;
+            }
+            audioArray[arraySizeReduced - 2] = audioArray[arraySizeDesktop - 2];
+            audioArray[arraySizeReduced - 1] = audioArray[arraySizeDesktop - 1];
+        } else {
+            for (let i = 0; i < audioArray.length - 2; i += 2) {
+                audioArray[i / 2] = (audioArray[i] + audioArray[i + 1]) / 2;
+            }
+            audioArray[arraySizeReduced - 2] = audioArray[arraySizeOrig - 2];
+            audioArray[arraySizeReduced - 1] = audioArray[arraySizeOrig - 1];
         }
-        audioArray[arraySizeReduced - 2] = audioArray[arraySizeOrig - 2];
-        audioArray[arraySizeReduced - 1] = audioArray[arraySizeOrig - 1];
     } else {
-        arraySize = arraySizeOrig;
+        arraySize = isUsingDesktopAudio ? arraySizeDesktop : arraySizeOrig;
     }
 
     // Clear the canvas
@@ -224,6 +252,7 @@ export function updateVisConfig() {
         diffScale: parseFloat(localStorage.wmpotifyVisDiffScale || 0.07),
         reduceBars: !localStorage.wmpotifyVisDontReduceBars,
         fpsSet: !!localStorage.wmpotifyVisFPS,
+        sysAudioOverSpotify: !!localStorage.wmpotifyVisSysAudioOverSpotify
     };
     if (localStorage.wmpotifyVisAutoSizeBars) {
         delete visConfig.barWidth;
@@ -271,9 +300,9 @@ function loadAlbumArt() {
         const size = localStorage.wmpotifyVisAlbumArtSrcSize || 'standard';
         const image = images.find((img) => img.label === size || img.label === 'large' || img.label === 'xlarge');
         if (image) {
-            albumArt.src = image.url.replace('spotify:image:', 'https://i.scdn.co/image/');
+            albumArt.src = image.url;
         } else {
-            albumArt.src = images[0].url.replace('spotify:image:', 'https://i.scdn.co/image/');
+            albumArt.src = images[0].url;
         }
     } else {
         albumArt.src = '';
@@ -359,6 +388,16 @@ function updateAlbumArtSize() {
     App.setState({ albumArtSizeProps: props, albumArtSize: mode });
 }
 
+export async function loadAudioData() {
+    try {
+        audioData = await spAudioDataToFrequencies();
+        App.setState({ noAudioData: false });
+    } catch {
+        audioData = null;
+        App.setState({ noAudioData: true });
+    }
+}
+
 async function setupListeners() {
     console.log('Setting up listeners');
     try {
@@ -367,7 +406,7 @@ async function setupListeners() {
     } catch {
         // Retry after 1 second
         initAttempts++;
-        if (initAttempts > 5) {
+        if (initAttempts > 3) {
             App.setState({ noAudioData: true });
         } else {
             setTimeout(setupListeners, 1000);
@@ -406,8 +445,10 @@ async function setupListeners() {
             updateAlbumArtColor();
         }
         ButterchurnAdaptor.setAudioData(audioData || []);
+        ButterchurnAdaptor.launchSongTitleAnim();
     });
     ButterchurnAdaptor.setAudioData(audioData || []);
+    ButterchurnAdaptor.launchSongTitleAnim();
     if (interval) {
         clearInterval(interval);
     }
@@ -448,6 +489,7 @@ export async function init(elemRefs) {
 
     if (visConfig.type === 'milkdrop') {
         ButterchurnAdaptor.init(visBC, debugView);
+        ButterchurnAdaptor.launchSongTitleAnim();
     }
 
     MadVisLyrics.init(elemRefs.lyrics.current);

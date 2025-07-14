@@ -2,13 +2,14 @@
 
 import React from 'react'
 import Strings from './strings';
-import { init, updateVisConfig, uninit } from './wmpvis';
+import { init, updateVisConfig, loadAudioData, uninit } from './wmpvis';
 import ButterchurnAdaptor from './butterchurn/adaptor';
 import MadVisLyrics from './lyrics/main';
 import lrcCache from './lyrics/caching';
 import { checkUpdates } from './UpdateCheck';
 import { openConfigDialog } from './config';
 import { promptModal } from './dialogs';
+import { setupDesktopAudioCapture } from './DesktopAudio';
 
 let appInstance = null;
 
@@ -57,6 +58,7 @@ class App extends React.Component {
       enableLyricsCache: !localStorage.wmpotifyVisLyricsNoCache,
       isFullscreen: !!document.fullscreenElement,
       noAudioData: false,
+      desktopAudioAvailable: globalThis.wmpvisDesktopAudioCapturer?.stream?.active,
       debugMode: false,
       updateAvailable: false
     };
@@ -134,10 +136,10 @@ class App extends React.Component {
 
   changeVisType = (type) => {
     localStorage.wmpotifyVisType = type;
-    updateVisConfig();
     this.setState({
       type: type
     });
+    updateVisConfig();
     if (!localStorage.wmpotifyVisUseSchemeColors && !localStorage.wmpotifyVisBgColor && !(this.state.followAlbumArt && this.state.bgColorFromAlbumArt)) {
       this.setState({
         bgColor: type === "albumArt" ? "var(--spice-main)" : "black"
@@ -345,6 +347,9 @@ class App extends React.Component {
             label="Adjust Sync"
             onClick={async () => {
               const syncDelay = await promptModal(Strings["MENU_LRC_ADJUST_SYNC"], Strings["UI_PROMPT_ENTER_VALUE"], "", this.state.syncDelay);
+              if (syncDelay === null) {
+                return;
+              }
               if (syncDelay) {
                 localStorage.wmpotifyVisLyricsSyncDelay = syncDelay;
               } else {
@@ -566,30 +571,41 @@ class App extends React.Component {
               position: "absolute",
               top: 0,
               left: 0,
-              zIndex: 3
+              zIndex: 4
             }}
             ref={this.elemRefs.debug}
           ></p>
           <p
             className="wmpotify-no-audio-notification"
             style={{
-              display: this.state.noAudioData && ["bars", "milkdrop"].includes(this.state.type) ? "block" : "none",
+              display: this.state.noAudioData && !this.state.desktopAudioAvailable && ["bars", "milkdrop"].includes(this.state.type) ? "block" : "none",
               color:
-                this.state.type !== "milkdrop" ?
+                this.state.type !== "milkdrop" && !this.state.showLyrics ?
                   this.state.followAlbumArt && this.state.bgColorFromAlbumArt ?
                     this.state.albumArtTopColor :
                     localStorage.wmpotifyVisUseSchemeColors ?
                       this.state.schemeTopColor :
                         localStorage.wmpotifyVisTopColor || "white"
                   : "white",
-              backgroundColor: this.state.type !== "milkdrop" ? "transparent" : "rgba(0, 0, 0, 0.5)",
+              backgroundColor: this.state.type !== "milkdrop" && !this.state.showLyrics ? "transparent" : "rgba(0, 0, 0, 0.5)",
               position: "absolute",
               left: 0,
               bottom: 0,
-              zIndex: 4
+              zIndex: 6
             }}
           >
-            {Strings['NO_AUD_DATA']}
+            {Strings['NO_AUD_DATA']}<br />
+            <a
+              style={{    
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                color: 'inherit' // 1.2.64
+              }}
+              title={Strings["VISCONF_SYSAUDIO_SETUP_DESC"]}
+              onClick={setupDesktopAudioCapture}
+            >
+              {Strings['SYSAUDIO_SETUP']}
+            </a>
           </p>
           <div
             className="wmpvis-lyrics-container"
@@ -599,7 +615,7 @@ class App extends React.Component {
               position: "absolute",
               top: 0,
               left: 0,
-              zIndex: 4,
+              zIndex: 5,
               width: "100%",
               height: "100%",
               backgroundColor: this.state.type === "none" ? "transparent" : "rgba(0, 0, 0, 0.5)",
@@ -622,7 +638,7 @@ class App extends React.Component {
         </section>
       </Spicetify.ReactComponent.ContextMenu>
     </>
-  } 
+  }
 }
 
 export default App;
