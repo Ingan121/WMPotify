@@ -16,8 +16,8 @@ get_latest_versions() {
         exit 1
     fi
 
-    theme_version=$(echo "$latest_versions" | grep 'wmpotify\s*=' | awk -F '=' '{print $2}' | tr -d ' ')
-    vis_version=$(echo "$latest_versions" | grep 'wmpvis\s*=' | awk -F '=' '{print $2}' | tr -d ' ')
+    theme_version=$(echo "$latest_versions" | grep 'wmpotify_new\s*=' | awk -F '=' '{print $2}' | tr -d ' ')
+    vis_version=$(echo "$latest_versions" | grep 'wmpvis_new\s*=' | awk -F '=' '{print $2}' | tr -d ' ')
 
     echo "$theme_version" "$vis_version"
 }

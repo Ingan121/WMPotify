@@ -614,8 +614,8 @@ function Get-LatestVersions {
         } catch {
             Write-Error -Message "Failed to download: $($_.Exception.Message). Please check your internet connection and try again."
         }
-        $themeVer = foreach ($line in $verContent | Select-String -Pattern 'wmpotify\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
-        $visVer = foreach ($line in $verContent | Select-String -Pattern 'wmpvis\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
+        $themeVer = foreach ($line in $verContent | Select-String -Pattern 'wmpotify_new\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
+        $visVer = foreach ($line in $verContent | Select-String -Pattern 'wmpvis_new\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
         $cteVer = foreach ($line in $verContent | Select-String -Pattern 'cte\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
         $whVer = foreach ($line in $verContent | Select-String -Pattern 'wh\s*=\s*(.+)') { $line.Matches[0].Groups[1].Value }
     }

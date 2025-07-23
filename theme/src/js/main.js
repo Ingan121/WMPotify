@@ -10,7 +10,7 @@ import { initQueuePanel } from './pages/queue';
 import WindhawkComm from './WindhawkComm';
 import PageManager from './managers/PageManager';
 import WindowManager from './managers/WindowManager';
-import { ver, checkUpdates, compareVersions, compareSpotifyVersion } from './utils/UpdateCheck';
+import { ver, checkUpdates, compareSpotifyVersion, MadVersion } from './utils/UpdateCheck';
 import { openUpdateDialog, openWmpvisInstallDialog, promptModal, confirmModal } from './ui/dialogs';
 import ThemeManager from './managers/ThemeManager';
 import { ylxKeyPrefix } from "./pages/libx";
@@ -225,6 +225,7 @@ globalThis.WMPotify = {
         createMadMenu,
         MadMenu,
     },
+    MadVersion,
     setTintColor,
     checkUpdates
 };
@@ -261,10 +262,10 @@ async function init() {
         document.querySelector('.Root__right-sidebar div[class]') // Works on .45-.52
     , { childList: true });
 
-    if (!localStorage.wmpotifyLastVer || compareVersions(localStorage.wmpotifyLastVer, ver) < 0) {
-        openUpdateDialog(true, ver);
+    if (!localStorage.wmpotifyLastVer || ver.compare(localStorage.wmpotifyLastVer) < 0) {
+        openUpdateDialog(true, ver.toString(0));
     }
-    localStorage.wmpotifyLastVer = ver;
+    localStorage.wmpotifyLastVer = ver.toString(0);
     if (!localStorage.wmpotifyNoUpdateCheck) {
         checkUpdates();
     }
