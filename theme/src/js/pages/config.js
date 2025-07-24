@@ -6,11 +6,10 @@ import FontDetective from "../utils/FontDetective";
 import { setTintColor } from "../ui/tinting";
 import WindhawkComm from "../WindhawkComm";
 import WindowManager from "../managers/WindowManager";
-import { checkUpdates } from "../utils/UpdateCheck";
+import { ver, checkUpdates } from "../utils/UpdateCheck";
 import ThemeManager from "../managers/ThemeManager";
 import { ylxKeyPrefix } from "./libx";
 import { importScheme } from "../utils/appearance";
-import { ver } from "../utils/UpdateCheck";
 
 const configWindow = document.createElement('div');
 let tabs = null;

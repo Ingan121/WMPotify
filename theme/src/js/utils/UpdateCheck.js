@@ -4,36 +4,7 @@ import Strings from '../strings'
 import WindhawkComm from "../WindhawkComm";
 import { openUpdateDialog } from '../ui/dialogs';
 
-const verString = '1.1.1'; // Legacy version: 1.1a1
-
-export async function checkUpdates() {
-    try {
-        const isMarketplaceDist = !!document.querySelector('style.marketplaceUserCSS');
-        const cteAvailable = WindhawkComm.available();
-        const cteVer = WindhawkComm.getModule()?.version;
-
-        const res = await fetch('https://www.ingan121.com/wmpotify/latest-dev.txt');
-        const latest = await res.text();
-        const wmpotifyLatest = latest.match('wmpotify_new=(.*)')[1];
-        const cteLatest = latest.match('cte=(.*)')[1];
-
-        if (!isMarketplaceDist && ver.compare(wmpotifyLatest) < 0) {
-            if (localStorage.wmpotifyIgnoreVersion !== wmpotifyLatest) {
-                openUpdateDialog(false, wmpotifyLatest);
-            }
-        }
-
-        if (cteAvailable && compareVersions(cteVer, cteLatest) < 0) {
-            if (localStorage.wmpotifyLastCheckedWhVer !== cteLatest) {
-                Spicetify.showNotification('[WMPotify] ' + Strings.getString('CTEWH_UPDATE_MSG', cteLatest));
-            }
-        }
-        localStorage.wmpotifyLastCheckedWhVer = cteLatest;
-    } catch (e) {
-        // probably offline or my server is down
-        console.error(e);
-    }
-}
+const verString = '1.2.0';
 
 export class MadVersion {
     constructor(ver) {
@@ -87,7 +58,37 @@ export class MadVersion {
         return 0;
     }
 }
+
 export const ver = new MadVersion(verString);
+
+export async function checkUpdates() {
+    try {
+        const isMarketplaceDist = !!document.querySelector('style.marketplaceUserCSS');
+        const cteAvailable = WindhawkComm.available();
+        const cteVer = new MadVersion(WindhawkComm.getModule()?.version);
+
+        const res = await fetch('https://www.ingan121.com/wmpotify/latest.txt');
+        const latest = await res.text();
+        const wmpotifyLatest = latest.match('wmpotify_new=(.*)')[1];
+        const cteLatest = latest.match('cte=(.*)')[1];
+
+        if (!isMarketplaceDist && ver.compare(wmpotifyLatest) < 0) {
+            if (localStorage.wmpotifyIgnoreVersion !== wmpotifyLatest) {
+                openUpdateDialog(false, wmpotifyLatest);
+            }
+        }
+
+        if (cteAvailable && cteVer.compare(cteLatest) < 0) {
+            if (localStorage.wmpotifyLastCheckedWhVer !== cteLatest) {
+                Spicetify.showNotification('[WMPotify] ' + Strings.getString('CTEWH_UPDATE_MSG', cteLatest));
+            }
+        }
+        localStorage.wmpotifyLastCheckedWhVer = cteLatest;
+    } catch (e) {
+        // probably offline or my server is down
+        console.error(e);
+    }
+}
 
 export function compareSpotifyVersion(target) {
     let current = window?.Spicetify?.Platform?.version?.split('.').map(Number);
