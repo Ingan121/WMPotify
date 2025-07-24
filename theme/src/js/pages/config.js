@@ -6,7 +6,7 @@ import FontDetective from "../utils/FontDetective";
 import { setTintColor } from "../ui/tinting";
 import WindhawkComm from "../WindhawkComm";
 import WindowManager from "../managers/WindowManager";
-import { checkUpdates } from "../utils/UpdateCheck";
+import { ver, checkUpdates } from "../utils/UpdateCheck";
 import ThemeManager from "../managers/ThemeManager";
 import { ylxKeyPrefix } from "./libx";
 import { importScheme } from "../utils/appearance";
@@ -155,7 +155,7 @@ function init() {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: 1.1<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>${Strings['CONF_ABOUT_VERSION']}: ${ver.toString(0)}<span id="wmpotify-about-ctewh-ver"></span></p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>

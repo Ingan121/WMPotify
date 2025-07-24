@@ -86,7 +86,8 @@ const PageManager = {
         }
         const headerWrapper = document.querySelector('div[data-testid="topbar-content-wrapper"]');
         if (headerWrapper) {
-            headerWrapperObserver = new MutationObserver(PageManager.onMainContentMount).observe(headerWrapper, { childList: true });
+            headerWrapperObserver = new MutationObserver(PageManager.onMainContentMount);
+            headerWrapperObserver.observe(headerWrapper, { childList: true });
         }
     },
 
