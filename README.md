@@ -66,7 +66,7 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 * Warning: The Spicetify Marketplace version may load slowly due to the large number of images in the theme.
 
 ### Notes for Windows 7, 8, and 8.1 users:
-* The installation script requires PowerShell 5.1 or later. If you are using an older version, you can update it from [here](https://loadspot.pages.dev).
+* The installation script requires PowerShell 5.1 or later. If you are using an older version, you can update it from [here](https://www.microsoft.com/en-us/download/details.aspx?id=54616).
 * Before running the installation script, you will need to install WMPotify-compatible versions of Spotify and Spicetify manually and apply appropriate workarounds (e.g. [VxKex](https://github.com/i486/VxKex)) for them to work on your system.
 * You may need to run the Spotify executable with the `--no-sandbox` flag to get the Windhawk mod working properly with Aero Glass, etc. Add the flag to the Spotify shortcut, `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Spotify` (for autostart), and `spotify_launch_flags` key in `%appdata%\spicetify\config-xpui.ini` (for Spicetify).
 
@@ -98,7 +98,7 @@ curl -fsSL https://raw.githubusercontent.com/Ingan121/WMPotify/master/installer/
 ## Frequently Asked Questions
 1. **Q:** Queue list does not show up in the right panel
     * **A:** Check `Enable Queue on the right panel.` in the user button -> `Experimental features`.
-    * If this still does not work and the Experimental features popup shows `Using fallback mode`, you need to downgrade Spotify to a version fully supported by Spicetify. Old releases are available [here](https://docs.google.com/spreadsheets/d/1wztO1L4zvNykBRw7X4jxP8pvo11oQjT0O5DvZ_-S4Ok/edit?pli=1&gid=803394557#gid=803394557)
+    * If this still does not work and the Experimental features popup shows `Using fallback mode`, you need to downgrade Spotify to a version fully supported by Spicetify. Old releases are available [here](https://loadspot.pages.dev)
 2. **Q:** Aero Glass or the mini mode does not work
     * **A:** Currently those features are only available on Windows, and if you have installed the [CEF/Spotify Tweaks](https://windhawk.net/mods/cef-titlebar-enabler-universal) [Windhawk](https://windhawk.net/) mod. macOS is not supported now, and it needs more research to implement them.
     * For Linux, you can use [libcef-transparency-linux](https://github.com/fixpointer/libcef-transparency-linux) by [fixpointer](https://github.com/fixpointer) to enable transparency. You may need to apply additional mods like force blur.
