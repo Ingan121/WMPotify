@@ -2,7 +2,7 @@
 // @id              cef-titlebar-enabler-universal
 // @name            CEF/Spotify Tweaks
 // @description     Various tweaks for Spotify, including native frames, transparent windows, and more
-// @version         1.2
+// @version         1.3
 // @author          Ingan121
 // @github          https://github.com/Ingan121
 // @twitter         https://twitter.com/Ingan121
@@ -20,6 +20,7 @@
 * Only works on apps using native CEF top-level windows
     * Steam uses SDL for its top-level windows (except DevTools), so this mod doesn't work with Steam
 * Electron apps are NOT supported! Just patch asar to override `frame: false` to true in BrowserWindow creation
+* Try my [Titlebar for Everyone](https://windhawk.net/mods/titlebar-for-everyone) mod for other apps
 ## Features for Spotify
 * Enable native frames and title bars on the main window
 * Enable native frames and title bars on other windows, including Miniplayer, DevTools, etc.
@@ -32,13 +33,13 @@
 * Force enable Chrome extension support
 * Use the settings tab on the mod details page to configure the features
 ## Notes
-* Supported CEF versions: 90.4 to 134
+* Supported CEF versions: 90.4 to 138
     * This mod won't work with versions before 90.4
     * Versions after 132 may work, but are not tested
     * A variant of this mod, which uses copy-pasted CEF structs instead of hardcoded offsets, is available [here](https://github.com/Ingan121/files/tree/master/cte)
     * Copy the required structs/definitions from your wanted CEF version (available [here](https://cef-builds.spotifycdn.com/index.html)) and paste them into the above variant to calculate the offsets
     * Testing with cefclient: `cefclient.exe --use-views --hide-frame --hide-controls`
-* Supported Spotify versions: 1.1.60 to 1.2.65 (newer versions may work)
+* Supported Spotify versions: 1.1.60 to 1.2.70 (newer versions may work)
 * Spotify notes:
     * Old releases are available [here](https://loadspot.pages.dev/)
     * 1.1.60-1.1.67: Use [SpotifyNoControl](https://github.com/JulienMaille/SpotifyNoControl) to remove the window controls
@@ -169,8 +170,10 @@
 128: 1.2.47-1.2.48
 129: 1.2.49-1.2.50
 130: 1.2.51-1.2.52
-131: 1.2.53, 1.2.55-1.2.61
-134: 1.2.62-1.2.65
+131: 1.2.53-1.2.61
+134: 1.2.62-1.2.69
+138: 1.2.70
+See https://www.spotify.com/opensource/ for more
 */
 
 #include <libloaderapi.h>
@@ -199,7 +202,7 @@ using namespace std::string_view_literals;
 #define cef_window_handle_t HWND
 #define ANY_MINOR -1
 #define PIPE_NAME L"\\\\.\\pipe\\CTEWH-IPC"
-#define LAST_TESTED_CEF_VERSION 134
+#define LAST_TESTED_CEF_VERSION 138
 #define CR_RT_1ST_VERSION 119 // First Spotify version to support Chrome runtime
 
 // Win11 only DWM attributes for Windhawk 1.4
@@ -267,7 +270,7 @@ cte_offset_t get_window_handle_offsets[] = {
     {124, ANY_MINOR, 0x18c, 0x318},
     {130, ANY_MINOR, 0x18c, 0x318},
     {131, ANY_MINOR, 0x194, 0x328},
-    {136, ANY_MINOR, 0x194, 0x328}
+    {138, ANY_MINOR, 0x194, 0x328}
 };
 
 cte_offset_t set_background_color_offsets[] = {
@@ -602,7 +605,15 @@ LRESULT CALLBACK SubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             break;
         case WM_NCPAINT:
             if (hWnd == g_mainHwnd && FindWindowExW(g_mainHwnd, NULL, L"Intermediate D3D Window", NULL) != NULL && cte_settings.transparentrendering && !cte_settings.showframe && !IsDwmEnabled()) {
-                // Do not draw anything
+                // Paint black background in non-client area
+                HDC hdc = GetWindowDC(hWnd);
+                if (hdc) {
+                    RECT rect;
+                    GetWindowRect(hWnd, &rect);
+                    OffsetRect(&rect, -rect.left, -rect.top); // Convert to client-relative coords
+                    FillRect(hdc, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+                    ReleaseDC(hWnd, hdc);
+                }
                 return 0;
             }
         case WM_NCHITTEST:
@@ -2473,8 +2484,6 @@ BOOL Wh_ModInit() {
 
     LoadSettings();
 
-    char* pbExecutable = (char*)GetModuleHandle(NULL);
-
     #ifdef _WIN64
         const size_t OFFSET_SAME_TEB_FLAGS = 0x17EE;
     #else
@@ -2567,6 +2576,18 @@ BOOL Wh_ModInit() {
         Wh_SetFunctionHook((void*)CreateProcessAsUserW, (void*)CreateProcessAsUserW_hook,
                            (void**)&CreateProcessAsUserW_original);
 
+        char* pbExecutable = NULL;
+        // Spotify 1.2.70 (CEF 138) introduced a separate Spotify.dll which contains the core logic
+        // All the existing patch matches exist in this DLL
+        // Limit the Spotify.dll use only to 1.2.70 and above, as downgrading to older versions
+        //   from 1.2.70 does not remove the redundant Spotify.dll in the installation directory
+        if (major >= 138) {
+            pbExecutable = (char*)LoadLibrary(L"Spotify.dll");
+        }
+        if (pbExecutable == NULL) {
+            pbExecutable = (char*)GetModuleHandle(NULL);
+        }
+
         // Patch the executable in memory to enable transparent rendering, disable forced dark mode, or force enable extensions
         // (Pointless if done after CEF initialization though)
         if (cte_settings.transparentrendering && major >= CR_RT_1ST_VERSION) {
@@ -2574,7 +2595,7 @@ BOOL Wh_ModInit() {
                 Wh_Log(L"Enabled transparent rendering");
             }
         }
-        // Spotify 1.2.68+ (patch is not needed before that)
+        // Spotify 1.1.68+ (patch is not needed before that)
         if (cte_settings.noforceddarkmode && (major > 91 || (major == 91 && minor >= 3))) {
             if (DisableForcedDarkMode(pbExecutable, major)) {
                 Wh_Log(L"Disabled forced dark mode");
