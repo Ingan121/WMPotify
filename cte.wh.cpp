@@ -726,7 +726,14 @@ std::string ReplaceAll(std::string str, const std::string& from, const std::stri
 }
 
 // Pass an empty targetPatch to use it as a regex search
-int64_t PatchMemory(std::wstring identifier, char* pbExecutable, const std::string& targetRegex, const std::vector<uint8_t>& targetPatch, int expectedSection = -1, int maxMatch = -1) {
+// identifier: String to identify the match, used for caching
+// pbExecutable: Base address to search, pass EXE or DLL address
+// targetRegex: Target regex string to search
+// targetPatch: Bytes to replace the matched memory, pass an empty vector to use it as a simple regex search
+// expectedSection: Section number to search, pass -1 to search all
+// maxMatch: Max numbers of matches, pass -1 to search the whole memory region for all matches (not recommended for performance reasons)
+// verifyRegex: Regex string to use for verifying the cache match
+int64_t PatchMemory(std::wstring identifier, char* pbExecutable, const std::string& targetRegex, const std::vector<uint8_t>& targetPatch, int expectedSection = -1, int maxMatch = -1, const std::string& verifyRegex = "") {
     IMAGE_DOS_HEADER* pDosHeader = (IMAGE_DOS_HEADER*)pbExecutable;
     IMAGE_NT_HEADERS* pNtHeader = (IMAGE_NT_HEADERS*)((char*)pDosHeader + pDosHeader->e_lfanew);
     IMAGE_SECTION_HEADER* pSectionHeader = (IMAGE_SECTION_HEADER*)((char*)&pNtHeader->OptionalHeader + pNtHeader->FileHeader.SizeOfOptionalHeader);
@@ -756,6 +763,9 @@ int64_t PatchMemory(std::wstring identifier, char* pbExecutable, const std::stri
                     Wh_Log(L"Cache offset out of bounds; invalidating...");
                     Wh_DeleteValue(key.c_str());
                 } else {
+                    if (!verifyRegex.empty()) {
+                        regex = std::regex(verifyRegex, std::regex::optimize);
+                    }
                     std::string_view candidate(pbExecutable + cachedOffset, targetRegex.size());
                     if (std::regex_search(candidate.begin(), candidate.end(), regex)) {
                         char* addr = pbExecutable + cachedOffset;
@@ -783,6 +793,9 @@ int64_t PatchMemory(std::wstring identifier, char* pbExecutable, const std::stri
                             continue;
                         }
                         std::string_view candidate(pbExecutable + cachedOffset, targetPatch.size());
+                        if (!verifyRegex.empty()) {
+                            regex = std::regex(verifyRegex, std::regex::optimize);
+                        }
                         if (std::regex_search(candidate.begin(), candidate.end(), regex)) {
                             char* addr = pbExecutable + cachedOffset;
                             DWORD oldProtect;
@@ -1095,17 +1108,20 @@ SetPlaybackSpeed_t SetPlaybackSpeed;
 // Find this function with xref of string "Setting playback speed to %d percent (playback_id %s) from %d percent"
 // This function's various numbers are different in every version, so we need to perform a regex search
 const std::string SetPlaybackSpeed_instructions =
-    R"(\x48\x8B\xC4)"              // mov rax, rsp (beginning of function)
-    R"(\x48\x89\x58\x18)"          // mov [rax+18h], rbx
-    R"(\x48\x89\x70\x20)"          // mov [rax+20h], rsi
-    R"(\x55\x57\x41\x56)"          // push rbp, push rdi, push r14
-    R"(\x48\x8D\xA8.?\xFD\xFF\xFF)"; // lea rbp, [rax-??h]
+    R"(\x48\x8B\xC4)"                  // mov rax, rsp (beginning of function)
+    R"(\x48\x89\x58\x18)"              // mov [rax+18h], rbx
+    R"(\x48\x89\x70\x20)"              // mov [rax+20h], rsi
+    R"(\x55\x57\x41\x56)"              // push rbp, push rdi, push r14
+    R"(\x48\x8D\xA8.?\xFD\xFF\xFF)";   // lea rbp, [rax-??h]
 const std::string SetPlaybackSpeed_instructions_2 = // 1.2.68+
-    R"(\x48\x8B\xC4)"              // mov rax, rsp (beginning of function)
-    R"(\x48\x89\x58\x18)"          // mov [rax+18h], rbx
-    R"(\x55\x56\x57)"              // push rbp, push rsi, push rdi
-    R"(\x41\x54\x41\x56)"          // push r12, push r14
+    R"(\x48\x8B\xC4)"                  // mov rax, rsp (beginning of function)
+    R"(\x48\x89\x58\x18)"              // mov [rax+18h], rbx
+    R"(\x55\x56\x57)"                  // push rbp, push rsi, push rdi
+    R"(\x41\x54\x41\x56)"              // push r12, push r14
     R"(\x48\x8D\xA8\x58\xFC\xFF\xFF)"; // lea rbp, [rax-??h]
+const std::string SetPlaybackSpeed_prologue =
+    R"(\x48\x8B\xC4)"                  // mov rax, rsp (beginning of function)
+    R"(\x48\x89\x58\x18)";             // mov [rax+18h], rbx
 
 // Only works on Spotify x64 1.2.36 and newer
 // No plans to support x86 or older versions
@@ -1151,9 +1167,9 @@ BOOL HookCreateTrackPlayer(char* pbExecutable, BOOL shouldFindSetPlaybackSpeed) 
     // Don't find SetPlaybackSpeed on a known unsupported version, as finding non-existent instructions will delay startup
     if (shouldFindSetPlaybackSpeed) {
         // Try the new one first, as the old one has matches to other functions, causing crashes when wrongly called
-        SetPlaybackSpeed = (SetPlaybackSpeed_t)PatchMemory(L"SetPlaybackSpeed", pbExecutable, SetPlaybackSpeed_instructions_2, {}, 0, 1);
+        SetPlaybackSpeed = (SetPlaybackSpeed_t)PatchMemory(L"SetPlaybackSpeed", pbExecutable, SetPlaybackSpeed_instructions_2, {}, 0, 1, SetPlaybackSpeed_prologue);
         if (SetPlaybackSpeed == NULL) {
-            SetPlaybackSpeed = (SetPlaybackSpeed_t)PatchMemory(L"SetPlaybackSpeed", pbExecutable, SetPlaybackSpeed_instructions, {}, 0, 1);
+            SetPlaybackSpeed = (SetPlaybackSpeed_t)PatchMemory(L"SetPlaybackSpeed", pbExecutable, SetPlaybackSpeed_instructions, {}, 0, 1, SetPlaybackSpeed_prologue);
         }
         Wh_Log(L"SetPlaybackSpeed at %p", SetPlaybackSpeed);
     }
