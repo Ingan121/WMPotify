@@ -167,7 +167,8 @@
               margin-top: 9px;
             }
 
-            &.Vz3pFUXmll6fKB5Fc4nd { /* Bottom separator */
+            &.Vz3pFUXmll6fKB5Fc4nd,
+            &.main-contextMenu-dividerAfter { /* Bottom separator */
               &::before {
                 content: "";
                 position: absolute;
@@ -197,6 +198,13 @@
             transform: scale(0.6);
             --text-subdued: var(--menu-text);
           }
+        }
+
+        div.main-contextMenu-dividerAfter { /* 1.2.69 */
+          border-top: solid 1px var(--button-shadow-color);
+          border-bottom: solid 1px var(--button-hilight);
+          margin: 4px 0 3px 1px;
+          width: calc(100% - 1px);
         }
 
         /* 1.2.61 LibX view chooser */

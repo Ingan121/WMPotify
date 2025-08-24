@@ -24,13 +24,19 @@
           > button,
           > a {
             &.vvMORUKtQKpQcpQ992bR,
-            &.Vz3pFUXmll6fKB5Fc4nd {
+            &.Vz3pFUXmll6fKB5Fc4nd,
+            &.main-contextMenu-dividerAfter {
               &::before {
                 border-top: solid 1px var(--button-shadow-color);
                 border-bottom: solid 1px transparent;
               }
             }
           }
+        }
+
+        div.main-contextMenu-dividerAfter { /* 1.2.69 */
+          border-top: solid 1px var(--button-shadow-color);
+          border-bottom: solid 1px transparent;
         }
         
         &:has(+ [role="menu"]) {

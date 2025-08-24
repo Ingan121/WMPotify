@@ -33,10 +33,10 @@ async function initTitlebar(mode) {
 
     switch (mode) {
         case 'native':
-            new ControlManager(0);
+            new ControlManager(1);
             break;
         case 'custom':
-            new ControlManager(0);
+            new ControlManager(1);
         case 'keepmenu':
             const titleButtons = document.createElement('div');
             titleButtons.id = 'wmpotify-title-buttons';

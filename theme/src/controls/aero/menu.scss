@@ -190,7 +190,8 @@
               margin-top: 9px;
             }
 
-            &.Vz3pFUXmll6fKB5Fc4nd { /* Bottom separator */
+            &.Vz3pFUXmll6fKB5Fc4nd,
+            &.main-contextMenu-dividerAfter { /* Bottom separator */
               &::before {
                 content: "";
                 position: absolute;
@@ -218,6 +219,13 @@
             left: 4px;
             transform: scale(0.75);
           }
+        }
+
+        div.main-contextMenu-dividerAfter { /* 1.2.69 */
+          border-top: solid 1px var(--menu-separator-border-top-color);
+          border-bottom: solid 1px var(--menu-separator-border-bottom-color);
+          margin: 3px 0 4px 30px;
+          width: calc(100% - 31px);
         }
 
         /* 1.2.61 LibX view chooser */

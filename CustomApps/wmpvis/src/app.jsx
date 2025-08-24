@@ -81,7 +81,6 @@ class App extends React.Component {
     }
     // This interferes with the right-click menu on non-WMPotify themes
     // Since this bar is empty when global nav is enabled, just hide it
-    // (And this bar is always re-rendered on page navigation, so no need to restore it on unmount)
     const hideTarget = document.querySelector('.main-topBar-container');
     const isGlobalNav = !!document.querySelector('.Root__globalNav');
     if (hideTarget) {
@@ -131,6 +130,10 @@ class App extends React.Component {
     const resizeTarget3 = resizeTarget2.parentElement;
     if (resizeTarget3) {
       resizeTarget3.style.height = '';
+    }
+    const showTarget = document.querySelector('.main-topBar-container');
+    if (showTarget) {
+      showTarget.style.display = '';
     }
   }
 

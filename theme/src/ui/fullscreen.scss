@@ -3,6 +3,13 @@
         background-color: var(--wmp11-window) !important;
     }
 
+    .Root__top-container {
+        grid-template-areas: "global-nav global-nav global-nav"
+            "left-sidebar    main-view         right-sidebar"
+            "now-playing-bar now-playing-bar now-playing-bar";
+        grid-template-rows: auto 1fr auto;
+    }
+
     .Root__globalNav {
         display: none;
     }
