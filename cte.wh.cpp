@@ -1103,11 +1103,11 @@ SetPlaybackSpeed_t SetPlaybackSpeed;
 // Find this function with xref of string "Setting playback speed to %d percent (playback_id %s) from %d percent"
 // This function's various numbers are different in every version, so we need to perform a regex search
 const std::string SetPlaybackSpeed_instructions =
-    R"(\x48\x8B\xC4)"                  // mov rax, rsp (beginning of function)
-    R"(\x48\x89\x58\x18)"              // mov [rax+18h], rbx
-    R"(\x48\x89\x70\x20)"              // mov [rax+20h], rsi
-    R"(\x55\x57\x41\x56)"              // push rbp, push rdi, push r14
-    R"(\x48\x8D\xA8.?\xFD\xFF\xFF)";   // lea rbp, [rax-??h]
+    R"(\x48\x8B\xC4)"                // mov rax, rsp (beginning of function)
+    R"(\x48\x89\x58\x18)"            // mov [rax+18h], rbx
+    R"(\x48\x89\x70\x20)"            // mov [rax+20h], rsi
+    R"(\x55\x57\x41\x56)"            // push rbp, push rdi, push r14
+    R"(\x48\x8D\xA8.?\xFD\xFF\xFF)"; // lea rbp, [rax-??h]
 
 // Only works on Spotify x64 1.2.36 and newer
 // No plans to support x86 or older versions
@@ -1141,7 +1141,6 @@ BOOL HookCreateTrackPlayer(char* pbExecutable, BOOL shouldFindSetPlaybackSpeed) 
     // This only works on Spotify x64 1.2.45 and newer
     // Don't find SetPlaybackSpeed on a known unsupported version, as finding non-existent instructions will delay startup
     if (shouldFindSetPlaybackSpeed) {
-        // Try the new one first, as the old one has matches to other functions, causing crashes when wrongly called
         SetPlaybackSpeed = (SetPlaybackSpeed_t)PatchMemory(L"SetPlaybackSpeed", pbExecutable, SetPlaybackSpeed_instructions, {}, 0, 1);
         Wh_Log(L"SetPlaybackSpeed at %p", SetPlaybackSpeed);
     }
