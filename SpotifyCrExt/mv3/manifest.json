@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Spotify API Extender (MV3)",
+  "version": "1.1",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://xpui.app.spotify.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "externally_connectable": {
+    "ids": ["*"],
+    "matches": ["https://xpui.app.spotify.com/*"]
+  },
+  "permissions": [
+    "tabs",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["exposed.js"],
+      "matches": ["https://xpui.app.spotify.com/*"]
+    }
+  ]
+}

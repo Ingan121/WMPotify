@@ -51,6 +51,7 @@ window.SpotEx = {
 }
 
 window.addEventListener("load", function() {
+    let attempts = 0;
     const interval = setInterval(() => {
         if (window.Spicetify) {
             try {
@@ -64,7 +65,13 @@ window.addEventListener("load", function() {
                 clearInterval(interval);
             } catch {
                 // Not ready
+                attempts++;
             }
+        } else {
+            attempts++;
+        }
+        if (attempts > 100) {
+            clearInterval(interval);
         }
     }, 100);
 });
