@@ -115,12 +115,8 @@
             }
 
             /* Checkmark */
-            &:has(
-                path[d="M15.53 2.47a.75.75 0 0 1 0 1.06L4.907 14.153.47 9.716a.75.75 0 0 1 1.06-1.06l3.377 3.376L14.47 2.47a.75.75 0 0 1 1.06 0z"]
-              ) {
-              svg:has(
-                  path[d="M15.53 2.47a.75.75 0 0 1 0 1.06L4.907 14.153.47 9.716a.75.75 0 0 1 1.06-1.06l3.377 3.376L14.47 2.47a.75.75 0 0 1 1.06 0z"]
-                ) {
+            &:has(path[d^="M15.53 2.47a.75.75 0 0 1 0 1.06L4.907 14.153.47 9.716a.75.75 0 0 1 1.06-1.06l3.377 3.376L14.47 2.47a.75.75 0 0 1 1.06 0"]) {
+              svg:has(path[d^="M15.53 2.47a.75.75 0 0 1 0 1.06L4.907 14.153.47 9.716a.75.75 0 0 1 1.06-1.06l3.377 3.376L14.47 2.47a.75.75 0 0 1 1.06 0"]) {
                 display: none;
               }
 
@@ -262,11 +258,15 @@
         /* Hide the bottom separator if there is no menu below */
         &:not(:has(+ [role="menu"])) {
           .main-contextMenu-menuItem:not(:has(+ .main-contextMenu-menuItem)) {
-            .Vz3pFUXmll6fKB5Fc4nd:not(#Prio1):not(#Prio2) {
+            .Vz3pFUXmll6fKB5Fc4nd:not(#Prio1):not(#Prio2),
+            .main-contextMenu-dividerAfter:not(#Prio1):not(#Prio2) {
               &::before {
                 display: none;
               }
             }
+          }
+          .main-contextMenu-dividerAfter:not(:has(+ .main-contextMenu-menuItem)) {
+            display: none;
           }
         }
 

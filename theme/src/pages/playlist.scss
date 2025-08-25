@@ -2,7 +2,8 @@
 section[data-testid="playlist-page"],
 :root[data-page^="/collection/"] main {
     .main-entityHeader-backgroundColor,
-    .main-actionBarBackground-background {
+    .main-actionBarBackground-background,
+    .playlist-playlist-actionBarBackground-background /* 1.2.70 */ {
         background: none !important;
     }
 
