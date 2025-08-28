@@ -72,21 +72,6 @@
                     }
                 }
             }
-    
-            .view-homeShortcutsGrid-main:has(.view-homeShortcutsGrid-trailingIndicator) {
-                .view-homeShortcutsGrid-PlayButtonContainer button {
-                    background: var(--pause) center / cover no-repeat;
-                    border-radius: 0;
-    
-                    &:hover {
-                        background-image: var(--pause-hover);
-                    }
-    
-                    &:active {
-                        background-image: var(--pause-pressed);
-                    }
-                }
-            }
         }
     }
 
