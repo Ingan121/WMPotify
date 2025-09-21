@@ -3,6 +3,7 @@
 * Supported versions: 1.2.45 - 1.2.70
     * Primarily tested on 1.2.68
     * 1.2.45: `Show Global nav bar with home button, search input and user avatar` must be set to `home-next-to-search` in the experimental features
+    * 1.2.71: Some features may not work properly due to issues in the Spotify client itself
     * 1.2.44 and below are not supported
 
 ## **Installation** / Updating

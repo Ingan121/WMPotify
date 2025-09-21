@@ -4,7 +4,7 @@ import Strings from '../strings'
 import WindhawkComm from "../WindhawkComm";
 import { openUpdateDialog } from '../ui/dialogs';
 
-const verString = '1.2.1 Pre-release (2025/08/28)';
+const verString = '1.2.1 Pre-release (2025/09/21)';
 
 export class MadVersion {
     constructor(ver) {
