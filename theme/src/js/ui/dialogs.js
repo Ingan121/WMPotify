@@ -1,6 +1,7 @@
 'use strict';
 
 import Strings from '../strings';
+import { compareSpotifyVersion, ver, lastSupportedSpotifyVer} from '../utils/UpdateCheck';
 
 export function confirmModal(title = "WMPotify", message, confirmText = Strings['UI_OK'], cancelText = Strings['UI_CANCEL']) {
     return new Promise((resolve, reject) => {
@@ -205,4 +206,73 @@ export async function openUpdateDialog(alreadyUpdated, tagName, content) {
             Spicetify.Platform.ClipboardAPI.copy(command);
         });
     }
+}
+
+export function errorDialog(message, missingElements = []) {
+    const dialogContent = document.createElement('div');
+    dialogContent.id = 'wmpotify-error-dialog';
+    const isSupportedSpotify = compareSpotifyVersion('1.2.45') >= 0 && compareSpotifyVersion(lastSupportedSpotifyVer) <= 0;
+    const missingApis = Object.entries({
+        'Spicetify.Platform.PlayerAPI': Spicetify.Platform?.PlayerAPI,
+        'Spicetify.AppTitle': Spicetify.AppTitle,
+        'Spicetify.Menu': Spicetify.Menu,
+        'Spicetify.Platform.History.listen': Spicetify.Platform.History?.listen,
+        'Spicetify.Platform.LocalStorageAPI': Spicetify.Platform.LocalStorageAPI,
+        'Spicetify.Platform.Translations': Spicetify.Platform.Translations,
+        'Spicetify.Platform.PlatformData': Spicetify.Platform.PlatformData,
+        'Spicetify.Player.origin._state.repeat': Spicetify.Player.origin?._state?.repeat != undefined
+    }).filter(([_, obj]) => !obj).map(([key, _]) => key).join('<br>');
+    dialogContent.innerHTML = `
+        <div class="main-trackCreditsModal-header">
+            <h1>${Strings['ERRDLG_TITLE']}</h1>
+        </div>
+        <div class="main-trackCreditsModal-mainSection">
+            <p>${Strings['ERRDLG_MAIN_MSG']}</p><br>
+            <p>${Strings['ERRDLG_DETAIL_TITLE']}:</p>
+            <div id="wmpotify-error-dialog-details">
+                <div class="wmpotify-code-container">
+                    <code id="wmpotify-error-dialog-message" style="white-space: pre-wrap;">${message}</code>
+                </div>
+                <hr>
+                <p>${Strings.getString('ERRDLG_VERSION', 'Spotify')}: ${Spicetify.Platform?.version || navigator.userAgent} (${isSupportedSpotify ? Strings['ERRDLG_SUPPORTED'] : Strings['ERRDLG_UNSUPPORTED']})</p>
+                <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify')}: ${Spicetify.Config.version || 'Unknown'}</p>
+                <p>${Strings.getString('ERRDLG_VERSION', 'WMPotify')}: ${ver.toString(0)}</p>
+                <hr>
+                <p>${Strings['ERRDLG_EXT']}: ${Spicetify.Config.extensions?.join(', ') ?? 'Unknown'}</p>
+                <p>${Strings['ERRDLG_APP']}: ${Spicetify.Config.custom_apps?.join(', ') ?? 'Unknown'}</p>
+                <p>${Strings['ERRDLG_IS_MARKETPLACE']}: ${!!document.querySelector('style.marketplaceUserCSS')}</p>
+                ${missingElements.length > 0 ? `<hr><p>${Strings['ERRDLG_MISSING_ELEMENTS']}: <div class="wmpotify-code-container">${missingElements.join('<br>')}</div></p>` : ''}
+                ${missingApis ? `<hr><p>${Strings['ERRDLG_MISSING_API']}: <div class="wmpotify-code-container">${missingApis}</div></p>` : ''}
+            </div>
+            ${!isSupportedSpotify ? `<hr><p>${Strings.getString('ERRDLG_UNSUPPORTED_INFO_' + (ver.extra ? 'PREREL' : 'STABLE'), `1.2.45 - ${lastSupportedSpotifyVer}`)}</p>` : ''}
+            <hr>
+            <p>${Strings.getString('ERRDLG_REPORT_GUIDE', `<a href="https://github.com/Ingan121/WMPotify/issues">${Strings['ERRDLG_REPORT_LINK']}</a>`)}</p>
+            <div class="wmpotify-modal-bottom-buttons" style="justify-content: flex-end;">
+                <button class="wmpotify-aero" id="wmpotify-error-copy">${Strings['ERRDLG_COPY']}</button>
+                <button class="wmpotify-aero" id="wmpotify-error-abort">${Strings['ERRDLG_ABORT']}</button>
+                <button class="wmpotify-aero" id="wmpotify-error-retry">${Strings['ERRDLG_RETRY']}</button>
+                <button class="wmpotify-aero" id="wmpotify-error-ignore">${Strings['ERRDLG_IGNORE']}</button>
+            </div>
+        </div>
+    `;
+    // Avoid using Spicetify.PopupModal to make this not dependent on Spicetify API
+    document.body.appendChild(dialogContent);
+
+    console.error('WMPotify initialization error:', message, missingElements, missingApis);
+
+    document.querySelector('#wmpotify-error-copy').addEventListener('click', () => {
+        const details = document.querySelector('#wmpotify-error-dialog-details').innerText.replaceAll('\n\n', '\n').trim();
+        // Whatever succeeds
+        navigator.clipboard.writeText(details);
+        Spicetify.Platform.ClipboardAPI.copy(details);
+    });
+    document.querySelector('#wmpotify-error-abort').addEventListener('click', () => {
+        window.close();
+    });
+    document.querySelector('#wmpotify-error-retry').addEventListener('click', () => {
+        location.reload();
+    });
+    document.querySelector('#wmpotify-error-ignore').addEventListener('click', () => {
+        document.querySelector('#wmpotify-error-dialog').remove();
+    });
 }

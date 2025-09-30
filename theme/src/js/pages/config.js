@@ -255,7 +255,7 @@ function init() {
 
         localStorage.wmpotifyDarkMode = darkMode;
         if (darkMode === 'always' ||
-            (darkMode === 'follow_scheme' && window.Spicetify?.Config?.color_scheme === 'dark') ||
+            (darkMode === 'follow_scheme' && Spicetify.Config.color_scheme === 'dark') ||
             (darkMode === 'system' && darkQuery.matches)
         ) {
             document.documentElement.dataset.wmpotifyDarkMode = true;

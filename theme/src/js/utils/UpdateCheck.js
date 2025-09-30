@@ -4,7 +4,8 @@ import Strings from '../strings'
 import WindhawkComm from "../WindhawkComm";
 import { openUpdateDialog } from '../ui/dialogs';
 
-const verString = '1.2.1 Pre-release (2025/09/21)';
+const verString = '1.2.1 Pre-release (2025/10/01)';
+export let lastSupportedSpotifyVer = '1.2.70';
 
 export class MadVersion {
     constructor(ver) {
@@ -71,6 +72,12 @@ export async function checkUpdates() {
         const latest = await res.text();
         const wmpotifyLatest = latest.match('wmpotify_new=(.*)')[1];
         const cteLatest = latest.match('cte=(.*)')[1];
+        if (!ver.extra) { // Only update last supported Spotify version on stable releases
+            const lastSpotifyVer = latest.match('last_spotify=(.*)')?.[1];
+            if (lastSpotifyVer) {
+                lastSupportedSpotifyVer = lastSpotifyVer;
+            }
+        }
 
         if (!isMarketplaceDist && ver.compare(wmpotifyLatest) < 0) {
             if (localStorage.wmpotifyIgnoreVersion !== wmpotifyLatest) {
@@ -84,6 +91,13 @@ export async function checkUpdates() {
             }
         }
         localStorage.wmpotifyLastCheckedWhVer = cteLatest;
+
+        if (compareSpotifyVersion(lastSupportedSpotifyVer) > 0) {
+            if (localStorage.wmpotifyLastCompatNotifiedVer !== Spicetify.Platform?.version) {
+                Spicetify.showNotification(Strings[ver.extra ? 'MAIN_MSG_ERROR_NEW_SPOTIFY_PREREL' : 'MAIN_MSG_ERROR_NEW_SPOTIFY']);
+            }
+            localStorage.wmpotifyLastCompatNotifiedVer = Spicetify.Platform?.version;
+        }
     } catch (e) {
         // probably offline or my server is down
         console.error(e);
@@ -91,7 +105,7 @@ export async function checkUpdates() {
 }
 
 export function compareSpotifyVersion(target) {
-    let current = window?.Spicetify?.Platform?.version?.split('.').map(Number);
+    let current = Spicetify.Platform?.version?.split('.').map(Number);
     if (!current) {
         current = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number);
     }

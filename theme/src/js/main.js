@@ -10,8 +10,19 @@ import { initQueuePanel } from './pages/queue';
 import WindhawkComm from './WindhawkComm';
 import PageManager from './managers/PageManager';
 import WindowManager from './managers/WindowManager';
-import { ver, checkUpdates, compareSpotifyVersion, MadVersion } from './utils/UpdateCheck';
-import { openUpdateDialog, openWmpvisInstallDialog, promptModal, confirmModal } from './ui/dialogs';
+import {
+    ver,
+    checkUpdates,
+    compareSpotifyVersion,
+    MadVersion
+} from './utils/UpdateCheck';
+import {
+    openUpdateDialog,
+    openWmpvisInstallDialog,
+    errorDialog,
+    promptModal,
+    confirmModal
+} from './ui/dialogs';
 import ThemeManager from './managers/ThemeManager';
 import { ylxKeyPrefix } from "./pages/libx";
 import { applyScheme } from './utils/appearance';
@@ -190,7 +201,7 @@ function earlyInit() {
     }
     const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
     if (darkMode === 'always' ||
-        (darkMode === 'follow_scheme' && window.Spicetify?.Config?.color_scheme === 'dark') ||
+        (darkMode === 'follow_scheme' && Spicetify.Config.color_scheme === 'dark') ||
         (darkMode === 'system' && darkQuery.matches)
     ) {
         document.documentElement.dataset.wmpotifyDarkMode = true;
@@ -218,6 +229,7 @@ globalThis.WMPotify = {
     Dialog: {
         openUpdateDialog,
         openWmpvisInstallDialog,
+        errorDialog,
         promptModal,
         confirmModal,
     },
@@ -278,23 +290,20 @@ async function doInit() {
         document.documentElement.dataset.wmpotifyInitComplete = true;
     } catch (e) {
         console.error('WMPotify: Error during init:', e);
-        let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_INIT'] + '\n\n' + e.stack;
-        if (window.confirm(msg)) {
-            window.location.reload();
-        }
+        errorDialog(Strings.getString('ERRDLG_DETAIL_EXCEPTION', e.stack));
         document.documentElement.dataset.wmpotifyJsFail = true;
     }
 }
 
 function isReady() {
-    if (window.Spicetify?.Platform?.PlayerAPI &&
-        window.Spicetify.AppTitle &&
-        window.Spicetify.Menu &&
-        window.Spicetify.Platform.History?.listen &&
-        window.Spicetify.Platform.LocalStorageAPI &&
-        window.Spicetify.Platform.Translations &&
-        window.Spicetify.Platform.PlatformData &&
-        window.Spicetify.Player.origin?._state?.repeat != undefined // Spicetify.Player.getRepeat()
+    if (Spicetify.Platform?.PlayerAPI &&
+        Spicetify.AppTitle &&
+        Spicetify.Menu &&
+        Spicetify.Platform.History?.listen &&
+        Spicetify.Platform.LocalStorageAPI &&
+        Spicetify.Platform.Translations &&
+        Spicetify.Platform.PlatformData &&
+        Spicetify.Player.origin?._state?.repeat != undefined // Spicetify.Player.getRepeat()
     ) {
         if (elementsRequired.every(selector => document.querySelector(selector))) {
             return true;
@@ -330,33 +339,14 @@ function waitForReady() {
                         doInit();
                     } else if (cnt++ > 80) {
                         if (compareSpotifyVersion('1.2.45') < 0) {
-                            (window.Spicetify?.showNotification || window.alert)('[WMPotify] ' + Strings['MAIN_MSG_ERROR_OLD_SPOTIFY']);
+                            (Spicetify.showNotification || window.alert)('[WMPotify] ' + Strings['MAIN_MSG_ERROR_OLD_SPOTIFY']);
                         } else {
                             if (compareSpotifyVersion('1.2.45') === 0 && !document.querySelector('.Root__globalNav')) {
                                 if (window.confirm('[WMPotify] ' + Strings['MAIN_MSG_ERROR_LOAD_FAIL_GLOBALNAV'])) {
                                     window.location.reload();
                                 }
                             } else {
-                                let msg = '[WMPotify] ' + Strings['MAIN_MSG_ERROR_LOAD_FAIL'] + '\n\n';
-                                let extraMsg = '';
-                                if (ready === false) {
-                                    extraMsg += 'Missing elements:\n' + elementsRequired.filter(selector => !document.querySelector(selector)).join('\n');
-                                } else {
-                                    extraMsg += 'Missing API objects:\n' + Object.entries({
-                                        'Spicetify.Platform.PlayerAPI': window.Spicetify?.Platform?.PlayerAPI,
-                                        'Spicetify.AppTitle': window.Spicetify.AppTitle,
-                                        'Spicetify.Menu': window.Spicetify.Menu,
-                                        'Spicetify.Platform.History.listen': window.Spicetify.Platform.History?.listen,
-                                        'Spicetify.Platform.LocalStorageAPI': window.Spicetify.Platform.LocalStorageAPI,
-                                        'Spicetify.Platform.Translations': window.Spicetify.Platform.Translations,
-                                        'Spicetify.Platform.PlatformData': window.Spicetify.Platform.PlatformData,
-                                        'Spicetify.Player.origin._state.repeat': window.Spicetify.Player.origin?._state?.repeat != undefined
-                                    }).filter(([_, obj]) => !obj).map(([key, _]) => key).join('\n');
-                                }
-                                if (window.confirm(msg + extraMsg)) {
-                                    window.location.reload();
-                                }
-                                console.error('WMPotify:', extraMsg);
+                                errorDialog(Strings[ready === false ? 'ERRDLG_DETAIL_MISSING_ELEMENTS' : 'ERRDLG_DETAIL_MISSING_API'], elementsRequired.filter(selector => !document.querySelector(selector)));
                             }
                         }
                         if (!document.querySelector('.Root__globalNav')) {

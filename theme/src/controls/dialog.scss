@@ -5,7 +5,8 @@
 
 .ReactModalPortal,
 generic-modal,
-dialog {
+dialog,
+#wmpotify-error-dialog {
   animation: none !important;
   transition: none !important;
   opacity: 1 !important;
@@ -23,7 +24,8 @@ dialog {
   }
 
   [role="dialog"] > div,
-  &[open] > div {
+  &[open] > div,
+  &#wmpotify-error-dialog {
     border-radius: 0;
     background-color: var(--surface);
     color: var(--button-text);
@@ -232,7 +234,9 @@ dialog {
 }
 
 /* WMPotify / WMPotify NowPlaying install / update dialog */
-#wmpotify-instructions-dialog {
+/* Also used for error dialog */
+#wmpotify-instructions-dialog,
+#wmpotify-error-dialog {
   img {
     width: 100%;
   }
@@ -268,5 +272,18 @@ dialog {
   button.wmpotify-aero {
     margin-top: 5px;
     float: right;
+  }
+}
+
+#wmpotify-error-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--surface);
+  z-index: 998;
+
+  * {
+    font: var(--message-font);
   }
 }
