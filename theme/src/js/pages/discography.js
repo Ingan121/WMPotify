@@ -18,6 +18,15 @@ export async function initDiscographyPage(wait) {
     if (topbar) {
         topbar.dataset.identifier = 'discography-topbar';
         document.querySelector('.main-topBar-topbarContent').appendChild(topbar);
+        // Prevent React from removing the topbar when exiting the page, causing critical errors (#64)
+        const origRemoveChild = section.removeChild;
+        section.removeChild = function (child) {
+            if (child === topbar) {
+                topbar.remove();
+                return;
+            }
+            return origRemoveChild.call(this, child);
+        };
     } else {
         topbar = document.querySelector('[data-identifier="discography-topbar"]');
     }
