@@ -234,17 +234,20 @@ export function errorDialog(message, missingElements = []) {
                     <code id="wmpotify-error-dialog-message" style="white-space: pre-wrap;">${message}</code>
                 </div>
                 <hr>
-                <p>${Strings.getString('ERRDLG_VERSION', 'Spotify')}: ${Spicetify.Platform?.version || navigator.userAgent} (${isSupportedSpotify ? Strings['ERRDLG_SUPPORTED'] : Strings['ERRDLG_UNSUPPORTED']})</p>
-                <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify')}: ${Spicetify.Config.version || 'Unknown'}</p>
+                <p>${Strings.getString('ERRDLG_VERSION', 'Spotify')}: ${Spicetify.Platform?.version || navigator.userAgent.match(/Spotify\/\d+\.\d+\.\d+/)?.[1] || Strings['ERRDLG_UNKNOWN']} (${isSupportedSpotify ? Strings['ERRDLG_SUPPORTED'] : Strings['ERRDLG_UNSUPPORTED']})</p>
+                <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify')}: ${Spicetify.Config.version || Strings['ERRDLG_UNKNOWN']}</p>
+                <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify Marketplace')}: ${window.Marketplace?.version || Strings['ERRDLG_UNKNOWN']}</p>
+                <p>${Strings.getString('ERRDLG_UA')}: ${navigator.userAgent}</p>
                 <p>${Strings.getString('ERRDLG_VERSION', 'WMPotify')}: ${ver.toString(0)}</p>
                 <hr>
-                <p>${Strings['ERRDLG_EXT']}: ${Spicetify.Config.extensions?.join(', ') ?? 'Unknown'}</p>
-                <p>${Strings['ERRDLG_APP']}: ${Spicetify.Config.custom_apps?.join(', ') ?? 'Unknown'}</p>
+                <p>${Strings['ERRDLG_EXT']}: ${Spicetify.Config.extensions?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
+                <p>${Strings['ERRDLG_APP']}: ${Spicetify.Config.custom_apps?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
                 <p>${Strings['ERRDLG_IS_MARKETPLACE']}: ${!!document.querySelector('style.marketplaceUserCSS')}</p>
                 ${missingElements.length > 0 ? `<hr><p>${Strings['ERRDLG_MISSING_ELEMENTS']}: <div class="wmpotify-code-container">${missingElements.join('<br>')}</div></p>` : ''}
                 ${missingApis ? `<hr><p>${Strings['ERRDLG_MISSING_API']}: <div class="wmpotify-code-container">${missingApis}</div></p>` : ''}
             </div>
             ${!isSupportedSpotify ? `<hr><p>${Strings.getString('ERRDLG_UNSUPPORTED_INFO_' + (ver.extra ? 'PREREL' : 'STABLE'), `1.2.45 - ${lastSupportedSpotifyVer}`)}</p>` : ''}
+            ${isSupportedSpotify && missingElements.length > 0 ? `<hr><p>${Strings['ERRDLG_SUPPORTED_INFO_CSSMAP']}</p>` : ''}
             <hr>
             <p>${Strings.getString('ERRDLG_REPORT_GUIDE', `<a href="https://github.com/Ingan121/WMPotify/issues">${Strings['ERRDLG_REPORT_LINK']}</a>`)}</p>
             <div class="wmpotify-modal-bottom-buttons" style="justify-content: flex-end;">

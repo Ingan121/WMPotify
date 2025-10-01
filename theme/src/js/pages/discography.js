@@ -114,17 +114,3 @@ function waitForContextMenu() {
         observer.observe(document.body, { childList: true });
     });
 }
-
-function waitForChildren(element, selector) {
-    if (!element.querySelector(selector)) {
-        return new Promise(resolve => {
-            const observer = new MutationObserver(() => {
-                if (element.querySelector(selector)) {
-                    observer.disconnect();
-                    resolve();
-                }
-            });
-            observer.observe(element, { childList: true, subtree: true });
-        });
-    }
-}

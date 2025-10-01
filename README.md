@@ -1,9 +1,10 @@
 # <img src="https://raw.githubusercontent.com/Ingan121/WMPotify/refs/heads/master/theme/src/resources/icon/wmpotify_48.png"> WMPotify
 * A Windows Media Player 11 inspired Spicetify theme for Spotify
-* Supported versions: 1.2.45 - 1.2.70
+* Supported versions: 1.2.45 - 1.2.72
     * Primarily tested on 1.2.68
     * 1.2.45: `Show Global nav bar with home button, search input and user avatar` must be set to `home-next-to-search` in the experimental features
     * 1.2.71: Some features may not work properly due to issues in the Spotify client itself
+    * 1.2.73: Currently requires the css map from my Spicetify PR: [#3541](https://github.com/spicetify/cli/pull/3541)
     * 1.2.44 and below are not supported
 
 ## **Installation** / Updating

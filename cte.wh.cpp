@@ -2,7 +2,7 @@
 // @id              cef-titlebar-enabler-universal
 // @name            CEF/Spotify Tweaks
 // @description     Various tweaks for Spotify, including native frames, transparent windows, and more
-// @version         1.3
+// @version         1.4
 // @author          Ingan121
 // @github          https://github.com/Ingan121
 // @twitter         https://twitter.com/Ingan121
@@ -39,7 +39,7 @@
     * A variant of this mod, which uses copy-pasted CEF structs instead of hardcoded offsets, is available [here](https://github.com/Ingan121/files/tree/master/cte)
     * Copy the required structs/definitions from your wanted CEF version (available [here](https://cef-builds.spotifycdn.com/index.html)) and paste them into the above variant to calculate the offsets
     * Testing with cefclient: `cefclient.exe --use-views --hide-frame --hide-controls`
-* Supported Spotify versions: 1.1.60 to 1.2.71 (newer versions may work)
+* Supported Spotify versions: 1.1.60 to 1.2.73 (newer versions may work)
 * Spotify notes:
     * Old releases are available [here](https://loadspot.pages.dev/)
     * 1.1.60-1.1.67: Use [SpotifyNoControl](https://github.com/JulienMaille/SpotifyNoControl) to remove the window controls
@@ -121,7 +121,7 @@
     Spotify 1.2.45+: The change will be applied immediately\n
     This feature is not available while playing on another device"
   $description:ko-KR: "소수 값을 입력하세요. 1.0이 보통 재생 속도입니다\n
-    이 기능은 1.2.36 버전 이상의 x64 Spotify 클라이언트가 필요합니다\n
+    이 기능은 1.2.36과 1.2.66 사이 버전의 x64 Spotify 클라이언트가 필요합니다\n
     Spotify 1.2.36-1.2.44: 변경 사항은 다음 트랙부터 적용됩니다\n
     Spotify 1.2.45+: 변경 사항은 즉시 적용됩니다\n
     다른 기기에서 재생하는 동안에는 사용할 수 없습니다"
@@ -598,6 +598,14 @@ LRESULT CALLBACK SubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     // Assumed 1 if this mod is loaded after the window is created
     // dwRefData is 2 if the window is created by cef_window_create_top_level and is_frameless is hooked
     switch (uMsg) {
+        case WM_SIZE:
+            // Fix Basic frames being wrongly drawn when entering and exiting fullscreen
+            if (!cte_settings.showframe) {
+                return 0;
+            } else {
+                return DefWindowProc(hWnd, uMsg, wParam, lParam);
+            }
+            break;
         case WM_NCACTIVATE:
             if (hWnd == g_mainHwnd && cte_settings.transparentrendering && !cte_settings.showframe && IsDwmEnabled()) {
                 // Fix MicaForEveryone not working well with frameless windows

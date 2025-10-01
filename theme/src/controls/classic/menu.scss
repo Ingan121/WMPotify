@@ -232,7 +232,7 @@
               }
             }
           }
-          .main-contextMenu-dividerAfter:not(:has(+ .main-contextMenu-menuItem)) {
+          .main-contextMenu-dividerAfter:not(.main-contextMenu-menuItemButton):not(:has(+ .main-contextMenu-menuItem)) {
             display: none;
           }
         }

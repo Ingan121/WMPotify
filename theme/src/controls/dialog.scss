@@ -281,7 +281,14 @@ dialog,
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: var(--surface);
+  width: 664px;
   z-index: 998;
+  user-select: text;
+
+  .main-trackCreditsModal-mainSection {
+    max-height: calc(100vh - 50px);
+    overflow-y: auto;
+  }
 
   * {
     font: var(--message-font);
