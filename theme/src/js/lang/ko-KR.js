@@ -22,6 +22,7 @@ const lang = {
     'ERRDLG_DETAIL_MISSING_ELEMENTS': 'WMPotify에 필요한 일부 UI 요소가 없습니다.',
     'ERRDLG_DETAIL_MISSING_API': 'WMPotify에 필요한 일부 Spicetify API를 사용할 수 없습니다.',
     'ERRDLG_DETAIL_EXCEPTION': '초기화 중에 알 수 없는 오류가 발생했습니다:\n\n%s\n\n자세한 내용은 콘솔을 확인하십시오.',
+    'ERRDLG_DIAG_TITLE': 'WMPotify 진단 정보',
     'ERRDLG_VERSION': '%s 버전',
     'ERRDLG_UNKNOWN': '알 수 없음',
     'ERRDLG_UA': '사용자 에이전트',
@@ -138,6 +139,7 @@ const lang = {
     'CONF_ABOUT_CTEWH_VERSION': 'CEF/Spotify Tweaks Windhawk 모드 %s 사용 가능',
     'CONF_ABOUT_AUTHOR': '제작: Ingan121',
     'CONF_ABOUT_AUTO_UPDATES': '자동으로 업데이트 확인',
+    'CONF_ABOUT_DIAG': '진단 정보 표시',
 
     'WMPVIS_INSTALL_TITLE': 'WMPotify NowPlaying을 설치하시겠습니까?',
     'WMPVIS_INSTALL_DESC': 'WMPotify NowPlaying은 WMP와 같은 시각화 화면과 그 위에 표시되는 가사 창을 제공합니다. WMPotify를 최상의 경험으로 사용하려면 WMPotify NowPlaying 설치를 권장합니다.',

@@ -234,14 +234,7 @@ export function errorDialog(message, missingElements = []) {
                     <code id="wmpotify-error-dialog-message" style="white-space: pre-wrap;">${message}</code>
                 </div>
                 <hr>
-                <p>${Strings.getString('ERRDLG_VERSION', 'Spotify')}: ${Spicetify.Platform?.version || navigator.userAgent.match(/Spotify\/\d+\.\d+\.\d+/)?.[1] || Strings['ERRDLG_UNKNOWN']} (${isSupportedSpotify ? Strings['ERRDLG_SUPPORTED'] : Strings['ERRDLG_UNSUPPORTED']})</p>
-                <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify')}: ${Spicetify.Config.version || Strings['ERRDLG_UNKNOWN']}</p>
-                <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify Marketplace')}: ${window.Marketplace?.version || Strings['ERRDLG_UNKNOWN']}</p>
-                <p>${Strings.getString('ERRDLG_UA')}: ${navigator.userAgent}</p>
-                <p>${Strings.getString('ERRDLG_VERSION', 'WMPotify')}: ${ver.toString(0)}</p>
-                <hr>
-                <p>${Strings['ERRDLG_EXT']}: ${Spicetify.Config.extensions?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
-                <p>${Strings['ERRDLG_APP']}: ${Spicetify.Config.custom_apps?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
+                ${(getDiagInfo())}
                 <p>${Strings['ERRDLG_IS_MARKETPLACE']}: ${!!document.querySelector('style.marketplaceUserCSS')}</p>
                 ${missingElements.length > 0 ? `<hr><p>${Strings['ERRDLG_MISSING_ELEMENTS']}: <div class="wmpotify-code-container">${missingElements.join('<br>')}</div></p>` : ''}
                 ${missingApis ? `<hr><p>${Strings['ERRDLG_MISSING_API']}: <div class="wmpotify-code-container">${missingApis}</div></p>` : ''}
@@ -278,4 +271,47 @@ export function errorDialog(message, missingElements = []) {
     document.querySelector('#wmpotify-error-ignore').addEventListener('click', () => {
         document.querySelector('#wmpotify-error-dialog').remove();
     });
+}
+
+export function diagDialog() {
+    const dialogContent = document.createElement('div');
+    dialogContent.id = 'wmpotify-diag-dialog';
+    dialogContent.innerHTML = `
+        <div id="wmpotify-diag-dialog-details">
+            ${getDiagInfo()}
+        </div>
+        <hr>
+        <p>${Strings.getString('ERRDLG_REPORT_GUIDE', `<a href="https://github.com/Ingan121/WMPotify/issues">${Strings['ERRDLG_REPORT_LINK']}</a>`)}</p>
+        <div class="wmpotify-modal-bottom-buttons" style="justify-content: flex-end;">
+            <button class="wmpotify-aero" id="wmpotify-error-copy">${Strings['ERRDLG_COPY']}</button>
+            <button class="wmpotify-aero" id="wmpotify-error-close">${Strings['UI_OK']}</button>
+        </div>`;
+    Spicetify.PopupModal.display({
+        title: Strings['ERRDLG_DIAG_TITLE'],
+        content: dialogContent,
+        isLarge: true
+    });
+    document.querySelector('#wmpotify-error-copy').addEventListener('click', () => {
+        const details = document.querySelector('#wmpotify-diag-dialog-details').innerText.replaceAll('\n\n', '\n').trim();
+        // Whatever succeeds
+        navigator.clipboard.writeText(details);
+        Spicetify.Platform.ClipboardAPI.copy(details);
+    });
+    document.querySelector('#wmpotify-error-close').addEventListener('click', () => {
+        Spicetify.PopupModal.hide();
+    });
+}
+
+function getDiagInfo() {
+    const isSupportedSpotify = compareSpotifyVersion('1.2.45') >= 0 && compareSpotifyVersion(lastSupportedSpotifyVer) <= 0;
+    return `
+        <p>${Strings.getString('ERRDLG_VERSION', 'Spotify')}: ${Spicetify.Platform?.version || navigator.userAgent.match(/Spotify\/\d+\.\d+\.\d+/)?.[1] || Strings['ERRDLG_UNKNOWN']} (${isSupportedSpotify ? Strings['ERRDLG_SUPPORTED'] : Strings['ERRDLG_UNSUPPORTED']})</p>
+        <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify')}: ${Spicetify.Config.version || Strings['ERRDLG_UNKNOWN']}</p>
+        <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify Marketplace')}: ${window.Marketplace?.version || Strings['ERRDLG_UNKNOWN']}</p>
+        <p>${Strings.getString('ERRDLG_UA')}: ${navigator.userAgent}</p>
+        <p>${Strings.getString('ERRDLG_VERSION', 'WMPotify')}: ${ver.toString(0)}</p>
+        <hr>
+        <p>${Strings['ERRDLG_EXT']}: ${Spicetify.Config.extensions?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
+        <p>${Strings['ERRDLG_APP']}: ${Spicetify.Config.custom_apps?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
+    `;
 }

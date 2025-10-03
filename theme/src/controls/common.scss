@@ -266,7 +266,8 @@
 
 /* This somehow interferes with -webkit-app-region: drag */
 .main-entityHeader-container {
-    &.main-entityHeader-withBackgroundImage {
+    &.main-entityHeader-withBackgroundImage,
+    &.DFuKwT5bvhKZoYr2gfZe { /* 1.2.72 */
         .main-entityHeader-headerText * {
             text-shadow: var(--aero-text-glow);
             color: black !important;

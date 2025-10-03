@@ -1,7 +1,7 @@
 'use strict';
 
 import Strings from "../strings";
-import { confirmModal, promptModal } from "../ui/dialogs";
+import { confirmModal, promptModal, diagDialog } from "../ui/dialogs";
 import FontDetective from "../utils/FontDetective";
 import { setTintColor } from "../ui/tinting";
 import WindhawkComm from "../WindhawkComm";
@@ -159,6 +159,7 @@ function init() {
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
+            <span>/ <a href="#" id="wmpotify-config-show-diag">${Strings['CONF_ABOUT_DIAG']}</a></span>
         </section>
     `;
 
@@ -185,6 +186,7 @@ function init() {
     elements.whMessage = configWindow.querySelector('#wmpotify-config-wh-message');
     elements.whVer = configWindow.querySelector('#wmpotify-about-ctewh-ver');
     elements.autoUpdates = configWindow.querySelector('#wmpotify-config-auto-updates');
+    elements.showDiag = configWindow.querySelector('#wmpotify-config-show-diag');
 
     const configHeightConf = localStorage.wmpotifyConfigHeight;
     if (configHeightConf && parseInt(configHeightConf) >= 24) {
@@ -380,6 +382,9 @@ function init() {
         } else {
             localStorage.wmpotifyNoUpdateCheck = true;
         }
+    });
+    elements.showDiag.addEventListener('click', () => {
+        diagDialog();
     });
 
     whSpeedModSupported = whStatus?.speedModSupported;

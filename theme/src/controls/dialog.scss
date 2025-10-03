@@ -236,7 +236,8 @@ dialog,
 /* WMPotify / WMPotify NowPlaying install / update dialog */
 /* Also used for error dialog */
 #wmpotify-instructions-dialog,
-#wmpotify-error-dialog {
+#wmpotify-error-dialog,
+#wmpotify-diag-dialog {
   img {
     width: 100%;
   }
@@ -275,6 +276,8 @@ dialog,
   }
 }
 
+/* Base Spicetify.PopupModal styles for WMPotify error dialog */
+/* which is implemented with pure JS */
 #wmpotify-error-dialog {
   position: absolute;
   top: 50%;

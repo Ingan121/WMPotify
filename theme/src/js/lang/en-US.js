@@ -22,6 +22,7 @@ const lang = {
     'ERRDLG_DETAIL_MISSING_ELEMENTS': 'Some UI elements required by WMPotify are missing.',
     'ERRDLG_DETAIL_MISSING_API': 'Some Spicetify APIs required by WMPotify are not available.',
     'ERRDLG_DETAIL_EXCEPTION': 'An unknown error occurred during initialization:\n\n%s\n\nPlease check the console for more information.',
+    'ERRDLG_DIAG_TITLE': 'WMPotify Diagnostic Information',
     'ERRDLG_VERSION': '%s version',
     'ERRDLG_UNKNOWN': 'Unknown',
     'ERRDLG_UA': 'User Agent',
@@ -138,6 +139,7 @@ const lang = {
     'CONF_ABOUT_CTEWH_VERSION': 'CEF/Spotify Tweaks Windhawk mod %s available',
     'CONF_ABOUT_AUTHOR': 'Made by Ingan121',
     'CONF_ABOUT_AUTO_UPDATES': 'Automatically check for updates',
+    'CONF_ABOUT_DIAG': 'Show diagnostic information',
 
     'WMPVIS_INSTALL_TITLE': 'Install WMPotify NowPlaying?',
     'WMPVIS_INSTALL_DESC': 'WMPotify NowPlaying features WMP-like visualization screen and lyrics overlaid on top of it. We recommend installing it for the best experience with WMPotify.',
