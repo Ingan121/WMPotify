@@ -20,6 +20,7 @@ import {
     openUpdateDialog,
     openWmpvisInstallDialog,
     errorDialog,
+    diagDialog,
     promptModal,
     confirmModal
 } from './ui/dialogs';
@@ -230,6 +231,7 @@ globalThis.WMPotify = {
         openUpdateDialog,
         openWmpvisInstallDialog,
         errorDialog,
+        diagDialog,
         promptModal,
         confirmModal,
     },
