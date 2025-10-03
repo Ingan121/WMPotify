@@ -120,7 +120,7 @@ section[data-test-uri^="spotify:artist:"] {
 :root[data-wmpotify-dark-mode] {
     section[data-testid="artist-page"],
     section[data-test-uri^="spotify:artist:"] {
-        .main-entityHeader-container:not(.main-entityHeader-withBackgroundImage):not(.DFuKwT5bvhKZoYr2gfZe) { /* 1.2.72 */
+        .main-entityHeader-container:not(.main-entityHeader-withBackgroundImage):not(.DFuKwT5bvhKZoYr2gfZe) {
             background-color: #222222;
         }
     }
