@@ -6,7 +6,7 @@ import { init, updateVisConfig, loadAudioData, uninit } from './wmpvis';
 import ButterchurnAdaptor from './butterchurn/adaptor';
 import MadVisLyrics from './lyrics/main';
 import lrcCache from './lyrics/caching';
-import { checkUpdates } from './UpdateCheck';
+import { checkUpdates, ver } from './UpdateCheck';
 import { openConfigDialog } from './config';
 import { promptModal } from './dialogs';
 import { setupDesktopAudioCapture } from './DesktopAudio';
@@ -401,7 +401,7 @@ class App extends React.Component {
             }
           }}
           leadingIcon={this.state.isFullscreen ? <CheckMark /> : null}
-          divider={this.state.updateAvailable ? "after" : null}
+          divider={this.state.updateAvailable || Spicetify.Config.current_theme.toLowerCase() !== 'wmpotify' ? "after" : null}
         >
           {Strings['MENU_FULLSCREEN']}
         </Spicetify.ReactComponent.MenuItem>
@@ -409,13 +409,19 @@ class App extends React.Component {
         <Spicetify.ReactComponent.MenuItem
           label="Update Available"
           onClick={() => {
-            const url = Spicetify.Config.current_theme.toLowerCase() === 'wmpotify' ?
-              'https://github.com/Ingan121/WMPotify' :
-              'https://github.com/Ingan121/Spicetify-CustomApps';
-            window.open(url);
+            window.open('https://github.com/Ingan121/WMPotify');
           }}
         >
           {Strings['MENU_UPDATE_AVAILABLE']}
+        </Spicetify.ReactComponent.MenuItem>}
+        {Spicetify.Config.current_theme.toLowerCase() !== 'wmpotify' &&
+        <Spicetify.ReactComponent.MenuItem
+          label="WMPotify NowPlaying"
+          onClick={() => {
+            window.open('https://github.com/Ingan121/WMPotify');
+          }}
+        >
+          {`WMPotify NowPlaying ${ver.toString(1)}`}
         </Spicetify.ReactComponent.MenuItem>}
       </Spicetify.ReactComponent.Menu>
     });
