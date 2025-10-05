@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Strings from './strings';
-import { init, updateVisConfig, loadAudioData, uninit } from './wmpvis';
+import { init, updateVisConfig, uninit } from './wmpvis';
 import ButterchurnAdaptor from './butterchurn/adaptor';
 import MadVisLyrics from './lyrics/main';
 import lrcCache from './lyrics/caching';
@@ -401,7 +401,7 @@ class App extends React.Component {
             }
           }}
           leadingIcon={this.state.isFullscreen ? <CheckMark /> : null}
-          divider={this.state.updateAvailable || Spicetify.Config.current_theme.toLowerCase() !== 'wmpotify' ? "after" : null}
+          divider={this.state.updateAvailable || !isUsingWMPotifyTheme() ? "after" : null}
         >
           {Strings['MENU_FULLSCREEN']}
         </Spicetify.ReactComponent.MenuItem>
@@ -414,7 +414,7 @@ class App extends React.Component {
         >
           {Strings['MENU_UPDATE_AVAILABLE']}
         </Spicetify.ReactComponent.MenuItem>}
-        {Spicetify.Config.current_theme.toLowerCase() !== 'wmpotify' &&
+        {!isUsingWMPotifyTheme() &&
         <Spicetify.ReactComponent.MenuItem
           label="WMPotify NowPlaying"
           onClick={() => {
@@ -648,6 +648,10 @@ class App extends React.Component {
       </Spicetify.ReactComponent.ContextMenu>
     </>
   }
+}
+
+function isUsingWMPotifyTheme() {
+  return Spicetify.Config.current_theme.toLowerCase().startsWith('wmpotify');
 }
 
 export default App;
