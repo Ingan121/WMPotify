@@ -1,7 +1,8 @@
 'use strict';
 
 import Strings from '../strings';
-import { compareSpotifyVersion, ver, lastSupportedSpotifyVer} from '../utils/UpdateCheck';
+import { compareSpotifyVersion, ver, lastSupportedSpotifyVer } from '../utils/UpdateCheck';
+import WindhawkComm from "../WindhawkComm";
 
 export function confirmModal(title = "WMPotify", message, confirmText = Strings['UI_OK'], cancelText = Strings['UI_CANCEL']) {
     return new Promise((resolve, reject) => {
@@ -310,6 +311,7 @@ function getDiagInfo() {
         <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify Marketplace')}: ${window.Marketplace?.version || Strings['ERRDLG_UNKNOWN']}</p>
         <p>${Strings.getString('ERRDLG_UA')}: ${navigator.userAgent}</p>
         <p>${Strings.getString('ERRDLG_VERSION', 'WMPotify')}: ${ver.toString(0)}</p>
+        <p>${Strings.getString('ERRDLG_VERSION', 'CEF/Spotify Tweaks')}: ${WindhawkComm.getModule()?.version || Strings['ERRDLG_UNKNOWN']}</p>
         <hr>
         <p>${Strings['ERRDLG_EXT']}: ${Spicetify.Config.extensions?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
         <p>${Strings['ERRDLG_APP']}: ${Spicetify.Config.custom_apps?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
