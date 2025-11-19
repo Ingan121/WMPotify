@@ -4,7 +4,7 @@ import Strings from '../strings'
 import WindhawkComm from "../WindhawkComm";
 import { openUpdateDialog } from '../ui/dialogs';
 
-const verString = '1.2.1';
+const verString = '1.2.2 Pre-release (2025/11/19)';
 export let lastSupportedSpotifyVer = '1.2.74';
 
 export class MadVersion {
