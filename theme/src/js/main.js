@@ -271,8 +271,7 @@ async function init() {
     initQueuePanel();
     new MutationObserver(initQueuePanel).observe(
         // Right panel has varying structure in different versions
-        document.querySelector('.oXO9_yYs6JyOwkBn8E4a') || // .72+
-        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // .45-.71
+        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // Seems same on .45-.61 but may change in future
         document.querySelector('.Root__right-sidebar > div > div[class]:first-child') ||
         document.querySelector('.Root__right-sidebar div[class]') // Works on .45-.52
     , { childList: true });
