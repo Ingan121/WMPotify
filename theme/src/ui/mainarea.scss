@@ -103,6 +103,10 @@ body[data-hide-libx].sidebar-open,
         &:has(.main-topBar-background[style*="opacity: 1"]) {
             display: flex !important;
         }
+
+        .main-topBar-overlay {
+            opacity: 0;
+        }
     }
 }
 
