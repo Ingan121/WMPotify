@@ -26,7 +26,7 @@
     "homepage": "https://github.com/Ingan121/WMPotify",
     "devDependencies": {
         "cssnano": "^5.1.7",
-        "esbuild": "^0.24.2",
+        "esbuild": "^0.27.0",
         "mkdirp": "^1.0.4",
         "postcss": "^8.3.5",
         "postcss-base64": "^0.7.1",
