@@ -127,13 +127,13 @@ function earlyInit() {
     WindhawkComm.setMinSize(358, titleStyle === 'native' ? 60 : 90); // mini mode
     switch (style) {
         case 'xp':
-            WindhawkComm.extendFrame(0, 0, 0, 0);
+            WindhawkComm.extendFrame(0, 0, 0, 60);
             break;
         case 'aero':
             WindhawkComm.extendFrame(0, 0, 0, 60);
             break;
         case 'basic':
-            WindhawkComm.extendFrame(0, 0, 0, 0);
+            WindhawkComm.extendFrame(0, 0, 0, 60);
 
             if (localStorage.wmpotifyBasicTextColor) {
                 document.body.style.setProperty('--basic-pb-text', localStorage.wmpotifyBasicTextColor);
