@@ -61,6 +61,14 @@
             }
           }
 
+          /* Audio quality selector with lossless option */
+          [class*="Box-group-naked-listRow-minBlockSize"] {
+            min-block-size: 0;
+            padding: 2px 0 2px 7px;
+            --text-announcement: var(--hilight);
+            color: var(--menu-text);
+          }
+
           > a,
           > button,
           > label,
@@ -88,6 +96,10 @@
               }
 
               .TypeElement-type-mesto-textBrightAccent {
+                color: var(--hilight-text) !important;
+              }
+
+              [class*="Box-group-naked-listRow-minBlockSize"] * {
                 color: var(--hilight-text) !important;
               }
             }
@@ -122,8 +134,9 @@
                   font-size: 1.3em !important;
                   color: inherit;
                   position: absolute;
-                  top: 0;
+                  top: calc(50% - 1px);
                   left: 4px;
+                  transform: translateY(-50%);
                   width: unset;
                   height: unset;
                   background: none;

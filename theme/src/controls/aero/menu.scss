@@ -72,6 +72,12 @@
             }
           }
 
+          /* Audio quality selector with lossless option */
+          [class*="Box-group-naked-listRow-minBlockSize"] {
+            min-block-size: 0;
+            padding: 2px 0 2px 22px;
+          }
+
           > a,
           > button,
           > label,
@@ -110,10 +116,11 @@
                 border-radius: inherit;
                 box-sizing: border-box;
                 position: absolute;
-                top: 0;
+                top: 50%;
                 left: 0;
                 width: 22px;
                 height: 22px;
+                transform: translateY(-50%);
               }
 
               > span::before {
