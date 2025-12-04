@@ -102,6 +102,8 @@ function earlyInit() {
         CustomTitlebar.earlyInit();
     }
 
+    const whInitialOpts = WindhawkComm.getModule()?.initialOptions || {};
+
     // Set default style if the style is set to auto (not set)
     // If the Windhawk mod is available, and the title style is native:
     //   Use Aero style if transparency is enabled and DWM is enabled
@@ -112,7 +114,7 @@ function earlyInit() {
         if (hcQuery.matches) {
             style = 'basic';
         } else if (whStatus && whStatus.isThemingEnabled) {
-            if (WindhawkComm.getModule()?.initialOptions.transparentrendering && whStatus.isDwmEnabled) {
+            if (whInitialOpts.transparentrendering && whStatus.isDwmEnabled) {
                 style = 'aero';
             } else if (!whStatus.isDwmEnabled) {
                 style = 'basic';
@@ -128,12 +130,18 @@ function earlyInit() {
     switch (style) {
         case 'xp':
             WindhawkComm.extendFrame(0, 0, 0, 0);
+            if (whInitialOpts.showframe === false) {
+                WindhawkComm.setTransparent(true);
+            }
             break;
         case 'aero':
-            WindhawkComm.extendFrame(0, 0, 0, 60);
+            WindhawkComm.extendFrame(0, 0, whInitialOpts.showframe === false ? 24 : 0, 60);
             break;
         case 'basic':
             WindhawkComm.extendFrame(0, 0, 0, 0);
+            if (whInitialOpts.showframe === false) {
+                WindhawkComm.setTransparent(true);
+            }
 
             if (localStorage.wmpotifyBasicTextColor) {
                 document.body.style.setProperty('--basic-pb-text', localStorage.wmpotifyBasicTextColor);
@@ -170,8 +178,11 @@ function earlyInit() {
             if (window.innerHeight < 62) {
                 WindhawkComm.extendFrame(-1, -1, -1, -1);
             } else {
-                WindhawkComm.extendFrame(0, 0, 0, 60);
+                WindhawkComm.extendFrame(0, 0, whInitialOpts.showframe === false ? 24 : 0, 60);
             }
+        } else if (whInitialOpts.showframe === false) {
+            // Only doing once is somehow unreliable on Win11
+            WindhawkComm.setTransparent(true);
         }
         WindhawkComm.setMinSize(358, titleStyle === 'native' ? 60 : 90);
     });
@@ -197,7 +208,7 @@ function earlyInit() {
     let darkMode = 'follow_scheme';
     if (['follow_scheme', 'system', 'always', 'never'].includes(localStorage.wmpotifyDarkMode)) {
         darkMode = localStorage.wmpotifyDarkMode;
-    } else if (WindhawkComm.getModule()?.initialOptions.noforceddarkmode) {
+    } else if (whInitialOpts.noforceddarkmode) {
         darkMode = 'system';
     }
     const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');

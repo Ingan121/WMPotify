@@ -2,7 +2,7 @@
 // @id              cef-titlebar-enabler-universal
 // @name            CEF/Spotify Tweaks
 // @description     Various tweaks for Spotify, including native frames, transparent windows, and more
-// @version         1.5
+// @version         1.6
 // @author          Ingan121
 // @github          https://github.com/Ingan121
 // @twitter         https://twitter.com/Ingan121
@@ -34,7 +34,7 @@
 * Block automatic updates
 * Use the settings tab on the mod details page to configure the features
 ## Notes
-* Supported CEF versions: 90.4 to 140
+* Supported CEF versions: 90.4 to 142
     * This mod won't work with versions before 90.4
     * Versions after 132 may work, but are not tested
     * A variant of this mod, which uses copy-pasted CEF structs instead of hardcoded offsets, is available [here](https://github.com/Ingan121/files/tree/master/cte)
@@ -180,7 +180,8 @@
 134: 1.2.62-1.2.69
 138: 1.2.70
 139: 1.2.71-1.2.74
-140: 1.2.75
+140: 1.2.75-1.2.77
+142: 1.2.78
 See https://www.spotify.com/opensource/ for more
 */
 
@@ -210,7 +211,7 @@ using namespace std::string_view_literals;
 #define cef_window_handle_t HWND
 #define ANY_MINOR -1
 #define PIPE_NAME L"\\\\.\\pipe\\CTEWH-IPC"
-#define LAST_TESTED_CEF_VERSION 140
+#define LAST_TESTED_CEF_VERSION 142
 #define CR_RT_1ST_VERSION 119 // First Spotify version to support Chrome runtime
 
 // Win11 only DWM attributes for Windhawk 1.4
@@ -306,6 +307,7 @@ HWND g_mainHwnd = NULL;
 int g_minWidth = -1;
 int g_minHeight = -1;
 BOOL g_titleLocked = FALSE;
+BOOL g_transparentMode = FALSE;
 
 double g_playbackSpeed = 1.0;
 int64_t g_currentTrackPlayer = NULL;
@@ -619,7 +621,7 @@ LRESULT CALLBACK SubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     switch (uMsg) {
         case WM_SIZE:
             // Fix Basic frames being wrongly drawn when entering and exiting fullscreen
-            if (!cte_settings.showframe) {
+            if (hWnd == g_mainHwnd &&!cte_settings.showframe) {
                 return 0;
             } else {
                 return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -1588,6 +1590,11 @@ void HandleWindhawkComm(LPCWSTR command) {
     // /WH:ExtendFrame:<left>:<right>:<top>:<bottom>
     // Set DWM margins to extend frame into client area
     if (wcsncmp(command, L"/WH:ExtendFrame:", 16) == 0) {
+        if (g_transparentMode) {
+            int ncRenderingPolicy = DWMNCRP_ENABLED;
+            DwmSetWindowAttribute(g_mainHwnd, DWMWA_NCRENDERING_POLICY, &ncRenderingPolicy, sizeof(ncRenderingPolicy));
+            g_transparentMode = FALSE;
+        }
         if (!IsDwmEnabled()) {
             return;
         }
@@ -1636,6 +1643,26 @@ void HandleWindhawkComm(LPCWSTR command) {
             } else {
                 SetWindowLong(g_mainHwnd, GWL_EXSTYLE, GetWindowLong(g_mainHwnd, GWL_EXSTYLE) & ~WS_EX_LAYERED);
             }
+        }
+    // /WH:SetTransparent:<transparent (1/0)>
+    // Enable or disable true transparency trick for frameless windows
+    } else if (wcsncmp(command, L"/WH:SetTransparent:", 19) == 0) {
+        // CEF paints non-alpha-blended black background by default
+        // I tried things like suppressing WM_PAINT to stop that, but I couldn't get rid of black painting on window maximize
+        // (I think this is a DWM quirk? Transparency by not drawing anything isn't a documented behavior after all)
+        // So instead we use DwmExtendFrameIntoClientArea to enable DWM's transparency handling of alphaless pixels (which just turns black to transparent)
+        // And disable DWM frames to get real transparency instead of DWM frames/effects
+        if (cte_settings.showframe) {
+            // Don't do this if native frames are enabled, as it breaks the frame
+            return;
+        }
+        int transparent;
+        if (swscanf(command + 19, L"%d", &transparent) == 1) {
+            MARGINS margins = { transparent ? -1 : 0 };
+            DwmExtendFrameIntoClientArea(g_mainHwnd, &margins);
+            int ncRenderingPolicy = transparent ? DWMNCRP_DISABLED : DWMNCRP_ENABLED;
+            DwmSetWindowAttribute(g_mainHwnd, DWMWA_NCRENDERING_POLICY, &ncRenderingPolicy, sizeof(ncRenderingPolicy));
+            g_transparentMode = transparent;
         }
     // /WH:SetBackdrop:<mica|acrylic|tabbed>
     // Set the window backdrop type (Windows 11 only)
@@ -2112,6 +2139,17 @@ int CEF_CALLBACK WindhawkCommV8Handler(cef_v8handler_t* self, const cef_string_t
             free(msg);
             return TRUE;
         }
+    } else if (nameStr == u"setTransparent") {
+        if (argumentsCount >= 1 && arguments[0]->is_bool(arguments[0])) {
+            bool transparent = arguments[0]->get_bool_value(arguments[0]);
+            ipcRes = SendNamedPipeMessage((L"/WH:SetTransparent:" + std::to_wstring(transparent)).c_str());
+        } else {
+            cef_string_t* msg = GenerateCefString(u"Invalid argument types, expected (bool)");
+            *exception = *msg;
+            free(msg->str);
+            free(msg);
+            return TRUE;
+        }
     } else if (nameStr == u"setBackdrop") {
         if (argumentsCount == 1 && arguments[0]->is_string(arguments[0])) {
             cef_string_t* backdropArg = arguments[0]->get_string_value(arguments[0]);
@@ -2291,6 +2329,7 @@ int InjectCTEV8Handler(cef_v8value_t* const* arguments, cef_v8value_t** retval) 
         AddFunctionToObj(retobj, u"close", cancelCosmosRequest_v8handler);
         AddFunctionToObj(retobj, u"focus", cancelCosmosRequest_v8handler);
         AddFunctionToObj(retobj, u"setLayered", cancelCosmosRequest_v8handler);
+        AddFunctionToObj(retobj, u"setTransparent", cancelCosmosRequest_v8handler);
         AddFunctionToObj(retobj, u"setBackdrop", cancelCosmosRequest_v8handler);
         AddFunctionToObj(retobj, u"resizeTo", cancelCosmosRequest_v8handler);
         AddFunctionToObj(retobj, u"setMinSize", cancelCosmosRequest_v8handler);

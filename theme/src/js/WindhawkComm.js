@@ -56,6 +56,13 @@ const WindhawkComm = {
         }
     },
 
+    // (bool)
+    setTransparent(transparent) {
+        if (windhawkModule?.setTransparent) {
+            windhawkModule.setTransparent(transparent);
+        }
+    },
+
     // (string - mica, acrylic, tabbed)
     setBackdrop(backdropType) {
         if (windhawkModule?.setBackdrop) {
