@@ -66,6 +66,7 @@ function earlyInit() {
     WindhawkComm.init();
 
     const whStatus = WindhawkComm.query();
+    const whInitialOpts = WindhawkComm.getModule()?.initialOptions || {};
 
     if (whStatus) {
         if (localStorage.wmpotifyTopMost === 'always' || (localStorage.wmpotifyTopMost === 'minimode' && WindowManager.isMiniMode())) {
@@ -85,7 +86,7 @@ function earlyInit() {
         titleStyle = localStorage.wmpotifyTitleStyle;
     } else {
         console.log('WMPotify EarlyInit:', window.SpotEx, whStatus);
-        if (window.outerHeight - window.innerHeight > 0 || whStatus?.options?.showframe || navigator.userAgent.includes('Linux')) {
+        if (window.outerHeight - window.innerHeight > 0 || whInitialOpts.showframe || navigator.userAgent.includes('Linux')) {
             titleStyle = 'native';
         } else if (window.SpotEx || whStatus) {
             titleStyle = 'custom';
@@ -101,8 +102,6 @@ function earlyInit() {
     if (titleStyle !== 'native') {
         CustomTitlebar.earlyInit();
     }
-
-    const whInitialOpts = WindhawkComm.getModule()?.initialOptions || {};
 
     // Set default style if the style is set to auto (not set)
     // If the Windhawk mod is available, and the title style is native:
@@ -267,7 +266,9 @@ async function init() {
     }
 
     const isWin11 = Spicetify.Platform.PlatformData.os_version?.split('.')[2] >= 22000;
-    if (isWin11 && localStorage.wmpotifyBackdrop !== 'none') {
+    if (isWin11 && localStorage.wmpotifyBackdrop !== 'none' &&
+        (WindhawkComm.getModule()?.initialOptions?.showframe !== false || style === 'aero')
+    ) {
         WindhawkComm.setBackdrop(localStorage.wmpotifyBackdrop || 'mica');
     }
 
@@ -282,7 +283,8 @@ async function init() {
     initQueuePanel();
     new MutationObserver(initQueuePanel).observe(
         // Right panel has varying structure in different versions
-        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // Seems same on .45-.61 but may change in future
+        document.querySelector('.oXO9_yYs6JyOwkBn8E4a') || // .72+
+        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // .45-.71
         document.querySelector('.Root__right-sidebar > div > div[class]:first-child') ||
         document.querySelector('.Root__right-sidebar div[class]') // Works on .45-.52
     , { childList: true });

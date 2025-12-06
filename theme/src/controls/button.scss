@@ -60,6 +60,16 @@ header nav li,
   padding: 0;
 }
 
+/* 1.2.68 */
+.playlist-playlist-searchBoxContainer {
+  align-items: initial;
+}
+
+/* 1.2.70 */
+.playlist-playlist-searchBoxContainer > div:has(button.x-sortBox-sortDropdown) {
+  order: -1;
+}
+
 button.x-sortBox-sortDropdown,
 button[aria-controls="sort-and-view-picker"] {
   color: var(--spice-text);

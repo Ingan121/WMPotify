@@ -236,7 +236,6 @@ export function errorDialog(message, missingElements = []) {
                 </div>
                 <hr>
                 ${(getDiagInfo())}
-                <p>${Strings['ERRDLG_IS_MARKETPLACE']}: ${!!document.querySelector('style.marketplaceUserCSS')}</p>
                 ${missingElements.length > 0 ? `<hr><p>${Strings['ERRDLG_MISSING_ELEMENTS']}: <div class="wmpotify-code-container">${missingElements.join('<br>')}</div></p>` : ''}
                 ${missingApis ? `<hr><p>${Strings['ERRDLG_MISSING_API']}: <div class="wmpotify-code-container">${missingApis}</div></p>` : ''}
             </div>
@@ -315,5 +314,6 @@ function getDiagInfo() {
         <hr>
         <p>${Strings['ERRDLG_EXT']}: ${Spicetify.Config.extensions?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
         <p>${Strings['ERRDLG_APP']}: ${Spicetify.Config.custom_apps?.join(', ') ?? Strings['ERRDLG_UNKNOWN']}</p>
+        <p>${Strings['ERRDLG_IS_MARKETPLACE']}: ${!!document.querySelector('style.marketplaceUserCSS')}</p>
     `;
 }

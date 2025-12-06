@@ -7,7 +7,8 @@
     background: var(--wmp11-search-gradient);
     margin-top: -1px;
 
-    .x-filterBox-filterInput {
+    .x-filterBox-filterInput,
+    [role="searchbox"] {
         position: absolute;
         top: 0;
         left: 0;
@@ -32,10 +33,14 @@
         }
     }
 
-    .x-filterBox-overlay {
+    .x-filterBox-overlay,
+    [role="searchbox"] + div {
         opacity: 1;
+        left: 0;
+        right: 0;
 
-        .x-filterBox-searchIconContainer {
+        .x-filterBox-searchIconContainer,
+        > span {
             position: absolute;
             top: 1px;
             right: 0px;
@@ -45,11 +50,13 @@
             background: url('resources/topbar/search.png') no-repeat;
         }
 
-        &:has(.x-filterBox-clearButton) .x-filterBox-searchIconContainer {
+        &:has(.x-filterBox-clearButton) .x-filterBox-searchIconContainer,
+        &:has(> button) > span {
             display: none;
         }
 
-        .x-filterBox-clearButton {
+        .x-filterBox-clearButton,
+        > button {
             position: absolute;
             top: 1px;
             right: 0px;

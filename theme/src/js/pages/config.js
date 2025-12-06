@@ -404,6 +404,7 @@ function init() {
     });
 
     const isWin11 = Spicetify.Platform.PlatformData.os_version.split('.')[2] >= 22000;
+    const showBackdropOption = isWin11 && (WindhawkComm.getModule().initialOptions.showframe !== false || document.documentElement.dataset.wmpotifyStyle === 'aero');
     if (whStatus) {
         elements.topmost.disabled = false;
         elements.topmost.value = localStorage.wmpotifyTopMost || 'never';
@@ -433,7 +434,7 @@ function init() {
             }
         });
 
-        if (isWin11) {
+        if (showBackdropOption) {
             elements.backdrop.disabled = false;
             elements.backdrop.value = localStorage.wmpotifyBackdrop || 'mica';
             elements.backdrop.addEventListener('change', () => {
@@ -445,7 +446,7 @@ function init() {
         elements.whMessage.style.display = 'none';
         elements.whVer.textContent = ', ' + Strings.getString('CONF_ABOUT_CTEWH_VERSION', WindhawkComm.getModule().version);
     }
-    if (!isWin11) {
+    if (!showBackdropOption) {
         elements.backdrop.style.display = 'none';
         elements.backdrop.previousElementSibling.style.display = 'none';
     }
