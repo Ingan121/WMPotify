@@ -63,7 +63,7 @@ const WindhawkComm = {
         }
     },
 
-    // (string - mica, acrylic, tabbed)
+    // (string - none, mica, acrylic, tabbed)
     setBackdrop(backdropType) {
         if (windhawkModule?.setBackdrop) {
             windhawkModule.setBackdrop(backdropType);

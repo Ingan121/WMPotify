@@ -266,11 +266,14 @@ async function init() {
     }
 
     const isWin11 = Spicetify.Platform.PlatformData.os_version?.split('.')[2] >= 22000;
-    if (isWin11 && localStorage.wmpotifyBackdrop !== 'none' &&
-        (WindhawkComm.getModule()?.initialOptions?.showframe !== false || style === 'aero')
-    ) {
-        WindhawkComm.setBackdrop(localStorage.wmpotifyBackdrop || 'mica');
-    }
+    if (isWin11 && (WindhawkComm.getModule()?.initialOptions?.showframe !== false || style === 'aero')) {
+        try {
+            WindhawkComm.setBackdrop(localStorage.wmpotifyBackdrop || 'mica');
+        } catch (e) {
+            // 'none' was introduced in mod version 1.6 and throws on older versions
+            console.error(e);
+        }
+    } 
 
     PageManager.init();
     new SidebarManager();

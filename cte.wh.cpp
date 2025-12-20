@@ -40,7 +40,7 @@
     * A variant of this mod, which uses copy-pasted CEF structs instead of hardcoded offsets, is available [here](https://github.com/Ingan121/files/tree/master/cte)
     * Copy the required structs/definitions from your wanted CEF version (available [here](https://cef-builds.spotifycdn.com/index.html)) and paste them into the above variant to calculate the offsets
     * Testing with cefclient: `cefclient.exe --use-views --hide-frame --hide-controls`
-* Supported Spotify versions: 1.1.60 to 1.2.75 (newer versions may work)
+* Supported Spotify versions: 1.1.60 to 1.2.79 (newer versions may work)
 * Spotify notes:
     * Old releases are available [here](https://loadspot.pages.dev/)
     * 1.1.60-1.1.67: Use [SpotifyNoControl](https://github.com/JulienMaille/SpotifyNoControl) to remove the window controls
@@ -181,7 +181,7 @@
 138: 1.2.70
 139: 1.2.71-1.2.74
 140: 1.2.75-1.2.77
-142: 1.2.78
+142: 1.2.78-1.2.79
 See https://www.spotify.com/opensource/ for more
 */
 
@@ -1660,14 +1660,23 @@ void HandleWindhawkComm(LPCWSTR command) {
         if (swscanf(command + 19, L"%d", &transparent) == 1) {
             MARGINS margins = { transparent ? -1 : 0 };
             DwmExtendFrameIntoClientArea(g_mainHwnd, &margins);
+            BOOL value = FALSE;
+            DwmSetWindowAttribute(g_mainHwnd, DWMWA_USE_HOSTBACKDROPBRUSH, &value, sizeof(value));
+            int backdrop_type = DWMSBT_NONE;
+            DwmSetWindowAttribute(g_mainHwnd, DWMWA_SYSTEMBACKDROP_TYPE, &backdrop_type, sizeof(backdrop_type));
             int ncRenderingPolicy = transparent ? DWMNCRP_DISABLED : DWMNCRP_ENABLED;
             DwmSetWindowAttribute(g_mainHwnd, DWMWA_NCRENDERING_POLICY, &ncRenderingPolicy, sizeof(ncRenderingPolicy));
             g_transparentMode = transparent;
         }
-    // /WH:SetBackdrop:<mica|acrylic|tabbed>
+    // /WH:SetBackdrop:<none|mica|acrylic|tabbed>
     // Set the window backdrop type (Windows 11 only)
     } else if (wcsncmp(command, L"/WH:SetBackdrop:", 16) == 0) {
-        if (wcscmp(command + 16, L"mica") == 0) {
+        if (wcscmp(command + 16, L"none") == 0) {
+            BOOL value = FALSE;
+            DwmSetWindowAttribute(g_mainHwnd, DWMWA_USE_HOSTBACKDROPBRUSH, &value, sizeof(value));
+            int backdrop_type = DWMSBT_NONE;
+            DwmSetWindowAttribute(g_mainHwnd, DWMWA_SYSTEMBACKDROP_TYPE, &backdrop_type, sizeof(backdrop_type));
+        } else if (wcscmp(command + 16, L"mica") == 0) {
             BOOL value = TRUE;
             DwmSetWindowAttribute(g_mainHwnd, DWMWA_USE_HOSTBACKDROPBRUSH, &value, sizeof(value));
             int backdrop_type = DWMSBT_MAINWINDOW;
@@ -2154,10 +2163,10 @@ int CEF_CALLBACK WindhawkCommV8Handler(cef_v8handler_t* self, const cef_string_t
         if (argumentsCount == 1 && arguments[0]->is_string(arguments[0])) {
             cef_string_t* backdropArg = arguments[0]->get_string_value(arguments[0]);
             std::wstring backdropStr(backdropArg->str, backdropArg->str + backdropArg->length);
-            if (backdropStr == L"mica" || backdropStr == L"acrylic" || backdropStr == L"tabbed") {
+            if (backdropStr == L"none" || backdropStr == L"mica" || backdropStr == L"acrylic" || backdropStr == L"tabbed") {
                 ipcRes = SendNamedPipeMessage((L"/WH:SetBackdrop:" + backdropStr).c_str());
             } else {
-                cef_string_t* msg = GenerateCefString(u"Invalid backdrop type, expected 'mica', 'acrylic', or 'tabbed'");
+                cef_string_t* msg = GenerateCefString(u"Invalid backdrop type, expected 'none', 'mica', 'acrylic', or 'tabbed'");
                 *exception = *msg;
                 free(msg->str);
                 free(msg);

@@ -112,7 +112,7 @@ const lang = {
     'CONF_GENERAL_TOPMOST_MINIMODE': '미니 모드에서',
     'CONF_GENERAL_TOPMOST_NEVER': '안함',
     'CONF_GENERAL_BACKDROP': '배경 재질',
-    'CONF_GENERAL_BACKDROP_NONE': '없음 (재시작 필요)',
+    'CONF_GENERAL_BACKDROP_NONE': '없음',
     'CONF_GENERAL_BACKDROP_ACRYLIC': '아크릴',
     'CONF_GENERAL_BACKDROP_TABBED': '탭',
     'CONF_GENERAL_PBLEFTBTN': '지금 재생 막대의 좋아요 버튼',

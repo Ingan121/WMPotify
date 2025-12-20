@@ -112,7 +112,7 @@ const lang = {
     'CONF_GENERAL_TOPMOST_MINIMODE': 'In mini mode',
     'CONF_GENERAL_TOPMOST_NEVER': 'Never',
     'CONF_GENERAL_BACKDROP': 'Backdrop',
-    'CONF_GENERAL_BACKDROP_NONE': 'None (restart required)',
+    'CONF_GENERAL_BACKDROP_NONE': 'None',
     'CONF_GENERAL_BACKDROP_ACRYLIC': 'Acrylic',
     'CONF_GENERAL_BACKDROP_TABBED': 'Tabbed',
     'CONF_GENERAL_PBLEFTBTN': 'Like button in the now playing bar',

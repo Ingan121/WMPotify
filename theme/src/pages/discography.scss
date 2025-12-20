@@ -86,6 +86,7 @@ section[data-test-uri^="spotify:artist:"] {
         width: 240px;
         position: relative;
         padding-top: 0 !important; /* 1.2.45 */
+        margin-top: 0 !important; /* 1.2.78 */
         z-index: 1;
 
         .artist-artistDiscography-headerImage {
