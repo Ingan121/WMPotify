@@ -11,6 +11,8 @@ import ThemeManager from "../managers/ThemeManager";
 import { ylxKeyPrefix } from "./libx";
 import { importScheme } from "../utils/appearance";
 
+const isWindows = navigator.userAgent.includes('Windows');
+
 const configWindow = document.createElement('div');
 let tabs = null;
 let currentTab = 0;
@@ -96,7 +98,7 @@ function init() {
                 <option value="mica">Mica</option>
                 <option value="acrylic">${Strings['CONF_GENERAL_BACKDROP_ACRYLIC']}</option>
                 <option value="tabbed">${Strings['CONF_GENERAL_BACKDROP_TABBED']}</option>
-            </select><br>
+            </select><br id="wmpotify-config-topmost-backdrop-br">
             <label for="wmpotify-config-pbleftbtn">${Strings['CONF_GENERAL_PBLEFTBTN']}</label>
             <select id="wmpotify-config-pbleftbtn" class="wmpotify-aero">
                 <option value="hide">${Strings['CONF_GENERAL_PBLEFTBTN_HIDE']}</option>
@@ -180,6 +182,7 @@ function init() {
     elements.defaultFontOptionsCount = 3 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload));
     elements.topmost = configWindow.querySelector('#wmpotify-config-topmost');
     elements.backdrop = configWindow.querySelector('#wmpotify-config-backdrop');
+    elements.backdropBr = configWindow.querySelector('#wmpotify-config-topmost-backdrop-br');
     elements.pbLeftBtn = configWindow.querySelector('#wmpotify-config-pbleftbtn');
     elements.showLibX = configWindow.querySelector('#wmpotify-config-show-libx');
     elements.lockTitle = configWindow.querySelector('#wmpotify-config-lock-title');
@@ -248,7 +251,7 @@ function init() {
         const darkMode = elements.darkMode.value;
         const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
         if (darkMode === 'system' && !WindhawkComm.getModule()?.initialOptions.noforceddarkmode && darkQuery.matches) {
-            const locId = 'CONF_GENERAL_DARK_MODE_SYSTEM_MSG_' + (navigator.userAgent.includes('Windows') ? 'WIN' : 'UNIX');
+            const locId = 'CONF_GENERAL_DARK_MODE_SYSTEM_MSG_' + (isWindows ? 'WIN' : 'UNIX');
             if (!await confirmModal(Strings['CONF_GENERAL_DARK_MODE_SYSTEM'], Strings[locId])) {
                 elements.darkMode.value = localStorage.wmpotifyDarkMode || 'follow_scheme';
                 return;
@@ -403,7 +406,7 @@ function init() {
         }
     });
 
-    const isWin11 = Spicetify.Platform.PlatformData.os_version.split('.')[2] >= 22000;
+    const isWin11 = isWindows && Spicetify.Platform.PlatformData.os_version.split('.')[2] >= 22000;
     const showBackdropOption = isWin11 && (WindhawkComm.getModule().initialOptions.showframe !== false || document.documentElement.dataset.wmpotifyStyle === 'aero');
     if (whStatus) {
         elements.topmost.disabled = false;
@@ -450,9 +453,10 @@ function init() {
         elements.backdrop.style.display = 'none';
         elements.backdrop.previousElementSibling.style.display = 'none';
     }
-    if (!navigator.userAgent.includes('Windows')) {
+    if (!isWindows) {
         elements.topmost.style.display = 'none';
         elements.topmost.previousElementSibling.style.display = 'none';
+        elements.backdropBr.style.display = 'none';
         elements.lockTitle.style.display = 'none';
         elements.lockTitle.nextElementSibling.style.display = 'none';
         elements.whMessage.style.display = 'none';
@@ -479,7 +483,7 @@ function init() {
             elements.style.value = localStorage.wmpotifyStyle;
         }
     }
-    if (!navigator.userAgent.includes('Windows')) {
+    if (!isWindows) {
         elements.titleStyle.querySelector('option[value=keepmenu]').remove();
     }
     if (navigator.userAgent.includes('Linux')) {
@@ -635,7 +639,7 @@ function onSpeedChange() {
 function setSpeed(speed) {
     const isPlayingPodcast = document.querySelector('button[data-testid="control-button-playback-speed"]');
     if (!whSpeedModSupported && !isPlayingPodcast) {
-        Spicetify.showNotification(Strings['CONF_SPEED_UNSUPPORTED_MSG_' + (navigator.userAgent.includes('Windows') ? 'WIN' : 'UNIX')]);
+        Spicetify.showNotification(Strings['CONF_SPEED_UNSUPPORTED_MSG_' + (isWindows ? 'WIN' : 'UNIX')]);
         return;
     }
     if (Spicetify.Platform.ConnectAPI.state.connectionStatus === 'connected' && !isPlayingPodcast) {

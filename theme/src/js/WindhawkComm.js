@@ -18,14 +18,14 @@ const WindhawkComm = {
     // (int, int, int, int)
     // To disable: (0, 0, 0, 0)
     // To extend to full window: (-1, -1, -1, -1)
-    extendFrame(left, top, right, bottom) {
+    extendFrame(left, right, top, bottom) {
         if (windhawkModule?.extendFrame) {
-            [left, top, right, bottom] = [left, top, right, bottom].map(v => Math.round(v * window.devicePixelRatio));
+            [left, right, top, bottom] = [left, right, top, bottom].map(v => Math.round(v * window.devicePixelRatio));
             if (lastDpi > 1) { // Fix for Windows DPI scaling
-                [left, top] = [left && left - 1, top && top - 1];
-                [right, bottom] = [right && right - 1, bottom && bottom - 1];
+                [left, right] = [left && left - 1, right && right - 1];
+                [top, bottom] = [top && top - 1, bottom && bottom - 1];
             }
-            windhawkModule.extendFrame(left, top, right, bottom);
+            windhawkModule.extendFrame(left, right, top, bottom);
         }
     },
 
