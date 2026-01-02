@@ -407,7 +407,7 @@ function init() {
     });
 
     const isWin11 = isWindows && Spicetify.Platform.PlatformData.os_version.split('.')[2] >= 22000;
-    const showBackdropOption = isWin11 && (WindhawkComm.getModule().initialOptions.showframe !== false || document.documentElement.dataset.wmpotifyStyle === 'aero');
+    const showBackdropOption = isWin11 && (WindhawkComm.getModule()?.initialOptions.showframe !== false || document.documentElement.dataset.wmpotifyStyle === 'aero');
     if (whStatus) {
         elements.topmost.disabled = false;
         elements.topmost.value = localStorage.wmpotifyTopMost || 'never';
