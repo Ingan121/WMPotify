@@ -60,15 +60,26 @@ const CustomLibX = {
             });
         }
 
+        const libraryContainer = document.querySelector('.main-yourLibraryX-libraryContainer');
+
         const header = document.createElement('div');
         header.id = 'wmpotify-libx-header';
-        document.querySelector('.main-yourLibraryX-libraryContainer').insertAdjacentElement('afterbegin', header);
+        libraryContainer.insertAdjacentElement('afterbegin', header);
 
         const sidebar = document.createElement('div');
         sidebar.id = 'wmpotify-libx-sidebar';
         document.querySelector('.main-yourLibraryX-libraryItemContainer').insertAdjacentElement('afterbegin', sidebar);
 
         await waitForLibXLoad();
+
+        libraryContainer.dataset.treegrid = !!libraryContainer.querySelector('ul[role="treegrid"]');
+        libraryContainer.dataset.gridcell = !!libraryContainer.querySelector('div[role="gridcell"]');
+        Spicetify.Platform.LocalStorageAPI._events.addListener("update", ({ data }) => {
+            if (data.key === "items-view") {
+                libraryContainer.dataset.treegrid = !!libraryContainer.querySelector('ul[role="treegrid"]');
+                libraryContainer.dataset.gridcell = !!libraryContainer.querySelector('div[role="gridcell"]');
+            }
+        });
 
         categoryButtons = document.querySelector('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]');
         const categoryButtonsInner = categoryButtons.querySelector('div[role="listbox"]'); // 1.2.68

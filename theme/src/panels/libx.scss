@@ -97,7 +97,7 @@
     }
 
     /* 1.2.62 */
-    &:has(div[role="gridcell"]) {
+    &[data-gridcell] {
         #wmpotify-libx-sidebar {
             margin-top: 0;
             height: calc(100% + 26px);
@@ -114,7 +114,7 @@
         }
     }
 
-    &:has(ul[role="treegrid"]) {
+    &[data-treegrid] {
         .main-yourLibraryX-filterArea,
         .rjsuxO8gqIyaiYTHNpOQ /* 1.2.72 */ {
             button[role="combobox"] {
@@ -540,13 +540,13 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
             height: calc(100% - 55px);
         }
 
-        &:has(div[role="gridcell"]) {
+        &[data-gridcell] {
             > div:last-child {
                 height: calc(100% - 29px);
             }
         }
 
-        &:has(ul[role="treegrid"]) {
+        &[data-treegrid] {
             > div:last-child {
                 height: 100%;
                 &:has(> .os-scrollbar-visible) {

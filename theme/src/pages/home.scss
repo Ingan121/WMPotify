@@ -77,7 +77,7 @@
 
     /* Picked for you, etc. */
     section:not(.main-shelf-shelfGrid):not(.view-homeShortcutsGrid-shortcuts) {
-        a:has(div[class*="PromotionDefaultNative-"]) {
+        a[class*="PromotionDefaultNative-"] {
             border: solid 1px transparent;
             border-radius: 3px;
 
@@ -127,7 +127,7 @@
         }
 
         section:not(.main-shelf-shelfGrid):not(.view-homeShortcutsGrid-shortcuts) {
-            a:has(div[class*="PromotionDefaultNative-"]):hover {
+            a[class*="PromotionDefaultNative-"]:hover {
                 [class*=encore-text] {
                     color: HighlightText !important;
                     background-color: Highlight !important;

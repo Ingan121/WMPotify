@@ -15,6 +15,7 @@ class Topbar {
         this.tabsContainer = document.createElement('div');
         this.tabsContainer.id = 'wmpotify-tabs-container';
         topbar.insertBefore(this.tabsContainer, topbar.querySelector('.main-globalNav-searchSection'));
+        topbar.dataset.wmpotifyTabsCreated = true;
 
         let nowPlayingButton = document.querySelector('.custom-navlinks-scrollable_container div[role="presentation"] > button:has(#wmpotify-nowplaying-icon)');
         if (!nowPlayingButton) {

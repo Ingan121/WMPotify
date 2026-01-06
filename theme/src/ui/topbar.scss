@@ -32,7 +32,7 @@
 
     /* Marketplace load bugfix */
     padding-inline: 7px !important;
-    &:has(#wmpotify-tabs-container) {
+    &[data-wmpotify-tabs-created] {
         padding-inline: 8px !important;
     }
 
@@ -157,7 +157,7 @@
 }
 
 :root[data-wmpotify-init-complete],
-.Root__globalNav:has(#wmpotify-tabs-container) {
+.Root__globalNav[data-wmpotify-tabs-created] {
     .main-globalNav-searchContainer,
     .custom-navlinks-scrollable_container,
     .main-topBar-topbarContentRight > .main-actionButtons > button {
@@ -238,9 +238,7 @@
             }
         }
 
-        &.main-globalNav-navLinkActive,
-        &:has(svg.Svg-img-icon-small-textBase),
-        &:has(svg[style*="--encore-icon-fill"]) {
+        &.main-globalNav-navLinkActive {
             border-image-source: var(--tab-active);
 
             &:hover {
@@ -460,14 +458,52 @@ body[data-hide-libx] {
 
 :root[data-page^="/wmpvis"] {
     #wmpotify-tabs-container button[data-identifier="now-playing"] {
-        border-image-source: var(--tab-active);
+        border-image-source: var(--tab-active) !important;
 
         &:hover {
-            border-image-source: var(--tab-active-hover);
+            border-image-source: var(--tab-active-hover) !important;
         }
 
         &:active {
-            border-image-source: var(--tab-active-pressed);
+            border-image-source: var(--tab-active-pressed) !important;
+        }
+
+        .wmpotify-tab-label {
+            background-color: var(--tab-label-bg-active) !important;
+            color: var(--tab-label-text-active) !important;
+        }
+    }
+}
+
+:root[data-page^="/content-feed"] {
+    #wmpotify-tabs-container button[data-identifier="content-feed"] {
+        border-image-source: var(--tab-active) !important;
+
+        &:hover {
+            border-image-source: var(--tab-active-hover) !important;
+        }
+
+        &:active {
+            border-image-source: var(--tab-active-pressed) !important;
+        }
+
+        .wmpotify-tab-label {
+            background-color: var(--tab-label-bg-active) !important;
+            color: var(--tab-label-text-active) !important;
+        }
+    }
+}
+
+:root[data-buddy-feed-open] {
+    #wmpotify-tabs-container button[data-identifier="buddy-feed"] {
+        border-image-source: var(--tab-active) !important;
+
+        &:hover {
+            border-image-source: var(--tab-active-hover) !important;
+        }
+
+        &:active {
+            border-image-source: var(--tab-active-pressed) !important;
         }
 
         .wmpotify-tab-label {

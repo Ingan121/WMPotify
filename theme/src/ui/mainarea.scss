@@ -76,22 +76,18 @@ body[data-hide-libx].sidebar-open,
         height: 28px;
         border-bottom: solid 1px var(--wmp11-separator-shadow);
         outline: solid 1px var(--wmp11-separator-light);
-        overflow: hidden;
+        overflow: visible;
 
-        &:has(.Dropdown-menu) {
-            overflow: visible;
-        }
-
-        &:has(.main-topBar-topbarContentWrapper:empty) {
+        &:has(> .contentSpacing > .main-topBar-topbarContentWrapper:empty) {
             display: none;
         }
 
-        &:has(.main-topBar-topbarContent > span.main-entityHeader-topbarTitle):not(:has(div[data-identifier="discography-topbar"])) {
+        &:has(> .contentSpacing > div > div > span.main-entityHeader-topbarTitle) {
             position: absolute;
             width: calc(100% - var(--scrollbar-size));
             outline: none;
 
-            &:not(:has(.main-entityHeader-topbarContentFadeIn)) {
+            &:not(:has(> .contentSpacing > div > .main-entityHeader-topbarContentFadeIn)) {
                 display: none;
             }
         }
@@ -100,7 +96,7 @@ body[data-hide-libx].sidebar-open,
             display: flex;
         }
 
-        &:has(.main-topBar-background[style*="opacity: 1"]) {
+        &:has(> .main-topBar-background[style*="opacity: 1"]) {
             display: flex !important;
         }
 
@@ -141,12 +137,7 @@ body[data-hide-libx].sidebar-open,
             background: transparent !important;
         }
 
-        div:has([data-testid='NPV_Panel_OpenDiv']) {
-            background: transparent !important;
-        }
-
-        &:has([data-testid='NPV_Panel_OpenDiv']),
-        &:has(#spotify-queue-panel-content) {
+        &[data-identifier="spotify-queue-panel"] {
             animation: none !important;
         }
 
@@ -184,10 +175,8 @@ body[data-hide-libx].sidebar-open,
         }
     }
 
-    &:not(:has(aside)) {
-        .LayoutResizer__resize-bar.LayoutResizer__inline-start {
-            display: none;
-        }
+    > div:empty + .LayoutResizer__resize-bar.LayoutResizer__inline-start {
+        display: none;
     }
 }
 

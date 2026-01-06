@@ -19,6 +19,12 @@ export function initQueuePanel() {
         extraQueuePanelObserver.observe(detectTarget, { childList: true });
     }
 
+    if (document.querySelector('[data-testid*="buddy-feed"]')) {
+        document.documentElement.dataset.buddyFeedOpen = true;
+    } else {
+        delete document.documentElement.dataset.buddyFeedOpen;
+    }
+
     if (!document.querySelector('#queue-panel') ||
         document.querySelector('#wmpotify-queue-toolbar') ||
         document.querySelectorAll('div[data-encore-id="tabPanel"]').length > 2
