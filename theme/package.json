@@ -35,6 +35,7 @@
         "postcss-nested": "^7.0.2"
     },
     "dependencies": {
-        "@types/chrome": "^0.1.36"
+        "@types/chrome": "^0.1.36",
+        "@types/react": "^19.2.10"
     }
 }
