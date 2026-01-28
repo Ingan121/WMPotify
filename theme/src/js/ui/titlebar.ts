@@ -1,9 +1,10 @@
 'use strict';
 
 import ControlManager from "../managers/ControlManager";
-import WindhawkComm from "../WindhawkComm";
+import WindhawkComm from "../utils/WindhawkComm";
 
-let titleBar = null;
+let titleBar: HTMLDivElement | null = null;
+let titleButtons: HTMLDivElement | null = null;
 
 function createTitlebarSkeleton() {
     titleBar = document.createElement('div');
@@ -28,7 +29,7 @@ function createTitlebarSkeleton() {
     document.body.appendChild(titleBar);
 }
 
-async function initTitlebar(mode) {
+async function initTitlebar(mode: string) {
     const whStatus = WindhawkComm.query();
 
     switch (mode) {
@@ -38,7 +39,7 @@ async function initTitlebar(mode) {
         case 'custom':
             new ControlManager(1);
         case 'keepmenu':
-            const titleButtons = document.createElement('div');
+            titleButtons = document.createElement('div');
             titleButtons.id = 'wmpotify-title-buttons';
             if (window.SpotEx || whStatus) {
                 const minimizeButton = document.createElement('button');
@@ -70,14 +71,14 @@ async function initTitlebar(mode) {
 
                 async function updateWindowStatus() {
                     if (whStatus) {
-                        if (WindhawkComm.query().isMaximized) {
-                            maximizeButton.dataset.maximized = true;
+                        if (WindhawkComm.query()?.isMaximized) {
+                            maximizeButton.dataset.maximized = "true";
                         } else {
                             delete maximizeButton.dataset.maximized;
                         }
                     } else {
                         if ((await SpotEx.getWindow()).state === 'maximized') {
-                            maximizeButton.dataset.maximized = true;
+                            maximizeButton.dataset.maximized = "true";
                         } else {
                             delete maximizeButton.dataset.maximized;
                         }
@@ -93,13 +94,18 @@ async function initTitlebar(mode) {
         case 'spotify':
             if (titleBar === null) {
                 createTitlebarSkeleton();
+                if (titleBar === null) {
+                    return;
+                }
             }
             const titleText = document.createElement('span');
             titleText.id = 'wmpotify-title-text';
             titleText.textContent = await Spicetify.AppTitle.get();
             titleBar.appendChild(titleText);
             if (mode === 'custom' || mode === 'keepmenu') {
-                titleBar.appendChild(titleButtons);
+                if (titleButtons) {
+                    titleBar.appendChild(titleButtons);
+                }
             }
             if (mode === 'keepmenu' || mode === 'spotify') {
                 new ControlManager(25);

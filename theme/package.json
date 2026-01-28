@@ -33,5 +33,8 @@
         "postcss-calc": "^10.0.2",
         "postcss-import": "^16.1.0",
         "postcss-nested": "^7.0.2"
+    },
+    "dependencies": {
+        "@types/chrome": "^0.1.36"
     }
 }

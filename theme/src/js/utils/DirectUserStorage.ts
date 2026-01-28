@@ -3,20 +3,23 @@
 // Spicetify LocalStorageAPI but without immediate effect
 
 const DirectUserStorage = {
-    getItem(key) {
+    getItem(key: string): string | number | null {
         const username = Spicetify._platform?.initialUser?.username;
         const res = localStorage.getItem(username + ":" + key);
-        if (isNaN(res)) {
+        if (isNaN(Number(res))) {
             return res;
         } else {
+            if (res === null) {
+                return null;
+            }
             return parseFloat(res);
         }
     },
-    setItem(key, value) {
+    setItem(key: string, value: string | number) {
         const username = Spicetify._platform?.initialUser?.username;
-        localStorage.setItem(username + ":" + key, value);
+        localStorage.setItem(username + ":" + key, value.toString());
     },
-    removeItem(key) {
+    removeItem(key: string) {
         const username = Spicetify._platform?.initialUser?.username;
         localStorage.removeItem(username + ":" + key);
     }

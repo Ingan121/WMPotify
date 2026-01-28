@@ -6,6 +6,7 @@ canvas.height = 1;
 const context = canvas.getContext('2d', { alpha: false, willReadFrequently: true });
 
 function getTintedColor(hue, sat, base = '#EEF3FA') {
+    if (!context) return base;
     context.fillStyle = base;
     context.filter = `hue-rotate(${hue}deg) saturate(${sat}%)`;
     context.fillRect(0, 0, 1, 1);
@@ -38,10 +39,10 @@ export function setTintColor(hue, sat, tintPb, tintMore) {
 
     document.documentElement.style.setProperty('--spice-main', getTintedColor(hue, sat));
     document.documentElement.style.setProperty('--wmpotify-tint-hue', hue + 'deg');
-    document.documentElement.style.setProperty('--wmpotify-tint-sat', sat / 100);
+    document.documentElement.style.setProperty('--wmpotify-tint-sat', sat / 100 + '');
 
     if (tintMore) {
-        document.documentElement.dataset.wmpotifyTintMore = true;
+        document.documentElement.dataset.wmpotifyTintMore = "true";
         const tintedAccent = getTintedColor(hue, sat, '#0067d0');
         document.documentElement.style.setProperty('--spice-button', tintedAccent);
         document.documentElement.style.setProperty('--spice-button-active', tintedAccent);

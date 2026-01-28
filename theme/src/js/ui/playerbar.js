@@ -2,7 +2,7 @@
 
 import Strings from '../strings';
 import { formatTime } from '../utils/functions';
-import WindhawkComm from '../WindhawkComm';
+import WindhawkComm from '../utils/WindhawkComm';
 import WindowManager from '../managers/WindowManager';
 
 class PlayerBar {

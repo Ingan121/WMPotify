@@ -3,6 +3,8 @@
 import Strings from '../strings';
 
 class ControlManager {
+	controlHeight: number;
+
 	// From https://github.com/ohitstom/spicetify-extensions/tree/main/noControls
 	constructor(controlHeight = 1) {
 		this.controlHeight = controlHeight;

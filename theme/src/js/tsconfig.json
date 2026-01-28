@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "noImplicitAny": false,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "lib": ["DOM", "ESNext", "DOM.Iterable"],
+    "types": ["react", "chrome"]
+  }
+}

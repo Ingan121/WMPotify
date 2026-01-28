@@ -2,7 +2,7 @@
 
 import Strings from '../strings';
 import { compareSpotifyVersion, ver, lastSupportedSpotifyVer } from '../utils/UpdateCheck';
-import WindhawkComm from "../WindhawkComm";
+import WindhawkComm from "../utils/WindhawkComm";
 
 export function confirmModal(title = "WMPotify", message, confirmText = Strings['UI_OK'], cancelText = Strings['UI_CANCEL']) {
     return new Promise((resolve, reject) => {

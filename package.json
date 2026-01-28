@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@types/react": "^19.2.10"
+  }
+}

@@ -1,14 +1,19 @@
 'use strict';
 
 import Strings from '../strings'
-import WindhawkComm from "../WindhawkComm";
+import WindhawkComm from "../utils/WindhawkComm";
 import { openUpdateDialog } from '../ui/dialogs';
 
-const verString = '1.3 Pre-release (2026/01/07)';
+const verString = '1.3 Pre-release (2026/01/29)';
 export let lastSupportedSpotifyVer = '1.2.80';
 
 export class MadVersion {
-    constructor(ver) {
+    major: number;
+    minor: number;
+    patch: number;
+    extra: string;
+
+    constructor(ver: string) {
         const split = ver.split(" ");
         const verSplit = split[0].split(".");
         this.major = parseInt(verSplit[0]);
@@ -17,8 +22,8 @@ export class MadVersion {
         this.extra = split.length === 1 ? "" : split.slice(1).join(" ");
     }
 
-    toString(level = 1) {
-        switch (parseInt(level)) {
+    toString(level: number): string {
+        switch (level) {
             case 0:
                 return `${this.major}.${this.minor}.${this.patch}${this.extra ? ` ${this.extra}` : ""}`;
             case 1:
@@ -32,7 +37,7 @@ export class MadVersion {
         }
     }
 
-    compare(verString, noExtra) {
+    compare(verString: string, noExtra: boolean = false): number {
         // Returns 1 if this version is newer, -1 if older, 0 if equal
         const ver = new MadVersion(verString);
         if (this.major !== ver.major) {
@@ -66,12 +71,12 @@ export async function checkUpdates() {
     try {
         const isMarketplaceDist = !!document.querySelector('style.marketplaceUserCSS');
         const cteAvailable = WindhawkComm.available();
-        const cteVer = new MadVersion(WindhawkComm.getModule()?.version);
+        const cteVer = new MadVersion(WindhawkComm.getModule()?.version!);
 
         const res = await fetch('https://www.ingan121.com/wmpotify/latest.txt');
         const latest = await res.text();
-        const wmpotifyLatest = latest.match('wmpotify_new=(.*)')[1];
-        const cteLatest = latest.match('cte=(.*)')[1];
+        const wmpotifyLatest = latest.match('wmpotify_new=(.*)')![1];
+        const cteLatest = latest.match('cte=(.*)')![1];
         if (!ver.extra) { // Only update last supported Spotify version on stable releases
             const lastSpotifyVer = latest.match('last_spotify=(.*)')?.[1];
             if (lastSpotifyVer) {

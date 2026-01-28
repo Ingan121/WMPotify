@@ -1,4 +1,4 @@
-let observer = null;
+let observer: MutationObserver | null = null;
 
 export async function initPlaylistPage() {
     const section = document.querySelector('main [role=presentation]');
@@ -23,11 +23,11 @@ export async function initPlaylistPage() {
     observer = new MutationObserver((mutationsList) => {
         for (let mutation of mutationsList) {
             if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                const targetElement = mutation.target;
-                if (targetElement.classList.contains('main-entityHeader-topbarContentFadeIn')) {
+                const targetElement = mutation.target as HTMLElement | null;
+                if (targetElement && targetElement.classList.contains('main-entityHeader-topbarContentFadeIn')) {
                     targetElement.appendChild(searchBox);
                 } else {
-                    searchBoxOrigParent.appendChild(searchBox);
+                    searchBoxOrigParent?.appendChild(searchBox);
                 }
             }
         }

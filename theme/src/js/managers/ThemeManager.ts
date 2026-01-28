@@ -16,7 +16,7 @@ const mpSchemeUpdateObserver = new MutationObserver((mutationsList) => {
 
             if (hasMarketplaceCSS(addedNodes)) {
                 if (Spicetify.Config.color_scheme === 'dark') {
-                    document.documentElement.dataset.wmpotifyDarkMode = true;
+                    document.documentElement.dataset.wmpotifyDarkMode = "true";
                 } else {
                     delete document.documentElement.dataset.wmpotifyDarkMode;
                 }
@@ -31,7 +31,7 @@ const mpSchemeUpdateObserver = new MutationObserver((mutationsList) => {
 
 function updateSystemDarkMode(event) {
     if (event.matches) {
-        document.documentElement.dataset.wmpotifyDarkMode = true;
+        document.documentElement.dataset.wmpotifyDarkMode = "true";
     } else {
         delete document.documentElement.dataset.wmpotifyDarkMode;
     }

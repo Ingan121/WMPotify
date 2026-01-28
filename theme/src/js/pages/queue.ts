@@ -2,10 +2,10 @@
 
 import Strings from '../strings';
 import { formatTime } from "../utils/functions";
-import { createMadMenu, MadMenu } from "../utils/MadMenu";
+import { createMadMenu, MadMenu, MadMenuItem, CreateMadMenuRes } from "../utils/MadMenu";
 import SidebarManager from '../managers/SidebarManager';
 
-let extraQueuePanelObserver;
+let extraQueuePanelObserver: MutationObserver | null = null;
 
 export function initQueuePanel() {
     console.log('WMPotify: Trying to initialize queue panel');
@@ -20,7 +20,7 @@ export function initQueuePanel() {
     }
 
     if (document.querySelector('[data-testid*="buddy-feed"]')) {
-        document.documentElement.dataset.buddyFeedOpen = true;
+        document.documentElement.dataset.buddyFeedOpen = "true";
     } else {
         delete document.documentElement.dataset.buddyFeedOpen;
     }
@@ -33,15 +33,19 @@ export function initQueuePanel() {
     }
 
     // There are two panels with the same ID, when the transition animation is in progress
-    const panel = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel)');
-    const previousPanel = document.querySelector('#Desktop_PanelContainer_Id:not(:has(#queue-panel))');
-    if (panel && previousPanel) {
-        previousPanel.style.display = 'none';
+    const panel = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel)') as HTMLDivElement | null;
+    const previousPanel = document.querySelector('#Desktop_PanelContainer_Id:not(:has(#queue-panel))') as HTMLDivElement | null;
+    if (panel) {
+        if (previousPanel) {
+            previousPanel.style.display = 'none';
+        }
+        panel.dataset.identifier = 'spotify-queue-panel';
     }
-    panel.dataset.identifier = 'spotify-queue-panel';
-    const top = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel) > div > div:first-child > div:first-child');
-    const belowSeparator = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel) > div > div:nth-child(2)');
-    belowSeparator.id = 'spotify-queue-panel-content';
+    const top = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel) > div > div:first-child > div:first-child') as HTMLDivElement | null;
+    const belowSeparator = document.querySelector('#Desktop_PanelContainer_Id:has(#queue-panel) > div > div:nth-child(2)') as HTMLDivElement | null;
+    if (belowSeparator) {
+        belowSeparator.id = 'spotify-queue-panel-content';
+    }
 
     const queueToolbar = document.createElement('div');
     queueToolbar.id = 'wmpotify-queue-toolbar';
@@ -68,36 +72,42 @@ export function initQueuePanel() {
     });
 
     queueToolbar.appendChild(clearButton);
-    belowSeparator.insertAdjacentElement('afterbegin', queueToolbar);
+    if (belowSeparator) {
+        belowSeparator.insertAdjacentElement('afterbegin', queueToolbar);
+    }
 
     const placeholderImage = getComputedStyle(document.documentElement).getPropertyValue('--album-art-placeholder').trim().slice(5, -2);
     const topPanel = document.createElement('div');
     topPanel.id = 'wmpotify-queue-npv';
     const albumArt = document.createElement('img');
     albumArt.id = 'wmpotify-queue-album-art';
-    albumArt.src = document.querySelector('.main-nowPlayingWidget-coverArt .cover-art img')?.src || placeholderImage;
+    const npvCoverArtImg = document.querySelector('.main-nowPlayingWidget-coverArt .cover-art img') as HTMLImageElement | null;
+    albumArt.src = npvCoverArtImg?.src || placeholderImage;
     topPanel.appendChild(albumArt);
     const songTitle = document.createElement('div');
     songTitle.id = 'wmpotify-queue-song-title';
     songTitle.textContent = document.querySelector('.main-trackInfo-name')?.textContent || 'No items';
     topPanel.appendChild(songTitle);
-    top.insertAdjacentElement('afterbegin', topPanel);
+    top?.insertAdjacentElement('afterbegin', topPanel);
 
     onQueuePanelInit();
-    new MutationObserver(onQueuePanelInit).observe(document.querySelector('#queue-panel'), { childList: true });
+    new MutationObserver(onQueuePanelInit).observe(document.querySelector('#queue-panel')!, { childList: true });
 
     const tabs = document.querySelectorAll('#Desktop_PanelContainer_Id:has(#queue-panel) div[role="tablist"] button');
-    let menuItems = [];
-    let menuObj;
+    let menuItems: MadMenuItem[] = [];
+    let menuObj: CreateMadMenuRes;
     for (const tab of tabs) {
         menuItems.push({
             text: tab.textContent,
-            click: function () {
+            click: function (event: Event) {
+                if (!menuObj.menuItems) {
+                    return;
+                }
                 for (const menuItem of menuObj.menuItems) {
                     menuItem.classList.remove('activeStyle');
                 }
-                this.classList.add('activeStyle');
-                tab.click()
+                (event.target as HTMLElement).classList.add('activeStyle');
+                (tab as HTMLElement).click();
             }
         });
     }
@@ -105,10 +115,12 @@ export function initQueuePanel() {
     document.querySelector('#wmpotifyQueueTabMenuBg')?.remove();
     menuObj = createMadMenu('wmpotifyQueueTab', menuItems);
     const menu = new MadMenu(['wmpotifyQueueTab']);
-    panel.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        menu.openMenu('wmpotifyQueueTab', { left: e.clientX + 'px', top: e.clientY + 'px' });
-    });
+    if (panel) {
+        panel.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            menu.openMenu('wmpotifyQueueTab', { left: e.clientX + 'px', top: e.clientY + 'px' });
+        });
+    }
 
     Spicetify.Player.addEventListener('songchange', () => {
         playlistButton.textContent = Spicetify.Player.data?.context?.metadata?.context_description || Strings['QUEUE_CURRENT_PLAYLIST_PLACEHOLDER'];
@@ -119,7 +131,7 @@ export function initQueuePanel() {
 }
 
 function onQueuePanelInit() {
-    const queueContainer = document.querySelector('#queue-panel > div:first-child');
+    const queueContainer = document.querySelector('#queue-panel > div:first-child') as HTMLDivElement | null;
     if (!queueContainer) {
         return;
     }
@@ -130,7 +142,7 @@ function onQueuePanelInit() {
         new MutationObserver(processQueueItems).observe(queueContent, { childList: true });
     } else {
         if (document.querySelector('#queue-panel > div:first-child > svg:first-child')) {
-            queueContainer.dataset.nothingInQueue = true;
+            queueContainer.dataset.nothingInQueue = "true";
         } else {
             delete queueContainer.dataset.nothingInQueue;
         }

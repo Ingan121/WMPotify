@@ -4,7 +4,7 @@ import Strings from "../strings";
 import { confirmModal, promptModal, diagDialog } from "../ui/dialogs";
 import FontDetective from "../utils/FontDetective";
 import { setTintColor } from "../ui/tinting";
-import WindhawkComm from "../WindhawkComm";
+import WindhawkComm from "../utils/WindhawkComm";
 import WindowManager from "../managers/WindowManager";
 import { ver, checkUpdates } from "../utils/UpdateCheck";
 import ThemeManager from "../managers/ThemeManager";

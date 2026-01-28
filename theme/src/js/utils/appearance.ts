@@ -5,10 +5,83 @@
 
 'use strict';
 
-import Strings from '../strings.js';
+import Strings from '../strings';
+
+interface ThemeScheme {
+    'active-border'?: string;
+    'active-title'?: string;
+    'app-workspace'?: string;
+    'background'?: string;
+    'button-alternate-face'?: string;
+    'button-dk-shadow'?: string;
+    'button-face'?: string;
+    'button-hilight'?: string;
+    'button-light'?: string;
+    'button-shadow'?: string;
+    'button-text'?: string;
+    'gradient-active-title'?: string;
+    'gradient-inactive-title'?: string;
+    'gray-text'?: string;
+    'hilight'?: string;
+    'hilight-text'?: string;
+    'hot-tracking-color'?: string;
+    'inactive-border'?: string;
+    'inactive-title'?: string;
+    'inactive-title-text'?: string;
+    'info-text'?: string;
+    'info-window'?: string;
+    'menu'?: string;
+    'menu-bar'?: string;
+    'menu-hilight'?: string;
+    'menu-text'?: string;
+    'scrollbar'?: string;
+    'title-text'?: string;
+    'window'?: string;
+    'window-frame'?: string;
+    'window-text'?: string;
+    // Additional properties for WCTC
+    'scrollbar-size'?: string;
+    'menu-height'?: string;
+    'flat-menus'?: string;
+    // Keys that should be ignored
+    'extra-border-bottom'?: string;
+    'supports-win-shadow'?: string;
+    'extra-title-height'?: string;
+    'extra-border-size'?: string;
+    'menu-animation'?: string;
+    'menu-shadow'?: string;
+    'supports-colorization'?: string;
+    'win-open-anim'?: string;
+    'win-close-anim'?: string;
+    'palette-title-height'?: string;
+    // More internal key names used in final CSS
+    'surface'?: string;
+    'button-shadow-color'?: string;
+    'ui-font-default'?: string;
+}
+
+// Type declaration for File System Access API which is somehow still missing
+interface PickerOpts {
+    types?: Array<{
+        description?: string;
+        accept: Record<string, string[]>;
+    }>;
+    excludeAcceptAllOption?: boolean;
+    multiple?: boolean;
+}
+
+declare global {
+    interface Window {
+        showOpenFilePicker(options?: PickerOpts): Promise<FileSystemFileHandle[]>;
+    }
+}
+
+interface FileSystemFileHandle {
+    getFile(): Promise<File>;
+}
 
 export async function importScheme() {
-    const pickerOpts = {
+    const pickerOpts: PickerOpts = {
         types: [{
             description: "All Supported Types",
             accept: {
@@ -74,7 +147,7 @@ export async function importScheme() {
                     cssScheme = cssScheme.replace(line, line.replace(/:\s*(.*);/, ': $1 !important;'));
                 }
             }
-            const scheme = [];
+            const scheme: ThemeScheme = {};
             scheme['surface'] = cssScheme.match(/--surface:\s*(.*);/)?.[1].replace(/ !important/, '');
             scheme['button-shadow-color'] = cssScheme.match(/--button-shadow-color:\s*(.*);/)?.[1].replace(/ !important/, '');
             scheme['button-dk-shadow'] = cssScheme.match(/--button-dk-shadow:\s*(.*);/)?.[1].replace(/ !important/, '');
@@ -101,7 +174,7 @@ export async function importScheme() {
             const reg = !!text.split("\n")[0].match(/(?=.*REG)(?=.*EDIT)/i);
             const ctc = reg && text.includes("\\Control Panel\\Appearance\\ClassicSchemes\\");
             try {
-                const scheme = {
+                const scheme: ThemeScheme = {
                     'active-border': getColorValue(text, 'ActiveBorder', reg, ctc),
                     'active-title': getColorValue(text, 'ActiveTitle', reg, ctc),
                     'app-workspace': getColorValue(text, 'AppWorkspace', reg, ctc),
@@ -178,7 +251,7 @@ export async function importScheme() {
     }
 }
 
-export async function applyScheme(cssText) {
+export async function applyScheme(cssText: string) {
     let style = document.getElementById('wmpotify-scheme');
     if (!style) {
         style = document.createElement('style');
@@ -189,11 +262,11 @@ export async function applyScheme(cssText) {
 
     document.documentElement.dataset.wmpotifyControlStyle = "custom";
     if (cssText.includes("--flat-menus: mbcm")) {
-        document.documentElement.dataset.wmpotifyFlatMenus = true;
+        document.documentElement.dataset.wmpotifyFlatMenus = "true";
     }
 }
 
-function generateCssScheme(scheme) {
+function generateCssScheme(scheme: ThemeScheme): string {
     const shouldBeDeleted = [ // Keys not used in WMPotify
         'extra-border-bottom',
         'supports-win-shadow',
@@ -228,7 +301,7 @@ function generateCssScheme(scheme) {
     return cssScheme;
 }
 
-function generateThemeSvgs(scheme) {
+function generateThemeSvgs(scheme: ThemeScheme): string {
     const buttonFace = scheme['surface'] || scheme['button-face'];
     const buttonDkShadow = scheme['button-dk-shadow'];
     const buttonHilight = scheme['button-hilight'];
@@ -324,7 +397,7 @@ function generateThemeSvgs(scheme) {
 // Parse *.theme files
 // Or exported "HKCU\Control Panel\Colors" *.reg files (reg = true)
 // Or WinClassicThemeConfig reg files (ctc = true)
-function getColorValue(themeText, name, reg, ctc) {
+function getColorValue(themeText: string, name: string, reg: boolean, ctc: boolean = false): string {
     const ctcMap = [
         'Scrollbar',
         'Background',
@@ -358,7 +431,7 @@ function getColorValue(themeText, name, reg, ctc) {
         'MenuHilight',
         'MenuBar'
     ];
-    let regex;
+    let regex: RegExp;
     if (ctc) {
         regex = new RegExp(`\\n"Color${ctcMap.indexOf(name)}"=dword:00(.*)\r\n`);
     } else if (reg) {
@@ -371,7 +444,7 @@ function getColorValue(themeText, name, reg, ctc) {
         if (!rgb) {
             throw new Error(`Color not found for ${name}`);
         } else {
-            return '#' + rgb[1].trim().match(/.{2}/g).reverse().join('');
+            return '#' + rgb[1].trim().match(/.{2}/g)!.reverse().join('');
         }
     }
     if (!rgb) {

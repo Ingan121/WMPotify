@@ -20,7 +20,9 @@ if (!(lang in supportedLanguages)) {
     }
 }
 
-const strings = {
+type Strings = typeof enUS;
+
+const strings: { [key: string]: Strings } = {
     'en-US': enUS,
     'ko-KR': koKR,
 };
@@ -29,32 +31,34 @@ const currentStrings = strings['en-US'];
 if (lang !== 'en-US') {
     Object.assign(currentStrings, strings[lang]);
 }
-currentStrings.getString = getString;
+const exportedStrings = {
+    ...currentStrings,
+    getString: getString
+};
+export default exportedStrings;
 
-export default currentStrings;
-
-function getString(locId) {
+function getString(locId: keyof Strings, ...args: any[]): string {
     if (currentStrings[locId]) {
-        return processString(currentStrings[locId], ...Array.from(arguments).slice(1));
+        return processString(currentStrings[locId], ...args);
     } else if (strings['en-US'][locId]) {
         console.info(`Fallback string used for locId ${locId}`);
-        return processString(strings['en-US'][locId], ...Array.from(arguments).slice(1));
+        return processString(strings['en-US'][locId], ...args);
     } else {
         console.error(`No string found for locId ${locId}`);
         return locId;
     }
 }
 
-export function processString(str) {
+export function processString(str: string, ...extraStrings: any[]): string {
     // &Apply -> <u>A</u>pply
     // \&Apply -> &Apply
     str = str.replace(/&([^&])/g, "<u>$1</u>").replace(/\\&/g, "&");
-    // %s -> extraString
-    // %[n]s -> arguments[n]
-    if (arguments.length > 1) {
-        for (let i = 1; i < arguments.length; i++) {
-            str = str.replace(/%s/, arguments[i]);
-            str = str.replace(`%${i}s`, arguments[i]);
+    // %s -> extraStrings[0]
+    // %[n]s -> extraStrings[n]
+    if (extraStrings.length > 0) {
+        for (let i = 0; i < extraStrings.length; i++) {
+            str = str.replace(/%s/, extraStrings[i]);
+            str = str.replace(`%${i + 1}s`, extraStrings[i]);
         }
     }
     return str;

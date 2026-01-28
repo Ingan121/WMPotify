@@ -3,7 +3,7 @@
 import Strings from '../strings';
 import { openWmpvisInstallDialog } from '../ui/dialogs';
 import { MadMenu, createMadMenu } from '../utils/MadMenu';
-import WindhawkComm from '../WindhawkComm';
+import WindhawkComm from '../utils/WindhawkComm';
 
 const tabNameSubstitutes = {
     'Friend Activity': 'Friends',

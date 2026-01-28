@@ -1,16 +1,16 @@
 'use strict';
 
-const widthObserver = new MutationObserver(updateSidebarWidth);
+const widthObserver = new MutationObserver(updateSidebarWidth.bind(null, false));
 const widthObserver2 = new ResizeObserver(updateSidebarWidth.bind(null, true));
 const leftWidthObserver = new MutationObserver(updateLeftSidebarWidth);
 
 class SidebarManager {
     constructor() {
         widthObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
-        widthObserver2.observe(document.querySelector('.Root__right-sidebar'));
-        leftWidthObserver.observe(document.querySelector('#Desktop_LeftSidebar_Id'), { attributes: true, attributeFilter: ['style'] });
-        window.addEventListener('resize', updateSidebarWidth);
-        window.addEventListener('load', updateSidebarWidth);
+        widthObserver2.observe(document.querySelector('.Root__right-sidebar')!);
+        leftWidthObserver.observe(document.querySelector('#Desktop_LeftSidebar_Id')!, { attributes: true, attributeFilter: ['style'] });
+        window.addEventListener('resize', updateSidebarWidth.bind(null, false));
+        window.addEventListener('load', updateSidebarWidth.bind(null, false));
         updateSidebarWidth(true);
         updateLeftSidebarWidth();
     }
@@ -18,7 +18,7 @@ class SidebarManager {
     static updateSidebarWidth = updateSidebarWidth;
 };
 
-function updateSidebarWidth(force) {
+function updateSidebarWidth(force: boolean = false) {
     if (!Spicetify.Platform.History.location.pathname.startsWith('/wmpotify-standalone-libx') && !force) {
         // 1.2.53 changed --panel-width to --right-sidebar-width, so sync them for multi version compatibility
         // AAAnd 1.2.56 completely removed the panel width variable (@property --right-sidebar-width exists but somehow it's always zero) so prefer --panel-width
@@ -36,10 +36,13 @@ function updateSidebarWidth(force) {
     // So just get the real width and set it back
     widthObserver.disconnect();
     const rightSidebar = document.querySelector('.Root__right-sidebar');
-    document.documentElement.style.setProperty("--panel-width", rightSidebar ? rightSidebar.offsetWidth : 8);
+    if (!rightSidebar || rightSidebar instanceof HTMLElement === false) {
+        return;
+    }
+    document.documentElement.style.setProperty("--panel-width", (rightSidebar ? rightSidebar.offsetWidth : 8).toString());
     const rightSidebarWidth = getComputedStyle(document.documentElement).getPropertyValue("--right-sidebar-width");
     if (rightSidebarWidth) {
-        document.documentElement.style.setProperty("--right-sidebar-width", rightSidebar ? rightSidebar.offsetWidth : 8);
+        document.documentElement.style.setProperty("--right-sidebar-width", (rightSidebar ? rightSidebar.offsetWidth : 8).toString());
     }
     if (rightSidebar.querySelector('aside')) {
         document.body.classList.add('sidebar-open');
@@ -60,6 +63,9 @@ function updateLeftSidebarWidth() {
     // And has a fixed initial value of 232px which doesn't care about what's set in the document root
     // So use a custom variable instead
     const leftSidebar = document.querySelector('#Desktop_LeftSidebar_Id');
+    if (!leftSidebar || leftSidebar instanceof HTMLElement === false) {
+        return;
+    }
     const leftSidebarWidth = leftSidebar.style.getPropertyValue('--left-sidebar-width');
     if (leftSidebarWidth) {
         document.documentElement.style.setProperty("--wmpotify-left-sidebar-width", leftSidebarWidth);

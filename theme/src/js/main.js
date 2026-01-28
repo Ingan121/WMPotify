@@ -7,7 +7,7 @@ import PlayerBar from './ui/playerbar';
 import Config from './pages/config';
 import SidebarManager from './managers/SidebarManager';
 import { initQueuePanel } from './pages/queue';
-import WindhawkComm from './WindhawkComm';
+import WindhawkComm from './utils/WindhawkComm';
 import PageManager from './managers/PageManager';
 import WindowManager from './managers/WindowManager';
 import {
