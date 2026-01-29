@@ -141,13 +141,15 @@ export async function openWmpvisInstallDialog() {
         content: dialogContent,
         isLarge: true
     });
-    document.querySelector('#wmpotify-copy-code').addEventListener('click', () => {
-        const command = document.querySelector('#wmpotify-instructions-dialog code').textContent.trim();
-        Spicetify.Platform.ClipboardAPI.copy(command);
+    document.querySelector<HTMLButtonElement>('#wmpotify-copy-code')?.addEventListener('click', () => {
+        const command = document.querySelector<HTMLElement>('#wmpotify-instructions-dialog code')?.textContent?.trim();
+        if (command) {
+            Spicetify.Platform.ClipboardAPI.copy(command);
+        }
     });
 }
 
-export async function openUpdateDialog(alreadyUpdated, tagName, content) {
+export async function openUpdateDialog(alreadyUpdated: boolean = false, tagName?: string, content?: string) {
     let version = tagName;
     let changelog = 'Failed to fetch changelog!';
     if (content) {
@@ -202,14 +204,16 @@ export async function openUpdateDialog(alreadyUpdated, tagName, content) {
         isLarge: !alreadyUpdated
     });
     if (!alreadyUpdated) {
-        document.querySelector('#wmpotify-copy-code').addEventListener('click', () => {
-            const command = document.querySelector('#wmpotify-instructions-dialog code').textContent.trim();
-            Spicetify.Platform.ClipboardAPI.copy(command);
+        document.querySelector<HTMLButtonElement>('#wmpotify-copy-code')?.addEventListener('click', () => {
+            const command = document.querySelector<HTMLElement>('#wmpotify-instructions-dialog code')?.textContent?.trim();
+            if (command) {
+                Spicetify.Platform.ClipboardAPI.copy(command);
+            }
         });
     }
 }
 
-export function errorDialog(message, missingElements = []) {
+export function errorDialog(message: string, missingElements: string[] = []) {
     const dialogContent = document.createElement('div');
     dialogContent.id = 'wmpotify-error-dialog';
     const isSupportedSpotify = compareSpotifyVersion('1.2.45') >= 0 && compareSpotifyVersion(lastSupportedSpotifyVer) <= 0;
@@ -239,7 +243,7 @@ export function errorDialog(message, missingElements = []) {
                 ${missingElements.length > 0 ? `<hr><p>${Strings['ERRDLG_MISSING_ELEMENTS']}: <div class="wmpotify-code-container">${missingElements.join('<br>')}</div></p>` : ''}
                 ${missingApis ? `<hr><p>${Strings['ERRDLG_MISSING_API']}: <div class="wmpotify-code-container">${missingApis}</div></p>` : ''}
             </div>
-            ${!isSupportedSpotify ? `<hr><p>${Strings.getString('ERRDLG_UNSUPPORTED_INFO_' + (ver.extra ? 'PREREL' : 'STABLE'), `1.2.45 - ${lastSupportedSpotifyVer}`)}</p>` : ''}
+            ${!isSupportedSpotify ? `<hr><p>${Strings.getString(ver.extra ? 'ERRDLG_UNSUPPORTED_INFO_PREREL' : 'ERRDLG_UNSUPPORTED_INFO_STABLE', `1.2.45 - ${lastSupportedSpotifyVer}`)}</p>` : ''}
             ${isSupportedSpotify && missingElements.length > 0 ? `<hr><p>${Strings['ERRDLG_SUPPORTED_INFO_CSSMAP']}</p>` : ''}
             <hr>
             <p>${Strings.getString('ERRDLG_REPORT_GUIDE', `<a href="https://github.com/Ingan121/WMPotify/issues">${Strings['ERRDLG_REPORT_LINK']}</a>`)}</p>
@@ -256,20 +260,22 @@ export function errorDialog(message, missingElements = []) {
 
     console.error('WMPotify initialization error:', message, missingElements, missingApis);
 
-    document.querySelector('#wmpotify-error-copy').addEventListener('click', () => {
-        const details = document.querySelector('#wmpotify-error-dialog-details').innerText.replaceAll('\n\n', '\n').trim();
-        // Whatever succeeds
-        navigator.clipboard.writeText(details);
-        Spicetify.Platform.ClipboardAPI.copy(details);
+    document.querySelector<HTMLButtonElement>('#wmpotify-error-copy')?.addEventListener('click', () => {
+        const details = document.querySelector<HTMLElement>('#wmpotify-error-dialog-details')?.innerText.replaceAll('\n\n', '\n').trim();
+        if (details) {
+            // Whatever succeeds
+            navigator.clipboard.writeText(details); // Fails if not window is focused
+            Spicetify.Platform.ClipboardAPI.copy(details); // Fails if Spicetify is not fully loaded
+        }
     });
-    document.querySelector('#wmpotify-error-abort').addEventListener('click', () => {
+    document.querySelector<HTMLButtonElement>('#wmpotify-error-abort')?.addEventListener('click', () => {
         window.close();
     });
-    document.querySelector('#wmpotify-error-retry').addEventListener('click', () => {
+    document.querySelector<HTMLButtonElement>('#wmpotify-error-retry')?.addEventListener('click', () => {
         location.reload();
     });
-    document.querySelector('#wmpotify-error-ignore').addEventListener('click', () => {
-        document.querySelector('#wmpotify-error-dialog').remove();
+    document.querySelector<HTMLButtonElement>('#wmpotify-error-ignore')?.addEventListener('click', () => {
+        document.querySelector('#wmpotify-error-dialog')?.remove();
     });
 }
 
@@ -291,13 +297,13 @@ export function diagDialog() {
         content: dialogContent,
         isLarge: true
     });
-    document.querySelector('#wmpotify-error-copy').addEventListener('click', () => {
-        const details = document.querySelector('#wmpotify-diag-dialog-details').innerText.replaceAll('\n\n', '\n').trim();
-        // Whatever succeeds
-        navigator.clipboard.writeText(details);
-        Spicetify.Platform.ClipboardAPI.copy(details);
+    document.querySelector<HTMLButtonElement>('#wmpotify-error-copy')?.addEventListener('click', () => {
+        const details = document.querySelector<HTMLElement>('#wmpotify-diag-dialog-details')?.innerText.replaceAll('\n\n', '\n').trim();
+        if (details) {
+            Spicetify.Platform.ClipboardAPI.copy(details);
+        }
     });
-    document.querySelector('#wmpotify-error-close').addEventListener('click', () => {
+    document.querySelector<HTMLButtonElement>('#wmpotify-error-close')?.addEventListener('click', () => {
         Spicetify.PopupModal.hide();
     });
 }

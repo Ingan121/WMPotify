@@ -7,7 +7,7 @@ import PlayerBar from './ui/playerbar';
 import Config from './pages/config';
 import SidebarManager from './managers/SidebarManager';
 import { initQueuePanel } from './pages/queue';
-import WindhawkComm from './utils/WindhawkComm';
+import WindhawkComm, { WindhawkModOptions } from './utils/WindhawkComm';
 import PageManager from './managers/PageManager';
 import WindowManager from './managers/WindowManager';
 import {
@@ -60,13 +60,13 @@ let titleStyle = 'spotify';
 
 function earlyInit() {
     if (!localStorage.wmpotifyShowLibX) {
-        document.body.dataset.hideLibx = true;
+        document.body.dataset.hideLibx = 'true';
     }
 
     WindhawkComm.init();
 
     const whStatus = WindhawkComm.query();
-    const whInitialOpts = WindhawkComm.getModule()?.initialOptions || {};
+    const whInitialOpts: WindhawkModOptions | undefined = WindhawkComm.module?.initialOptions;
 
     if (whStatus) {
         if (localStorage.wmpotifyTopMost === 'always' || (localStorage.wmpotifyTopMost === 'minimode' && WindowManager.isMiniMode())) {
@@ -86,7 +86,7 @@ function earlyInit() {
         titleStyle = localStorage.wmpotifyTitleStyle;
     } else {
         console.log('WMPotify EarlyInit:', window.SpotEx, whStatus);
-        if (window.outerHeight - window.innerHeight > 0 || whInitialOpts.showframe || navigator.userAgent.includes('Linux')) {
+        if (window.outerHeight - window.innerHeight > 0 || whInitialOpts!.showframe || navigator.userAgent.includes('Linux')) {
             titleStyle = 'native';
         } else if (window.SpotEx || whStatus) {
             titleStyle = 'custom';
@@ -113,7 +113,7 @@ function earlyInit() {
         if (hcQuery.matches) {
             style = 'basic';
         } else if (whStatus && whStatus.isThemingEnabled) {
-            if (whInitialOpts.transparentrendering && whStatus.isDwmEnabled) {
+            if (whInitialOpts!.transparentrendering && whStatus.isDwmEnabled) {
                 style = 'aero';
             } else if (!whStatus.isDwmEnabled) {
                 style = 'basic';
@@ -129,16 +129,16 @@ function earlyInit() {
     switch (style) {
         case 'xp':
             WindhawkComm.extendFrame(0, 0, 0, 0);
-            if (whInitialOpts.showframe === false) {
+            if (whInitialOpts!.showframe === false) {
                 WindhawkComm.setTransparent(true);
             }
             break;
         case 'aero':
-            WindhawkComm.extendFrame(0, 0, whInitialOpts.showframe === false ? 24 : 0, 60);
+            WindhawkComm.extendFrame(0, 0, whInitialOpts!.showframe === false ? 24 : 0, 60);
             break;
         case 'basic':
             WindhawkComm.extendFrame(0, 0, 0, 0);
-            if (whInitialOpts.showframe === false) {
+            if (whInitialOpts!.showframe === false) {
                 WindhawkComm.setTransparent(true);
             }
 
@@ -177,9 +177,9 @@ function earlyInit() {
             if (window.innerHeight < 62) {
                 WindhawkComm.extendFrame(-1, -1, -1, -1);
             } else {
-                WindhawkComm.extendFrame(0, 0, whInitialOpts.showframe === false ? 24 : 0, 60);
+                WindhawkComm.extendFrame(0, 0, whInitialOpts!.showframe === false ? 24 : 0, 60);
             }
-        } else if (whInitialOpts.showframe === false) {
+        } else if (whInitialOpts!.showframe === false) {
             // Only doing once is somehow unreliable on Win11
             WindhawkComm.setTransparent(true);
         }
@@ -194,10 +194,10 @@ function earlyInit() {
     }
 
     if (localStorage.wmpotifyHidePbLeftBtn) {
-        document.body.dataset.hidePbLeftBtn = true;
+        document.body.dataset.hidePbLeftBtn = 'true';
     }
     if (localStorage.wmpotifyRightAlignPbLeftBtn) {
-        document.body.dataset.rightAlignPbLeftBtn = true;
+        document.body.dataset.rightAlignPbLeftBtn = 'true';
     }
 
     if (whStatus && localStorage.wmpotifyLockTitle) {
@@ -207,7 +207,7 @@ function earlyInit() {
     let darkMode = 'follow_scheme';
     if (['follow_scheme', 'system', 'always', 'never'].includes(localStorage.wmpotifyDarkMode)) {
         darkMode = localStorage.wmpotifyDarkMode;
-    } else if (whInitialOpts.noforceddarkmode) {
+    } else if (whInitialOpts!.noforceddarkmode) {
         darkMode = 'system';
     }
     const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -215,7 +215,7 @@ function earlyInit() {
         (darkMode === 'follow_scheme' && Spicetify.Config.color_scheme === 'dark') ||
         (darkMode === 'system' && darkQuery.matches)
     ) {
-        document.documentElement.dataset.wmpotifyDarkMode = true;
+        document.documentElement.dataset.wmpotifyDarkMode = 'true';
     }
     if (darkMode === 'system') {
         ThemeManager.addSystemDarkModeListener();
@@ -255,7 +255,7 @@ globalThis.WMPotify = {
 };
 
 async function init() {
-    await CustomTitlebar.init(titleStyle);
+    await CustomTitlebar.init(titleStyle as 'native' | 'custom' | 'keepmenu' | 'spotify');
 
     if (WindhawkComm.available() && localStorage.wmpotifyLockTitle) {
         WindhawkComm.setTitle(await Spicetify.AppTitle.get());
@@ -284,13 +284,15 @@ async function init() {
     globalThis.WMPotify.playerBar = new PlayerBar();
 
     initQueuePanel();
-    new MutationObserver(initQueuePanel).observe(
-        // Right panel has varying structure in different versions
-        document.querySelector('.oXO9_yYs6JyOwkBn8E4a') || // .72+
-        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // .45-.71
+    // Right panel has varying structure in different versions
+    const rightPanelObservationTarget = 
+        document.querySelector('.oXO9_yYs6JyOwkBn8E4a') || // 1.2.72+
+        document.querySelector('.XOawmCGZcQx4cesyNfVO') || // 1.2.45-1.2.71
         document.querySelector('.Root__right-sidebar > div > div[class]:first-child') ||
-        document.querySelector('.Root__right-sidebar div[class]') // Works on .45-.52
-    , { childList: true });
+        document.querySelector('.Root__right-sidebar div[class]'); // Works on 1.2.45-1.2.52
+    if (rightPanelObservationTarget) {
+        new MutationObserver(initQueuePanel).observe(rightPanelObservationTarget, { childList: true });
+    }
 
     if (!localStorage.wmpotifyLastVer || ver.compare(localStorage.wmpotifyLastVer) < 0) {
         openUpdateDialog(true, ver.toString(0));
@@ -305,11 +307,12 @@ async function doInit() {
     try {
         await init();
         logTimed('WMPotify: Theme loaded');
-        document.documentElement.dataset.wmpotifyInitComplete = true;
+        document.documentElement.dataset.wmpotifyInitComplete = 'true';
     } catch (e) {
         console.error('WMPotify: Error during init:', e);
-        errorDialog(Strings.getString('ERRDLG_DETAIL_EXCEPTION', e.stack));
-        document.documentElement.dataset.wmpotifyJsFail = true;
+        const errorStack = e instanceof Error ? e.stack : String(e);
+        errorDialog(Strings.getString('ERRDLG_DETAIL_EXCEPTION', errorStack));
+        document.documentElement.dataset.wmpotifyJsFail = 'true';
     }
 }
 
@@ -370,7 +373,7 @@ function waitForReady() {
                         if (!document.querySelector('.Root__globalNav')) {
                             // Show headers and sidebar when global nav is missing
                             // To allow users to access experimental features, marketplace, etc.
-                            document.documentElement.dataset.wmpotifyNoGlobalNav = true;
+                            document.documentElement.dataset.wmpotifyNoGlobalNav = 'true';
                             delete document.body.dataset.hideLibx;
                             console.error('WMPotify: Global nav not found');
                         }

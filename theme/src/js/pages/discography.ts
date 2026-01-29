@@ -102,13 +102,13 @@ export async function initDiscographyPage(wait: boolean) {
     observer.observe(target!, { childList: true, subtree: subtreeNeeded });
 }
 
-function waitForFullRender(section: HTMLElement, noGridView: boolean = false): Promise<undefined> | undefined {
+function waitForFullRender(section: HTMLElement, noGridView: boolean = false): Promise<void> | void {
     if (!section.querySelector('.artist-artistDiscography-tracklist') && (noGridView || !section.querySelector('.artist-artistDiscography-cardGrid'))) {
         return new Promise(resolve => {
             const observer = new MutationObserver(() => {
                 if (section.querySelector('.artist-artistDiscography-tracklist') || (!noGridView && section.querySelector('.artist-artistDiscography-cardGrid'))) {
                     observer.disconnect();
-                    resolve(undefined);
+                    resolve();
                 }
             });
             observer.observe(section, { childList: true, subtree: true });
@@ -122,7 +122,7 @@ function waitForContextMenu(): Promise<void> {
             const menu = document.querySelector('[data-tippy-root]');
             if (menu) {
                 observer.disconnect();
-                resolve(undefined);
+                resolve();
             }
         });
         observer.observe(document.body, { childList: true });

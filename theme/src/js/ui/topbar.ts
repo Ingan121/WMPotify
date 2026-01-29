@@ -1,8 +1,8 @@
 'use strict';
 
 import Strings from '../strings';
-import { openWmpvisInstallDialog } from '../ui/dialogs';
-import { MadMenu, createMadMenu } from '../utils/MadMenu';
+import { openWmpvisInstallDialog } from './dialogs';
+import { MadMenu, createMadMenu, MadMenuItem } from '../utils/MadMenu';
 import WindhawkComm from '../utils/WindhawkComm';
 
 const tabNameSubstitutes = {
@@ -10,14 +10,20 @@ const tabNameSubstitutes = {
 }
 
 class Topbar {
+    tabsContainer: HTMLDivElement;
+    tabs: HTMLElement[];
+    overflowButton: HTMLButtonElement;
+
     constructor() {
-        const topbar = document.querySelector('.Root__globalNav');
+        const topbar = document.querySelector<HTMLElement>('.Root__globalNav');
         this.tabsContainer = document.createElement('div');
         this.tabsContainer.id = 'wmpotify-tabs-container';
-        topbar.insertBefore(this.tabsContainer, topbar.querySelector('.main-globalNav-searchSection'));
-        topbar.dataset.wmpotifyTabsCreated = true;
+        if (topbar) {
+            topbar.insertBefore(this.tabsContainer, topbar.querySelector('.main-globalNav-searchSection'));
+            topbar.dataset.wmpotifyTabsCreated = 'true';
+        }
 
-        let nowPlayingButton = document.querySelector('.custom-navlinks-scrollable_container div[role="presentation"] > button:has(#wmpotify-nowplaying-icon)');
+        let nowPlayingButton = document.querySelector<HTMLButtonElement>('.custom-navlinks-scrollable_container div[role="presentation"] > button:has(#wmpotify-nowplaying-icon)');
         if (!nowPlayingButton) {
             nowPlayingButton = document.createElement('button');
             nowPlayingButton.addEventListener('click', () => {
@@ -29,25 +35,32 @@ class Topbar {
                 }
             });
             if (localStorage.wmpotifyNoWmpvis && !Spicetify.Config.custom_apps.includes('wmpvis')) {
-                nowPlayingButton.dataset.extraHidden = true;
+                nowPlayingButton.dataset.extraHidden = 'true';
             }
         }
+        this.tabs = [nowPlayingButton];
         nowPlayingButton.setAttribute('aria-label', Strings['TAB_NOW_PLAYING']);
         nowPlayingButton.dataset.identifier = 'now-playing';
         this.addTab(nowPlayingButton);
-        const homeButton = document.querySelector('.main-globalNav-searchContainer > button');
-        homeButton.dataset.identifier = 'home';
-        this.addTab(homeButton);
-        const searchButton = document.querySelector('.main-globalNav-searchContainer div form button');
-        searchButton.dataset.identifier = 'search';
-        searchButton.addEventListener('click', (event) => {
-            // This button behave differently from version to version
-            // So just open the search page directly
-            Spicetify.Platform.History.push({ pathname: '/search' });
-            event.preventDefault();
-            event.stopPropagation();
-        });
-        this.addTab(searchButton);
+        const homeButton = document.querySelector<HTMLButtonElement>('.main-globalNav-searchContainer > button');
+        if (homeButton) {
+            homeButton.dataset.identifier = 'home';
+            this.addTab(homeButton);
+            this.tabs.push(homeButton);
+        }
+        const searchButton = document.querySelector<HTMLButtonElement>('.main-globalNav-searchContainer div form button');
+        if (searchButton) {
+            searchButton.dataset.identifier = 'search';
+            searchButton.addEventListener('click', (event) => {
+                // This button behave differently from version to version
+                // So just open the search page directly
+                Spicetify.Platform.History.push({ pathname: '/search' });
+                event.preventDefault();
+                event.stopPropagation();
+            });
+            this.addTab(searchButton);
+            this.tabs.push(searchButton);
+        }
         const libraryButton = document.createElement('button');
         libraryButton.id = 'wmpotify-library-button';
         libraryButton.dataset.identifier = 'library';
@@ -56,37 +69,39 @@ class Topbar {
             Spicetify.Platform.History.push({ pathname: '/wmpotify-standalone-libx', });
         });
         this.addTab(libraryButton);
-        this.tabs = [nowPlayingButton, homeButton, searchButton, libraryButton];
-        const customAppButtons = document.querySelectorAll('.custom-navlinks-scrollable_container div[role="presentation"] > button');
+        this.tabs.push(libraryButton);
+        const customAppButtons = document.querySelectorAll<HTMLElement>('.custom-navlinks-scrollable_container div[role="presentation"] > button');
         if (customAppButtons.length > 0) {
             for (const btn of customAppButtons) {
                 this.addTab(btn);
                 this.tabs.push(btn);
             }
         } else {
-            const customAppsButtonsParent = document.querySelector('.main-globalNav-historyButtonsContainer');
-            const observer = new MutationObserver(() => {
-                console.log('WMPotify: Handling late custom apps buttons mount');
-                for (const btn of this.tabs) {
-                    delete btn.dataset.hidden;
-                }
-                const customAppsButtons = document.querySelectorAll('.custom-navlinks-scrollable_container div[role="presentation"] > button');
-                if (customAppsButtons.length > 0) {
-                    for (const btn of customAppsButtons) {
-                        if (btn.querySelector('#wmpotify-nowplaying-icon')) {
-                            delete nowPlayingButton.dataset.hidden;
-                            continue;
-                        }
-                        this.addTab(btn);
-                        this.tabs.push(btn);
+            const customAppsButtonsParent = document.querySelector<HTMLElement>('.main-globalNav-historyButtonsContainer');
+            if (customAppsButtonsParent) {
+                const observer = new MutationObserver(() => {
+                    console.log('WMPotify: Handling late custom apps buttons mount');
+                    for (const btn of this.tabs) {
+                        delete btn.dataset.hidden;
                     }
-                    observer.disconnect();
-                    this.loadOrder();
-                }
-            });
-            observer.observe(customAppsButtonsParent, { childList: true, subtree: true });
+                    const customAppsButtons = document.querySelectorAll<HTMLElement>('.custom-navlinks-scrollable_container div[role="presentation"] > button');
+                    if (customAppsButtons.length > 0) {
+                        for (const btn of customAppsButtons) {
+                            if (btn.querySelector('#wmpotify-nowplaying-icon')) {
+                                delete nowPlayingButton.dataset.hidden;
+                                continue;
+                            }
+                            this.addTab(btn);
+                            this.tabs.push(btn);
+                        }
+                        observer.disconnect();
+                        this.loadOrder();
+                    }
+                });
+                observer.observe(customAppsButtonsParent, { childList: true, subtree: true });
+            }
         }
-        const rightButtons = document.querySelectorAll('.main-topBar-topbarContentRight > .main-actionButtons > button');
+        const rightButtons = document.querySelectorAll<HTMLButtonElement>('.main-topBar-topbarContentRight > .main-actionButtons > button');
         for (const btn of rightButtons) {
             if (btn.dataset.restoreFocusKey === 'buddy_feed') {
                 btn.dataset.identifier = 'buddy-feed';
@@ -99,10 +114,10 @@ class Topbar {
 
         this.loadOrder();
 
-        const menuItems = [];
+        const menuItems: MadMenuItem[] = [];
         for (const tab of this.tabs) {
             menuItems.push({
-                text: tab.querySelector('.wmpotify-tab-label').textContent,
+                text: tab.querySelector('.wmpotify-tab-label')?.textContent,
                 click: () => tab.click(),
             });
         }
@@ -142,32 +157,38 @@ class Topbar {
         new ResizeObserver(this.handleTabOverflow.bind(this)).observe(this.tabsContainer);
         document.addEventListener('fullscreenchange', this.handleTabOverflow.bind(this));
 
-        const accountButton = document.querySelector('.main-topBar-topbarContentRight > button:last-child');
+        const accountButton = document.querySelector<HTMLButtonElement>('.main-topBar-topbarContentRight > button:last-child');
         const accountLabel = document.createElement('span');
-        accountLabel.textContent = accountButton.getAttribute('aria-label');
+        accountLabel.textContent = accountButton?.getAttribute('aria-label') || 'User';
         accountLabel.classList.add('wmpotify-user-label');
-        accountButton.appendChild(accountLabel);
+        accountButton?.appendChild(accountLabel);
 
         const searchContainer = document.createElement('div');
         searchContainer.id = 'wmpotify-search-container';
         const searchBarWrapper = document.createElement('div');
         searchBarWrapper.id = 'wmpotify-search-wrapper';
-        const searchBar = document.querySelector('.main-globalNav-searchContainer div form input[type="search"]');
-        searchBarWrapper.appendChild(searchBar);
-        const searchClearButton = document.createElement('button');
-        searchClearButton.id = 'wmpotify-search-clear-button';
-        searchClearButton.setAttribute('aria-label', 'Clear search');
-        searchClearButton.addEventListener('click', () => {
-            searchBar.value = '';
-            searchBar.focus();
-            Spicetify.Platform.History.push({ pathname: '/search' });
-        });
-        searchBarWrapper.appendChild(searchClearButton);
+        const searchBar = document.querySelector<HTMLInputElement>('.main-globalNav-searchContainer div form input[type="search"]');
+        if (searchBar) {
+            searchBarWrapper.appendChild(searchBar);
+            const searchClearButton = document.createElement('button');
+            searchClearButton.id = 'wmpotify-search-clear-button';
+            searchClearButton.setAttribute('aria-label', 'Clear search');
+            searchClearButton.addEventListener('click', () => {
+                searchBar.value = '';
+                searchBar.focus();
+                Spicetify.Platform.History.push({ pathname: '/search' });
+            });
+            searchBarWrapper.appendChild(searchClearButton);
+        }
         searchContainer.appendChild(searchBarWrapper);
-        topbar.appendChild(searchContainer);
+        topbar?.appendChild(searchContainer);
 
-        topbar.addEventListener('pointerdown', (event) => {
-            if (event.button === 2 && !event.target.closest('input') && !event.target.closest('#wmpotify-tabs-container')) {
+        topbar?.addEventListener('pointerdown', (event: PointerEvent) => {
+            if (event.button === 2) {
+                const target = event.target as HTMLElement;
+                if (target.closest('input') || target.closest('#wmpotify-tabs-container')) {
+                    return;
+                }
                 WindhawkComm.openSpotifyMenu();
             }
         });
@@ -241,13 +262,13 @@ class Topbar {
     }
 
     handleTabOverflow() {
-        const leftAreaWidth = document.querySelector('.main-globalNav-historyButtons').getBoundingClientRect().right;
-        const rightAreaWidth = window.innerWidth - document.querySelector('.main-topBar-topbarContentRight').getBoundingClientRect().left;
+        const leftAreaWidth = document.querySelector('.main-globalNav-historyButtons')?.getBoundingClientRect().right || 0;
+        const rightAreaWidth = window.innerWidth - (document.querySelector('.main-topBar-topbarContentRight')?.getBoundingClientRect().left || 0);
         const extra = 160;
 
         let hiddenTabs = 0;
         while (window.innerWidth - leftAreaWidth - rightAreaWidth - extra < this.tabsContainer.getBoundingClientRect().width && hiddenTabs < this.tabs.length) {
-            this.tabs[this.tabs.length - 1 - hiddenTabs++].dataset.hidden = true;
+            this.tabs[this.tabs.length - 1 - hiddenTabs++].dataset.hidden = 'true';
         }
         hiddenTabs = document.querySelectorAll('#wmpotify-tabs-container button[data-hidden]').length;
         while (hiddenTabs > 0 && window.innerWidth - leftAreaWidth - rightAreaWidth - extra > this.tabsContainer.getBoundingClientRect().width) {

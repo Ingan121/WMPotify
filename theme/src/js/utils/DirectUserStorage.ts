@@ -5,6 +5,9 @@
 const DirectUserStorage = {
     getItem(key: string): string | number | null {
         const username = Spicetify._platform?.initialUser?.username;
+        if (!username) {
+            return null;
+        }
         const res = localStorage.getItem(username + ":" + key);
         if (isNaN(Number(res))) {
             return res;
@@ -17,11 +20,15 @@ const DirectUserStorage = {
     },
     setItem(key: string, value: string | number) {
         const username = Spicetify._platform?.initialUser?.username;
-        localStorage.setItem(username + ":" + key, value.toString());
+        if (username) {
+            localStorage.setItem(username + ":" + key, value.toString());
+        }
     },
     removeItem(key: string) {
         const username = Spicetify._platform?.initialUser?.username;
-        localStorage.removeItem(username + ":" + key);
+        if (username) {
+            localStorage.removeItem(username + ":" + key);
+        }
     }
 }
 

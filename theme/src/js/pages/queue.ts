@@ -99,14 +99,14 @@ export function initQueuePanel() {
     for (const tab of tabs) {
         menuItems.push({
             text: tab.textContent,
-            click: function (event: Event) {
+            click: function (this: HTMLElement, event: Event) {
                 if (!menuObj.menuItems) {
                     return;
                 }
                 for (const menuItem of menuObj.menuItems) {
                     menuItem.classList.remove('activeStyle');
                 }
-                (event.target as HTMLElement).classList.add('activeStyle');
+                this.classList.add('activeStyle');
                 (tab as HTMLElement).click();
             }
         });

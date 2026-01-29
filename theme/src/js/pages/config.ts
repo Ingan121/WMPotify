@@ -2,7 +2,7 @@
 
 import Strings from "../strings";
 import { confirmModal, promptModal, diagDialog } from "../ui/dialogs";
-import FontDetective from "../utils/FontDetective";
+import FontDetective, { Font } from "../utils/FontDetective";
 import { setTintColor } from "../ui/tinting";
 import WindhawkComm from "../utils/WindhawkComm";
 import WindowManager from "../managers/WindowManager";
@@ -14,24 +14,73 @@ import { importScheme } from "../utils/appearance";
 const isWindows = navigator.userAgent.includes('Windows');
 
 const configWindow = document.createElement('div');
-let tabs = null;
+let tabs: NodeListOf<HTMLDivElement> | null = null;
 let currentTab = 0;
-let speedApplyTimer = null;
+let speedApplyTimer: number | null = null;
 let whSpeedModSupported = false;
 
-let activeBasicColor = null;
-let inactiveBasicColor = null;
-let textBasicColor = null;
+let activeBasicColor: string | null = null;
+let inactiveBasicColor: string | null = null;
+let textBasicColor: string | null = null;
 
-const elements = {}
+let defaultFontOptionsCount = 0;
 
-function init() {
+interface ElementsStore {
+    // Main UI
+    topborder: HTMLDivElement;
+    prev: HTMLButtonElement;
+    next: HTMLButtonElement;
+    title: HTMLParagraphElement;
+    whMessage: HTMLSpanElement;
+    close: HTMLButtonElement;
+    // General Tab
+    style: HTMLSelectElement;
+    titleStyle: HTMLSelectElement;
+    apply: HTMLButtonElement;
+    controlStyle: HTMLSelectElement;
+    darkMode: HTMLSelectElement;
+    fontSelector: HTMLSelectElement;
+    fontCustom: HTMLOptionElement;
+    fontReload: HTMLOptionElement;
+    topmost: HTMLSelectElement;
+    topmostLabel: HTMLLabelElement;
+    backdrop: HTMLSelectElement;
+    backdropLabel: HTMLLabelElement;
+    backdropBr: HTMLBRElement;
+    pbLeftBtn: HTMLSelectElement;
+    showLibX: HTMLInputElement;
+    lockTitle: HTMLInputElement;
+    lockTitleLabel: HTMLLabelElement;
+    // Color Tab
+    resetColor: HTMLAnchorElement;
+    hue: HTMLInputElement;
+    sat: HTMLInputElement;
+    tintPb: HTMLInputElement;
+    tintMore: HTMLInputElement;
+    // Speed Tab
+    speed: HTMLInputElement;
+    speedValue: HTMLSpanElement;
+    speedSlow: HTMLAnchorElement;
+    speedNormal: HTMLAnchorElement;
+    speedFast: HTMLAnchorElement;
+    // About Tab
+    whVer: HTMLSpanElement;
+    autoUpdates: HTMLInputElement;
+    showDiag: HTMLAnchorElement;
+}
+
+let elements: ElementsStore = null!;
+
+function init(): void {
     if (document.getElementById('wmpotify-config')) {
         return;
     }
 
     const whStatus = WindhawkComm.query();
     const mainView = document.querySelector('.Root__main-view');
+    if (!mainView) {
+        return;
+    }
     const hcQuery = window.matchMedia('(forced-colors: active)');
 
     configWindow.id = 'wmpotify-config';
@@ -166,30 +215,45 @@ function init() {
     `;
 
     tabs = configWindow.querySelectorAll('.wmpotify-config-tab-content');
-    elements.topborder = configWindow.querySelector('#wmpotify-config-topborder');
-    elements.title = configWindow.querySelector('#wmpotify-config-title');
-    elements.hue = configWindow.querySelector('#wmpotify-config-hue');
-    elements.sat = configWindow.querySelector('#wmpotify-config-sat');
-    elements.tintPb = configWindow.querySelector('#wmpotify-config-tint-playerbar');
-    elements.tintMore = configWindow.querySelector('#wmpotify-config-tint-more');
-    elements.style = configWindow.querySelector('#wmpotify-config-style');
-    elements.titleStyle = configWindow.querySelector('#wmpotify-config-title-style');
-    elements.controlStyle = configWindow.querySelector('#wmpotify-config-control-style');
-    elements.darkMode = configWindow.querySelector('#wmpotify-config-dark-mode');
-    elements.fontSelector = configWindow.querySelector('#wmpotify-config-font');
-    elements.fontCustom = configWindow.querySelector('#wmpotify-config-font option[value="custom"]');
-    elements.fontReload = configWindow.querySelector('#wmpotify-config-font option[value="reload"]');
-    elements.defaultFontOptionsCount = 3 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload));
-    elements.topmost = configWindow.querySelector('#wmpotify-config-topmost');
-    elements.backdrop = configWindow.querySelector('#wmpotify-config-backdrop');
-    elements.backdropBr = configWindow.querySelector('#wmpotify-config-topmost-backdrop-br');
-    elements.pbLeftBtn = configWindow.querySelector('#wmpotify-config-pbleftbtn');
-    elements.showLibX = configWindow.querySelector('#wmpotify-config-show-libx');
-    elements.lockTitle = configWindow.querySelector('#wmpotify-config-lock-title');
-    elements.whMessage = configWindow.querySelector('#wmpotify-config-wh-message');
-    elements.whVer = configWindow.querySelector('#wmpotify-about-ctewh-ver');
-    elements.autoUpdates = configWindow.querySelector('#wmpotify-config-auto-updates');
-    elements.showDiag = configWindow.querySelector('#wmpotify-config-show-diag');
+    elements = {
+        topborder: configWindow.querySelector<HTMLDivElement>('#wmpotify-config-topborder')!,
+        prev: configWindow.querySelector<HTMLButtonElement>('#wmpotify-config-prev')!,
+        next: configWindow.querySelector<HTMLButtonElement>('#wmpotify-config-next')!,
+        title: configWindow.querySelector<HTMLParagraphElement>('#wmpotify-config-title')!,
+        whMessage: configWindow.querySelector<HTMLSpanElement>('#wmpotify-config-wh-message')!,
+        close: configWindow.querySelector<HTMLButtonElement>('#wmpotify-config-close')!,
+        style: configWindow.querySelector<HTMLSelectElement>('#wmpotify-config-style')!,
+        titleStyle: configWindow.querySelector<HTMLSelectElement>('#wmpotify-config-title-style')!,
+        apply: configWindow.querySelector<HTMLButtonElement>('#wmpotify-config-apply')!,
+        controlStyle: configWindow.querySelector<HTMLSelectElement>('#wmpotify-config-control-style')!,
+        darkMode: configWindow.querySelector<HTMLSelectElement>('#wmpotify-config-dark-mode')!,
+        fontSelector: configWindow.querySelector<HTMLSelectElement>('#wmpotify-config-font')!,
+        fontCustom: configWindow.querySelector<HTMLOptionElement>('#wmpotify-config-font option[value="custom"]')!,
+        fontReload: configWindow.querySelector<HTMLOptionElement>('#wmpotify-config-font option[value="reload"]')!,
+        topmost: configWindow.querySelector<HTMLSelectElement>('#wmpotify-config-topmost')!,
+        topmostLabel: configWindow.querySelector<HTMLLabelElement>('label[for="wmpotify-config-topmost"]')!,
+        backdrop: configWindow.querySelector<HTMLSelectElement>('#wmpotify-config-backdrop')!,
+        backdropLabel: configWindow.querySelector<HTMLLabelElement>('label[for="wmpotify-config-backdrop"]')!,
+        backdropBr: configWindow.querySelector<HTMLBRElement>('#wmpotify-config-topmost-backdrop-br')!,
+        pbLeftBtn: configWindow.querySelector<HTMLSelectElement>('#wmpotify-config-pbleftbtn')!,
+        showLibX: configWindow.querySelector<HTMLInputElement>('#wmpotify-config-show-libx')!,
+        lockTitle: configWindow.querySelector<HTMLInputElement>('#wmpotify-config-lock-title')!,
+        lockTitleLabel: configWindow.querySelector<HTMLLabelElement>('#wmpotify-config-lock-title + label')!,
+        resetColor: configWindow.querySelector<HTMLAnchorElement>('#wmpotify-config-color-reset')!,
+        hue: configWindow.querySelector<HTMLInputElement>('#wmpotify-config-hue')!,
+        sat: configWindow.querySelector<HTMLInputElement>('#wmpotify-config-sat')!,
+        tintPb: configWindow.querySelector<HTMLInputElement>('#wmpotify-config-tint-playerbar')!,
+        tintMore: configWindow.querySelector<HTMLInputElement>('#wmpotify-config-tint-more')!,
+        speed: configWindow.querySelector<HTMLInputElement>('#wmpotify-config-speed')!,
+        speedValue: configWindow.querySelector<HTMLSpanElement>('#wmpotify-config-speed-value')!,
+        speedSlow: configWindow.querySelector<HTMLAnchorElement>('#wmpotify-config-speed-slow')!,
+        speedNormal: configWindow.querySelector<HTMLAnchorElement>('#wmpotify-config-speed-normal')!,
+        speedFast: configWindow.querySelector<HTMLAnchorElement>('#wmpotify-config-speed-fast')!,
+        whVer: configWindow.querySelector<HTMLSpanElement>('#wmpotify-about-ctewh-ver')!,
+        autoUpdates: configWindow.querySelector<HTMLInputElement>('#wmpotify-config-auto-updates')!,
+        showDiag: configWindow.querySelector<HTMLAnchorElement>('#wmpotify-config-show-diag')!,
+    };
+    defaultFontOptionsCount = 3 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload));
 
     const configHeightConf = localStorage.wmpotifyConfigHeight;
     if (configHeightConf && parseInt(configHeightConf) >= 24) {
@@ -263,7 +327,7 @@ function init() {
             (darkMode === 'follow_scheme' && Spicetify.Config.color_scheme === 'dark') ||
             (darkMode === 'system' && darkQuery.matches)
         ) {
-            document.documentElement.dataset.wmpotifyDarkMode = true;
+            document.documentElement.dataset.wmpotifyDarkMode = "true";
         } else {
             delete document.documentElement.dataset.wmpotifyDarkMode;
         }
@@ -324,9 +388,9 @@ function init() {
                     }
                 }
                 delete localStorage.wmpotifyFontCache;
-                const cnt = elements.fontSelector.options.length - elements.defaultFontOptionsCount;
+                const cnt = elements.fontSelector.options.length - defaultFontOptionsCount;
                 for (let i = 0; i < cnt; i++) {
-                    elements.fontSelector.options[elements.defaultFontOptionsCount].remove();
+                    elements.fontSelector.options[defaultFontOptionsCount].remove();
                 }
                 if (elements.fontSelector.value === 'loadsys') {
                     loadSystemFonts(systemFonts);
@@ -348,8 +412,8 @@ function init() {
     elements.pbLeftBtn.addEventListener('change', () => {
         switch (elements.pbLeftBtn.value) {
             case 'hide':
-                localStorage.wmpotifyHidePbLeftBtn = true;
-                document.body.dataset.hidePbLeftBtn = true;
+                localStorage.wmpotifyHidePbLeftBtn = "true";
+                document.body.dataset.hidePbLeftBtn = "true";
                 delete localStorage.wmpotifyRightAlignPbLeftBtn;
                 delete document.body.dataset.rightAlignPbLeftBtn;
                 break;
@@ -362,22 +426,22 @@ function init() {
             case 'right':
                 delete localStorage.wmpotifyHidePbLeftBtn;
                 delete document.body.dataset.hidePbLeftBtn;
-                localStorage.wmpotifyRightAlignPbLeftBtn = true;
-                document.body.dataset.rightAlignPbLeftBtn = true;
+                localStorage.wmpotifyRightAlignPbLeftBtn = "true";
+                document.body.dataset.rightAlignPbLeftBtn = "true";
         }
     });
     elements.showLibX.addEventListener('change', () => {
         if (elements.showLibX.checked) {
-            localStorage.wmpotifyShowLibX = true;
+            localStorage.wmpotifyShowLibX = "true";
             delete document.body.dataset.hideLibx;
         } else {
             delete localStorage.wmpotifyShowLibX;
-            document.body.dataset.hideLibx = true;
+            document.body.dataset.hideLibx = "true";
             Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 1);
         }
     });
-    configWindow.querySelector('#wmpotify-config-close').addEventListener('click', close);
-    configWindow.querySelector('#wmpotify-config-apply').addEventListener('click', apply);
+    elements.close.addEventListener('click', close);
+    elements.apply.addEventListener('click', apply);
     elements.autoUpdates.addEventListener('change', () => {
         if (elements.autoUpdates.checked) {
             delete localStorage.wmpotifyNoUpdateCheck;
@@ -390,15 +454,10 @@ function init() {
         diagDialog();
     });
 
-    whSpeedModSupported = whStatus?.speedModSupported;
-    elements.speed = configWindow.querySelector('#wmpotify-config-speed');
-    elements.speedValue = configWindow.querySelector('#wmpotify-config-speed-value');
+    whSpeedModSupported = !!whStatus?.speedModSupported;
     elements.speed.addEventListener('pointerup', onSpeedChange);
-    configWindow.querySelector('#wmpotify-config-speed-slow').addEventListener('click', setSpeed.bind(null, 0.5));
-    configWindow.querySelector('#wmpotify-config-speed-normal').addEventListener('click', setSpeed.bind(null, 1));
-    configWindow.querySelector('#wmpotify-config-speed-fast').addEventListener('click', setSpeed.bind(null, 1.4));
     const playbackSpeed = Spicetify.Player.origin.getState().speed || 1;
-    elements.speedValue.textContent = Number.isInteger(playbackSpeed) ? playbackSpeed + '.0' : playbackSpeed;
+    elements.speedValue.textContent = (Number.isInteger(playbackSpeed) ? playbackSpeed + '.0' : playbackSpeed).toString();
     elements.speedValue.addEventListener('click', async () => {
         const speed = await promptModal(Strings['CONF_SPEED_CUSTOM_DLG_TITLE'], Strings['CONF_SPEED_CUSTOM_MSG'], playbackSpeed.toString(), '1.0');
         if (speed) {
@@ -442,23 +501,23 @@ function init() {
             elements.backdrop.value = localStorage.wmpotifyBackdrop || 'mica';
             elements.backdrop.addEventListener('change', () => {
                 localStorage.wmpotifyBackdrop = elements.backdrop.value;
-                WindhawkComm.setBackdrop(elements.backdrop.value);
+                WindhawkComm.setBackdrop(elements.backdrop.value as 'none' | 'mica' | 'acrylic' | 'tabbed');
             });
         }
 
         elements.whMessage.style.display = 'none';
-        elements.whVer.textContent = ', ' + Strings.getString('CONF_ABOUT_CTEWH_VERSION', WindhawkComm.getModule().version);
+        elements.whVer.textContent = ', ' + Strings.getString('CONF_ABOUT_CTEWH_VERSION', WindhawkComm.module?.version);
     }
     if (!showBackdropOption) {
         elements.backdrop.style.display = 'none';
-        elements.backdrop.previousElementSibling.style.display = 'none';
+        elements.backdropLabel.style.display = 'none';
     }
     if (!isWindows) {
         elements.topmost.style.display = 'none';
-        elements.topmost.previousElementSibling.style.display = 'none';
+        elements.topmostLabel.style.display = 'none';
         elements.backdropBr.style.display = 'none';
         elements.lockTitle.style.display = 'none';
-        elements.lockTitle.nextElementSibling.style.display = 'none';
+        elements.lockTitleLabel.style.display = 'none';
         elements.whMessage.style.display = 'none';
     }
 
@@ -466,10 +525,10 @@ function init() {
     elements.sat.addEventListener('input', onColorChange);
     elements.tintPb.addEventListener('change', onColorChange);
     elements.tintMore.addEventListener('change', onColorChange);
-    configWindow.querySelector('#wmpotify-config-color-reset').addEventListener('click', resetColor);
+    elements.resetColor.addEventListener('click', resetColor);
 
-    configWindow.querySelector('#wmpotify-config-prev').addEventListener('click', prevTab);
-    configWindow.querySelector('#wmpotify-config-next').addEventListener('click', nextTab);
+    elements.prev.addEventListener('click', prevTab);
+    elements.next.addEventListener('click', nextTab);
 
     loadFonts();
 
@@ -484,10 +543,10 @@ function init() {
         }
     }
     if (!isWindows) {
-        elements.titleStyle.querySelector('option[value=keepmenu]').remove();
+        elements.titleStyle.querySelector('option[value=keepmenu]')?.remove();
     }
     if (navigator.userAgent.includes('Linux')) {
-        elements.titleStyle.querySelector('option[value=spotify]').remove();
+        elements.titleStyle.querySelector('option[value=spotify]')?.remove();
     }
     if (localStorage.wmpotifyTitleStyle) {
         elements.titleStyle.value = localStorage.wmpotifyTitleStyle;
@@ -508,7 +567,7 @@ function init() {
         elements.pbLeftBtn.value = 'right';
     }
     if (localStorage.wmpotifyShowLibX) {
-        configWindow.querySelector('#wmpotify-config-show-libx').checked = true;
+        elements.showLibX.checked = true;
     }
     if (localStorage.wmpotifyNoUpdateCheck) {
         elements.autoUpdates.checked = false;
@@ -568,8 +627,8 @@ function open() {
     configWindow.style.display = 'block';
     if (localStorage.wmpotifyTintColor) {
         const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
-        elements.hue.value = parseInt(hue) + 180;
-        elements.sat.value = parseInt(sat) * 121 / 100;
+        elements.hue.value = (parseInt(hue) + 180).toString();
+        elements.sat.value = (parseInt(sat) * 121 / 100).toString();
         if (tintPb) {
             elements.tintPb.checked = true;
         }
@@ -592,10 +651,13 @@ function openTab(index) {
         tab.style.display = i === index ? 'block' : 'none';
     }
     currentTab = index;
-    elements.title.textContent = tabs[index].dataset.tabTitle;
+    elements.title.textContent = tabs[index].dataset.tabTitle || '';
 }
 
 function prevTab() {
+    if (!tabs) {
+        return;
+    }
     let newTab = (currentTab - 1 + tabs.length) % tabs.length;
     if (tabs[newTab].dataset.whSpeedmodRequired && !whSpeedModSupported && !document.querySelector('button[data-testid="control-button-playback-speed"]')) {
         newTab--;
@@ -604,6 +666,9 @@ function prevTab() {
 }
 
 function nextTab() {
+    if (!tabs) {
+        return;
+    }
     let newTab = (currentTab + 1) % tabs.length;
     if (tabs[newTab].dataset.whSpeedmodRequired && !whSpeedModSupported && !document.querySelector('button[data-testid="control-button-playback-speed"]')) {
         newTab++;
@@ -612,15 +677,15 @@ function nextTab() {
 }
 
 function onColorChange() {
-    const hue = elements.hue.value - 180;
-    const sat = elements.sat.value * 100 / 121;
+    const hue = parseInt(elements.hue.value) - 180;
+    const sat = parseInt(elements.sat.value) * 100 / 121;
     setTintColor(hue, sat, elements.tintPb.checked, elements.tintMore.checked);
     localStorage.wmpotifyTintColor = hue + ',' + sat + ',' + (elements.tintPb.checked ? '1' : '') + ',' + (elements.tintMore.checked ? '1' : '');
 }
 
 function resetColor() {
-    elements.hue.value = 180;
-    elements.sat.value = 121;
+    elements.hue.value = '180';
+    elements.sat.value = '121';
     setTintColor();
     delete localStorage.wmpotifyTintColor;
 }
@@ -664,7 +729,11 @@ function setSpeed(speed) {
             WindhawkComm.setPlaybackSpeed(speed);
         }
     } catch (e) {
-        Spicetify.showNotification(e.message);
+        if (e instanceof Error) {
+            Spicetify.showNotification(e.message);
+        } else {
+            Spicetify.showNotification(String(e));
+        }
     }
 }
 
@@ -693,8 +762,8 @@ function apply() {
     location.reload();
 }
 
-function loadFonts() {
-    const fonts = localStorage.wmpotifyFontCache?.split(',') || [];
+function loadFonts(): void {
+    const fonts: string[] = localStorage.wmpotifyFontCache?.split(',') || [];
     if (fonts.length) {
         fonts.forEach(font => {
             const option = document.createElement("option");
@@ -704,7 +773,7 @@ function loadFonts() {
                 option.selected = true;
             }
             if (font === 'Segoe UI') {
-                elements.fontSelector.insertBefore(option, elements.fontSelector.options[elements.defaultFontOptionsCount])
+                elements.fontSelector.insertBefore(option, elements.fontSelector.options[defaultFontOptionsCount]);
             } else {
                 elements.fontSelector.appendChild(option);
             }
@@ -718,7 +787,7 @@ function loadFonts() {
             }
         }
     } else {
-        FontDetective.each(font => {
+        FontDetective.each((font: Font) => {
             const option = document.createElement("option");
             option.textContent = font.name;
             option.value = font.name;
@@ -726,7 +795,7 @@ function loadFonts() {
                 option.selected = true;
             }
             if (font.name === 'Segoe UI') {
-                elements.fontSelector.insertBefore(option, elements.fontSelector.options[elements.defaultFontOptionsCount]);
+                elements.fontSelector.insertBefore(option, elements.fontSelector.options[defaultFontOptionsCount]);
             } else {
                 elements.fontSelector.appendChild(option);
             }
@@ -746,12 +815,12 @@ function loadFonts() {
             // FD will just return the same fonts if called again, so remove the reload option
             // Refresh the page and select reload to reload the fonts
             elements.fontReload.remove();
-            elements.defaultFontOptionsCount--;
+            defaultFontOptionsCount--;
         });
     }
 }
 
-async function loadSystemFonts(fonts) {
+async function loadSystemFonts(fonts: FontData[]): Promise<void> {
     const families = [...new Set(fonts.map(f => f.family))];
     for (const family of families) {
         const option = document.createElement("option");
@@ -761,7 +830,7 @@ async function loadSystemFonts(fonts) {
             option.selected = true;
         }
         if (family === 'Segoe UI') {
-            elements.fontSelector.insertBefore(option, elements.fontSelector.options[elements.defaultFontOptionsCount]);
+            elements.fontSelector.insertBefore(option, elements.fontSelector.options[defaultFontOptionsCount]);
         } else {
             elements.fontSelector.appendChild(option);
         }
@@ -778,8 +847,8 @@ async function loadSystemFonts(fonts) {
     localStorage.wmpotifyFontCache = families.join(',');
 }
 
-function applyExternalFont(url) {
-    let style = document.getElementById('wmpotify-external-font');
+function applyExternalFont(url: string): void {
+    let style = document.getElementById('wmpotify-external-font') as HTMLLinkElement;
     if (!style) {
         style = document.createElement('link');
         style.rel = 'stylesheet';
@@ -788,9 +857,9 @@ function applyExternalFont(url) {
     style.href = url;
 }
 
-async function showFontsPermRecoveryGuide() {
+async function showFontsPermRecoveryGuide(): Promise<void> {
     if (window.documentPictureInPicture) {
-        const dpipWin = await documentPictureInPicture.requestWindow({
+        const dpipWin = await window.documentPictureInPicture.requestWindow({
             width: 1000,
             height: 650
         });
@@ -827,7 +896,7 @@ async function showFontsPermRecoveryGuide() {
     }
 }
 
-function selectCurrentFont() {
+function selectCurrentFont(): void {
     const current = localStorage.wmpotifyFont;
     if (!current) {
         elements.fontSelector.value = 'default';
@@ -842,7 +911,7 @@ function selectCurrentFont() {
     elements.fontSelector.value = 'custom';
 }
 
-function onHCChange(event) {
+function onHCChange(event: MediaQueryListEvent | MediaQueryList): void {
     if (event.matches) {
         elements.controlStyle.innerHTML = `
             <option value="classic">${Strings['CONF_GENERAL_CONTROL_STYLE_HC']}</option>

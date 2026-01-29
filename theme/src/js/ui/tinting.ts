@@ -13,8 +13,8 @@ function getTintedColor(hue, sat, base = '#EEF3FA') {
     return 'rgba(' + context.getImageData(0, 0, 1, 1).data + ')';
 }
 
-export function setTintColor(hue, sat, tintPb, tintMore) {
-    if (!hue && !sat) {
+export function setTintColor(hue?: number, sat?: number, tintPb?: boolean, tintMore?: boolean) {
+    if (!hue || !sat) {
         document.documentElement.style.setProperty('--spice-main', '#EEF3FA');
         document.documentElement.style.removeProperty('--wmpotify-tint-hue');
         document.documentElement.style.removeProperty('--wmpotify-tint-sat');

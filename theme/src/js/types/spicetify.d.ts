@@ -479,6 +479,13 @@ declare namespace Spicetify {
 		 * Toggle Shuffle/No shuffle.
 		 */
 		function toggleShuffle(): void;
+
+		// Internal stuff used by WMPotify
+		const origin: {
+			getState(): PlayerState;
+			setSpeed(speed: number): void;
+			_state: PlayerState;
+		};
 	}
 	/**
 	 * Adds a track or array of tracks to prioritized queue.
@@ -2358,4 +2365,10 @@ declare namespace Spicetify {
             const username: string;
         }
     }
+
+	namespace Events {
+		namespace platformLoaded {
+			function on(callback: () => void): void;
+		}
+	}
 }

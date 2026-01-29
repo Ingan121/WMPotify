@@ -31,7 +31,7 @@ async function buildCSS() {
 
 async function buildJS() {
   await esbuild.build({
-    entryPoints: ["src/js/main.js"],
+    entryPoints: ["src/js/main.ts"],
     bundle: true,
     minify: true,
     outfile: "dist/theme.js",

@@ -60,26 +60,6 @@ interface ThemeScheme {
     'ui-font-default'?: string;
 }
 
-// Type declaration for File System Access API which is somehow still missing
-interface PickerOpts {
-    types?: Array<{
-        description?: string;
-        accept: Record<string, string[]>;
-    }>;
-    excludeAcceptAllOption?: boolean;
-    multiple?: boolean;
-}
-
-declare global {
-    interface Window {
-        showOpenFilePicker(options?: PickerOpts): Promise<FileSystemFileHandle[]>;
-    }
-}
-
-interface FileSystemFileHandle {
-    getFile(): Promise<File>;
-}
-
 export async function importScheme() {
     const pickerOpts: PickerOpts = {
         types: [{

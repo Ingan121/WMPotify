@@ -71,7 +71,7 @@ export async function checkUpdates() {
     try {
         const isMarketplaceDist = !!document.querySelector('style.marketplaceUserCSS');
         const cteAvailable = WindhawkComm.available();
-        const cteVer = new MadVersion(WindhawkComm.getModule()?.version!);
+        const cteVer = new MadVersion(WindhawkComm.module?.version || '0.0');
 
         const res = await fetch('https://www.ingan121.com/wmpotify/latest.txt');
         const latest = await res.text();

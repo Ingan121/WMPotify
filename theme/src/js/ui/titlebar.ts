@@ -6,7 +6,7 @@ import WindhawkComm from "../utils/WindhawkComm";
 let titleBar: HTMLDivElement | null = null;
 let titleButtons: HTMLDivElement | null = null;
 
-function createTitlebarSkeleton() {
+function createTitlebarSkeleton(): void {
     titleBar = document.createElement('div');
     titleBar.id = 'wmpotify-title-bar';
     const titleIcon = document.createElement('div');
@@ -29,7 +29,7 @@ function createTitlebarSkeleton() {
     document.body.appendChild(titleBar);
 }
 
-async function initTitlebar(mode: string) {
+async function initTitlebar(mode: 'native' | 'custom' | 'keepmenu' | 'spotify'): Promise<void> {
     const whStatus = WindhawkComm.query();
 
     switch (mode) {
