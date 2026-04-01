@@ -460,13 +460,13 @@ div[data-testid='now-playing-widget'] {
 .player-controls__right {
     gap: 0;
 
-    .volume-bar {
+    .volume-bar, [data-testid="volume-bar"] {
         position: relative;
         left: 12px;
         margin-right: 0;
     }
     
-    .volume-bar__icon-button {
+    .volume-bar__icon-button, [data-testid="volume-bar-toggle-mute-button"], [data-testid="volume-bar"] button {
         width: 25px;
         height: 25px;
         border-radius: 0;
@@ -496,7 +496,7 @@ div[data-testid='now-playing-widget'] {
         }
     }
 
-    .volume-bar__slider-container {
+    .volume-bar__slider-container, [data-testid="volume-bar"] > :not(button) {
         width: 67px;
         margin-left: -1px;
 
@@ -543,7 +543,9 @@ div[data-testid='now-playing-widget'] {
 .player-controls__left > button:first-child::before,
 #wmpotify-repeat-button::after,
 #wmpotify-stop-button::before,
-.volume-bar__icon-button::before {
+.volume-bar__icon-button::before,
+[data-testid="volume-bar-toggle-mute-button"]::before,
+[data-testid="volume-bar"] button::before {
     content: '';
     position: absolute;
     left: 0;
@@ -558,7 +560,9 @@ div[data-testid='now-playing-widget'] {
 .player-controls__left > button:first-child:hover::before,
 #wmpotify-repeat-button:hover::after,
 #wmpotify-stop-button:hover::before,
-.volume-bar__icon-button:hover::before {
+.volume-bar__icon-button:hover::before,
+[data-testid="volume-bar-toggle-mute-button"]:hover::before,
+[data-testid="volume-bar"] button:hover::before {
     background-image: var(--btn-hover);
 }
 
@@ -566,7 +570,9 @@ div[data-testid='now-playing-widget'] {
 .player-controls__left > button:first-child:active::before,
 #wmpotify-repeat-button:active::after,
 #wmpotify-stop-button:active::before,
-.volume-bar__icon-button:active::before {
+.volume-bar__icon-button:active::before,
+[data-testid="volume-bar-toggle-mute-button"]:active::before,
+[data-testid="volume-bar"] button:active::before {
     background-image: var(--btn-pressed);
 }
 
@@ -1163,10 +1169,10 @@ body[data-right-align-pb-left-btn] {
         display: none !important;
     }
 
-    .volume-bar {
+    .volume-bar, [data-testid="volume-bar"] {
         flex: unset;
 
-        .volume-bar__slider-container {
+        .volume-bar__slider-container, & > :not(button) {
             width: 19px !important;
             height: 25px;
             background: var(--vol-mini-expand) no-repeat;
@@ -1203,7 +1209,7 @@ body[data-right-align-pb-left-btn] {
             }
         }
 
-        .volume-bar__icon-button {
+        .volume-bar__icon-button, [data-testid="volume-bar-toggle-mute-button"], & > button {
             min-width: 0;
 
             &::before {
@@ -1224,12 +1230,14 @@ body[data-right-align-pb-left-btn] {
                 background-image: var(--vol-mini-pressed);
             }
 
-            &:hover + .volume-bar__slider-container {
+            &:hover + .volume-bar__slider-container, &:hover + :not(button) {
                 background-image: var(--vol-mini-expand-hover);
             }
         }
 
-        &:has(.volume-bar__slider-container:hover):not(:has(.playback-progressbar:hover)):not(:has(.x-progressBar-wrapper:hover)) .volume-bar__icon-button::before {
+        &:has(.volume-bar__slider-container:hover):not(:has(.playback-progressbar:hover)):not(:has(.x-progressBar-wrapper:hover)) .volume-bar__icon-button::before,
+        &:has(> :not(button):hover):not(:has(.playback-progressbar:hover)):not(:has(.x-progressBar-wrapper:hover)) [data-testid="volume-bar-toggle-mute-button"]::before,
+        &:has(> :not(button):hover):not(:has(.playback-progressbar:hover)):not(:has(.x-progressBar-wrapper:hover)) > button::before {
             background-image: var(--vol-mini-hover);
         }
     }

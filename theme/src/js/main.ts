@@ -47,9 +47,9 @@ const elementsRequired = [
     '.player-controls__buttons button[data-testid="control-button-playpause"]',
     '.player-controls__right',
     '.playback-bar [class*=encore-text]',
-    '.volume-bar',
-    '.volume-bar__icon-button',
-    '.volume-bar .progress-bar, .volume-bar .x-progressBar-progressBar, .volume-bar [data-testid="progress-bar"]',
+    '.volume-bar, [data-testid="volume-bar"]',
+    '.volume-bar__icon-button, [data-testid="volume-bar-toggle-mute-button"], [data-testid="volume-bar"] button',
+    '.volume-bar .progress-bar, .volume-bar .x-progressBar-progressBar, .volume-bar [data-testid="progress-bar"], [data-testid="volume-bar"] [data-testid="progress-bar"]',
     '.main-nowPlayingBar-left',
 ];
 

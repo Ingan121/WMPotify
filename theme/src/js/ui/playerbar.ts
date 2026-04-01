@@ -112,29 +112,31 @@ class PlayerBar {
         playerControlsLeft.appendChild(stopButton);
 
         const playerControlsRight = document.querySelector('.player-controls__right')!;
-        const volumeBar = document.querySelector('.volume-bar')!;
-        this.volumeButton = volumeBar.querySelector('.volume-bar__icon-button')!;
+        const volumeBar = document.querySelector('.volume-bar, [data-testid="volume-bar"]')!;
+        this.volumeButton = volumeBar.querySelector('.volume-bar__icon-button, [data-testid="volume-bar-toggle-mute-button"], button')!;
         this.volumeBarProgress = volumeBar.querySelector('.progress-bar, .x-progressBar-progressBar, [data-testid="progress-bar"]')!;
         this.updateVolumeIcon();
         new MutationObserver(this.updateVolumeIcon.bind(this)).observe(this.volumeBarProgress, { attributes: true, attributeFilter: ['style'] });
         playerControlsRight.appendChild(volumeBar);
 
-        const volSlider = document.querySelector('.volume-bar__slider-container')!;
-        const volPopup = volSlider.children[0] as HTMLElement;
-        volSlider.addEventListener('click', () => {
-            if (window.innerWidth < 750) {
-                volPopup.dataset.visible = 'true';
-                const autoClose = setTimeout(() => {
-                    delete volPopup.dataset.visible;
-                }, 5000);
-                volPopup.addEventListener('pointerup', () => {
-                    clearTimeout(autoClose);
-                    setTimeout(() => {
+        const volSlider = document.querySelector('.volume-bar__slider-container, [data-testid="volume-bar"] > :not(button)');
+        const volPopup = volSlider ? volSlider.children[0] as HTMLElement : null;
+        if (volSlider && volPopup) {
+            volSlider.addEventListener('click', () => {
+                if (window.innerWidth < 750) {
+                    volPopup.dataset.visible = 'true';
+                    const autoClose = setTimeout(() => {
                         delete volPopup.dataset.visible;
-                    }, 100);
-                }, { once: true });
-            }
-        });
+                    }, 5000);
+                    volPopup.addEventListener('pointerup', () => {
+                        clearTimeout(autoClose);
+                        setTimeout(() => {
+                            delete volPopup.dataset.visible;
+                        }, 100);
+                    }, { once: true });
+                }
+            });
+        }
 
         this.timeTexts = document.querySelectorAll('.playback-bar [class*=encore-text]'); // 0: elapsed, 1: total (both in HH:MM:SS format)
         this.timeTextContainer = document.createElement('div');
