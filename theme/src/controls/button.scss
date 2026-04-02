@@ -8,7 +8,8 @@ div[data-identifier="discography-topbar"] [role="switch"],
 button[role="combobox"],
 header nav li,
 [class*="LegacyChipComponent-checkbox-chip-sm-"],
-[class*="LegacyChipComponent-presentation-chip-sm-"] /* 1.2.68 */ {
+[class*="LegacyChipComponent-presentation-chip-sm-"], /* 1.2.68 */
+[class*="-legacy-chip "] /* 1.2.86 */ {
   appearance: none;
   background: transparent;
   border: none;
@@ -36,7 +37,8 @@ header nav li,
 
   &:active,
   &:has([class*="ctive"]),
-  &[class*="-selected-"] {
+  &[class*="-selected-"],
+  &[class*="--selected"] { /* 1.2.86 */
     border-image-source: url("resources/ui/toolbarbutton_pressed.png");
     color: black !important;
 
@@ -171,7 +173,8 @@ dialog button[class*="e-"][class*="-button-primary"],
   button[role="combobox"],
   header nav li,
   [class*="LegacyChipComponent-checkbox-chip-sm-"],
-  [class*="LegacyChipComponent-presentation-chip-sm-"] /* 1.2.68 */ {
+  [class*="LegacyChipComponent-presentation-chip-sm-"], /* 1.2.68 */
+  [class*="-legacy-chip "] { /* 1.2.86 */
     border: none;
     padding: 3px;
     border-image: none !important;
@@ -189,7 +192,8 @@ dialog button[class*="e-"][class*="-button-primary"],
 
     &:active,
     &:has([class*="ctive"]),
-    &[class*="-selected-"] {
+    &[class*="-selected-"],
+    &[class*="--selected"] { /* 1.2.86 */
       box-shadow: var(--border-sunken-outer), var(--border-sunken-inner);
       color: CanvasText !important;
 

@@ -162,7 +162,7 @@ function processQueueItems() {
     if (!document.querySelector('#queue-panel') || !Spicetify.Queue) {
         return;
     }
-    const queueItems = document.querySelectorAll('#queue-panel li .HeaderArea');
+    const queueItems = document.querySelectorAll('#queue-panel li .HeaderArea, #queue-panel li div[class$="-legacy-list-row__header"]');
     for (let i = 0; i < queueItems.length; i++) {
         const queueItem = queueItems[i];
         if (queueItem.querySelector('.wmpotify-queue-duration')) {
