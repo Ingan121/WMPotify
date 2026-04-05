@@ -722,7 +722,8 @@ div[data-testid='now-playing-widget'] {
         display: none !important;
     }
 
-    .x-progressBar-middleground { /* 1.2.84 */
+    .x-progressBar-middleground, /* 1.2.84 */
+    .x-progressBar-progressFillColor { /* 1.2.86 mapping nonsense */
         display: none;
     }
 
