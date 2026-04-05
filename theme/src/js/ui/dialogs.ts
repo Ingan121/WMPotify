@@ -4,7 +4,7 @@ import Strings from '../strings';
 import { compareSpotifyVersion, ver, lastSupportedSpotifyVer } from '../utils/UpdateCheck';
 import WindhawkComm from "../utils/WindhawkComm";
 
-export function confirmModal(title: string, message: string, confirmText = Strings['UI_OK'], cancelText = Strings['UI_CANCEL']) {
+export function confirmModal(title: string, message: string, confirmText = Strings['UI_OK'], cancelText = Strings['UI_CANCEL']): Promise<boolean> {
     return new Promise((resolve, reject) => {
         const modalContent = document.createElement('div');
         modalContent.id = 'wmpotify-confirm-modal';
@@ -48,7 +48,7 @@ export function confirmModal(title: string, message: string, confirmText = Strin
     });
 }
 
-export function promptModal(title: string, message: string, text: string, hint: string = "") {
+export function promptModal(title: string, message: string, text: string, hint: string = ""): Promise<string | null> {
     return new Promise((resolve, reject) => {
         const modalContent = document.createElement('div');
         modalContent.id = 'wmpotify-prompt-modal';
@@ -107,7 +107,7 @@ export function promptModal(title: string, message: string, text: string, hint: 
     });
 }
 
-export async function openWmpvisInstallDialog() {
+export function openWmpvisInstallDialog() {
     const dialogContent = document.createElement('div');
     dialogContent.id = 'wmpotify-instructions-dialog';
     dialogContent.innerHTML = `

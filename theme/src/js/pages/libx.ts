@@ -29,6 +29,8 @@ let lastCategoriesIdentifier: string[] = [];
 
 export const ylxKeyPrefix = compareSpotifyVersion('1.2.58') >= 0 ? 'left' : 'ylx';
 export const expandedStateKey = compareSpotifyVersion('1.2.58') >= 0 ? 'left-sidebar-expanded-state-width' : 'ylx-expanded-state-nav-bar-width';
+const chipClearClassName = compareSpotifyVersion('1.2.86') >= 0 ? '-chip-clear' : 'ChipClear';
+const secondarySelectedClassName = compareSpotifyVersion('1.2.86') >= 0 ? '--secondary' : 'secondary-selected';
 
 const CustomLibX = {
     async init() {
@@ -222,7 +224,7 @@ function parseCategoryButtons() {
         renderHeader();
         return;
     }
-    const isInitial = !categoryButtons.querySelector('button[class*="ChipClear"]:first-child, div[role="option"]:has(div[class*="ChipClear"]):first-child');
+    const isInitial = !categoryButtons.querySelector(`button[class*="${chipClearClassName}"]:first-child, div[role="option"]:has(div[class*="${chipClearClassName}"]):first-child`);
     const buttons = Array.from(categoryButtons.querySelectorAll('button, div[role="option"]'));
     if (isInitial) {
         buttons.forEach((button, index) => {
@@ -265,6 +267,8 @@ function parseCategoryButtons() {
     }
     renderHeader();
     renderSidebar();
+
+    console.debug("WMPotify: Parsed category buttons, hierarchy:", categoryButtonsHierarchy, "inFolder:", inFolder, "currentCategories:", currentCategories);
 }
 
 function onFolderChange() {
@@ -276,6 +280,7 @@ function onFolderChange() {
     }
     parseCategoryButtons();
     categoryButtonsObserver.observe(categoryButtons, { childList: true });
+    console.debug("WMPotify: onFolderChange, inFolder:", inFolder);
 }
 
 // Refresh the element reference in the category object
@@ -291,7 +296,7 @@ function refreshElement(category: Category) {
 }
 
 function isInRootCategory() {
-    return !categoryButtons.querySelector('button[class*="ChipClear"]:first-child, div[role="option"]:has(div[class*="ChipClear"]):first-child');
+    return !categoryButtons.querySelector(`button[class*="${chipClearClassName}"]:first-child, div[role="option"]:has(div[class*="${chipClearClassName}"]):first-child`);
 }
 
 function isInParentCategory(parentCategory: Category) {
@@ -307,7 +312,7 @@ async function goToRootCategory() {
         exitFolder();
         await waitForFolderChange();
     }
-    categoryButtons.querySelector<HTMLElement>('button[class*="ChipClear"]:first-child, div[role="option"]:has(div[class*="ChipClear"]):first-child')?.click();
+    categoryButtons.querySelector<HTMLElement>(`button[class*="${chipClearClassName}"]:first-child, div[role="option"]:has(div[class*="${chipClearClassName}"]):first-child`)?.click();
 };
 
 function exitFolder() {
@@ -334,7 +339,7 @@ function getCurrentCategories(identifier = false) {
             currentParent = Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === currentParent) || `unknown`;
         }
         currentCategories.push(currentParent);
-        const activeChild = categoryButtons.querySelector('button[class*="secondary-selected"], div[role="option"]:has(div[class*="secondary-selected"])');
+        const activeChild = categoryButtons.querySelector(`button[class*="${secondarySelectedClassName}"], div[role="option"]:has(div[class*="${secondarySelectedClassName}"])`);
         if (activeChild) {
             if (identifier) {
                 currentCategories.push(Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === activeChild.textContent) || `unknown`);

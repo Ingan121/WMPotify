@@ -618,7 +618,7 @@ function open() {
     if (!tabs) {
         return;
     }
-    if (document.body.dataset.wmpotifyLibPageOpen || document.querySelector('.QdB2YtfEq0ks5O4QbtwX')) {
+    if (document.body.dataset.wmpotifyLibPageOpen || document.querySelector('.Root__cinema-view')) {
         // Close standalone LibX or improved cinema and go to home / NowPlaying to show the config panel
         // As standalone LibX page or improved cinema hides the main area
         if (Spicetify.Config.custom_apps.includes('wmpvis')) {

@@ -132,7 +132,8 @@ export async function checkUpdates() {
     }
 }
 
-export function compareSpotifyVersion(target) {
+// Compare current Spotify version with target version. Returns 1 if current is newer than target, -1 if older, 0 if equal or unable to determine
+export function compareSpotifyVersion(target: string): number {
     let current = Spicetify.Platform?.version?.split('.').map(Number);
     if (!current) {
         current = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number);
