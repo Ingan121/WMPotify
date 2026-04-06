@@ -1,6 +1,11 @@
+import Strings from './lang/strings';
 import enUS from './lang/en-US';
 import koKR from './lang/ko-KR';
 import esAR from './lang/es-AR';
+
+// Translation guide, kinda: https://github.com/Ingan121/ModernActiveDesktop/blob/master/docs/Translating.md
+// It uses the localization system with the same basis, but there are a lot of differences and missing stuff (e.g. some formatting characters in processString)
+// so refer to the code and comments in this file and files in ./lang as well
 
 const supportedLanguages = {
     "en-US": "English",
@@ -10,6 +15,7 @@ const supportedLanguages = {
 
 let lang = navigator.language;
 
+// 1. Exact match, 2. Match first 2 characters (e.g. "en" matches "en-US"), 3. Default to English
 if (!(lang in supportedLanguages)) {
     for (const supportedLang in supportedLanguages) {
         if (lang.slice(0, 2) === supportedLang.slice(0, 2)) {
@@ -21,8 +27,6 @@ if (!(lang in supportedLanguages)) {
         lang = "en-US";
     }
 }
-
-type Strings = typeof enUS;
 
 const strings: { [key: string]: Strings } = {
     'en-US': enUS,

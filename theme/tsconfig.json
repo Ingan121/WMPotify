@@ -8,7 +8,6 @@
     "noEmit": true,
     "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "lib": ["DOM", "ESNext", "DOM.Iterable"],
     "types": ["node"]
   }

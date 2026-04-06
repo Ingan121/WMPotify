@@ -1,4 +1,6 @@
-const lang = {
+import Strings from "./strings";
+
+const lang: Strings = {
     identifier: 'en-US',
 
     'UI_OK': 'OK',

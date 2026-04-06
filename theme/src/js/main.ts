@@ -289,6 +289,7 @@ async function init() {
     initQueuePanel();
     // Right panel has varying structure in different versions
     const rightPanelObservationTarget = 
+        document.querySelector('.zjCIcN96KsMfWwRo') ||     // 1.2.86+
         document.querySelector('.oXO9_yYs6JyOwkBn8E4a') || // 1.2.72+
         document.querySelector('.XOawmCGZcQx4cesyNfVO') || // 1.2.45-1.2.71
         document.querySelector('.Root__right-sidebar > div > div[class]:first-child') ||
@@ -370,7 +371,7 @@ function waitForReady() {
                                     window.location.reload();
                                 }
                             } else {
-                                errorDialog(Strings[ready === false ? 'ERRDLG_DETAIL_MISSING_ELEMENTS' : 'ERRDLG_DETAIL_MISSING_API'], elementsRequired.filter(selector => !document.querySelector(selector)));
+                                errorDialog(Strings.getString(ready === false ? 'ERRDLG_DETAIL_MISSING_ELEMENTS' : 'ERRDLG_DETAIL_MISSING_API'), elementsRequired.filter(selector => !document.querySelector(selector)));
                             }
                         }
                         if (!document.querySelector('.Root__globalNav')) {

@@ -43,17 +43,23 @@ dialog,
   }
 
   .main-trackCreditsModal-header,
+  .main-trackCreditsModalV2-header,
   .main-playlistEditDetailsModal-header,
   .profile-userEditDetails-header {
     padding: 8px;
     border-bottom: none;
 
-    h1 {
+    h1, h2 {
       font: var(--caption-font);
+    }
+
+    h2 {
+      margin-top: 8px;
     }
   }
 
-  .main-trackCreditsModal-mainSection {
+  .main-trackCreditsModal-mainSection,
+  .main-trackCreditsModalV2-mainSection {
     padding: 8px;
     scrollbar-width: none;
 
@@ -167,6 +173,7 @@ dialog,
   }
 
   .main-trackCreditsModal-closeBtn,
+  .main-trackCreditsModalV2-closeBtn,
   .main-playlistEditDetailsModal-closeBtn,
   .profile-userEditDetails-closeButton,
   .desktopmodals-aboutSpotifyModal-closeButton {
@@ -288,7 +295,8 @@ dialog,
   z-index: 998;
   user-select: text;
 
-  .main-trackCreditsModal-mainSection {
+  .main-trackCreditsModal-mainSection,
+  .main-trackCreditsModalV2-mainSection {
     max-height: calc(100vh - 50px);
     overflow-y: auto;
   }
