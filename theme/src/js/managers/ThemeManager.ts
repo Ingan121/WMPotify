@@ -1,5 +1,3 @@
-'use strict';
-
 import { setTintColor } from '../ui/tinting';
 
 const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -42,16 +40,16 @@ function updateSystemDarkMode(event) {
 }
 
 const ThemeManager = {
-    addSystemDarkModeListener: function () {
+    addSystemDarkModeListener: () => {
         darkQuery.addEventListener('change', updateSystemDarkMode);
     },
-    removeSystemDarkModeListener: function () {
+    removeSystemDarkModeListener: () => {
         darkQuery.removeEventListener('change', updateSystemDarkMode);
     },
-    addMarketplaceSchemeObserver: function () {
+    addMarketplaceSchemeObserver: () => {
         mpSchemeUpdateObserver.observe(document.body, { childList: true });
     },
-    removeMarketplaceSchemeObserver: function () {
+    removeMarketplaceSchemeObserver: () => {
         mpSchemeUpdateObserver.disconnect();
     }
 }

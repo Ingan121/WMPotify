@@ -1,8 +1,6 @@
-'use strict';
-
 import Strings from '../strings';
 import { openWmpvisInstallDialog } from './dialogs';
-import { MadMenu, createMadMenu, MadMenuItem } from '../utils/MadMenu';
+import { MadMenu, createMadMenu, type MadMenuItem } from '../utils/MadMenu';
 import WindhawkComm from '../utils/WindhawkComm';
 
 const tabNameSubstitutes = {

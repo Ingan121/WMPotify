@@ -1,5 +1,3 @@
-'use strict';
-
 import Strings from '../strings';
 import DirectUserStorage from '../utils/DirectUserStorage';
 import { compareSpotifyVersion } from '../utils/UpdateCheck';
@@ -383,7 +381,7 @@ async function go(identifiers: string[]) {
             await waitForCategoryButtonsUpdate();
         } else {
             const parentCategory = categoryButtonsHierarchy.find(cat => cat.identifier === identifiers[i - 1]);
-            if (!parentCategory || !parentCategory.children) {
+            if (!parentCategory?.children) {
                 return;
             }
             const category = parentCategory.children.find(cat => cat.identifier === identifiers[i]);

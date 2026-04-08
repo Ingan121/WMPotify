@@ -1,5 +1,3 @@
-'use strict';
-
 import Strings from './strings'
 import CustomTitlebar from './ui/titlebar';
 import Topbar from './ui/topbar';
@@ -7,7 +5,7 @@ import PlayerBar from './ui/playerbar';
 import Config from './pages/config';
 import SidebarManager from './managers/SidebarManager';
 import { initQueuePanel } from './pages/queue';
-import WindhawkComm, { WindhawkModOptions } from './utils/WindhawkComm';
+import WindhawkComm, { type WindhawkModOptions } from './utils/WindhawkComm';
 import PageManager from './managers/PageManager';
 import WindowManager from './managers/WindowManager';
 import {
@@ -115,8 +113,8 @@ function earlyInit() {
     if (!localStorage.wmpotifyStyle && titleStyle === 'native') {
         if (hcQuery.matches) {
             style = 'basic';
-        } else if (whStatus && whStatus.isThemingEnabled) {
-            if (whInitialOpts!.transparentrendering && whStatus.isDwmEnabled) {
+        } else if (whStatus?.isThemingEnabled) {
+            if (whInitialOpts?.transparentrendering && whStatus.isDwmEnabled) {
                 style = 'aero';
             } else if (!whStatus.isDwmEnabled) {
                 style = 'basic';
@@ -314,7 +312,7 @@ async function doInit() {
         document.documentElement.dataset.wmpotifyInitComplete = 'true';
     } catch (e) {
         console.error('WMPotify: Error during init:', e);
-        const errorStack = e instanceof Error ? e.stack : String(e);
+        const errorStack = e instanceof Error ? e.stack || String(e) : String(e);
         errorDialog(Strings.getString('ERRDLG_DETAIL_EXCEPTION', errorStack));
         document.documentElement.dataset.wmpotifyJsFail = 'true';
     }
@@ -328,7 +326,7 @@ function isReady() {
         Spicetify.Platform.LocalStorageAPI &&
         Spicetify.Platform.Translations &&
         Spicetify.Platform.PlatformData &&
-        Spicetify.Player.origin?._state?.repeat != undefined // Spicetify.Player.getRepeat()
+        Spicetify.Player.origin?._state?.repeat !== undefined // Spicetify.Player.getRepeat()
     ) {
         if (elementsRequired.every(selector => document.querySelector(selector))) {
             return true;
@@ -389,11 +387,11 @@ function waitForReady() {
     }
 }
 
-document.addEventListener('scroll', function () {
+document.addEventListener('scroll', () => {
     document.documentElement.scrollTo(0, 0);
 });
 
-function logTimed(str) {
+function logTimed(str: string) {
     const time = performance.now() - loadStartTime;
     console.log(`[${time.toFixed(6)}ms] ${str}`);
 }

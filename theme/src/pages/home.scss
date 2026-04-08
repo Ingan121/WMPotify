@@ -124,6 +124,8 @@
     .main-home-content {
         .view-homeShortcutsGrid-shortcut:hover a {
             color: var(--hilight-text);
+            background-color: var(--hilight);
+            forced-color-adjust: none;
         }
 
         section:not(.main-shelf-shelfGrid):not(.view-homeShortcutsGrid-shortcuts) {

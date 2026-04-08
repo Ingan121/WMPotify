@@ -1,10 +1,3 @@
-// appearance.js for ModernActiveDesktop Configurator
-// Made by Ingan121
-// Licensed under the MIT License
-// SPDX-License-Identifier: MIT
-
-'use strict';
-
 import Strings from '../strings';
 
 interface ThemeScheme {
@@ -136,8 +129,8 @@ export async function importScheme() {
             scheme['button-text'] = cssScheme.match(/--button-text:\s*(.*);/)?.[1].replace(/ !important/, '');
             scheme['menu-text'] = cssScheme.match(/--menu-text:\s*(.*);/)?.[1].replace(/ !important/, '');
             scheme['hilight-text'] = cssScheme.match(/--hilight-text:\s*(.*);/)?.[1].replace(/ !important/, '');
-            cssScheme += ':root {' + generateThemeSvgs(scheme) + '}';
-            cssScheme = cssScheme.replace(/  |\n/g, '');
+            cssScheme += `:root {${generateThemeSvgs(scheme)}}`;
+            cssScheme = cssScheme.replace(/ {2}|\n/g, '');
         }
         applyScheme(cssScheme);
         localStorage.wmpotifyControlStyle = "custom";
@@ -192,13 +185,13 @@ export async function importScheme() {
                     // Font values are not supported
                     const scrollbarSize = text.match(`\\n"Size1"=dword:0000(.*)\r\n`);
                     if (scrollbarSize) {
-                        scheme['scrollbar-size'] = parseInt(scrollbarSize[1], 16) + "px";
+                        scheme['scrollbar-size'] = `${parseInt(scrollbarSize[1], 16)}px`;
                     } else {
                         scheme['scrollbar-size'] = '16px';
                     }
                     const menuHeight = text.match(`\\n"Size8"=dword:0000(.*)\r\n`);
                     if (menuHeight) {
-                        scheme['menu-height'] = parseInt(menuHeight[1], 16) + "px";
+                        scheme['menu-height'] = `${parseInt(menuHeight[1], 16)}px`;
                     } else {
                         scheme['menu-height'] = '18px';
                     }
@@ -299,7 +292,7 @@ function generateThemeSvgs(scheme: ThemeScheme): string {
             <path fill-rule="evenodd" clip-rule="evenodd" d="M15 1H14V15H1V16H14H15V1Z" fill="${buttonShadow}"/>
             <rect x="2" y="2" width="12" height="13" fill="${buttonFace}"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M8 6H7V7H6V8H5V9H4V10H11V9H10V8H9V7H8V6Z" fill="${buttonText}"/>
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
     const scrollDown = `
         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M15 0H0V1V16H1V1H15V0Z" fill="${buttonLight}"/>
@@ -308,7 +301,7 @@ function generateThemeSvgs(scheme: ThemeScheme): string {
             <path fill-rule="evenodd" clip-rule="evenodd" d="M15 1H14V15H1V16H14H15V1Z" fill="${buttonShadow}"/>
             <rect x="2" y="2" width="12" height="13" fill="${buttonFace}"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M9 6H4V7H5V8H6V9H7V10H8V9H9V8H10V7H11V6Z" fill="${buttonText}"/>
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
     const scrollLeft = `
         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M15 0H0V1V16H1V1H15V0Z" fill="${buttonLight}"/>
@@ -317,7 +310,7 @@ function generateThemeSvgs(scheme: ThemeScheme): string {
             <path fill-rule="evenodd" clip-rule="evenodd" d="M15 1H14V15H1V16H14H15V1Z" fill="${buttonShadow}"/>
             <rect x="2" y="2" width="12" height="13" fill="${buttonFace}"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M9 4H8V5H7V6H6V7H5V8H6V9H7V10H8V11H9V4Z" fill="${buttonText}"/>
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
     const scrollRight = `
         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M15 0H0V1V16H1V1H15V0Z" fill="${buttonLight}"/>
@@ -326,38 +319,38 @@ function generateThemeSvgs(scheme: ThemeScheme): string {
             <path fill-rule="evenodd" clip-rule="evenodd" d="M15 1H14V15H1V16H14H15V1Z" fill="${buttonShadow}"/>
             <rect x="2" y="2" width="12" height="13" fill="${buttonFace}"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M7 4H6V11H7V10H8V9H9V8H10V7H9V6H8V5H7V4Z" fill="${buttonText}"/>
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
     const scrollTrack = `
         <svg width="2" height="2" viewBox="0 0 2 2" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M1 0H0V1H1V2H2V1H1V0Z" fill="${buttonFace}"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M2 0H1V1H0V2H1V1H2V0Z" fill="${buttonHilight}"/>
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
     const dropdownButtonPressed = `
         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H15H16V17H15H0V16V1V0ZM1 16H15V1H1V16Z" fill="${buttonShadow}"/>
             <rect x="1" y="1" width="14" height="15" fill="${buttonFace}"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7H5V8H6V9H7V10H8V11H9V10H10V9H11V8H12V7Z" fill="${buttonText}"/>
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
     const checkmark = `
         <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0H6V1H5V2H4V3H3V4H2V3H1V2H0V5H1V6H2V7H3V6H4V5H5V4H6V3H7V0Z" fill="${buttonText}"/>
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
     const checkmarkDisabled = `
         <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0H6V1H5V2H4V3H3V4H2V3H1V2H0V5H1V6H2V7H3V6H4V5H5V4H6V3H7V0Z" fill="${buttonShadow}"/>
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
     const checkmarkMenu = `
         <?xml version="1.0" standalone="no"?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-10 0 2058 2048" shape-rendering="crispEdges">
             <path fill="${menuText}" d="M512 832l320 319l576 -575v384l-576 576l-320 -320v-384z" />
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
     const checkmarkMenuHover = `
         <?xml version="1.0" standalone="no"?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-10 0 2058 2048" shape-rendering="crispEdges">
             <path fill="${hilightText}" d="M512 832l320 319l576 -575v384l-576 576l-320 -320v-384z" />
-        </svg>`.replace(/  |\n/g, '');
+        </svg>`.replace(/ {2}|\n/g, '');
 
     const css = `
         --scroll-up: url("data:image/svg+xml,${encodeURIComponent(scrollUp)}") !important;
@@ -370,7 +363,7 @@ function generateThemeSvgs(scheme: ThemeScheme): string {
         --checkmark-disabled: url("data:image/svg+xml,${encodeURIComponent(checkmarkDisabled)}") !important;
         --checkmark-menu: url("data:image/svg+xml,${encodeURIComponent(checkmarkMenu)}") !important;
         --checkmark-menu-hover: url("data:image/svg+xml,${encodeURIComponent(checkmarkMenuHover)}") !important;
-    `.replace(/  |\n/g, '');
+    `.replace(/ {2}|\n/g, '');
     return css;
 }
 
@@ -415,16 +408,16 @@ function getColorValue(themeText: string, name: string, reg: boolean, ctc: boole
     if (ctc) {
         regex = new RegExp(`\\n"Color${ctcMap.indexOf(name)}"=dword:00(.*)\r\n`);
     } else if (reg) {
-        regex = new RegExp(`\\n\"${name}\"=\"(.*)\"\r\n`);
+        regex = new RegExp(`\\n"${name}"="(.*)"\r\n`);
     } else {
         regex = new RegExp(`\\n${name}=(.*)\r\n`);
     }
-    let rgb = themeText.match(regex);
+    const rgb = themeText.match(regex);
     if (ctc) {
         if (!rgb) {
             throw new Error(`Color not found for ${name}`);
         } else {
-            return '#' + rgb[1].trim().match(/.{2}/g)!.reverse().join('');
+            return `#${rgb[1].trim().match(/.{2}/g)?.reverse().join('')}`;
         }
     }
     if (!rgb) {
@@ -445,5 +438,5 @@ function getColorValue(themeText: string, name: string, reg: boolean, ctc: boole
                 throw new Error(`Color not found for ${name}`);
         }
     }
-    return '#' + rgb[1].trim().split(' ').map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
+    return `#${rgb[1].trim().split(' ').map(x => parseInt(x, 10).toString(16).padStart(2, '0')).join('')}`;
 }

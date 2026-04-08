@@ -1,3 +1,7 @@
-.x-settings-equalizerSection {
+.x-settings-equalizerSection,
+.x-settings-zoomContainer,
+.x-settings-zoomRadioWrapper,
+.x-settings-zoomRadioCircle,
+.x-settings-zoomRadioCircle::before {
     background: none;
 }

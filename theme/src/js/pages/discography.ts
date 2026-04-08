@@ -1,5 +1,3 @@
-'use strict';
-
 import PageManager from "../managers/PageManager";
 
 export async function initDiscographyPage(wait: boolean) {
@@ -20,7 +18,7 @@ export async function initDiscographyPage(wait: boolean) {
         document.querySelector('.main-topBar-topbarContent')?.appendChild(topbar);
         // Prevent React from removing the topbar when exiting the page, causing critical errors (#64)
         const origRemoveChild = section.removeChild;
-        (section.removeChild as any) = function (child) {
+        (section.removeChild as (child: Node) => Node) = (child: Node) => {
             if (child === topbar) {
                 topbar?.remove();
                 return child;
@@ -99,7 +97,9 @@ export async function initDiscographyPage(wait: boolean) {
         target = section.querySelector('section');
         subtreeNeeded = true;
     }
-    observer.observe(target!, { childList: true, subtree: subtreeNeeded });
+    if (target) {
+        observer.observe(target, { childList: true, subtree: subtreeNeeded });
+    }
 }
 
 function waitForFullRender(section: HTMLElement, noGridView: boolean = false): Promise<void> | void {

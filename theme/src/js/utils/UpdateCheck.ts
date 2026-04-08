@@ -1,5 +1,3 @@
-'use strict';
-
 import Strings from '../strings'
 import WindhawkComm from "../utils/WindhawkComm";
 import { openUpdateDialog } from '../ui/dialogs';
@@ -27,9 +25,9 @@ export class MadVersion {
         if (typeof ver === "string") {
             const split = ver.split(" ");
             const verSplit = split[0].split(".");
-            this.major = parseInt(verSplit[0]);
-            this.minor = parseInt(verSplit[1]);
-            this.patch = parseInt(verSplit[2]) || 0;
+            this.major = parseInt(verSplit[0], 10);
+            this.minor = parseInt(verSplit[1], 10);
+            this.patch = parseInt(verSplit[2], 10) || 0;
             this.extra = split.length === 1 ? "" : split.slice(1).join(" ");
         } else {
             this.major = ver.major;
@@ -38,7 +36,7 @@ export class MadVersion {
             if (ver.rcNum) {
                 this.extra = `Release Candidate ${ver.rcNum}`;
             } else if (ver.isPreRelease) {
-                this.extra = "Pre-release" + (ver.buildDate ? ` (${ver.buildDate})` : "");
+                this.extra = `Pre-release${ver.buildDate ? ` (${ver.buildDate})` : ""}`;
             } else {
                 this.extra = ver.extra || "";
             }

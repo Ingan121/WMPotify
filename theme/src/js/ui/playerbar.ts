@@ -248,7 +248,7 @@ class PlayerBar {
                         WindhawkComm.lockTitle(false);
                     }
                     if (Spicetify.Player.isPlaying() && !localStorage.wmpotifyLockTitle) {
-                        WindhawkComm.setTitle(trackInfo.artist_name + ' - ' + trackInfo.title);
+                        WindhawkComm.setTitle(`${trackInfo.artist_name} - ${trackInfo.title}`);
                     } else {
                         WindhawkComm.setTitle(origDefaultTitle);
                     }
@@ -286,7 +286,7 @@ class PlayerBar {
     }
 
     updateVolumeIcon() {
-        const volume = parseInt(getComputedStyle(this.volumeBarProgress).getPropertyValue('--progress-bar-transform').replace('%', '')) / 100;
+        const volume = parseInt(getComputedStyle(this.volumeBarProgress).getPropertyValue('--progress-bar-transform').replace('%', ''), 10) / 100;
         if (volume === 0) {
             this.volumeButton.dataset.vol = 'muted';
         } else if (volume <= 0.3) {
@@ -303,7 +303,7 @@ class PlayerBar {
             case 0:
                 {
                     try {
-                        const remaining = parseInt(Spicetify.Player.data?.item?.metadata?.duration) - Spicetify.Player.getProgress();
+                        const remaining = parseInt(Spicetify.Player.data?.item?.metadata?.duration, 10) - Spicetify.Player.getProgress();
                         this.timeText.textContent = formatTime(remaining, true);
                     } catch (e) {
                         // getProgress might fail if some internal Spotify stuff goes wrong (more internal Spotify errors show up in console before WMPotify fail logs)
@@ -317,7 +317,7 @@ class PlayerBar {
                 {
                     let elapsed = this.timeTexts[0].textContent;
                     if (elapsed.length === 4 || elapsed.length === 7) { // idk if there's a hour-long song
-                        elapsed = '0' + elapsed;
+                        elapsed = `0${elapsed}`;
                     }
                     this.timeText.textContent = elapsed;
                 }
@@ -326,11 +326,11 @@ class PlayerBar {
                 {
                     let elapsed = this.timeTexts[0].textContent;
                     if (elapsed.length === 4 || elapsed.length === 7) {
-                        elapsed = '0' + elapsed;
+                        elapsed = `0${elapsed}`;
                     }
                     let total = this.timeTexts[1].textContent;
                     if (total.length === 4 || total.length === 7) {
-                        total = '0' + total;
+                        total = `0${total}`;
                     }
                     this.timeText.textContent = `${elapsed} / ${total}`;
                 }

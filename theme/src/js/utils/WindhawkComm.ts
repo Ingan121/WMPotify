@@ -1,5 +1,3 @@
-'use strict';
-
 // CEF/Spotify Tweaks Windhawk mod communication
 // See <repository root>/cte.wh.cpp for the Windhawk mod implementation
 // https://windhawk.net/mods/cef-titlebar-enabler-universal

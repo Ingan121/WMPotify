@@ -1,8 +1,6 @@
-'use strict';
-
 import Strings from '../strings';
 import { formatTime } from "../utils/functions";
-import { createMadMenu, MadMenu, MadMenuItem, CreateMadMenuRes } from "../utils/MadMenu";
+import { createMadMenu, MadMenu, type MadMenuItem, type CreateMadMenuRes } from "../utils/MadMenu";
 import SidebarManager from '../managers/SidebarManager';
 
 let extraQueuePanelObserver: MutationObserver | null = null;
@@ -176,7 +174,7 @@ function processQueueItems() {
         }
         const durationElement = document.createElement('span');
         durationElement.classList.add('wmpotify-queue-duration');
-        durationElement.textContent = formatTime(duration);
+        durationElement.textContent = formatTime(parseInt(duration, 10));
         queueItem.appendChild(durationElement);
     }
 }

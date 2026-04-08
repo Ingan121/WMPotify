@@ -1,5 +1,3 @@
-'use strict';
-
 import Strings from '../strings';
 import { compareSpotifyVersion, ver, lastSupportedSpotifyVer } from '../utils/UpdateCheck';
 import WindhawkComm from "../utils/WindhawkComm";
@@ -150,7 +148,7 @@ export function openWmpvisInstallDialog() {
 }
 
 export async function openUpdateDialog(alreadyUpdated: boolean = false, tagName?: string, content?: string) {
-    let version = tagName;
+    let version = tagName || '?.??';
     let changelog = 'Failed to fetch changelog!';
     if (content) {
         changelog = content.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>');
@@ -225,7 +223,7 @@ export function errorDialog(message: string, missingElements: string[] = []) {
         'Spicetify.Platform.LocalStorageAPI': Spicetify.Platform.LocalStorageAPI,
         'Spicetify.Platform.Translations': Spicetify.Platform.Translations,
         'Spicetify.Platform.PlatformData': Spicetify.Platform.PlatformData,
-        'Spicetify.Player.origin._state.repeat': Spicetify.Player.origin?._state?.repeat != undefined
+        'Spicetify.Player.origin._state.repeat': Spicetify.Player.origin?._state?.repeat !== undefined
     }).filter(([_, obj]) => !obj).map(([key, _]) => key).join('<br>');
     dialogContent.innerHTML = `
         <div class="main-trackCreditsModal-header">

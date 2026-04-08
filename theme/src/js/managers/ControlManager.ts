@@ -1,5 +1,3 @@
-'use strict';
-
 import Strings from '../strings';
 
 class ControlManager {

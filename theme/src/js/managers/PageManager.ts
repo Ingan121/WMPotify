@@ -1,5 +1,3 @@
-'use strict';
-
 import DirectUserStorage from "../utils/DirectUserStorage";
 import SidebarManager from "./SidebarManager";
 import CustomLibX from "../pages/libx";
@@ -66,8 +64,8 @@ const PageManager = {
                 DirectUserStorage.removeItem(`${ylxKeyPrefix}-sidebar-state`); // Spicetify LocalStorageAPI does nothing if setting to same value, so remove it first
                 const origSidebarWidth = DirectUserStorage.getItem(expandedStateKey);
                 DirectUserStorage.removeItem(expandedStateKey);
-                Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, parseInt(origSidebarState!.toString()));
-                Spicetify.Platform.LocalStorageAPI.setItem(expandedStateKey, parseInt(origSidebarWidth!.toString()));
+                Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, parseInt(origSidebarState!.toString(), 10));
+                Spicetify.Platform.LocalStorageAPI.setItem(expandedStateKey, parseInt(origSidebarWidth!.toString(), 10));
             } else {
                 Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 1); // collapsed
             }

@@ -1,4 +1,4 @@
-import Strings from "./strings";
+import type Strings from "./strings";
 
 const lang: Strings = {
     identifier: 'en-US',

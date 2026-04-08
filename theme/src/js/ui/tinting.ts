@@ -1,5 +1,3 @@
-'use strict';
-
 const canvas = document.createElement('canvas');
 canvas.width = 1;
 canvas.height = 1;
@@ -10,7 +8,7 @@ function getTintedColor(hue, sat, base = '#EEF3FA') {
     context.fillStyle = base;
     context.filter = `hue-rotate(${hue}deg) saturate(${sat}%)`;
     context.fillRect(0, 0, 1, 1);
-    return 'rgba(' + context.getImageData(0, 0, 1, 1).data + ')';
+    return `rgba(${context.getImageData(0, 0, 1, 1).data})`;
 }
 
 export function setTintColor(hue?: number, sat?: number, tintPb?: boolean, tintMore?: boolean) {
@@ -38,8 +36,8 @@ export function setTintColor(hue?: number, sat?: number, tintPb?: boolean, tintM
     }
 
     document.documentElement.style.setProperty('--spice-main', getTintedColor(hue, sat));
-    document.documentElement.style.setProperty('--wmpotify-tint-hue', hue + 'deg');
-    document.documentElement.style.setProperty('--wmpotify-tint-sat', sat / 100 + '');
+    document.documentElement.style.setProperty('--wmpotify-tint-hue', `${hue}deg`);
+    document.documentElement.style.setProperty('--wmpotify-tint-sat', `${sat / 100}`);
 
     if (tintMore) {
         document.documentElement.dataset.wmpotifyTintMore = "true";

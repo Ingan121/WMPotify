@@ -3,7 +3,7 @@ export const currentVersion = {
     "minor": 2,
     "patch": 6,
     "isPreRelease": true,
-    "buildDate": "2026-04-06",
+    "buildDate": "2026-04-08",
     "rcNum": null,
     "extra": null
 };

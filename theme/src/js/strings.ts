@@ -34,7 +34,7 @@ const strings: { [key: string]: Strings } = {
     'es-AR': esAR
 };
 
-const currentStrings = strings['en-US'];
+const currentStrings = strings['en-US'] as Required<Strings>;
 if (lang !== 'en-US') {
     Object.assign(currentStrings, strings[lang]);
 }
@@ -44,7 +44,7 @@ const exportedStrings = {
 };
 export default exportedStrings;
 
-function getString(locId: keyof Strings, ...args: any[]): string {
+function getString(locId: keyof Strings, ...args: string[]): string {
     if (currentStrings[locId]) {
         return processString(currentStrings[locId], ...args);
     } else if (strings['en-US'][locId]) {
@@ -56,7 +56,7 @@ function getString(locId: keyof Strings, ...args: any[]): string {
     }
 }
 
-export function processString(str: string, ...extraStrings: any[]): string {
+export function processString(str: string, ...extraStrings: string[]): string {
     // &Apply -> <u>A</u>pply
     // \&Apply -> &Apply
     str = str.replace(/&([^&])/g, "<u>$1</u>").replace(/\\&/g, "&");

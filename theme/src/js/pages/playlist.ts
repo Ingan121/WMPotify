@@ -21,10 +21,10 @@ export async function initPlaylistPage() {
         observer.disconnect();
     }
     observer = new MutationObserver((mutationsList) => {
-        for (let mutation of mutationsList) {
+        for (const mutation of mutationsList) {
             if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                 const targetElement = mutation.target as HTMLElement | null;
-                if (targetElement && targetElement.classList.contains('main-entityHeader-topbarContentFadeIn')) {
+                if (targetElement?.classList.contains('main-entityHeader-topbarContentFadeIn')) {
                     targetElement.appendChild(searchBox);
                 } else {
                     searchBoxOrigParent?.appendChild(searchBox);
