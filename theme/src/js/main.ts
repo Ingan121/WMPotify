@@ -56,6 +56,7 @@ const loadStartTime = performance.now();
 let style = 'xp';
 let titleStyle = 'spotify';
 
+// This function runs immediately on script load
 function earlyInit() {
     if (!localStorage.wmpotifyShowLibX) {
         document.body.dataset.hideLibx = 'true';
@@ -255,6 +256,7 @@ globalThis.WMPotify = {
     checkUpdates
 };
 
+// Real initialization that requires Spotify APIs and DOM elements runs in the init function below, which is called once the platform is ready and required elements are present.
 async function init() {
     await CustomTitlebar.init(titleStyle as 'native' | 'custom' | 'keepmenu' | 'spotify');
 

@@ -3,9 +3,9 @@
     "version": "0.1",
     "description": "A Windows Media Player 11 inspired Spicetify theme for Spotify",
     "scripts": {
-        "build": "node build.ts build --experimental-strip-types",
-        "apply": "node build.ts apply --experimental-strip-types",
-        "build-local": "node build.ts build-local --experimental-strip-types"
+        "build": "node --experimental-strip-types build.ts build",
+        "apply": "node --experimental-strip-types build.ts apply",
+        "build-local": "node --experimental-strip-types build.ts build-local"
     },
     "repository": {
         "type": "git",

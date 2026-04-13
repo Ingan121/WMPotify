@@ -179,6 +179,7 @@ dialog,
   .desktopmodals-aboutSpotifyModal-closeButton {
     width: 25px;
     height: 15px;
+    min-width: 0;
     background: url("resources/icon/close.png") no-repeat;
     transform: none !important;
     border-radius: 0;
