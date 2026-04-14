@@ -139,6 +139,7 @@ const lang: Strings = {
     'CONF_ABOUT_TITLE': '정보',
     'CONF_ABOUT_DESC': 'Spotify용 Windows Media Player 11 테마',
     'CONF_ABOUT_VERSION': '버전',
+    'CONF_ABOUT_BUILD_DATE': '빌드 날짜',
     'CONF_ABOUT_CTEWH_VERSION': 'CEF/Spotify Tweaks Windhawk 모드 %s 사용 가능',
     'CONF_ABOUT_AUTHOR': '제작: Ingan121',
     'CONF_ABOUT_AUTO_UPDATES': '자동으로 업데이트 확인',

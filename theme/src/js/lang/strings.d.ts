@@ -137,6 +137,7 @@ type Strings = {
     'CONF_ABOUT_TITLE'?: string;
     'CONF_ABOUT_DESC'?: string;
     'CONF_ABOUT_VERSION'?: string;
+    'CONF_ABOUT_BUILD_DATE'?: string;
     'CONF_ABOUT_CTEWH_VERSION'?: string;
     'CONF_ABOUT_AUTHOR'?: string;
     'CONF_ABOUT_AUTO_UPDATES'?: string;

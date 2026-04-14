@@ -20,6 +20,9 @@ export class MadVersion {
     minor: number;
     patch: number;
     extra: string;
+    isPreRelease?: boolean;
+    buildDate?: string;
+    rcNum?: number | null;
 
     constructor(ver: string | StructuredMadVersion) {
         if (typeof ver === "string") {
@@ -40,6 +43,9 @@ export class MadVersion {
             } else {
                 this.extra = ver.extra || "";
             }
+            this.isPreRelease = ver.isPreRelease;
+            this.buildDate = ver.buildDate;
+            this.rcNum = ver.rcNum;
         }
     }
 

@@ -139,6 +139,7 @@ const lang: Strings = {
     'CONF_ABOUT_TITLE': 'About',
     'CONF_ABOUT_DESC': 'A Windows Media Player 11 inspired Spicetify theme for Spotify',
     'CONF_ABOUT_VERSION': 'Version',
+    'CONF_ABOUT_BUILD_DATE': 'Build date',
     'CONF_ABOUT_CTEWH_VERSION': 'CEF/Spotify Tweaks Windhawk mod %s available',
     'CONF_ABOUT_AUTHOR': 'Made by Ingan121',
     'CONF_ABOUT_AUTO_UPDATES': 'Automatically check for updates',

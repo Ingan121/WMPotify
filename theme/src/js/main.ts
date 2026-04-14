@@ -58,6 +58,8 @@ let titleStyle = 'spotify';
 
 // This function runs immediately on script load
 function earlyInit() {
+    document.documentElement.dataset.wmpotifyJsLoaded = 'true';
+
     if (!localStorage.wmpotifyShowLibX) {
         document.body.dataset.hideLibx = 'true';
     }
@@ -228,7 +230,19 @@ function earlyInit() {
     logTimed('WMPotify: earlyInit end');
 }
 
-earlyInit();
+try {
+    earlyInit();
+} catch (e) {
+    console.error('WMPotify: Error during early init:', e);
+    const stack = e instanceof Error ? e.stack || String(e) : String(e);
+    if (confirm('[WMPotify] Critical error occurred during early initialization. Please report this to the developer. Click OK to copy.\n\n' + stack)) {
+        // Whatever succeeds
+        navigator.clipboard.writeText(stack); // Fails if not window is focused
+        Spicetify.Platform.ClipboardAPI.copy(stack); // Fails if Spicetify is not fully loaded
+    }
+    document.documentElement.dataset.wmpotifyJsFail = 'true';
+    throw e; // stop further execution
+}
 
 globalThis.WMPotify = {
     ver,

@@ -77,7 +77,8 @@ dialog,
     min-height: 0;
   }
 
-  .main-confirmDialog-container {
+  .main-confirmDialog-container,
+  .KFAJvMWTSagxYXGC { /* 1.2.86+ (temp) */
     padding: 8px;
     min-height: 0;
     --text-base: var(--button-text);
@@ -210,7 +211,8 @@ dialog,
   }
 
   .wmpotify-modal-bottom-buttons,
-  .main-confirmDialog-buttonContainer {
+  .main-confirmDialog-buttonContainer,
+  .IrkgqR1tnx44Ecuy { /* 1.2.86+ (temp) */
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -238,6 +240,10 @@ dialog,
         }
       }
     }
+  }
+
+  .encore-light-theme {
+    --text-base: var(--spice-text);
   }
 }
 
@@ -272,6 +278,10 @@ dialog,
       white-space: nowrap;
       user-select: text;
     }
+  }
+
+  #wmpotify-diag-dialog-details {
+    user-select: text;
   }
 
   a {
