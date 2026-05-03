@@ -3,8 +3,9 @@
     "version": "0.1",
     "description": "A Windows Media Player 11 inspired Spicetify theme for Spotify",
     "scripts": {
-        "build": "node build.js",
-        "apply": "cmd /c copy .\\dist\\* \"%appdata%\\spicetify\\Themes\\WMPotify\""
+        "build": "node --experimental-strip-types build.ts build",
+        "apply": "node --experimental-strip-types build.ts apply",
+        "build-local": "node --experimental-strip-types build.ts build-local"
     },
     "repository": {
         "type": "git",
@@ -24,7 +25,10 @@
         "url": "https://github.com/Ingan121/WMPotify/issues"
     },
     "homepage": "https://github.com/Ingan121/WMPotify",
+    "type": "module",
     "devDependencies": {
+        "@types/node": "^25.5.0",
+        "@types/postcss-import": "^14.0.3",
         "cssnano": "^5.1.7",
         "esbuild": "^0.27.0",
         "mkdirp": "^1.0.4",

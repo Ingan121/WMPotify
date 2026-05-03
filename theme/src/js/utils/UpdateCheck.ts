@@ -1,25 +1,52 @@
-'use strict';
-
 import Strings from '../strings'
 import WindhawkComm from "../utils/WindhawkComm";
 import { openUpdateDialog } from '../ui/dialogs';
+import { currentVersion } from './ver';
 
-const verString = '1.2.5';
-export let lastSupportedSpotifyVer = '1.2.85';
+export let lastSupportedSpotifyVer = '1.2.88';
+
+interface StructuredMadVersion {
+    major: number;
+    minor: number;
+    patch: number;
+    isPreRelease: boolean;
+    buildDate: string;
+    rcNum?: number | null;
+    extra?: string | null;
+}
 
 export class MadVersion {
     major: number;
     minor: number;
     patch: number;
     extra: string;
+    isPreRelease?: boolean;
+    buildDate?: string;
+    rcNum?: number | null;
 
-    constructor(ver: string) {
-        const split = ver.split(" ");
-        const verSplit = split[0].split(".");
-        this.major = parseInt(verSplit[0]);
-        this.minor = parseInt(verSplit[1]);
-        this.patch = parseInt(verSplit[2]) || 0;
-        this.extra = split.length === 1 ? "" : split.slice(1).join(" ");
+    constructor(ver: string | StructuredMadVersion) {
+        if (typeof ver === "string") {
+            const split = ver.split(" ");
+            const verSplit = split[0].split(".");
+            this.major = parseInt(verSplit[0], 10);
+            this.minor = parseInt(verSplit[1], 10);
+            this.patch = parseInt(verSplit[2], 10) || 0;
+            this.extra = split.length === 1 ? "" : split.slice(1).join(" ");
+        } else {
+            this.major = ver.major;
+            this.minor = ver.minor;
+            this.patch = ver.patch;
+            if (ver.rcNum) {
+                this.extra = `Release Candidate ${ver.rcNum}`;
+            } else if (ver.isPreRelease) {
+                this.extra = `Pre-release${ver.buildDate ? ` (${ver.buildDate})` : ""}`;
+            } else {
+                this.extra = ver.extra || "";
+            }
+            this.isPreRelease = ver.isPreRelease;
+            this.buildDate = ver.buildDate;
+            this.rcNum = ver.rcNum;
+        }
     }
 
     toString(level: number): string {
@@ -65,7 +92,7 @@ export class MadVersion {
     }
 }
 
-export const ver = new MadVersion(verString);
+export const ver = new MadVersion(currentVersion);
 
 export async function checkUpdates() {
     try {
@@ -109,7 +136,8 @@ export async function checkUpdates() {
     }
 }
 
-export function compareSpotifyVersion(target) {
+// Compare current Spotify version with target version. Returns 1 if current is newer than target, -1 if older, 0 if equal or unable to determine
+export function compareSpotifyVersion(target: string): number {
     let current = Spicetify.Platform?.version?.split('.').map(Number);
     if (!current) {
         current = navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1].split('.').map(Number);

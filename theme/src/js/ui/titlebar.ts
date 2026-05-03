@@ -127,9 +127,9 @@ async function closeWindow() {
     }
 }
 
-class CustomTitlebar {
-    static earlyInit = createTitlebarSkeleton;
-    static init = initTitlebar;
+const CustomTitlebar = {
+    earlyInit: createTitlebarSkeleton,
+    init: initTitlebar,
 };
 
 export default CustomTitlebar;

@@ -1,10 +1,8 @@
-'use strict';
-
 import Strings from '../strings';
 import { compareSpotifyVersion, ver, lastSupportedSpotifyVer } from '../utils/UpdateCheck';
 import WindhawkComm from "../utils/WindhawkComm";
 
-export function confirmModal(title = "WMPotify", message, confirmText = Strings['UI_OK'], cancelText = Strings['UI_CANCEL']) {
+export function confirmModal(title: string, message: string, confirmText = Strings['UI_OK'], cancelText = Strings['UI_CANCEL']): Promise<boolean> {
     return new Promise((resolve, reject) => {
         const modalContent = document.createElement('div');
         modalContent.id = 'wmpotify-confirm-modal';
@@ -48,7 +46,7 @@ export function confirmModal(title = "WMPotify", message, confirmText = Strings[
     });
 }
 
-export function promptModal(title = "WMPotify", message, text, hint) {
+export function promptModal(title: string, message: string, text: string, hint: string = ""): Promise<string | null> {
     return new Promise((resolve, reject) => {
         const modalContent = document.createElement('div');
         modalContent.id = 'wmpotify-prompt-modal';
@@ -107,7 +105,7 @@ export function promptModal(title = "WMPotify", message, text, hint) {
     });
 }
 
-export async function openWmpvisInstallDialog() {
+export function openWmpvisInstallDialog() {
     const dialogContent = document.createElement('div');
     dialogContent.id = 'wmpotify-instructions-dialog';
     dialogContent.innerHTML = `
@@ -150,7 +148,7 @@ export async function openWmpvisInstallDialog() {
 }
 
 export async function openUpdateDialog(alreadyUpdated: boolean = false, tagName?: string, content?: string) {
-    let version = tagName;
+    let version = tagName || '?.??';
     let changelog = 'Failed to fetch changelog!';
     if (content) {
         changelog = content.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>');
@@ -225,7 +223,7 @@ export function errorDialog(message: string, missingElements: string[] = []) {
         'Spicetify.Platform.LocalStorageAPI': Spicetify.Platform.LocalStorageAPI,
         'Spicetify.Platform.Translations': Spicetify.Platform.Translations,
         'Spicetify.Platform.PlatformData': Spicetify.Platform.PlatformData,
-        'Spicetify.Player.origin._state.repeat': Spicetify.Player.origin?._state?.repeat != undefined
+        'Spicetify.Player.origin._state.repeat': Spicetify.Player.origin?._state?.repeat !== undefined
     }).filter(([_, obj]) => !obj).map(([key, _]) => key).join('<br>');
     dialogContent.innerHTML = `
         <div class="main-trackCreditsModal-header">
@@ -311,7 +309,7 @@ export function diagDialog() {
 function getDiagInfo() {
     const isSupportedSpotify = compareSpotifyVersion('1.2.45') >= 0 && compareSpotifyVersion(lastSupportedSpotifyVer) <= 0;
     return `
-        <p>${Strings.getString('ERRDLG_VERSION', 'Spotify')}: ${Spicetify.Platform?.version || navigator.userAgent.match(/Spotify\/\d+\.\d+\.\d+/)?.[1] || Strings['ERRDLG_UNKNOWN']} (${isSupportedSpotify ? Strings['ERRDLG_SUPPORTED'] : Strings['ERRDLG_UNSUPPORTED']})</p>
+        <p>${Strings.getString('ERRDLG_VERSION', 'Spotify')}: ${Spicetify.Platform?.version || navigator.userAgent.match(/Spotify\/(\d+\.\d+\.\d+\.\d+)/)?.[1] || Strings['ERRDLG_UNKNOWN']} (${isSupportedSpotify ? Strings['ERRDLG_SUPPORTED'] : Strings['ERRDLG_UNSUPPORTED']})</p>
         <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify')}: ${Spicetify.Config.version || Strings['ERRDLG_UNKNOWN']}</p>
         <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify Marketplace')}: ${window.Marketplace?.version || Strings['ERRDLG_UNKNOWN']}</p>
         <p>${Strings.getString('ERRDLG_UA')}: ${navigator.userAgent}</p>

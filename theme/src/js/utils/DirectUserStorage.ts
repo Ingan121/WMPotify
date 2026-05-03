@@ -1,5 +1,3 @@
-'use strict';
-
 // Spicetify LocalStorageAPI but without immediate effect
 
 const DirectUserStorage = {
@@ -8,8 +6,8 @@ const DirectUserStorage = {
         if (!username) {
             return null;
         }
-        const res = localStorage.getItem(username + ":" + key);
-        if (isNaN(Number(res))) {
+        const res = localStorage.getItem(`${username}:${key}`);
+        if (Number.isNaN(Number(res))) {
             return res;
         } else {
             if (res === null) {
@@ -21,13 +19,13 @@ const DirectUserStorage = {
     setItem(key: string, value: string | number) {
         const username = Spicetify._platform?.initialUser?.username;
         if (username) {
-            localStorage.setItem(username + ":" + key, value.toString());
+            localStorage.setItem(`${username}:${key}`, value.toString());
         }
     },
     removeItem(key: string) {
         const username = Spicetify._platform?.initialUser?.username;
         if (username) {
-            localStorage.removeItem(username + ":" + key);
+            localStorage.removeItem(`${username}:${key}`);
         }
     }
 }

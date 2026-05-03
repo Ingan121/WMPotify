@@ -1,5 +1,3 @@
-'use strict';
-
 import Strings from '../strings';
 import DirectUserStorage from '../utils/DirectUserStorage';
 import { compareSpotifyVersion } from '../utils/UpdateCheck';
@@ -10,18 +8,27 @@ import { compareSpotifyVersion } from '../utils/UpdateCheck';
 // But unfortunately it's quite unreliable and doesn't work in all cases (and those not working cases are not known)
 // So this script is implemented in the inefficient way
 
-let categoryButtons;
-const categoryButtonsHierarchy = [];
-const categoryLocalizations = {};
+interface Category {
+    identifier: string;
+    localized: string;
+    elem: HTMLElement | null;
+    children?: Category[];
+}
+
+let categoryButtons: HTMLElement;
+const categoryButtonsHierarchy: Category[] = [];
+const categoryLocalizations: { [key: string]: { loc_id: string; value: string } } = {};
 const categoryButtonsObserver = new MutationObserver(parseCategoryButtons);
 const folderObserver = new MutationObserver(onFolderChange);
 let inFolder = false;
 let exitingFolder = false;
-let lastCategories = [];
-let lastCategoriesIdentifier = [];
+let lastCategories: string[] = [];
+let lastCategoriesIdentifier: string[] = [];
 
 export const ylxKeyPrefix = compareSpotifyVersion('1.2.58') >= 0 ? 'left' : 'ylx';
 export const expandedStateKey = compareSpotifyVersion('1.2.58') >= 0 ? 'left-sidebar-expanded-state-width' : 'ylx-expanded-state-nav-bar-width';
+const chipClearClassName = compareSpotifyVersion('1.2.86') >= 0 ? '-chip-clear' : 'ChipClear';
+const secondarySelectedClassName = compareSpotifyVersion('1.2.86') >= 0 ? '--secondary' : 'secondary-selected';
 
 const CustomLibX = {
     async init() {
@@ -32,7 +39,7 @@ const CustomLibX = {
         const filterKeys = Object.keys(Spicetify.Platform.Translations).filter(key => key.startsWith('shared.library.filter.'));
         filterKeys.forEach(key => {
             const value = Spicetify.Platform.Translations[key];
-            categoryLocalizations[key.split('.').pop()] = {
+            categoryLocalizations[key.split('.').pop() || ''] = {
                 'loc_id': key,
                 'value': value
             };
@@ -60,7 +67,7 @@ const CustomLibX = {
             });
         }
 
-        const libraryContainer = document.querySelector('.main-yourLibraryX-libraryContainer');
+        const libraryContainer = document.querySelector<HTMLElement>('.main-yourLibraryX-libraryContainer')!;
 
         const header = document.createElement('div');
         header.id = 'wmpotify-libx-header';
@@ -68,21 +75,21 @@ const CustomLibX = {
 
         const sidebar = document.createElement('div');
         sidebar.id = 'wmpotify-libx-sidebar';
-        document.querySelector('.main-yourLibraryX-libraryItemContainer').insertAdjacentElement('afterbegin', sidebar);
+        document.querySelector<HTMLElement>('.main-yourLibraryX-libraryItemContainer')!.insertAdjacentElement('afterbegin', sidebar);
 
         await waitForLibXLoad();
 
-        libraryContainer.dataset.treegrid = !!libraryContainer.querySelector('ul[role="treegrid"]');
-        libraryContainer.dataset.gridcell = !!libraryContainer.querySelector('div[role="gridcell"]');
+        libraryContainer.dataset.treegrid = (!!libraryContainer.querySelector('ul[role="treegrid"]')).toString();
+        libraryContainer.dataset.gridcell = (!!libraryContainer.querySelector('div[role="gridcell"]')).toString();
         Spicetify.Platform.LocalStorageAPI._events.addListener("update", ({ data }) => {
             if (data.key === "items-view") {
-                libraryContainer.dataset.treegrid = !!libraryContainer.querySelector('ul[role="treegrid"]');
-                libraryContainer.dataset.gridcell = !!libraryContainer.querySelector('div[role="gridcell"]');
+                libraryContainer.dataset.treegrid = (!!libraryContainer.querySelector('ul[role="treegrid"]')).toString();
+                libraryContainer.dataset.gridcell = (!!libraryContainer.querySelector('div[role="gridcell"]')).toString();
             }
         });
 
-        categoryButtons = document.querySelector('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]');
-        const categoryButtonsInner = categoryButtons.querySelector('div[role="listbox"]'); // 1.2.68
+        categoryButtons = document.querySelector<HTMLElement>('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]')!;
+        const categoryButtonsInner = categoryButtons.querySelector<HTMLElement>('div[role="listbox"]'); // 1.2.68
         if (categoryButtonsInner) {
             categoryButtons = categoryButtonsInner;
         }
@@ -90,7 +97,7 @@ const CustomLibX = {
         categoryButtonsObserver.observe(categoryButtons, { childList: true });
 
         // Whole category buttons container gets re-rendered when entering and exiting a playlist folder
-        folderObserver.observe(document.querySelector('.main-yourLibraryX-filterArea'), { childList: true });
+        folderObserver.observe(document.querySelector<HTMLElement>('.main-yourLibraryX-filterArea')!, { childList: true });
 
         window.addEventListener('resize', handleResize);
 
@@ -98,16 +105,19 @@ const CustomLibX = {
     },
 
     uninit() {
-        document.querySelector('#wmpotify-libx-header')?.remove();
-        document.querySelector('#wmpotify-libx-sidebar')?.remove();
+        document.querySelector<HTMLElement>('#wmpotify-libx-header')?.remove();
+        document.querySelector<HTMLElement>('#wmpotify-libx-sidebar')?.remove();
         categoryButtonsObserver.disconnect();
         folderObserver.disconnect();
         window.removeEventListener('resize', handleResize);
     },
 
-    go(identifiers) {
+    go(identifiers: string[] | null = null) {
         if (!identifiers) {
             identifiers = Spicetify.Platform.History.location.pathname.split('/').slice(2);
+        }
+        if (!identifiers || identifiers.length === 0) {
+            return;
         }
         if (identifiers[0] === undefined) {
             return;
@@ -117,7 +127,7 @@ const CustomLibX = {
 };
 
 function renderHeader() {
-    const header = document.querySelector('#wmpotify-libx-header');
+    const header = document.querySelector<HTMLElement>('#wmpotify-libx-header')!;
     header.innerHTML = '';
     const rootIcon = document.createElement('div');
     rootIcon.classList.add('wmpotify-libx-header-root-icon');
@@ -146,27 +156,29 @@ function renderHeader() {
             }
             categoryButtonsObserver.disconnect();
             const currentCategory = categoryButtonsHierarchy.find(cat => cat.localized === category);
+            if (!currentCategory) {
+                return;
+            }
             if (index === 0) {
                 goToRootCategory();
                 await waitForCategoryButtonsUpdate();
             } else {
-                if (!currentCategory) {
+                const parentCategory = categoryButtonsHierarchy.find(cat => cat.localized === currentCategories[index - 1]);
+                if (!parentCategory) {
                     return;
                 }
-
-                const parentCategory = categoryButtonsHierarchy.find(cat => cat.localized === currentCategories[index - 1]);
 
                 if (!isInParentCategory(parentCategory) || !document.contains(currentCategory.elem)) {
                     if (!isInRootCategory()) {
                         goToRootCategory();
                         await waitForCategoryButtonsUpdate();
                     }
-                    parentCategory.elem.click();
+                    parentCategory.elem?.click();
                     await waitForCategoryButtonsUpdate();
                 }
             }
             refreshElement(currentCategory);
-            currentCategory.elem.click();
+            currentCategory.elem?.click();
             categoryButtonsObserver.observe(categoryButtons, { childList: true });
         });
         header.appendChild(categoryText);
@@ -175,7 +187,8 @@ function renderHeader() {
     if (inFolder) {
         const folderName = (
             document.querySelector('.main-yourLibraryX-collapseButton h2') ||
-            document.querySelector('.main-yourLibraryX-collapseButton [class*=encore-text]')
+            document.querySelector('.main-yourLibraryX-collapseButton [class*=encore-text]') ||
+            (() => { throw new Error('Folder name element not found') })()
         ).textContent;
         const folderText = document.createElement('button');
         folderText.classList.add('wmpotify-libx-header-category-text');
@@ -186,7 +199,7 @@ function renderHeader() {
 }
 
 function parseCategoryButtons() {
-    inFolder = document.querySelector('.main-yourLibraryX-collapseButton').childElementCount > 1;
+    inFolder = (document.querySelector<HTMLElement>('.main-yourLibraryX-collapseButton')?.childElementCount || 0) > 1;
 
     const currentCategories = getCurrentCategories(true);
     if (inFolder) {
@@ -209,14 +222,15 @@ function parseCategoryButtons() {
         renderHeader();
         return;
     }
-    const isInitial = !categoryButtons.querySelector('button[class*="ChipClear"]:first-child, div[role="option"]:has(div[class*="ChipClear"]):first-child');
+    const isInitial = !categoryButtons.querySelector(`button[class*="${chipClearClassName}"]:first-child, div[role="option"]:has(div[class*="${chipClearClassName}"]):first-child`);
     const buttons = Array.from(categoryButtons.querySelectorAll('button, div[role="option"]'));
     if (isInitial) {
         buttons.forEach((button, index) => {
-            const category = {};
-            category.localized = button.textContent;
-            category.identifier = Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === category.localized);
-            category.elem = button;
+            const category = {
+                localized: button.textContent,
+                identifier: Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === button.textContent) || `unknown-${index}`,
+                elem: button as HTMLElement
+            };
             if (!categoryButtonsHierarchy.some(cat => cat.localized === category.localized)) {
                 categoryButtonsHierarchy.push(category);
             }
@@ -226,10 +240,11 @@ function parseCategoryButtons() {
         const currentParentLocalized = buttons[0].textContent;
         let currentParent = categoryButtonsHierarchy.find(category => category.localized === currentParentLocalized);
         if (!currentParent) {
-            const category = {};
-            category.localized = currentParentLocalized;
-            category.identifier = Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === category.localized);
-            category.elem = buttons[0];
+            const category = {
+                localized: currentParentLocalized,
+                identifier: Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === currentParentLocalized) || `unknown`,
+                elem: buttons[0] as HTMLElement
+            };
             categoryButtonsHierarchy.push(category);
             currentParent = category;
         }
@@ -238,36 +253,40 @@ function parseCategoryButtons() {
         }
         buttons.shift(); // Skip the parent category button
         buttons.forEach((button, index) => {
-            const category = {};
-            category.localized = button.textContent;
-            category.identifier = Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === category.localized);
-            category.elem = button;
-            if (!currentParent.children.some(cat => cat.localized === category.localized)) {
+            const category = {
+                localized: button.textContent,
+                identifier: Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === button.textContent) || `unknown-${index}`,
+                elem: button as HTMLElement
+            };
+            if (currentParent.children && !currentParent.children.some(cat => cat.localized === category.localized)) {
                 currentParent.children.push(category);
             }
         });
     }
     renderHeader();
     renderSidebar();
+
+    console.debug("WMPotify: Parsed category buttons, hierarchy:", categoryButtonsHierarchy, "inFolder:", inFolder, "currentCategories:", currentCategories);
 }
 
 function onFolderChange() {
     categoryButtonsObserver.disconnect();
-    categoryButtons = document.querySelector('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]');
-    const categoryButtonsInner = categoryButtons.querySelector('div[role="listbox"]'); // 1.2.68
+    categoryButtons = document.querySelector<HTMLElement>('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]')!;
+    const categoryButtonsInner = categoryButtons.querySelector<HTMLElement>('div[role="listbox"]'); // 1.2.68
     if (categoryButtonsInner) {
         categoryButtons = categoryButtonsInner;
     }
     parseCategoryButtons();
     categoryButtonsObserver.observe(categoryButtons, { childList: true });
+    console.debug("WMPotify: onFolderChange, inFolder:", inFolder);
 }
 
 // Refresh the element reference in the category object
-function refreshElement(category) {
+function refreshElement(category: Category) {
     if (!document.contains(category.elem)) {
         for (const button of categoryButtons.querySelectorAll('button, div[role="option"]')) {
             if (button.textContent === category.localized) {
-                category.elem = button;
+                category.elem = button as HTMLElement;
                 break;
             }
         }
@@ -275,10 +294,10 @@ function refreshElement(category) {
 }
 
 function isInRootCategory() {
-    return !categoryButtons.querySelector('button[class*="ChipClear"]:first-child, div[role="option"]:has(div[class*="ChipClear"]):first-child');
+    return !categoryButtons.querySelector(`button[class*="${chipClearClassName}"]:first-child, div[role="option"]:has(div[class*="${chipClearClassName}"]):first-child`);
 }
 
-function isInParentCategory(parentCategory) {
+function isInParentCategory(parentCategory: Category) {
     if (isInRootCategory()) {
         return false;
     }
@@ -291,17 +310,17 @@ async function goToRootCategory() {
         exitFolder();
         await waitForFolderChange();
     }
-    categoryButtons.querySelector('button[class*="ChipClear"]:first-child, div[role="option"]:has(div[class*="ChipClear"]):first-child')?.click();
+    categoryButtons.querySelector<HTMLElement>(`button[class*="${chipClearClassName}"]:first-child, div[role="option"]:has(div[class*="${chipClearClassName}"]):first-child`)?.click();
 };
 
 function exitFolder() {
     exitingFolder = true;
-    document.querySelectorAll('.main-yourLibraryX-collapseButton button')?.[1]?.click();
+    document.querySelectorAll<HTMLElement>('.main-yourLibraryX-collapseButton button')?.[1]?.click();
 }
 
 function getCurrentCategories(identifier = false) {
-    const currentCategories = [];
-    inFolder = document.querySelector('.main-yourLibraryX-collapseButton').childElementCount > 1;
+    const currentCategories: string[] = [];
+    inFolder = (document.querySelector<HTMLElement>('.main-yourLibraryX-collapseButton')!.childElementCount || 0) > 1;
     if (inFolder) {
         if (identifier) {
             return lastCategoriesIdentifier;
@@ -315,13 +334,13 @@ function getCurrentCategories(identifier = false) {
         const buttons = Array.from(categoryButtons.querySelectorAll('button, div[role="option"]')).slice(1);
         let currentParent = buttons[0].textContent;
         if (identifier) {
-            currentParent = Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === currentParent);
+            currentParent = Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === currentParent) || `unknown`;
         }
         currentCategories.push(currentParent);
-        const activeChild = categoryButtons.querySelector('button[class*="secondary-selected"], div[role="option"]:has(div[class*="secondary-selected"])');
+        const activeChild = categoryButtons.querySelector(`button[class*="${secondarySelectedClassName}"], div[role="option"]:has(div[class*="${secondarySelectedClassName}"])`);
         if (activeChild) {
             if (identifier) {
-                currentCategories.push(Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === activeChild.textContent));
+                currentCategories.push(Object.keys(categoryLocalizations).find(key => categoryLocalizations[key].value === activeChild.textContent) || `unknown`);
             } else {
                 currentCategories.push(activeChild.textContent);
             }
@@ -335,7 +354,7 @@ function getCurrentCategories(identifier = false) {
     return currentCategories;
 }
 
-async function go(identifiers) {
+async function go(identifiers: string[]) {
     if (inFolder) {
         exitFolder();
         await waitForFolderChange();
@@ -351,18 +370,18 @@ async function go(identifiers) {
     for (let i = 0; i < identifiers.length; i++) {
         if (identifiers[i].startsWith('spotify:user:')) {
             await waitForListRender();
-            document.querySelector('.main-yourLibraryX-libraryRootlist .main-rootlist-wrapper div[role="button"][aria-labelledby*="listrow-title-' + identifiers[i] + '"]').click();
+            document.querySelector<HTMLElement>('.main-yourLibraryX-libraryRootlist .main-rootlist-wrapper div[role="button"][aria-labelledby*="listrow-title-' + identifiers[i] + '"]')?.click();
         } else if (i === 0) {
             const category = categoryButtonsHierarchy.find(cat => cat.identifier === identifiers[i]);
             if (!category) {
                 return;
             }
             refreshElement(category);
-            category.elem.click();
+            category.elem?.click();
             await waitForCategoryButtonsUpdate();
         } else {
             const parentCategory = categoryButtonsHierarchy.find(cat => cat.identifier === identifiers[i - 1]);
-            if (!parentCategory) {
+            if (!parentCategory?.children) {
                 return;
             }
             const category = parentCategory.children.find(cat => cat.identifier === identifiers[i]);
@@ -370,7 +389,7 @@ async function go(identifiers) {
                 return;
             }
             refreshElement(category);
-            category.elem.click();
+            category.elem?.click();
             await waitForCategoryButtonsUpdate();
         }
     }
@@ -380,7 +399,7 @@ async function go(identifiers) {
 }
 
 function renderSidebar() {
-    const sidebar = document.querySelector('#wmpotify-libx-sidebar');
+    const sidebar = document.querySelector<HTMLElement>('#wmpotify-libx-sidebar')!;
     sidebar.innerHTML = '';
     const rootButtonContainer = document.createElement('div');
     rootButtonContainer.classList.add('wmpotify-libx-sidebar-item-container');
@@ -418,7 +437,7 @@ function renderSidebar() {
                 await waitForCategoryButtonsUpdate();
             }
             refreshElement(category);
-            category.elem.click();
+            category.elem?.click();
             categoryButtonsObserver.observe(categoryButtons, { childList: true });
         });
         buttonContainer.appendChild(button);
@@ -453,11 +472,11 @@ function renderSidebar() {
                             await waitForCategoryButtonsUpdate();
                         }
                         refreshElement(category);
-                        category.elem.click();
+                        category.elem?.click();
                         await waitForCategoryButtonsUpdate();
                     }
                     refreshElement(child);
-                    child.elem.click();
+                    child.elem?.click();
                     categoryButtonsObserver.observe(categoryButtons, { childList: true });
                 });
                 downlevel.appendChild(childButton);
@@ -469,7 +488,7 @@ function renderSidebar() {
     if (activeCategories.length > 0) {
         const activeCategory = activeCategories.pop();
         const activeButton = Array.from(sidebar.querySelectorAll('.wmpotify-libx-sidebar-item')).find(button => button.textContent === activeCategory);
-        activeButton.classList.add('active');
+        activeButton?.classList.add('active');
     } else {
         rootButton.classList.add('active');
     }
@@ -477,25 +496,27 @@ function renderSidebar() {
 
 function handleResize() {
     const origSidebarState = DirectUserStorage.getItem(`${ylxKeyPrefix}-sidebar-state`);
-    Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 2);
-    DirectUserStorage.setItem(`${ylxKeyPrefix}-sidebar-state`, origSidebarState); // make the previous setItem temporary
+    if (origSidebarState) {
+        Spicetify.Platform.LocalStorageAPI.setItem(`${ylxKeyPrefix}-sidebar-state`, 2);
+        DirectUserStorage.setItem(`${ylxKeyPrefix}-sidebar-state`, origSidebarState); // make the previous setItem temporary
+    }
 }
 
-function waitForLibXLoad() {
-    if (!document.querySelector('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]')) {
+function waitForLibXLoad(): Promise<void> | undefined {
+    if (!document.querySelector<HTMLElement>('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]')) {
         return new Promise((resolve) => {
             const observer = new MutationObserver(() => {
-                if (document.querySelector('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]')) {
+                if (document.querySelector<HTMLElement>('.main-yourLibraryX-filterArea .search-searchCategory-categoryGrid [role="presentation"]')) {
                     resolve();
                     observer.disconnect();
                 }
             });
-            observer.observe(document.querySelector('.main-yourLibraryX-libraryItemContainer'), { childList: true, subtree: true });
+            observer.observe(document.querySelector<HTMLElement>('.main-yourLibraryX-libraryItemContainer')!, { childList: true, subtree: true });
         });
     }
 }
 
-function waitForCategoryButtonsUpdate() {
+function waitForCategoryButtonsUpdate(): Promise<void> {
     return new Promise((resolve) => {
         const observer = new MutationObserver(() => {
             if (categoryButtons.querySelector('button, div[role="option"]')) {
@@ -507,27 +528,27 @@ function waitForCategoryButtonsUpdate() {
     });
 }
 
-function waitForFolderChange() {
+function waitForFolderChange(): Promise<void> {
     return new Promise((resolve) => {
         const observer = new MutationObserver(() => {
             exitingFolder = false;
             resolve();
             observer.disconnect();
         });
-        observer.observe(document.querySelector('.main-yourLibraryX-filterArea'), { childList: true });
+        observer.observe(document.querySelector<HTMLElement>('.main-yourLibraryX-filterArea')!, { childList: true });
     });
 }
 
-function waitForListRender() {
-    if (!document.querySelector('.main-yourLibraryX-libraryRootlist .main-rootlist-wrapper [role="presentation"]:not([class])')) {
+function waitForListRender(): Promise<void> | undefined {
+    if (!document.querySelector<HTMLElement>('.main-yourLibraryX-libraryRootlist .main-rootlist-wrapper [role="presentation"]:not([class])')) {
         return new Promise((resolve) => {
             const observer = new MutationObserver(() => {
-                if (document.querySelector('.main-yourLibraryX-libraryRootlist .main-rootlist-wrapper [role="presentation"]:not([class])')) {
+                if (document.querySelector<HTMLElement>('.main-yourLibraryX-libraryRootlist .main-rootlist-wrapper [role="presentation"]:not([class])')) {
                     resolve();
                     observer.disconnect();
                 }
             });
-            observer.observe(document.querySelector('.main-yourLibraryX-libraryRootlist'), { childList: true, subtree: true });
+            observer.observe(document.querySelector<HTMLElement>('.main-yourLibraryX-libraryRootlist')!, { childList: true, subtree: true });
         });
     }
 }

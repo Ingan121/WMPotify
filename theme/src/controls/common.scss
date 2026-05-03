@@ -259,6 +259,7 @@
 
             svg {
                 scale: 0.7;
+                fill: currentColor !important;
             }
         }
     }
@@ -363,9 +364,10 @@
             }
         }
 
-        [class*=LineClamp] {
+        [class*=LineClamp], [class*=line-clamp] {
             &:has(.NUoUlYHQoMKe6r7dL2Hg),
-            &:has(.Wmr5qZ5jui6X37XCrChA) {
+            &:has(.Wmr5qZ5jui6X37XCrChA),
+            &:has(.BdmTv5m68qQWKpId) {
                 display: none;
             }
         }
@@ -419,7 +421,8 @@
 
     .main-shelf-shelfGrid {
         > *:hover, > *:focus-within {
-            [class*=LineClamp], [class*=LineClamp] * {
+            [class*=LineClamp], [class*=LineClamp] *,
+            [class*=line-clamp], [class*=line-clamp] * {
                 color: var(--hilight-text) !important;
                 background-color: var(--hilight) !important;
                 forced-color-adjust: none !important;
@@ -430,7 +433,8 @@
     .Root__main-view div[class^="Box__BoxComponent-"][class*="isInteractive"],
     .Root__main-view div[class*="e-"][class*="-box--interactive"] {
         &:hover, &:focus-within {
-            [class*=LineClamp], [class*=LineClamp] * {
+            [class*=LineClamp], [class*=LineClamp] *,
+            [class*=line-clamp], [class*=line-clamp] * {
                 color: var(--hilight-text) !important;
                 background-color: var(--hilight) !important;
                 forced-color-adjust: none !important;

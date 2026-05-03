@@ -1,5 +1,3 @@
-'use strict';
-
 import Strings from './strings'
 import CustomTitlebar from './ui/titlebar';
 import Topbar from './ui/topbar';
@@ -7,7 +5,7 @@ import PlayerBar from './ui/playerbar';
 import Config from './pages/config';
 import SidebarManager from './managers/SidebarManager';
 import { initQueuePanel } from './pages/queue';
-import WindhawkComm, { WindhawkModOptions } from './utils/WindhawkComm';
+import WindhawkComm, { type WindhawkModOptions } from './utils/WindhawkComm';
 import PageManager from './managers/PageManager';
 import WindowManager from './managers/WindowManager';
 import {
@@ -47,9 +45,9 @@ const elementsRequired = [
     '.player-controls__buttons button[data-testid="control-button-playpause"]',
     '.player-controls__right',
     '.playback-bar [class*=encore-text]',
-    '.volume-bar',
-    '.volume-bar__icon-button',
-    '.volume-bar .progress-bar, .volume-bar .x-progressBar-progressBar, .volume-bar [data-testid="progress-bar"]',
+    '.volume-bar, [data-testid="volume-bar"]',
+    '.volume-bar__icon-button, [data-testid="volume-bar-toggle-mute-button"], [data-testid="volume-bar"] button',
+    '.volume-bar .progress-bar, .volume-bar .x-progressBar-progressBar, .volume-bar [data-testid="progress-bar"], [data-testid="volume-bar"] [data-testid="progress-bar"]',
     '.main-nowPlayingBar-left',
 ];
 
@@ -58,7 +56,10 @@ const loadStartTime = performance.now();
 let style = 'xp';
 let titleStyle = 'spotify';
 
+// This function runs immediately on script load
 function earlyInit() {
+    document.documentElement.dataset.wmpotifyJsLoaded = 'true';
+
     if (!localStorage.wmpotifyShowLibX) {
         document.body.dataset.hideLibx = 'true';
     }
@@ -115,8 +116,8 @@ function earlyInit() {
     if (!localStorage.wmpotifyStyle && titleStyle === 'native') {
         if (hcQuery.matches) {
             style = 'basic';
-        } else if (whStatus && whStatus.isThemingEnabled) {
-            if (whInitialOpts!.transparentrendering && whStatus.isDwmEnabled) {
+        } else if (whStatus?.isThemingEnabled) {
+            if (whInitialOpts?.transparentrendering && whStatus.isDwmEnabled) {
                 style = 'aero';
             } else if (!whStatus.isDwmEnabled) {
                 style = 'basic';
@@ -229,7 +230,19 @@ function earlyInit() {
     logTimed('WMPotify: earlyInit end');
 }
 
-earlyInit();
+try {
+    earlyInit();
+} catch (e) {
+    console.error('WMPotify: Error during early init:', e);
+    const stack = e instanceof Error ? e.stack || String(e) : String(e);
+    if (confirm('[WMPotify] Critical error occurred during early initialization. Please report this to the developer. Click OK to copy.\n\n' + stack)) {
+        // Whatever succeeds
+        navigator.clipboard.writeText(stack); // Fails if not window is focused
+        Spicetify.Platform.ClipboardAPI.copy(stack); // Fails if Spicetify is not fully loaded
+    }
+    document.documentElement.dataset.wmpotifyJsFail = 'true';
+    throw e; // stop further execution
+}
 
 globalThis.WMPotify = {
     ver,
@@ -257,6 +270,7 @@ globalThis.WMPotify = {
     checkUpdates
 };
 
+// Real initialization that requires Spotify APIs and DOM elements runs in the init function below, which is called once the platform is ready and required elements are present.
 async function init() {
     await CustomTitlebar.init(titleStyle as 'native' | 'custom' | 'keepmenu' | 'spotify');
 
@@ -289,6 +303,7 @@ async function init() {
     initQueuePanel();
     // Right panel has varying structure in different versions
     const rightPanelObservationTarget = 
+        document.querySelector('.zjCIcN96KsMfWwRo') ||     // 1.2.86+
         document.querySelector('.oXO9_yYs6JyOwkBn8E4a') || // 1.2.72+
         document.querySelector('.XOawmCGZcQx4cesyNfVO') || // 1.2.45-1.2.71
         document.querySelector('.Root__right-sidebar > div > div[class]:first-child') ||
@@ -313,7 +328,7 @@ async function doInit() {
         document.documentElement.dataset.wmpotifyInitComplete = 'true';
     } catch (e) {
         console.error('WMPotify: Error during init:', e);
-        const errorStack = e instanceof Error ? e.stack : String(e);
+        const errorStack = e instanceof Error ? e.stack || String(e) : String(e);
         errorDialog(Strings.getString('ERRDLG_DETAIL_EXCEPTION', errorStack));
         document.documentElement.dataset.wmpotifyJsFail = 'true';
     }
@@ -327,7 +342,7 @@ function isReady() {
         Spicetify.Platform.LocalStorageAPI &&
         Spicetify.Platform.Translations &&
         Spicetify.Platform.PlatformData &&
-        Spicetify.Player.origin?._state?.repeat != undefined // Spicetify.Player.getRepeat()
+        Spicetify.Player.origin?._state?.repeat !== undefined // Spicetify.Player.getRepeat()
     ) {
         if (elementsRequired.every(selector => document.querySelector(selector))) {
             return true;
@@ -370,7 +385,7 @@ function waitForReady() {
                                     window.location.reload();
                                 }
                             } else {
-                                errorDialog(Strings[ready === false ? 'ERRDLG_DETAIL_MISSING_ELEMENTS' : 'ERRDLG_DETAIL_MISSING_API'], elementsRequired.filter(selector => !document.querySelector(selector)));
+                                errorDialog(Strings.getString(ready === false ? 'ERRDLG_DETAIL_MISSING_ELEMENTS' : 'ERRDLG_DETAIL_MISSING_API'), elementsRequired.filter(selector => !document.querySelector(selector)));
                             }
                         }
                         if (!document.querySelector('.Root__globalNav')) {
@@ -388,11 +403,11 @@ function waitForReady() {
     }
 }
 
-document.addEventListener('scroll', function () {
+document.addEventListener('scroll', () => {
     document.documentElement.scrollTo(0, 0);
 });
 
-function logTimed(str) {
+function logTimed(str: string) {
     const time = performance.now() - loadStartTime;
     console.log(`[${time.toFixed(6)}ms] ${str}`);
 }

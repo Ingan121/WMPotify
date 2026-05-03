@@ -167,7 +167,8 @@ aside[data-identifier="spotify-queue-panel"] > div {
             padding: 0;
         }
 
-        .Column-lg {
+        .Column-lg,
+        div[class*="-legacy-list-row__column"] { /* 1.2.86 */
             flex-direction: row;
 
             p:first-child {
@@ -227,7 +228,8 @@ aside[data-identifier="spotify-queue-panel"] > div {
             }
 
             div[role="button"],
-            .HeaderArea {
+            .HeaderArea,
+            div[class$="-legacy-list-row__header"] { /* 1.2.86 */
                 height: var(--queue-item-height);
                 margin-top: -1px;
                 margin-left: 1px;
@@ -304,11 +306,14 @@ aside[data-identifier="spotify-queue-panel"] > div {
     aside[data-identifier="spotify-queue-panel"] > div {
         #history-panel,
         #queue-panel {
-            .Column-lg p {
-                font-weight: bold;
-
-                [class*=encore-text] {
+            .Column-lg,
+            div[class$="-legacy-list-row__column"] { /* 1.2.86 */
+                p {
                     font-weight: bold;
+
+                    [class*=encore-text] {
+                        font-weight: bold;
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 :root[data-wmpotify-control-style="10"] {
-  .main-contextMenu-tippy {
+  .main-contextMenu-tippy,
+  [data-testid="progress-label"] {
     border: 1px solid #767676;
     border-radius: 0;
     box-shadow: 5px 5px 3px -3px rgba(0, 0, 0, 0.4);
@@ -7,7 +8,8 @@
   }
 
   &[data-wmpotify-dark-mode] {
-    .main-contextMenu-tippy {
+    .main-contextMenu-tippy,
+    [data-testid="progress-label"] {
       background: #2b2b2b;
     }
   }

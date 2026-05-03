@@ -9,6 +9,6 @@
     "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
     "lib": ["DOM", "ESNext", "DOM.Iterable"],
-    "types": ["react", "chrome"]
+    "types": ["node"]
   }
 }

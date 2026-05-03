@@ -1,5 +1,3 @@
-'use strict';
-
 import Config from "../pages/config";
 import WindhawkComm from "../utils/WindhawkComm";
 

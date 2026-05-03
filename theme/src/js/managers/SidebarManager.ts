@@ -1,5 +1,3 @@
-'use strict';
-
 const widthObserver = new MutationObserver(updateSidebarWidth.bind(null, false));
 const widthObserver2 = new ResizeObserver(updateSidebarWidth.bind(null, true));
 const leftWidthObserver = new MutationObserver(updateLeftSidebarWidth);

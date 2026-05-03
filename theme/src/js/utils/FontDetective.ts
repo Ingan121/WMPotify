@@ -5,27 +5,21 @@
 function after(ms: number, fn: () => void) {
   const tid = setTimeout(fn, ms);
   return {
-    stop: function() {
-      return clearTimeout(tid);
-    }
+    stop: () => clearTimeout(tid)
   };
 }
 
 function every(ms: number, fn: () => void){
   const iid = setInterval(fn, ms);
   return {
-    stop: function() {
-      return clearInterval(iid);
-    }
+    stop: () => clearInterval(iid)
   };
 }
 
 // http://www.dustindiaz.com/smallest-domready-ever
 function domReady(callback: () => void) {
   if (/in/.test(document.readyState)) {
-    return after(10, function() {
-      return domReady(callback);
-    });
+    return after(10, () => domReady(callback));
   } else {
     return callback();
   }
@@ -313,7 +307,7 @@ export class Font {
 };
 
 // Based off of http://www.lalit.org/lab/javascript-css-font-detect
-const fontAvailabilityChecker = (function() {
+const fontAvailabilityChecker = (() => {
   // A font will be compared against three base fonts
   // If it differs from one of the base measurements
   // (which implies it didn't fall back to the base font),
@@ -327,7 +321,7 @@ const fontAvailabilityChecker = (function() {
   const baseWidths = {};
   const baseHeights = {};
   return {
-    init: function() {
+    init: () => {
       // Call this method once the document has a body
       document.body.appendChild(container);
 
@@ -343,7 +337,7 @@ const fontAvailabilityChecker = (function() {
       }
       return results;
     },
-    check: function(font: Font) {
+    check: (font: Font) => {
       // Check whether a font is available
       for (let j = 0, len = baseFontFamilies.length; j < len; j++) {
         const baseFontFamily = baseFontFamilies[j];
@@ -359,14 +353,14 @@ const fontAvailabilityChecker = (function() {
     }
   };
 })();
-const loadFonts = function() {
+const loadFonts = () => {
   if (startedLoading) {
     return;
   }
   startedLoading = true;
   FD.incomplete = true;
   return domReady(() => {
-    return testFonts((function() {
+    return testFonts((() => {
       const results: Font[] = [];
       for (let j = 0, len = someCommonFontNames.length; j < len; j++) {
         const fontName = someCommonFontNames[j];
@@ -376,10 +370,10 @@ const loadFonts = function() {
     })());
   });
 };
-const testFonts = function(fonts: Font[]) {
+const testFonts = (fonts: Font[]) => {
   fontAvailabilityChecker.init();
   let i = 0;
-  let testingFonts = every(20, function() {
+  const testingFonts = every(20, () => {
     for (let j = 0; j <= 5; j++) {
       const font = fonts[i];
       const available = fontAvailabilityChecker.check(font);
@@ -417,7 +411,7 @@ FD.preload = loadFonts;
   * FontDetective.each(function(font){})
   * Calls back with a `Font` every time a font is detected and tested
   */
-FD.each = function(callback) {
+FD.each = (callback) => {
   for (let j = 0, len = testedFonts.length; j < len; j++) {
     const font = testedFonts[j];
     callback(font);
@@ -432,7 +426,7 @@ FD.eachCallbacks = [];
   * FontDetective.all(function(fonts){})
   * Calls back with an `Array` of `Font`s when all fonts are detected and tested
   */
-FD.all = function(callback) {
+FD.all = (callback) => {
   if (doneTestingFonts) {
     return callback(testedFonts);
   } else {

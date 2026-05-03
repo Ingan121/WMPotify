@@ -1,8 +1,6 @@
-'use strict';
-
 import Strings from '../strings';
 import { formatTime } from "../utils/functions";
-import { createMadMenu, MadMenu, MadMenuItem, CreateMadMenuRes } from "../utils/MadMenu";
+import { createMadMenu, MadMenu, type MadMenuItem, type CreateMadMenuRes } from "../utils/MadMenu";
 import SidebarManager from '../managers/SidebarManager';
 
 let extraQueuePanelObserver: MutationObserver | null = null;
@@ -93,10 +91,11 @@ export function initQueuePanel() {
     onQueuePanelInit();
     new MutationObserver(onQueuePanelInit).observe(document.querySelector('#queue-panel')!, { childList: true });
 
-    const tabs = document.querySelectorAll('#Desktop_PanelContainer_Id:has(#queue-panel) div[role="tablist"] button');
+    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('#Desktop_PanelContainer_Id:has(#queue-panel) div[role="tablist"] button'));
     let menuItems: MadMenuItem[] = [];
     let menuObj: CreateMadMenuRes;
-    for (const tab of tabs) {
+    for (const i in tabs) {
+        const tab = tabs[i];
         menuItems.push({
             text: tab.textContent,
             click: function (this: HTMLElement, event: Event) {
@@ -107,7 +106,14 @@ export function initQueuePanel() {
                     menuItem.classList.remove('activeStyle');
                 }
                 this.classList.add('activeStyle');
-                (tab as HTMLElement).click();
+                if (document.body.contains(tab)) {
+                    tab.click();
+                } else {
+                    const refreshedTabs = document.querySelectorAll<HTMLButtonElement>('#Desktop_PanelContainer_Id:has(#queue-panel) div[role="tablist"] button');
+                    if (refreshedTabs[i]) {
+                        refreshedTabs[i].click();
+                    }
+                }
             }
         });
     }
@@ -154,7 +160,7 @@ function processQueueItems() {
     if (!document.querySelector('#queue-panel') || !Spicetify.Queue) {
         return;
     }
-    const queueItems = document.querySelectorAll('#queue-panel li .HeaderArea');
+    const queueItems = document.querySelectorAll('#queue-panel li .HeaderArea, #queue-panel li div[class$="-legacy-list-row__header"]');
     for (let i = 0; i < queueItems.length; i++) {
         const queueItem = queueItems[i];
         if (queueItem.querySelector('.wmpotify-queue-duration')) {
@@ -168,7 +174,7 @@ function processQueueItems() {
         }
         const durationElement = document.createElement('span');
         durationElement.classList.add('wmpotify-queue-duration');
-        durationElement.textContent = formatTime(duration);
+        durationElement.textContent = formatTime(parseInt(duration, 10));
         queueItem.appendChild(durationElement);
     }
 }

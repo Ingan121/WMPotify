@@ -2,9 +2,11 @@
 @import "classic/tooltip.scss";
 @import "10/tooltip.scss";
 
-.main-contextMenu-tippy {
+.main-contextMenu-tippy,
+[data-testid="progress-label"] {
   padding: 0 6px 2px 5px;
   color: var(--info-text);
   font: var(--status-font) !important;
   white-space: pre-wrap;
+  height: unset;
 }

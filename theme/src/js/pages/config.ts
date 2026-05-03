@@ -1,8 +1,6 @@
-'use strict';
-
 import Strings from "../strings";
 import { confirmModal, promptModal, diagDialog } from "../ui/dialogs";
-import FontDetective, { Font } from "../utils/FontDetective";
+import FontDetective, { type Font } from "../utils/FontDetective";
 import { setTintColor } from "../ui/tinting";
 import WindhawkComm from "../utils/WindhawkComm";
 import WindowManager from "../managers/WindowManager";
@@ -207,7 +205,12 @@ function init(): void {
                 </svg>
             </button>
             <p>${Strings['CONF_ABOUT_DESC']}</p>
-            <p>${Strings['CONF_ABOUT_VERSION']}: ${ver.toString(0)}<span id="wmpotify-about-ctewh-ver"></span></p>
+            <p>
+                <span title="${Strings['CONF_ABOUT_BUILD_DATE']}: ${ver.buildDate}">
+                    ${Strings['CONF_ABOUT_VERSION']}: ${ver.toString(0)}
+                </span>
+                <span id="wmpotify-about-ctewh-ver"></span>
+            </p>
             <p>${Strings['CONF_ABOUT_AUTHOR']} - <a href="https://www.ingan121.com/" target="_blank">www.ingan121.com</a></p>
             <input type="checkbox" id="wmpotify-config-auto-updates" class="wmpotify-aero" checked>
             <label for="wmpotify-config-auto-updates">${Strings['CONF_ABOUT_AUTO_UPDATES']}</label>
@@ -257,7 +260,7 @@ function init(): void {
     defaultFontOptionsCount = 3 + (+!!globalThis.documentPictureInPicture) + (+configWindow.contains(elements.fontReload));
 
     const configHeightConf = localStorage.wmpotifyConfigHeight;
-    if (configHeightConf && parseInt(configHeightConf) >= 24) {
+    if (configHeightConf && parseInt(configHeightConf, 10) >= 24) {
         configWindow.style.height = localStorage.wmpotifyConfigHeight;
     }
 
@@ -316,7 +319,7 @@ function init(): void {
         const darkMode = elements.darkMode.value;
         const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
         if (darkMode === 'system' && !WindhawkComm.getModule()?.initialOptions.noforceddarkmode && darkQuery.matches) {
-            const locId = 'CONF_GENERAL_DARK_MODE_SYSTEM_MSG_' + (isWindows ? 'WIN' : 'UNIX');
+            const locId = `CONF_GENERAL_DARK_MODE_SYSTEM_MSG_${isWindows ? 'WIN' : 'UNIX'}`;
             if (!await confirmModal(Strings['CONF_GENERAL_DARK_MODE_SYSTEM'], Strings[locId])) {
                 elements.darkMode.value = localStorage.wmpotifyDarkMode || 'follow_scheme';
                 return;
@@ -379,7 +382,7 @@ function init(): void {
         } else {
             elements.fontCustom.textContent = Strings['UI_CUSTOM'];
             if (elements.fontSelector.value === 'reload' || elements.fontSelector.value === 'loadsys') {
-                let systemFonts;
+                let systemFonts: FontData[] = [];
                 if (elements.fontSelector.value === 'loadsys' && globalThis.documentPictureInPicture) {
                     systemFonts = await window.queryLocalFonts();
                     if (systemFonts.length === 0) {
@@ -461,7 +464,7 @@ function init(): void {
     elements.speedNormal.addEventListener('click', setSpeed.bind(null, 1));
     elements.speedFast.addEventListener('click', setSpeed.bind(null, 1.4));
     const playbackSpeed = Spicetify.Player.origin.getState().speed || 1;
-    elements.speedValue.textContent = (Number.isInteger(playbackSpeed) ? playbackSpeed + '.0' : playbackSpeed).toString();
+    elements.speedValue.textContent = (Number.isInteger(playbackSpeed) ? `${playbackSpeed}.0` : playbackSpeed).toString();
     elements.speedValue.addEventListener('click', async () => {
         const speed = await promptModal(Strings['CONF_SPEED_CUSTOM_DLG_TITLE'], Strings['CONF_SPEED_CUSTOM_MSG'], playbackSpeed.toString(), '1.0');
         if (speed) {
@@ -497,7 +500,7 @@ function init(): void {
                 delete localStorage.wmpotifyLockTitle;
                 const trackInfo = Spicetify.Player.data?.item.metadata;
                 if (trackInfo && Spicetify.Player.isPlaying()) {
-                    WindhawkComm.setTitle(trackInfo.artist_name + ' - ' + trackInfo.title);
+                    WindhawkComm.setTitle(`${trackInfo.artist_name} - ${trackInfo.title}`);
                 }
             }
         });
@@ -512,7 +515,7 @@ function init(): void {
         }
 
         elements.whMessage.style.display = 'none';
-        elements.whVer.textContent = ', ' + Strings.getString('CONF_ABOUT_CTEWH_VERSION', WindhawkComm.module?.version);
+        elements.whVer.textContent = `, ${Strings.getString('CONF_ABOUT_CTEWH_VERSION', WindhawkComm.module?.version || '?.?')}`;
     }
     if (!showBackdropOption) {
         elements.backdrop.style.display = 'none';
@@ -581,13 +584,13 @@ function init(): void {
 
     let offset = 0, isDown = false;
 
-    elements.topborder.addEventListener('pointerdown', function () {
+    elements.topborder.addEventListener('pointerdown', () => {
         isDown = true;
         offset = configWindow.getBoundingClientRect().bottom;
         document.body.style.cursor = 'ns-resize';
     }, true);
 
-    document.addEventListener('pointerup', function () {
+    document.addEventListener('pointerup', () => {
         if (isDown) {
             isDown = false;
             document.body.style.cursor = '';
@@ -598,9 +601,9 @@ function init(): void {
         }
     }, true);
 
-    document.addEventListener('pointermove', function (event) {
+    document.addEventListener('pointermove', (event) => {
         if (isDown && configWindow.offsetHeight >= 24) {
-            configWindow.style.height = offset - event.clientY + 'px';
+            configWindow.style.height = `${offset - event.clientY}px`;
         }
     }, true);
 
@@ -610,7 +613,7 @@ function init(): void {
         try {
             new Spicetify.Menu.Item(Strings['MENU_CONF'], false, Config.open).register();
             clearInterval(interval);
-        } catch (e) {}
+        } catch (_) {}
     }, 100);
 }
 
@@ -618,7 +621,7 @@ function open() {
     if (!tabs) {
         return;
     }
-    if (document.body.dataset.wmpotifyLibPageOpen || document.querySelector('.QdB2YtfEq0ks5O4QbtwX')) {
+    if (document.body.dataset.wmpotifyLibPageOpen || document.querySelector('.Root__cinema-view')) {
         // Close standalone LibX or improved cinema and go to home / NowPlaying to show the config panel
         // As standalone LibX page or improved cinema hides the main area
         if (Spicetify.Config.custom_apps.includes('wmpvis')) {
@@ -633,8 +636,8 @@ function open() {
     configWindow.style.display = 'block';
     if (localStorage.wmpotifyTintColor) {
         const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
-        elements.hue.value = (parseInt(hue) + 180).toString();
-        elements.sat.value = (parseInt(sat) * 121 / 100).toString();
+        elements.hue.value = (parseInt(hue, 10) + 180).toString();
+        elements.sat.value = (parseInt(sat, 10) * 121 / 100).toString();
         if (tintPb) {
             elements.tintPb.checked = true;
         }
@@ -683,8 +686,8 @@ function nextTab() {
 }
 
 function onColorChange() {
-    const hue = parseInt(elements.hue.value) - 180;
-    const sat = parseInt(elements.sat.value) * 100 / 121;
+    const hue = parseInt(elements.hue.value, 10) - 180;
+    const sat = parseInt(elements.sat.value, 10) * 100 / 121;
     setTintColor(hue, sat, elements.tintPb.checked, elements.tintMore.checked);
     localStorage.wmpotifyTintColor = hue + ',' + sat + ',' + (elements.tintPb.checked ? '1' : '') + ',' + (elements.tintMore.checked ? '1' : '');
 }
@@ -697,7 +700,7 @@ function resetColor() {
 }
 
 function onSpeedChange() {
-    elements.speedValue.textContent = Number.isInteger(parseFloat(elements.speed.value)) ? elements.speed.value + '.0' : elements.speed.value;
+    elements.speedValue.textContent = Number.isInteger(parseFloat(elements.speed.value)) ? `${elements.speed.value}.0` : elements.speed.value;
     if (speedApplyTimer) {
         clearTimeout(speedApplyTimer);
     }
@@ -710,7 +713,7 @@ function onSpeedChange() {
 function setSpeed(speed) {
     const isPlayingPodcast = document.querySelector('button[data-testid="control-button-playback-speed"]');
     if (!whSpeedModSupported && !isPlayingPodcast) {
-        Spicetify.showNotification(Strings['CONF_SPEED_UNSUPPORTED_MSG_' + (isWindows ? 'WIN' : 'UNIX')]);
+        Spicetify.showNotification(Strings[`CONF_SPEED_UNSUPPORTED_MSG_${isWindows ? 'WIN' : 'UNIX'}`]);
         return;
     }
     if (Spicetify.Platform.ConnectAPI.state.connectionStatus === 'connected' && !isPlayingPodcast) {
@@ -727,7 +730,7 @@ function setSpeed(speed) {
         return;
     }
     elements.speed.value = speed;
-    elements.speedValue.textContent = Number.isInteger(speed) ? speed + '.0' : speed;
+    elements.speedValue.textContent = Number.isInteger(speed) ? `${speed}.0` : speed;
     try {
         if (isPlayingPodcast) {
             Spicetify.Player.origin.setSpeed(speed);
@@ -937,7 +940,7 @@ function onHCChange(event: MediaQueryListEvent | MediaQueryList): void {
         elements.tintPb.disabled = true;
         elements.tintMore.disabled = true;
         if (localStorage.wmpotifyTintColor) {
-            const [hue, sat, tintPb, tintMore] = localStorage.wmpotifyTintColor.split(',');
+            const [hue, sat, _tintPb, _tintMore] = localStorage.wmpotifyTintColor.split(',');
             setTintColor(hue, sat, false, false);
         }
     } else {

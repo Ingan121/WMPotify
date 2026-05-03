@@ -76,7 +76,7 @@
           }
 
           /* 1.2.84 added this class to list view style bottom buttons, and audio quality selection menu, exclude those */
-          .main-contextMenu-menuItemButton:not(.YrVXiSMvnPFGqwDCePCf):not(.bZu9z5uN3CYG_zTFA97L):not(.CgGNDh1suyDyp2D3Azit) {
+          .main-contextMenu-menuItemButton:not(.YrVXiSMvnPFGqwDCePCf):not(.bZu9z5uN3CYG_zTFA97L):not(.CgGNDh1suyDyp2D3Azit):not(.kkupOYu8xsQwSAr0):not(.rtcPAPEOncZqcKJU) {
             height: 24px;
 
             span {
@@ -91,7 +91,8 @@
           }
 
           /* Audio quality selector with lossless option */
-          [class*="Box-group-naked-listRow-minBlockSize"] {
+          [class*="Box-group-naked-listRow-minBlockSize"],
+          .e-10180-box--naked {
             min-block-size: 0;
             padding: 2px 0 2px 22px;
           }
@@ -159,7 +160,8 @@
 
               &:has(svg.activeStyle),
               &[role="menuitemradio"] {
-                > span::before {
+                > span::before,
+                > div::before {
                   content: "";
                   top: calc(50% - 1px);
                   left: 7px;

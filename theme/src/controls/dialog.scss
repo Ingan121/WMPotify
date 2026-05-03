@@ -43,17 +43,23 @@ dialog,
   }
 
   .main-trackCreditsModal-header,
+  .main-trackCreditsModalV2-header,
   .main-playlistEditDetailsModal-header,
   .profile-userEditDetails-header {
     padding: 8px;
     border-bottom: none;
 
-    h1 {
+    h1, h2 {
       font: var(--caption-font);
+    }
+
+    h2 {
+      margin-top: 8px;
     }
   }
 
-  .main-trackCreditsModal-mainSection {
+  .main-trackCreditsModal-mainSection,
+  .main-trackCreditsModalV2-mainSection {
     padding: 8px;
     scrollbar-width: none;
 
@@ -71,7 +77,8 @@ dialog,
     min-height: 0;
   }
 
-  .main-confirmDialog-container {
+  .main-confirmDialog-container,
+  .KFAJvMWTSagxYXGC { /* 1.2.86+ (temp) */
     padding: 8px;
     min-height: 0;
     --text-base: var(--button-text);
@@ -167,11 +174,13 @@ dialog,
   }
 
   .main-trackCreditsModal-closeBtn,
+  .main-trackCreditsModalV2-closeBtn,
   .main-playlistEditDetailsModal-closeBtn,
   .profile-userEditDetails-closeButton,
   .desktopmodals-aboutSpotifyModal-closeButton {
     width: 25px;
     height: 15px;
+    min-width: 0;
     background: url("resources/icon/close.png") no-repeat;
     transform: none !important;
     border-radius: 0;
@@ -202,7 +211,8 @@ dialog,
   }
 
   .wmpotify-modal-bottom-buttons,
-  .main-confirmDialog-buttonContainer {
+  .main-confirmDialog-buttonContainer,
+  .IrkgqR1tnx44Ecuy { /* 1.2.86+ (temp) */
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -230,6 +240,10 @@ dialog,
         }
       }
     }
+  }
+
+  .encore-light-theme {
+    --text-base: var(--spice-text);
   }
 }
 
@@ -266,6 +280,10 @@ dialog,
     }
   }
 
+  #wmpotify-diag-dialog-details {
+    user-select: text;
+  }
+
   a {
     color: var(--hot-tracking-color);
   }
@@ -288,7 +306,8 @@ dialog,
   z-index: 998;
   user-select: text;
 
-  .main-trackCreditsModal-mainSection {
+  .main-trackCreditsModal-mainSection,
+  .main-trackCreditsModalV2-mainSection {
     max-height: calc(100vh - 50px);
     overflow-y: auto;
   }

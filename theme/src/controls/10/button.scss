@@ -27,15 +27,19 @@
 
   button.wmpotify-aero,
   button.Button-sc-y0gtbx-0,
+  button.e-10180-legacy-button-secondary--text-base,
   button[class*="e-"][class*="-button-primary"][type="submit"],
   .ReactModalPortal button.Button-sc-qlcn5g-0,
   .ReactModalPortal button.Button-sc-1dqy6lx-0,
   .ReactModalPortal button[class*="e-"][class*="-button-primary"],
+  .ReactModalPortal button[class*="e-"][class*="-button-tertiary"],
   dialog button.Button-sc-qlcn5g-0,
-  dialog button.Button-sc-1dqy6lx-0,
+  dialog button.Button-sc-1dqy6lx-0:not(.main-trackCreditsModalV2-closeBtn),
   dialog button[class*="e-"][class*="-button-primary"],
+  dialog button[class*="e-"][class*="-button-tertiary"],
   #context-menu button.Button-sc-1dqy6lx-0,
   #context-menu button.Button-sc-qlcn5g-0,
+  #context-menu button[class*="e-"][class*="-legacy-button"],
   .spicetify-exp-features button.reset:not(#Prio1):not(#Prio2),
   .search-searchCategory-carouselButton {
     box-sizing: border-box;
