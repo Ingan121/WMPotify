@@ -274,7 +274,7 @@ body.sidebar-open .Root {
     }
 }
 
-@media (max-width: 358px) {
+@media (max-width: 360px) { /* HiDPI/Zoom errors on 358px */
     #Desktop_LeftSidebar_Id {
         display: none;
     }
@@ -293,7 +293,9 @@ body.sidebar-open .Root {
             margin-left: calc(var(--panel-gap) * -3) !important;
 
             .XOawmCGZcQx4cesyNfVO,
-            .oXO9_yYs6JyOwkBn8E4a /* 1.2.72+ */ {
+            .oXO9_yYs6JyOwkBn8E4a, /* 1.2.72+ */
+            .zjCIcN96KsMfWwRo, /* 1.2.86+ */
+            .main-nowPlayingView-container { /* 1.2.86+, someone mapped this */
                 width: 358px !important;
             }
         }
@@ -309,7 +311,9 @@ body.sidebar-open .Root {
             margin-left: calc(var(--panel-gap) * -2) !important;
 
             .XOawmCGZcQx4cesyNfVO,
-            .oXO9_yYs6JyOwkBn8E4a /* 1.2.72+ */ {
+            .oXO9_yYs6JyOwkBn8E4a, /* 1.2.72+ */
+            .zjCIcN96KsMfWwRo, /* 1.2.86+ */
+            .main-nowPlayingView-container { /* 1.2.86+, someone mapped this */
                 width: 342px !important;
             }
         }
