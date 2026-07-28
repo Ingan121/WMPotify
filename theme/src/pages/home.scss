@@ -8,6 +8,14 @@
     &::after {
         background: var(--wmp11-window) !important;
     }
+
+    & + div {
+        .uMoqkRWisfbVwPoJgD6N, /* subcategory buttons */
+        .pDejgs2MAbpWS64_ { /* 1.2.86+ */
+            background: var(--wmp11-window) !important;
+            margin-inline-start: -8px;
+        }
+    }
 }
 
 .main-home-content {

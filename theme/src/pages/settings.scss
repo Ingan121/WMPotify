@@ -2,6 +2,7 @@
 .x-settings-zoomContainer,
 .x-settings-zoomRadioWrapper,
 .x-settings-zoomRadioCircle,
-.x-settings-zoomRadioCircle::before {
+.x-settings-zoomRadioCircle::before,
+.x-settings-outputDeviceSection {
     background: none;
 }
