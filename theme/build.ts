@@ -41,7 +41,8 @@ async function buildCSS() {
 
 async function buildJS() {
   currentVersion.buildDate = new Date().toISOString().split('T')[0];
-  fs.writeFileSync("src/js/utils/ver.ts", `export const currentVersion = ${JSON.stringify(currentVersion, null, 4)};`);
+  const verContent = `// buildDate is automatically updated by build.ts\nexport const currentVersion = ${JSON.stringify(currentVersion, null, 4)};`;
+  fs.writeFileSync("src/js/utils/ver.ts", verContent);
 
   await esbuild.build({
     entryPoints: ["src/js/main.ts"],

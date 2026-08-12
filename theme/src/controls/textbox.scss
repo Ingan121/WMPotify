@@ -2,3 +2,8 @@
 @import "xp/textbox.scss";
 @import "classic/textbox.scss";
 @import "10/textbox.scss";
+
+::selection {
+    background-color: var(--hilight);
+    color: var(--hilight-text);
+}

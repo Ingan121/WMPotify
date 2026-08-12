@@ -146,7 +146,8 @@
                 transform: translateY(-50%);
               }
 
-              > span::before {
+              span[data-encore-id="type"]::before,
+              span[data-encore-id="text"]::before {
                 content: "";
                 display: block;
                 position: absolute;
@@ -160,8 +161,8 @@
 
               &:has(svg.activeStyle),
               &[role="menuitemradio"] {
-                > span::before,
-                > div::before {
+                span[data-encore-id="type"]::before,
+                span[data-encore-id="text"]::before {
                   content: "";
                   top: calc(50% - 1px);
                   left: 7px;
@@ -259,9 +260,15 @@
           background: var(--menu-background-color);
           padding: 0;
 
-          span {
-            display: flex;
-            justify-content: center;
+          button {
+            span {
+              display: flex;
+              justify-content: center;
+
+              & + div {
+                display: none;
+              }
+            }
 
             svg {
               position: relative;
@@ -270,8 +277,9 @@
               transform: scale(0.8);
             }
 
-            & + div {
-              display: none;
+            &:has(> svg),
+            &:has(> div) {
+              justify-content: center;
             }
           }
         }

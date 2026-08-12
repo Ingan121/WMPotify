@@ -734,6 +734,7 @@ div[data-testid='now-playing-widget'] {
         width: 16px;
         height: 9px;
         image-rendering: pixelated;
+        box-shadow: none !important;
 
         &:hover {
             background-image: var(--seekhandle-hover);

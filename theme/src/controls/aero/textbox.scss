@@ -45,9 +45,5 @@
             border-color: var(--textbox-border-color-focused);
             border-top-color: var(--textbox-border-top-color-focused);
         }
-        &::selection {
-            background-color: var(--hilight);
-            color: var(--hilight-text);
-        }
     }
 }

@@ -47,9 +47,5 @@
         &:read-only {
             background-color: transparent;
         }
-        &::selection {
-            background-color: var(--hilight);
-            color: var(--hilight-text);
-        }
     }
 }

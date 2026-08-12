@@ -51,6 +51,7 @@
         opacity: 1 !important;
         transform: none !important;
         grid-gap: 0; /* fix for 1.2.59 */
+        padding-inline-end: 0 !important;
 
         span:nth-child(2) {
             display: none;

@@ -58,6 +58,13 @@ dialog,
     }
   }
 
+  /* Spotify 1.2.96 removed styles for main-trackCreditsModal-header, which is still used by Spicetify for its dialog API */
+  .main-trackCreditsModal-header {
+    justify-content: space-between;
+    align-items: baseline;
+    display: flex;
+  }
+
   .main-trackCreditsModal-mainSection,
   .main-trackCreditsModalV2-mainSection {
     padding: 8px;
@@ -184,6 +191,7 @@ dialog,
     background: url("resources/icon/close.png") no-repeat;
     transform: none !important;
     border-radius: 0;
+    border: none;
     cursor: auto;
 
     &:hover {
