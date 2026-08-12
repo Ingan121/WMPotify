@@ -50,5 +50,9 @@
       color: var(--button-shadow-color);
       text-shadow: 1px 1px 0 var(--button-hilight);
     }
+
+    svg {
+      fill: var(--button-text) !important;
+    }
   }
 }

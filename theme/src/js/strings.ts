@@ -1,4 +1,4 @@
-import Strings from './lang/strings';
+import type Strings from './lang/strings';
 import enUS from './lang/en-US';
 import koKR from './lang/ko-KR';
 import esAR from './lang/es-AR';
