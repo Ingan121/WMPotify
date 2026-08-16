@@ -64,6 +64,10 @@ dialog,
     align-items: baseline;
     display: flex;
   }
+  /* Restore this too */
+  .main-trackCreditsModal-container {
+    width: 440px;
+  }
 
   .main-trackCreditsModal-mainSection,
   .main-trackCreditsModalV2-mainSection {

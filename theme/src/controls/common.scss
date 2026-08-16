@@ -323,14 +323,18 @@
         .x-entityImage-imageContainer,
         .lKuMkIKSZanMIK6aQWfx, /* 1.2.72 */
         .main-card-imageContainer {
-            box-shadow: var(--album-shadow-big);
             border-radius: 0;
             background: none;
 
             div:has(img), img {
-                border-radius: 0;
+                border-radius: 0 !important;
                 box-shadow: none;
             }
+        }
+
+        .main-card-imageContainer:not(:has(.x-entityImage-imageContainer)),
+        .x-entityImage-imageContainer {
+            box-shadow: var(--album-shadow-big) !important;
         }
 
         button[data-encore-id="buttonPrimary"] {

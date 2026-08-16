@@ -3,7 +3,7 @@ import WindhawkComm from "../utils/WindhawkComm";
 import { openUpdateDialog } from '../ui/dialogs';
 import { currentVersion } from './ver';
 
-export let lastSupportedSpotifyVer = '1.2.96';
+export let lastSupportedSpotifyVer = '1.2.97';
 
 interface StructuredMadVersion {
     major: number;
