@@ -21,7 +21,11 @@ class Topbar {
             topbar.dataset.wmpotifyTabsCreated = 'true';
         }
 
-        let nowPlayingButton = document.querySelector<HTMLButtonElement>('.custom-navlinks-scrollable_container div[role="presentation"] > button:has(#wmpotify-nowplaying-icon)');
+        // Try to use already existing now playing button (from Spicetify) if it exists, otherwise create a custom one
+        let nowPlayingButton = document.querySelector<HTMLButtonElement>(`
+            .custom-navlinks-scrollable_container div[role="presentation"] > button:has(#wmpotify-nowplaying-icon),
+            .custom-navlinks-scrollable_container div[role="presentation"] > button[aria-label="Wmpvis"]
+        `); // Latter: incompletely initialized custom app button
         if (!nowPlayingButton) {
             nowPlayingButton = document.createElement('button');
             nowPlayingButton.addEventListener('click', () => {
@@ -71,6 +75,21 @@ class Topbar {
         const customAppButtons = document.querySelectorAll<HTMLElement>('.custom-navlinks-scrollable_container div[role="presentation"] > button');
         if (customAppButtons.length > 0) {
             for (const btn of customAppButtons) {
+                if (!btn.querySelector("svg > svg")) {
+                    // Spicetify wrapper JS did not fully load the app manifest yet and now using app ID as the label
+                    // So observe the label change to rename the custom label and tab order
+                    const observer = new MutationObserver(() => {
+                        const label = btn.querySelector('.wmpotify-tab-label');
+                        if (label) {
+                            observer.disconnect();
+                            const newName = btn.getAttribute('aria-label');
+                            console.debug(`WMPotify: custom app label changed from ${label.textContent} to ${newName}`);
+                            label.textContent = newName;
+                            this.loadOrder();
+                        }
+                    });
+                    observer.observe(btn, { attributes: true, attributeFilter: ['aria-label'] });
+                }
                 this.addTab(btn);
                 this.tabs.push(btn);
             }
@@ -197,17 +216,17 @@ class Topbar {
         }
     }
 
-    addTab(btn) {
+    addTab(btn: HTMLElement) {
         this.tabsContainer.appendChild(btn);
         const label = document.createElement('span');
-        const name = btn.getAttribute('aria-label');
+        const name = btn.getAttribute('aria-label') || '';
         label.textContent = tabNameSubstitutes[name] || name;
         label.classList.add('wmpotify-tab-label');
         btn.draggable = true;
         btn.addEventListener('dragstart', (event) => {
             this.tabsContainer.classList.add('dragging');
-            event.dataTransfer.setData('text/plain', label.textContent);
-            btn.dataset.dragging = true;
+            event.dataTransfer?.setData('text/plain', label.textContent);
+            btn.dataset.dragging = 'true';
         });
         btn.addEventListener('dragend', () => {
             delete btn.dataset.dragging;

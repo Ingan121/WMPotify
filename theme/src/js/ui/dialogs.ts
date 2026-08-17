@@ -313,6 +313,7 @@ function getDiagInfo() {
         <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify')}: ${Spicetify.Config.version || Strings['ERRDLG_UNKNOWN']}</p>
         <p>${Strings.getString('ERRDLG_VERSION', 'Spicetify Marketplace')}: ${window.Marketplace?.version || Strings['ERRDLG_UNKNOWN']}</p>
         <p>${Strings.getString('ERRDLG_UA')}: ${navigator.userAgent}</p>
+        <p>${Strings.getString('ERRDLG_VERSION', 'OS')}: ${Spicetify.Platform?.PlatformData?.os_version || Strings['ERRDLG_UNKNOWN']}</p>
         <p>${Strings.getString('ERRDLG_VERSION', 'WMPotify')}: ${ver.toString(0)}</p>
         <p>${Strings.getString('ERRDLG_VERSION', 'CEF/Spotify Tweaks')}: ${WindhawkComm.getModule()?.version || Strings['ERRDLG_UNKNOWN']}</p>
         <hr>
