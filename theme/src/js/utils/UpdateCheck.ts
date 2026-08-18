@@ -137,7 +137,8 @@ export async function checkUpdates() {
     }
 }
 
-// Compare current Spotify version with target version. Returns 1 if current is newer than target, -1 if older, 0 if equal or unable to determine
+// Compare current Spotify version with target version
+// Return > 0 if current is newer than target, < 0 if older, == 0 if equal or unable to determine
 export function compareSpotifyVersion(target: string): number {
     let current = Spicetify.Platform?.version?.split('.').map(Number);
     if (!current) {
@@ -156,7 +157,8 @@ export function compareSpotifyVersion(target: string): number {
     return 0;
 }
 
-// Compare two given Spotify version strings. Returns 1 if verA is newer than verB, -1 if older, 0 if equal or unable to determine
+// Compare two given Spotify version strings
+// Return > 0 if verA is newer than verB, < 0 if older, == 0 if equal or unable to determine
 export function compareSpotifyVersions(verA: string, verB: string): number {
     const aParsed = verA.split('.').map(Number);
     const bParsed = verB.split('.').map(Number);
