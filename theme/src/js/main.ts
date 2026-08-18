@@ -303,6 +303,7 @@ async function init() {
     initQueuePanel();
     // Right panel has varying structure in different versions
     const rightPanelObservationTarget = 
+        document.querySelector('.main-nowPlayingView-container') || // 1.2.86+, someone mapped this
         document.querySelector('.zjCIcN96KsMfWwRo') ||     // 1.2.86+
         document.querySelector('.oXO9_yYs6JyOwkBn8E4a') || // 1.2.72+
         document.querySelector('.XOawmCGZcQx4cesyNfVO') || // 1.2.45-1.2.71

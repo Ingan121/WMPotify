@@ -1,6 +1,6 @@
 'use strict';
 
-const verString = '1.2.6';
+const verString = '1.2.7';
 
 export class MadVersion {
     constructor(ver) {

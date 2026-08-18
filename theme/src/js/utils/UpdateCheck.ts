@@ -3,7 +3,7 @@ import WindhawkComm from "../utils/WindhawkComm";
 import { openUpdateDialog } from '../ui/dialogs';
 import { currentVersion } from './ver';
 
-export let lastSupportedSpotifyVer = '1.2.88';
+export let lastSupportedSpotifyVer = '1.2.97';
 
 interface StructuredMadVersion {
     major: number;
@@ -105,9 +105,10 @@ export async function checkUpdates() {
         const wmpotifyLatest = latest.match('wmpotify_new=(.*)')![1];
         const cteLatest = latest.match('cte=(.*)')![1];
         if (!ver.extra) { // Only update last supported Spotify version on stable releases
-            const lastSpotifyVer = latest.match('last_spotify=(.*)')?.[1];
-            if (lastSpotifyVer) {
-                lastSupportedSpotifyVer = lastSpotifyVer;
+            const lastSpotifyVerOnline = latest.match('last_spotify=(.*)')?.[1];
+            // Only update last supported Spotify version if the online version is newer than the hardcoded one
+            if (lastSpotifyVerOnline && compareSpotifyVersions(lastSpotifyVerOnline, lastSupportedSpotifyVer) > 0) {
+                lastSupportedSpotifyVer = lastSpotifyVerOnline;
             }
         }
 
@@ -136,7 +137,8 @@ export async function checkUpdates() {
     }
 }
 
-// Compare current Spotify version with target version. Returns 1 if current is newer than target, -1 if older, 0 if equal or unable to determine
+// Compare current Spotify version with target version
+// Return > 0 if current is newer than target, < 0 if older, == 0 if equal or unable to determine
 export function compareSpotifyVersion(target: string): number {
     let current = Spicetify.Platform?.version?.split('.').map(Number);
     if (!current) {
@@ -150,6 +152,22 @@ export function compareSpotifyVersion(target: string): number {
     for (let i = 0; i < targetParsed.length; i++) {
         if (current[i] !== targetParsed[i]) {
             return current[i] - targetParsed[i];
+        }
+    }
+    return 0;
+}
+
+// Compare two given Spotify version strings
+// Return > 0 if verA is newer than verB, < 0 if older, == 0 if equal or unable to determine
+export function compareSpotifyVersions(verA: string, verB: string): number {
+    const aParsed = verA.split('.').map(Number);
+    const bParsed = verB.split('.').map(Number);
+
+    for (let i = 0; i < Math.max(aParsed.length, bParsed.length); i++) {
+        const aNum = aParsed[i] || 0;
+        const bNum = bParsed[i] || 0;
+        if (aNum !== bNum) {
+            return aNum - bNum;
         }
     }
     return 0;

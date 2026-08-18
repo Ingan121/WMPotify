@@ -130,7 +130,8 @@
                 transform: translateY(-50%);
               }
 
-              > span::before {
+              span[data-encore-id="type"]::before,
+              span[data-encore-id="text"]::before {
                 content: "\2714";
                 color: var(--menu-icon-checkmark-color);
                 font-size: 10pt;
@@ -146,8 +147,8 @@
 
               &:has(svg.activeStyle),
               &[role="menuitemradio"] {
-                > span::before,
-                > div::before {
+                span[data-encore-id="type"]::before,
+                span[data-encore-id="text"]::before {
                   content: "";
                   left: 8px;
                   top: 50%;
@@ -226,7 +227,7 @@
             }
           }
 
-          svg {
+          svg, img {
             position: absolute;
             left: 4px;
             transform: scale(0.75);
@@ -245,9 +246,15 @@
           background: var(--menu-background-color);
           padding: 0;
 
-          span {
-            display: flex;
-            justify-content: center;
+          button {
+            span {
+              display: flex;
+              justify-content: center;
+
+              & + div {
+                display: none;
+              }
+            }
 
             svg {
               position: relative;
@@ -256,8 +263,9 @@
               transform: scale(0.8);
             }
 
-            & + div {
-              display: none;
+            &:has(> svg),
+            &:has(> div) {
+              justify-content: center;
             }
           }
         }
