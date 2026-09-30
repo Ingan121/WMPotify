@@ -136,16 +136,19 @@
 .main-globalNav-historyButtonsContainer,
 .main-globalNav-searchContainer,
 .custom-navlinks-scrollable_container,
-.main-topBar-topbarContentRight {
+.main-topBar-topbarContentRight,
+.main-globalNav-contentRight /* 1.3.0 map name change */ {
     /* Important is to override the Spotify's animation removal when the system animation is disabled */
     animation: appear 8s !important;
 }
 
-.main-topBar-topbarContentRight > .main-actionButtons {
-    > button {
-        animation: appear 8s !important;
-    }
+.main-topBar-topbarContentRight > .main-actionButtons > button,
+.main-globalNav-contentRight > .main-actionButtons > .main-actionButtons > button { /* 1.3.0 */
+    animation: appear 8s !important;
+}
 
+.main-topBar-topbarContentRight > .main-actionButtons,
+.main-globalNav-contentRight > .main-actionButtons { /* 1.3.0 */
     button {
         background: none;
         border: none;
@@ -171,12 +174,14 @@
 .Root__globalNav[data-wmpotify-tabs-created] {
     .main-globalNav-searchContainer,
     .custom-navlinks-scrollable_container,
-    .main-topBar-topbarContentRight > .main-actionButtons > button {
+    .main-topBar-topbarContentRight > .main-actionButtons > button,
+    .main-globalNav-contentRight > .main-actionButtons > .main-actionButtons > button {
         display: none;
     }
 
     .main-globalNav-historyButtonsContainer,
-    .main-topBar-topbarContentRight {
+    .main-topBar-topbarContentRight,
+    .main-globalNav-contentRight /* 1.3.0 */ {
         animation: none !important;
     }
 }
@@ -186,7 +191,9 @@
     .main-globalNav-searchContainer,
     .custom-navlinks-scrollable_container,
     .main-topBar-topbarContentRight,
-    .main-topBar-topbarContentRight > .main-actionButtons > button {
+    .main-globalNav-contentRight, /* 1.3.0 */
+    .main-topBar-topbarContentRight > .main-actionButtons > button,
+    .main-globalNav-contentRight > .main-actionButtons > .main-actionButtons > button {
         animation: none !important;
     }
 }
@@ -301,61 +308,58 @@
     }
 }
 
-.main-topBar-topbarContentRight {
-    /* Explore Premium button */
-    > button:first-child {
-        display: none !important;
+.main-topBar-topbarContentRight > button:first-child { /* Explore Premium button */
+    display: none !important;
+}
+
+.main-topBar-topbarContentRight > button:last-child, /* Account button */
+.main-globalNav-contentRight [data-testid="user-widget-link"] { /* 1.3.0 map name change */
+    min-width: 64px;
+    width: auto;
+    height: 36px;
+    min-height: 0;
+    background: none !important;
+    color: white !important;
+    font-weight: normal !important;
+    display: block !important;
+    transform: none !important;
+    cursor: default !important;
+    font-size: 11px;
+    line-height: 1;
+
+    figure,
+    > span:not(.wmpotify-user-label) {
+        display: none;
     }
 
-    /* User button */
-    > button:last-child {
-        min-width: 64px;
-        width: auto;
+    .wmpotify-user-label {
+        position: relative;
+        margin: 10px;
+    }
+
+    /* Spotify update alert */
+    svg {
+        display: none;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
         height: 36px;
-        min-height: 0;
-        background: none !important;
-        color: white !important;
-        font-weight: normal !important;
-        display: block !important;
-        transform: none !important;
-        cursor: default !important;
-        font-size: 11px;
-        line-height: 1;
+        border-image: url('resources/topbar/user.png') 10 5 10 5 fill stretch;
+        border-image-width: 10px 5px 10px 5px;
+        border-radius: 0 !important;
+    }
 
-        figure,
-        > span:not(.wmpotify-user-label) {
-            display: none;
-        }
+    &:hover::before {
+        border-image-source: url('resources/topbar/user_hover.png');
+    }
 
-        .wmpotify-user-label {
-            position: relative;
-            margin: 10px;
-        }
-
-        /* Spotify update alert */
-        svg {
-            display: none;
-        }
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 36px;
-            border-image: url('resources/topbar/user.png') 10 5 10 5 fill stretch;
-            border-image-width: 10px 5px 10px 5px;
-            border-radius: 0 !important;
-        }
-
-        &:hover::before {
-            border-image-source: url('resources/topbar/user_hover.png');
-        }
-
-        &:active::before {
-            border-image-source: url('resources/topbar/user_pressed.png');
-        }
+    &:active::before {
+        border-image-source: url('resources/topbar/user_pressed.png');
     }
 }
 
@@ -525,7 +529,8 @@ body[data-hide-libx] {
 }
 
 @media (max-width: 418px) {
-    .main-topBar-topbarContentRight > button:last-child {
+    .main-topBar-topbarContentRight > button:last-child,
+    .main-globalNav-contentRight [data-testid="user-widget-link"] {
         display: none !important;
     }
 }

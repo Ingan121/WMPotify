@@ -118,7 +118,7 @@ class Topbar {
                 observer.observe(customAppsButtonsParent, { childList: true, subtree: true });
             }
         }
-        const rightButtons = document.querySelectorAll<HTMLButtonElement>('.main-topBar-topbarContentRight > .main-actionButtons > button');
+        const rightButtons = document.querySelectorAll<HTMLButtonElement>('.main-topBar-topbarContentRight > .main-actionButtons > button, .main-globalNav-contentRight > .main-actionButtons > .main-actionButtons > button');
         for (const btn of rightButtons) {
             if (btn.dataset.restoreFocusKey === 'buddy_feed') {
                 btn.dataset.identifier = 'buddy-feed';
@@ -174,7 +174,7 @@ class Topbar {
         new ResizeObserver(this.handleTabOverflow.bind(this)).observe(this.tabsContainer);
         document.addEventListener('fullscreenchange', this.handleTabOverflow.bind(this));
 
-        const accountButton = document.querySelector<HTMLButtonElement>('.main-topBar-topbarContentRight > button:last-child');
+        const accountButton = document.querySelector<HTMLButtonElement>('.main-topBar-topbarContentRight > button:last-child, [data-testid="user-widget-link"]');
         const accountLabel = document.createElement('span');
         accountLabel.textContent = accountButton?.getAttribute('aria-label') || 'User';
         accountLabel.classList.add('wmpotify-user-label');
@@ -280,7 +280,7 @@ class Topbar {
 
     handleTabOverflow() {
         const leftAreaWidth = document.querySelector('.main-globalNav-historyButtons')?.getBoundingClientRect().right || 0;
-        const rightAreaWidth = window.innerWidth - (document.querySelector('.main-topBar-topbarContentRight')?.getBoundingClientRect().left || 0);
+        const rightAreaWidth = window.innerWidth - (document.querySelector('.main-topBar-topbarContentRight, .main-globalNav-contentRight')?.getBoundingClientRect().left || 0);
         const extra = 160;
 
         let hiddenTabs = 0;

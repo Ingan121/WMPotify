@@ -36,8 +36,8 @@ const elementsRequired = [
     '.main-globalNav-searchContainer > button',
     '.main-globalNav-searchContainer div form button',
     '.main-globalNav-searchContainer div form input[type="search"]',
-    '.main-topBar-topbarContentRight > .main-actionButtons > button',
-    '.main-topBar-topbarContentRight > button:last-child',
+    '.main-topBar-topbarContentRight > .main-actionButtons > button, .main-globalNav-contentRight > .main-actionButtons > button',
+    '.main-topBar-topbarContentRight > button:last-child, .main-globalNav-contentRight button:last-child',
     '.Root__main-view',
     '.main-view-container__scroll-node-child main',
     '.main-nowPlayingBar-nowPlayingBar',
@@ -273,6 +273,11 @@ globalThis.WMPotify = {
 // Real initialization that requires Spotify APIs and DOM elements runs in the init function below, which is called once the platform is ready and required elements are present.
 async function init() {
     await CustomTitlebar.init(titleStyle as 'native' | 'custom' | 'keepmenu' | 'spotify');
+
+    if (ver.isPreRelease && localStorage.wmpotifyAbortInit) {
+        delete localStorage.wmpotifyAbortInit;
+        throw new Error('Init aborted due to test flag (localStorage.wmpotifyAbortInit)');
+    }
 
     if (WindhawkComm.available() && localStorage.wmpotifyLockTitle) {
         WindhawkComm.setTitle(await Spicetify.AppTitle.get());
