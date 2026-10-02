@@ -533,8 +533,9 @@ div[data-testid='now-playing-widget'] {
         }
     }
 
-    button[data-testid='control-button-repeat'],
-    button[data-testid="control-button-seek-forward-15"] { /* Podcast control */
+    button[data-testid='control-button-repeat'], /* Replaced with custom button */
+    button[data-testid="control-button-seek-forward-15"], /* Podcast control */
+    button[data-testid="control-button-sleep-timer"] { /* Podcast control */
         display: none;
     }
 }

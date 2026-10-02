@@ -37,7 +37,7 @@ const elementsRequired = [
     '.main-globalNav-searchContainer div form button',
     '.main-globalNav-searchContainer div form input[type="search"]',
     '.main-topBar-topbarContentRight > .main-actionButtons > button, .main-globalNav-contentRight > .main-actionButtons > button',
-    '.main-topBar-topbarContentRight > button:last-child, .main-globalNav-contentRight button:last-child',
+    '.main-topBar-topbarContentRight > button:last-child, .main-globalNav-contentRight [data-testid="user-widget-link"]',
     '.Root__main-view',
     '.main-view-container__scroll-node-child main',
     '.main-nowPlayingBar-nowPlayingBar',

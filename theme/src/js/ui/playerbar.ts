@@ -17,6 +17,7 @@ class PlayerBar {
     timeTextContainer: HTMLDivElement;
     timeText: HTMLSpanElement;
     timeTextMode: number;
+    volumeBar: HTMLElement;
     volumeButton: HTMLButtonElement;
     volumeBarProgress: HTMLElement;
     titlebar: HTMLDivElement;
@@ -31,111 +32,16 @@ class PlayerBar {
         const npvLeft = document.querySelector<HTMLElement>('.main-nowPlayingBar-left')!;
         new MutationObserver(this.setupTrackInfoWidget.bind(this)).observe(npvLeft, { childList: true });
 
-        const playerControlsLeft = document.querySelector('.player-controls__left')!;
-        const repeatButton = document.createElement('button');
-        const repeatLabels = ['playback-control.enable-repeat', 'playback-control.enable-repeat-one', 'playback-control.disable-repeat'];
-        const currentRepeat = Spicetify.Player.getRepeat();
-        const currentLabel = Spicetify.Platform.Translations[repeatLabels[currentRepeat]];
-        repeatButton.setAttribute('aria-label', currentLabel);
-        repeatButton.setAttribute('aria-checked', (!!currentRepeat).toString());
-        repeatButton.id = 'wmpotify-repeat-button';
-        repeatButton.addEventListener('click', () => {
-            Spicetify.Player.toggleRepeat();
-        });
-        Spicetify.Tippy(repeatButton, {
-            ...Spicetify.TippyProps,
-            content: currentLabel
-        });
-        Spicetify.Platform.PlayerAPI._events.addListener("update", ({ data }) => {
-            repeatButton.setAttribute('aria-checked', (!!data.repeat).toString());
-            const newLabel = Spicetify.Platform.Translations[repeatLabels[data.repeat]];
-            repeatButton.setAttribute('aria-label', newLabel);
-            (repeatButton as HTMLButtonElementWithTippy)._tippy.setContent(newLabel);
-        });
-        playerControlsLeft.appendChild(repeatButton);
-
-        const whStatus = WindhawkComm.query();
-
-        const prevButton = document.querySelector<HTMLButtonElement>('.player-controls__buttons button[data-testid="control-button-skip-back"]');
-        const nextButton = document.querySelector<HTMLButtonElement>('.player-controls__buttons button[data-testid="control-button-skip-forward"]');
-        if (prevButton) {
-            prevButton.addEventListener('contextmenu', (event) => {
-                Spicetify.Player.seek(Spicetify.Player.getProgress() - 15000);
-                event.preventDefault();
-            });
-            Spicetify.Platform.Translations['playback-control.skip-back'] += '\n' + Strings['PB_TOOLTIP_SEEK_BK'];
-        }
-        if (nextButton) {
-            nextButton.addEventListener('contextmenu', (event) => {
-                Spicetify.Player.seek(Spicetify.Player.getProgress() + 15000);
-                event.preventDefault();
-            });
-            Spicetify.Platform.Translations['playback-control.skip-forward'] += '\n' + Strings['PB_TOOLTIP_SEEK_FWD'];
-            if (whStatus?.speedModSupported && whStatus.immediateSpeedChange) {
-                nextButton.addEventListener('pointerdown', () => {
-                    // Speed control won't work when using Spotify Connect (playing on another device)
-                    if (nextButton.disabled || Spicetify.Platform.ConnectAPI.state.connectionStatus === 'connected') {
-                        return;
-                    }
-                    this.longPressTimer = setTimeout(() => {
-                        nextButton.dataset.fastForward = 'true';
-                        WindhawkComm.setPlaybackSpeed(5);
-                        Spicetify.Player.play();
-                    }, 1000);
-                });
-                document.addEventListener('pointerup', (event) => {
-                    clearTimeout(this.longPressTimer);
-                    if (nextButton.dataset.fastForward) {
-                        delete nextButton.dataset.fastForward;
-                        WindhawkComm.setPlaybackSpeed(1);
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                });
-                Spicetify.Platform.Translations['playback-control.skip-forward'] += '\n' + Strings['PB_TOOLTIP_FF'];
-            }
-        }
-
-        // Shuffle button is often re-added to right before the prev button
-        // so keep shuffle and prev at the first of the left controls in DOM and re-order our modified/custom buttons with CSS flex order
-        const stopButton = document.createElement('button');
-        stopButton.setAttribute('aria-label', Strings['PB_TOOLTIP_STOP']);
-        stopButton.id = 'wmpotify-stop-button';
-        stopButton.addEventListener('click', () => {
-            Spicetify.Platform.PlayerAPI.clearQueue();
-            Spicetify.Player.playUri("");
-        });
-        Spicetify.Tippy(stopButton, {
-            ...Spicetify.TippyProps,
-            content: Strings['PB_TOOLTIP_STOP']
-        });
-        playerControlsLeft.appendChild(stopButton);
-
-        const playerControlsRight = document.querySelector('.player-controls__right')!;
-        const volumeBar = document.querySelector('.volume-bar, [data-testid="volume-bar"]')!;
-        this.volumeButton = volumeBar.querySelector('.volume-bar__icon-button, [data-testid="volume-bar-toggle-mute-button"], button')!;
-        this.volumeBarProgress = volumeBar.querySelector('.progress-bar, .x-progressBar-progressBar, [data-testid="progress-bar"]')!;
+        this.volumeBar = document.querySelector('.volume-bar, [data-testid="volume-bar"]')!;
+        this.volumeButton = this.volumeBar.querySelector('.volume-bar__icon-button, [data-testid="volume-bar-toggle-mute-button"], button')!;
+        this.volumeBarProgress = this.volumeBar.querySelector('.progress-bar, .x-progressBar-progressBar, [data-testid="progress-bar"]')!;
         this.updateVolumeIcon();
         new MutationObserver(this.updateVolumeIcon.bind(this)).observe(this.volumeBarProgress, { attributes: true, attributeFilter: ['style'] });
-        playerControlsRight.appendChild(volumeBar);
 
-        const volSlider = document.querySelector('.volume-bar__slider-container, [data-testid="volume-bar"] > :not(button)');
-        const volPopup = volSlider ? volSlider.children[0] as HTMLElement : null;
-        if (volSlider && volPopup) {
-            volSlider.addEventListener('click', () => {
-                if (window.innerWidth < 750) {
-                    volPopup.dataset.visible = 'true';
-                    const autoClose = setTimeout(() => {
-                        delete volPopup.dataset.visible;
-                    }, 5000);
-                    volPopup.addEventListener('pointerup', () => {
-                        clearTimeout(autoClose);
-                        setTimeout(() => {
-                            delete volPopup.dataset.visible;
-                        }, 100);
-                    }, { once: true });
-                }
-            });
+        this.setupPlayerControls();
+        const playerControls = document.querySelector<HTMLElement>('.player-controls');
+        if (playerControls) {
+            new MutationObserver(this.setupPlayerControls.bind(this)).observe(playerControls, { childList: true });
         }
 
         this.timeTexts = document.querySelectorAll('.playback-bar [class*=encore-text]'); // 0: elapsed, 1: total (both in HH:MM:SS format)
@@ -162,7 +68,7 @@ class PlayerBar {
             window.addEventListener('resize', this.updateTimeTextMiniMode.bind(this));
         }
 
-        if (whStatus) {
+        if (WindhawkComm.available()) {
             const miniModeButton = new Spicetify.Playbar.Button(
                 Strings['PB_BTN_MINI_MODE'],
                 '', // SVG icon, not needed (image provided in CSS)
@@ -267,6 +173,110 @@ class PlayerBar {
                 this.titleSet = true;
             }
         });
+    }
+
+    setupPlayerControls() {
+        const playerControlsLeft = document.querySelector('.player-controls__left')!;
+        const repeatButton = document.createElement('button');
+        const repeatLabels = ['playback-control.enable-repeat', 'playback-control.enable-repeat-one', 'playback-control.disable-repeat'];
+        const currentRepeat = Spicetify.Player.getRepeat();
+        const currentLabel = Spicetify.Platform.Translations[repeatLabels[currentRepeat]];
+        repeatButton.setAttribute('aria-label', currentLabel);
+        repeatButton.setAttribute('aria-checked', (!!currentRepeat).toString());
+        repeatButton.id = 'wmpotify-repeat-button';
+        repeatButton.addEventListener('click', () => {
+            Spicetify.Player.toggleRepeat();
+        });
+        Spicetify.Tippy(repeatButton, {
+            ...Spicetify.TippyProps,
+            content: currentLabel
+        });
+        Spicetify.Platform.PlayerAPI._events.addListener("update", ({ data }) => {
+            repeatButton.setAttribute('aria-checked', (!!data.repeat).toString());
+            const newLabel = Spicetify.Platform.Translations[repeatLabels[data.repeat]];
+            repeatButton.setAttribute('aria-label', newLabel);
+            (repeatButton as HTMLButtonElementWithTippy)._tippy.setContent(newLabel);
+        });
+        playerControlsLeft.appendChild(repeatButton);
+
+        const whStatus = WindhawkComm.query();
+
+        const prevButton = document.querySelector<HTMLButtonElement>('.player-controls__buttons button[data-testid="control-button-skip-back"]');
+        const nextButton = document.querySelector<HTMLButtonElement>('.player-controls__buttons button[data-testid="control-button-skip-forward"]');
+        if (prevButton) {
+            prevButton.addEventListener('contextmenu', (event) => {
+                Spicetify.Player.seek(Spicetify.Player.getProgress() - 15000);
+                event.preventDefault();
+            });
+            Spicetify.Platform.Translations['playback-control.skip-back'] += '\n' + Strings['PB_TOOLTIP_SEEK_BK'];
+        }
+        if (nextButton) {
+            nextButton.addEventListener('contextmenu', (event) => {
+                Spicetify.Player.seek(Spicetify.Player.getProgress() + 15000);
+                event.preventDefault();
+            });
+            Spicetify.Platform.Translations['playback-control.skip-forward'] += '\n' + Strings['PB_TOOLTIP_SEEK_FWD'];
+            if (whStatus?.speedModSupported && whStatus.immediateSpeedChange) {
+                nextButton.addEventListener('pointerdown', () => {
+                    // Speed control won't work when using Spotify Connect (playing on another device)
+                    if (nextButton.disabled || Spicetify.Platform.ConnectAPI.state.connectionStatus === 'connected') {
+                        return;
+                    }
+                    this.longPressTimer = setTimeout(() => {
+                        nextButton.dataset.fastForward = 'true';
+                        WindhawkComm.setPlaybackSpeed(5);
+                        Spicetify.Player.play();
+                    }, 1000);
+                });
+                document.addEventListener('pointerup', (event) => {
+                    clearTimeout(this.longPressTimer);
+                    if (nextButton.dataset.fastForward) {
+                        delete nextButton.dataset.fastForward;
+                        WindhawkComm.setPlaybackSpeed(1);
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                });
+                Spicetify.Platform.Translations['playback-control.skip-forward'] += '\n' + Strings['PB_TOOLTIP_FF'];
+            }
+        }
+
+        // Shuffle button is often re-added to right before the prev button
+        // so keep shuffle and prev at the first of the left controls in DOM and re-order our modified/custom buttons with CSS flex order
+        const stopButton = document.createElement('button');
+        stopButton.setAttribute('aria-label', Strings['PB_TOOLTIP_STOP']);
+        stopButton.id = 'wmpotify-stop-button';
+        stopButton.addEventListener('click', () => {
+            Spicetify.Platform.PlayerAPI.clearQueue();
+            Spicetify.Player.playUri("");
+        });
+        Spicetify.Tippy(stopButton, {
+            ...Spicetify.TippyProps,
+            content: Strings['PB_TOOLTIP_STOP']
+        });
+        playerControlsLeft.appendChild(stopButton);
+
+        const playerControlsRight = document.querySelector('.player-controls__right')!;
+        playerControlsRight.appendChild(this.volumeBar);
+
+        const volSlider = document.querySelector('.volume-bar__slider-container, [data-testid="volume-bar"] > :not(button)');
+        const volPopup = volSlider ? volSlider.children[0] as HTMLElement : null;
+        if (volSlider && volPopup) {
+            volSlider.addEventListener('click', () => {
+                if (window.innerWidth < 750) {
+                    volPopup.dataset.visible = 'true';
+                    const autoClose = setTimeout(() => {
+                        delete volPopup.dataset.visible;
+                    }, 5000);
+                    volPopup.addEventListener('pointerup', () => {
+                        clearTimeout(autoClose);
+                        setTimeout(() => {
+                            delete volPopup.dataset.visible;
+                        }, 100);
+                    }, { once: true });
+                }
+            });
+        }
     }
 
     updateTimeTextMiniMode() {

@@ -174,7 +174,7 @@ class Topbar {
         new ResizeObserver(this.handleTabOverflow.bind(this)).observe(this.tabsContainer);
         document.addEventListener('fullscreenchange', this.handleTabOverflow.bind(this));
 
-        const accountButton = document.querySelector<HTMLButtonElement>('.main-topBar-topbarContentRight > button:last-child, [data-testid="user-widget-link"]');
+        const accountButton = document.querySelector<HTMLButtonElement>('.main-topBar-topbarContentRight > button:last-child, .main-globalNav-contentRight [data-testid="user-widget-link"]');
         const accountLabel = document.createElement('span');
         accountLabel.textContent = accountButton?.getAttribute('aria-label') || 'User';
         accountLabel.classList.add('wmpotify-user-label');
