@@ -1,9 +1,7 @@
-// caching.js for ModernActiveDesktop Visualizer Lyrics
+// caching.js for for WMPotify NowPlaying
 // Made by Ingan121
 // Licensed under the MIT License
 // SPDX-License-Identifier: MIT
-
-'use strict';
 
 import madIdb from './MadIdb';
 
@@ -41,7 +39,7 @@ async function addCache(hash, lyrics) {
         return;
     }
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         const transaction = db.transaction("lrccache", "readwrite");
         const store = transaction.objectStore("lrccache");
         if (lyrics === null) {
@@ -53,13 +51,13 @@ async function addCache(hash, lyrics) {
             lyrics,
             createdAt: Date.now()
         });
-        request.onsuccess = function () {
-            console.log("MADVisLrc: Cache added: " + hash);
+        request.onsuccess = () => {
+            console.log(`MADVisLrc: Cache added: ${hash}`);
             resolve();
         };
-        request.onerror = function () {
+        request.onerror = () => {
             if (request.error.name === "ConstraintError") {
-                console.log("MADVisLrc: Cache already exists: " + hash);
+                console.log(`MADVisLrc: Cache already exists: ${hash}`);
                 resolve();
             } else {
                 console.error(request.error);
@@ -78,13 +76,13 @@ async function getCache(hash) {
         localStorage.wmpotifyVisLyricsNoCache = true;
         return null;
     }
-    const expiryDays = parseInt(localStorage.wmpotifyVisLyricsCacheExpiry) || 21;
+    const expiryDays = parseInt(localStorage.wmpotifyVisLyricsCacheExpiry, 10) || 21;
     const expiryTime = expiryDays * UNIX_1DAY;
     return new Promise((resolve, reject) => {
         const transaction = db.transaction("lrccache", "readwrite");
         const store = transaction.objectStore("lrccache");
         const request = store.get(hash);
-        request.onsuccess = function () {
+        request.onsuccess = () => {
             if (request.result && Date.now() - request.result.createdAt <= expiryTime) {
                 const lyrics = request.result.lyrics;
                 lyrics.cachedAt = request.result.createdAt;
@@ -94,7 +92,7 @@ async function getCache(hash) {
                 resolve(null);
             }
         };
-        request.onerror = function () {
+        request.onerror = () => {
             console.error(request.error);
             reject(request.error);
         };
@@ -113,10 +111,10 @@ async function deleteCache(hash) {
         const transaction = db.transaction("lrccache", "readwrite");
         const store = transaction.objectStore("lrccache");
         const request = store.delete(hash);
-        request.onsuccess = function () {
+        request.onsuccess = () => {
             resolve();
         };
-        request.onerror = function () {
+        request.onerror = () => {
             console.error(request.error);
             reject(request.error);
         };
@@ -132,10 +130,10 @@ async function cacheExists(hash) {
         const transaction = db.transaction("lrccache", "readonly");
         const store = transaction.objectStore("lrccache");
         const request = store.get(hash);
-        request.onsuccess = function () {
+        request.onsuccess = () => {
             resolve(request.result !== undefined);
         };
-        request.onerror = function () {
+        request.onerror = () => {
             console.error(request.error);
             reject(request.error);
         };
@@ -151,7 +149,7 @@ async function deleteOldestCache(num = 1) {
         const index = store.index("createdAtIndex");
         const request = index.openCursor();
         let cnt = 0;
-        request.onsuccess = function () {
+        request.onsuccess = () => {
             const cursor = request.result;
             if (cursor) {
                 store.delete(cursor.value.hash);
@@ -165,7 +163,7 @@ async function deleteOldestCache(num = 1) {
                 resolve();
             }
         };
-        request.onerror = function () {
+        request.onerror = () => {
             console.error(request.error);
             reject(request.error);
         };
@@ -182,7 +180,7 @@ async function cleanExpiredCache() {
         const index = store.index("createdAtIndex");
         const request = index.openCursor();
         let cnt = 0;
-        request.onsuccess = function () {
+        request.onsuccess = () => {
             const cursor = request.result;
             if (cursor) {
                 if (Date.now() - cursor.value.createdAt > expiryTime) {
@@ -195,7 +193,7 @@ async function cleanExpiredCache() {
                 resolve();
             }
         };
-        request.onerror = function () {
+        request.onerror = () => {
             console.error(request.error);
             reject(request.error);
         };
@@ -208,10 +206,10 @@ async function countCache() {
         const transaction = db.transaction("lrccache", "readonly");
         const store = transaction.objectStore("lrccache");
         const request = store.count();
-        request.onsuccess = function () {
+        request.onsuccess = () => {
             resolve(request.result);
         };
-        request.onerror = function () {
+        request.onerror = () => {
             console.error(request.error);
             reject(request.error);
         };
@@ -224,10 +222,10 @@ async function clearCache() {
         const transaction = db.transaction("lrccache", "readwrite");
         const store = transaction.objectStore("lrccache");
         const request = store.clear();
-        request.onsuccess = function () {
+        request.onsuccess = () => {
             resolve();
         };
-        request.onerror = function () {
+        request.onerror = () => {
             console.error(request.error);
             reject(request.error);
         };
@@ -235,7 +233,7 @@ async function clearCache() {
 }
 
 if (localStorage.wmpotifyVisLyricsLastCacheClean) {
-    const lastClean = parseInt(localStorage.wmpotifyVisLyricsLastCacheClean);
+    const lastClean = parseInt(localStorage.wmpotifyVisLyricsLastCacheClean, 10);
     if (Date.now() - lastClean >= UNIX_1DAY) {
         cleanExpiredCache();
         localStorage.wmpotifyVisLyricsLastCacheClean = Date.now();

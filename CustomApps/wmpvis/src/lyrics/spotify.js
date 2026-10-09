@@ -1,9 +1,7 @@
-// spotify.js for ModernActiveDesktop Visualizer Lyrics
+// spotify.js for for WMPotify NowPlaying
 // Made by Ingan121
 // Licensed under the MIT License
 // SPDX-License-Identifier: MIT
-
-'use strict';
 
 export async function getSpotifyNowPlaying(lang) {
     try {

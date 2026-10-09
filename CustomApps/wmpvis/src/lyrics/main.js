@@ -1,9 +1,7 @@
-// main.js for ModernActiveDesktop Visualizer Lyrics
+// main.js for WMPotify NowPlaying
 // Made by Ingan121
 // Licensed under the MIT License
 // SPDX-License-Identifier: MIT
-
-'use strict';
 
 import Strings from '../strings';
 import LRC from "./lrcparse";
@@ -114,17 +112,17 @@ async function findLyrics(id) {
     const override = overrides[hash];
     if (override?.lrc) {
         lastFetchInfo.override = -1;
-        if (LRC.isTextLrc(override.lrc)) {
-            const { artist, title, albumTitle, duration } = LRC.parseMetadata(override.lrc);
+        const lrc = new LRC(override.lrc);
+        if (lrc.isTextLrc()) {
             return {
                 synced: true,
                 id: null,
-                title: title,
-                artist: artist,
-                albumTitle: albumTitle,
-                duration: duration,
+                title: lrc.title,
+                artist: lrc.artist,
+                albumTitle: lrc.albumTitle,
+                duration: lrc.duration,
                 syncedLyrics: override.lrc,
-                plainLyrics: LRC.toPlain(override.lrc),
+                plainLyrics: lrc.toPlain(),
                 provider: 'Local File'
             };
         } else {
@@ -598,17 +596,17 @@ async function loadLyrics(idOrLrc, addOverride) {
     }
     if (idOrLrc instanceof File) {
         const text = await idOrLrc.text();
-        if (LRC.isTextLrc(text)) {
-            const { artist, title, albumTitle, duration } = LRC.parseMetadata(text);
+        const lrc = new LRC(text);
+        if (lrc.isTextLrc()) {
             lyrics = {
                 synced: true,
                 id: null,
-                title: title || getFilename(idOrLrc.name),
-                artist: artist,
-                albumTitle: albumTitle,
-                duration: duration,
+                title: lrc.title || getFilename(idOrLrc.name),
+                artist: lrc.artist,
+                albumTitle: lrc.albumTitle,
+                duration: lrc.duration,
                 syncedLyrics: text,
-                plainLyrics: LRC.toPlain(text),
+                plainLyrics: lrc.toPlain(),
                 provider: Strings['LRC_PROVIDER_LOCAL']
             }
         } else {
@@ -641,8 +639,8 @@ async function loadLyrics(idOrLrc, addOverride) {
         lastLyricsId = lyrics.id;
         if (lyrics.synced) {
             lyricsView.innerHTML = '';
-            const lrc = typeof lyrics.syncedLyrics === 'string' ? LRC.parse(lyrics.syncedLyrics) : lyrics.syncedLyrics;
-            lrc.forEach((line, index) => {
+            const lrc = new LRC(lyrics.syncedLyrics);
+            lrc.parsed.forEach((line, _index) => {
                 const p = document.createElement('p');
                 p.classList.add('wmpotify-lyrics-line');
                 p.textContent = line.text;
@@ -653,7 +651,7 @@ async function loadLyrics(idOrLrc, addOverride) {
                 lyricsView.appendChild(p);
             });
             lyricsView.scrollTop = 0;
-            lastSyncedLyricsParsed = lrc;
+            lastSyncedLyricsParsed = lrc.parsed;
             processTimeline(true);
         } else {
             lyricsView.textContent = lyrics.plainLyrics;
@@ -696,7 +694,7 @@ async function processProperties() {
     }
     lyricsView.innerHTML = Strings['LRC_STATUS_LOADING'];
     const spotifyNowPlayingLocal = await getSpotifyNowPlaying();
-    if (spotifyNowPlayingLocal && spotifyNowPlayingLocal.item) {
+    if (spotifyNowPlayingLocal?.item) {
         const artist = spotifyNowPlayingLocal.item.artists[0].name;
         const title = spotifyNowPlayingLocal.item.name;
         const albumTitle = spotifyNowPlayingLocal.item.album.name;
@@ -711,7 +709,7 @@ async function processProperties() {
         delete visStatus.lastMusic;
     }
     const spotifyNowPlayingEnglish = await getSpotifyNowPlaying('en');
-    if (spotifyNowPlayingEnglish && spotifyNowPlayingEnglish.item) {
+    if (spotifyNowPlayingEnglish?.item) {
         const artist = spotifyNowPlayingEnglish.item.artists[0].name;
         const title = spotifyNowPlayingEnglish.item.name;
         const albumTitle = spotifyNowPlayingEnglish.item.album.name;
@@ -854,7 +852,6 @@ function stripNonAlphaNumeric(str) {
 async function getSongHash(artist, title, albumTitle) {
     if (!artist && !title && !albumTitle) {
         // undefined + undefined + undefined = NaN, sha1("NaN") = 9/2caPgErNpmXSqwgiF7sVgzGPI=
-        // what the fuck
         return null;
     }
     const data = new TextEncoder().encode(artist + title + albumTitle);
