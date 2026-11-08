@@ -174,7 +174,8 @@
               }
             }
 
-            &.vvMORUKtQKpQcpQ992bR { /* Top separator */
+            &.vvMORUKtQKpQcpQ992bR,
+            &.main-contextMenu-dividerBefore { /* Top separator */
               /* has multiple classes, usually meaning a separator on top or bottom */
               &::before {
                 top: -7px;
@@ -205,7 +206,8 @@
             }
           }
 
-          &:last-child .Vz3pFUXmll6fKB5Fc4nd {
+          &:last-child .Vz3pFUXmll6fKB5Fc4nd,
+          &:last-child .main-contextMenu-dividerAfter {
             margin-bottom: 0;
             &::before {
               display: none;

@@ -3,7 +3,7 @@
 import React from 'react'
 import Strings from './strings';
 import { init, updateVisConfig, uninit } from './wmpvis';
-import ButterchurnAdaptor from './butterchurn/adaptor';
+import ButterchurnAdapter from './butterchurn/adapter';
 import MadVisLyrics from './lyrics/main';
 import lrcCache from './lyrics/caching';
 import { checkUpdates, ver } from './UpdateCheck';
@@ -169,7 +169,7 @@ class App extends React.Component {
   };
 
   render() {
-    const bcPresets = ButterchurnAdaptor.getPresets().sort();
+    const bcPresets = ButterchurnAdapter.getPresets().sort();
 
     const SvgIcon = React.memo((props) => {
       return <svg class={props.class} height="16" width="16" viewBox="0 0 16 16" fill="currentColor"><path d={props.d}></path></svg>;
@@ -243,7 +243,7 @@ class App extends React.Component {
             label="Random"
             onClick={() => {
               this.changeVisType("milkdrop");
-              ButterchurnAdaptor.setPreset(null);
+              ButterchurnAdapter.setPreset(null);
               delete localStorage.wmpotifyVisBCPreset;
               this.setState({ bcPreset: "Random" });
             }}
@@ -257,7 +257,7 @@ class App extends React.Component {
               label={preset}
               onClick={() => {
                 this.changeVisType("milkdrop");
-                ButterchurnAdaptor.setPreset(preset);
+                ButterchurnAdapter.setPreset(preset);
                 localStorage.wmpotifyVisBCPreset = preset;
                 this.setState({ bcPreset: preset });
               }}
@@ -274,7 +274,7 @@ class App extends React.Component {
             if (this.state.type !== "milkdrop") {
               openConfigDialog();
             } else {
-              ButterchurnAdaptor.openConfigDialog();
+              ButterchurnAdapter.openConfigDialog();
             }
           }}
         >

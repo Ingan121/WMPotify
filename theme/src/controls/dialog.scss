@@ -211,6 +211,12 @@ dialog,
     }
   }
 
+  /* Neuter weirdness caused by https://github.com/spicetify/cli/pull/3917 */
+  .spicetify-popup-closeBtn {
+    margin-block-start: 0;
+    margin-inline-end: 0;
+  }
+
   .main-playlistEditDetailsModal-closeBtn,
   .profile-userEditDetails-closeButton {
     position: relative;

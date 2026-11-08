@@ -510,7 +510,8 @@ div[data-testid='now-playing-widget'] {
             }
         }
 
-        .D3ukq4oRWEkyLsWPYziv { /* 1.2.83 */
+        .D3ukq4oRWEkyLsWPYziv, /* 1.2.83 */
+        .x-progressBar-progressFillColor {
             display: none !important;
         }
 
@@ -725,7 +726,7 @@ div[data-testid='now-playing-widget'] {
 
     .x-progressBar-middleground, /* 1.2.84 */
     .x-progressBar-progressFillColor { /* 1.2.86 mapping nonsense */
-        display: none;
+        display: none !important;
     }
 
     .progress-bar__slider,

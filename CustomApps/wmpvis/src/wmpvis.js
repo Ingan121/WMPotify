@@ -5,7 +5,7 @@
 
 'use strict';
 
-import ButterchurnAdaptor from './butterchurn/adaptor';
+import ButterchurnAdapter from './butterchurn/adapter';
 import MadVisLyrics from './lyrics/main';
 import { spAudioDataToFrequencies } from './spadapter';
 import { appInstance as App } from './app';
@@ -276,10 +276,10 @@ export function updateVisConfig() {
     idle = false;
 
     if (visConfig.type === 'milkdrop') {
-        ButterchurnAdaptor.init(visBC, debugView);
-        ButterchurnAdaptor.setPaused(false);
+        ButterchurnAdapter.init(visBC, debugView);
+        ButterchurnAdapter.setPaused(false);
     } else {
-        ButterchurnAdaptor.setPaused(true);
+        ButterchurnAdapter.setPaused(true);
         loadAlbumArt();
         if (visConfig.followAlbumArt) {
             updateAlbumArtColor();
@@ -444,11 +444,11 @@ async function setupListeners() {
         if (visConfig.followAlbumArt) {
             updateAlbumArtColor();
         }
-        ButterchurnAdaptor.setAudioData(audioData || []);
-        ButterchurnAdaptor.launchSongTitleAnim();
+        ButterchurnAdapter.setAudioData(audioData || []);
+        ButterchurnAdapter.launchSongTitleAnim();
     });
-    ButterchurnAdaptor.setAudioData(audioData || []);
-    ButterchurnAdaptor.launchSongTitleAnim();
+    ButterchurnAdapter.setAudioData(audioData || []);
+    ButterchurnAdapter.launchSongTitleAnim();
     if (interval) {
         clearInterval(interval);
     }
@@ -488,8 +488,8 @@ export async function init(elemRefs) {
     new ResizeObserver(updateSize).observe(visBar);
 
     if (visConfig.type === 'milkdrop') {
-        ButterchurnAdaptor.init(visBC, debugView);
-        ButterchurnAdaptor.launchSongTitleAnim();
+        ButterchurnAdapter.init(visBC, debugView);
+        ButterchurnAdapter.launchSongTitleAnim();
     }
 
     MadVisLyrics.init(elemRefs.lyrics.current);
@@ -513,6 +513,6 @@ export function uninit() {
     if (fpsDetectorInterval) {
         clearInterval(fpsDetectorInterval);
     }
-    ButterchurnAdaptor.uninit();
+    ButterchurnAdapter.uninit();
     MadVisLyrics.uninit();
 }

@@ -11,14 +11,17 @@
 
     & + div {
         .uMoqkRWisfbVwPoJgD6N, /* subcategory buttons */
-        .pDejgs2MAbpWS64_ { /* 1.2.86+ */
+        .pDejgs2MAbpWS64_, /* 1.2.86+ */
+        .I7QPPyjfzVuHwQWwJkas, /* 1.3.0 */
+        .FnerTVHdz74eJpPsJrVQ { /* 1.3.3 */ /* UNMAPPED */
             background: var(--wmp11-window) !important;
             margin-inline-start: -8px;
         }
     }
 }
 
-.main-home-content {
+.main-home-content,
+.main-gridContainer-homepageContent {
     .view-homeShortcutsGrid-shortcut {
         border: solid 1px transparent;
         border-radius: 3px;
@@ -129,7 +132,8 @@
 }
 
 @media (forced-colors: active) {
-    .main-home-content {
+    .main-home-content,
+    .main-gridContainer-homepageContent {
         .view-homeShortcutsGrid-shortcut:hover a {
             color: var(--hilight-text);
             background-color: var(--hilight);

@@ -12,8 +12,9 @@
     }
 
     &.Root__cinema-view--controls-hidden,
-    &.FWlHsHhD0hSw1ldIXnOF {
-        &:not(.FKsek3qI2lalTOUrGVqP):not(._6dEq1ZVxeUsyP_cwJlgR):not(.Kd2KIgZus6lPUgWrhKkt):not(.W5KqjeHO8MKbmawZ) {
+    /* These many unmapped stuff: version-specific hack iirc */
+    &.FWlHsHhD0hSw1ldIXnOF { /* UNMAPPED */
+        &:not(.FKsek3qI2lalTOUrGVqP):not(._6dEq1ZVxeUsyP_cwJlgR):not(.Kd2KIgZus6lPUgWrhKkt):not(.W5KqjeHO8MKbmawZ):not(.VbbHBQEcSuVC7aYf6BBS):not(.EcNAqLrnXmXWD7tNefiP) { /* UNMAPPED */
             margin-top: calc(var(--panel-gap) * -1) !important;
         }
     }
@@ -23,16 +24,20 @@
         &.FKsek3qI2lalTOUrGVqP,
         &._6dEq1ZVxeUsyP_cwJlgR,
         &.Kd2KIgZus6lPUgWrhKkt,
-        &.W5KqjeHO8MKbmawZ {
+        &.W5KqjeHO8MKbmawZ, /* 1.2.86 */
+        &.VbbHBQEcSuVC7aYf6BBS, /* 1.3.0 */
+        &.EcNAqLrnXmXWD7tNefiP { /* 1.3.3 */
             --bottom-bar-height: 0px !important;
         }
     }
 
     > div, /* 1.2.62, 1.2.63 */
     > div > div, /* 1.2.50, 1.2.51 */
-    .fOA8mVyHaHw2T808ZLpL, /* Artist image */
+    .fOA8mVyHaHw2T808ZLpL, /* Artist image */ /* UNMAPPED */
     .f_AjCoAAXZlsWbXydMiA,
-    .vFJoEglidP04w4hC { /* 1.2.86 */
+    .vFJoEglidP04w4hC, /* 1.2.86 */
+    .eDtJmRdtyW7PD5LbkGUZ, /* 1.3.0 */
+    .odynD0dbY3UqxDINJUB5 { /* 1.3.3 */
         border-radius: 0 !important;
     }
 }
@@ -46,7 +51,7 @@ body:fullscreen {
 
         &.Root__cinema-view--controls-hidden,
         &.FWlHsHhD0hSw1ldIXnOF {
-            &:not(.FKsek3qI2lalTOUrGVqP):not(._6dEq1ZVxeUsyP_cwJlgR):not(.Kd2KIgZus6lPUgWrhKkt):not(.W5KqjeHO8MKbmawZ) {
+            &:not(.FKsek3qI2lalTOUrGVqP):not(._6dEq1ZVxeUsyP_cwJlgR):not(.Kd2KIgZus6lPUgWrhKkt):not(.W5KqjeHO8MKbmawZ):not(.VbbHBQEcSuVC7aYf6BBS):not(.EcNAqLrnXmXWD7tNefiP) {
                 margin-bottom: calc(var(--panel-gap) * -1) !important;
             }
         }
@@ -62,7 +67,9 @@ body:fullscreen {
                 &.FKsek3qI2lalTOUrGVqP,
                 &._6dEq1ZVxeUsyP_cwJlgR,
                 &.Kd2KIgZus6lPUgWrhKkt,
-                &.W5KqjeHO8MKbmawZ {
+                &.W5KqjeHO8MKbmawZ,
+                &.VbbHBQEcSuVC7aYf6BBS,
+                &.EcNAqLrnXmXWD7tNefiP {
                     --bottom-bar-height: -19px !important;
                 }
             }

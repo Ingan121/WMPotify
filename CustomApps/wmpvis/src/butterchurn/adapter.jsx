@@ -3,8 +3,8 @@
 // Some codes are from https://steamcommunity.com/sharedfiles/filedetails/?id=2962616483
 
 import React from "react";
-import Strings from "../strings";
-import { appInstance as App } from "../app";
+import Strings from "../strings.js";
+import { appInstance as App } from "../app.jsx";
 import { setupDesktopAudioCapture } from "../DesktopAudio.js";
 
 import butterchurn from './butterchurn.min.js';
@@ -476,7 +476,7 @@ function launchSongTitleAnim() {
     }
 }
 
-const ButterchurnAdaptor = {
+const ButterchurnAdapter = {
     init,
     setAudioData: (data) => {
         audioData = data;
@@ -509,4 +509,4 @@ const ButterchurnAdaptor = {
     }
 };
 
-export default ButterchurnAdaptor;
+export default ButterchurnAdapter;
