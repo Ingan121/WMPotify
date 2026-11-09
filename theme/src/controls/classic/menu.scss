@@ -48,16 +48,7 @@
           }
 
           /* 1.2.84 added this class to list view style bottom buttons, and audio quality selection menu, exclude those */
-          .main-contextMenu-menuItemButton
-            :not(.YrVXiSMvnPFGqwDCePCf)
-            :not(.bZu9z5uN3CYG_zTFA97L)
-            :not(.CgGNDh1suyDyp2D3Azit)
-            :not(.rtcPAPEOncZqcKJU) /* UNMAPPED */
-            :not(.kkupOYu8xsQwSAr0)
-            :not(.ixcCiJz2SVFlPmAycDzB)
-            :not(.KIwqAvsRAUtuYqqoqjtu)
-            :not(.FgacylB2LjRf8G4iw3lo)
-            :not(.main-contextMenu-menuItemButtonLarge) {
+          .main-contextMenu-menuItemButton:not(.YrVXiSMvnPFGqwDCePCf):not(.bZu9z5uN3CYG_zTFA97L):not(.CgGNDh1suyDyp2D3Azit):not(.rtcPAPEOncZqcKJU):not(.kkupOYu8xsQwSAr0):not(.main-contextMenu-menuItemButtonLarge) { /* UNMAPPED */
             height: 18px;
 
             span {

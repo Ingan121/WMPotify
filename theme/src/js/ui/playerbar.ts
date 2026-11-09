@@ -39,7 +39,7 @@ class PlayerBar {
         new MutationObserver(this.updateVolumeIcon.bind(this)).observe(this.volumeBarProgress, { attributes: true, attributeFilter: ['style'] });
 
         this.setupPlayerControls();
-        const playerControls = document.querySelector<HTMLElement>('.player-controls');
+        const playerControls = document.querySelector<HTMLElement>('.player-controls, [data-testid="player-controls"]');
         if (playerControls) {
             new MutationObserver(this.setupPlayerControls.bind(this)).observe(playerControls, { childList: true });
         }
