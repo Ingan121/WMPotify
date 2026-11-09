@@ -106,7 +106,7 @@ class PlayerBar {
         }
         const trackInfoText = document.createElement('p');
         trackInfoText.classList.add('wmpotify-track-info');
-        trackInfoText.textContent = document.querySelector('.main-trackInfo-name')?.textContent || '';
+        trackInfoText.textContent = document.querySelector('.main-trackInfo-name, .main-watchFeed-contentWrapper')?.textContent || '';
         trackInfoWidget.appendChild(trackInfoText);
         if (window.innerWidth < 420 && window.innerHeight < (isCustomTitlebar ? 92 : 62)) {
             if (isCustomTitlebar) {

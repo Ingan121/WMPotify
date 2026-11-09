@@ -1,5 +1,6 @@
 :root[data-page^="/user/"] {
-    .Root__main-view {
+    .Root__main-view,
+    #main-view {
         header {
             .main-topBar-background {
                 border-radius: 0;

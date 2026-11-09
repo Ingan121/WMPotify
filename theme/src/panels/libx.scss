@@ -2,7 +2,8 @@
     --libx-sidebar-width: 170px;
 }
 
-.main-yourLibraryX-libraryContainer {
+.main-yourLibraryX-libraryContainer,
+.YourLibraryX {
     > div {
         box-shadow: none;
     }
@@ -534,7 +535,8 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
         }
     }
 
-    .main-yourLibraryX-libraryContainer {
+    .main-yourLibraryX-libraryContainer,
+    .YourLibraryX {
         overflow: hidden !important;
 
         > div:last-child {
@@ -592,7 +594,8 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
         margin-right: calc(var(--panel-gap) * -2 + 2px);
     }
 
-    .Root__main-view {
+    .Root__main-view,
+    #main-view {
         width: 0;
     }
 
@@ -609,7 +612,7 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
 }
 
 :root[data-wmpotify-dark-mode] {
-    .main-yourLibraryX-library, .main-yourLibraryX-libraryContainer {
+    .main-yourLibraryX-library, .main-yourLibraryX-libraryContainer, .YourLibraryX {
         background: #222222;
     }
     #wmpotify-libx-sidebar {
@@ -633,7 +636,8 @@ body[data-wmpotify-lib-page-open]:not(#Prio1):not(#Prio2):not(#Prio3) { /* dirty
 }
 
 @media (forced-colors: active) {
-    .main-yourLibraryX-libraryContainer {
+    .main-yourLibraryX-libraryContainer,
+    .YourLibraryX {
         .main-yourLibraryX-listItem:hover {
             [class*=encore-text], [class*=encore-text] * {
                 color: var(--hilight-text) !important;

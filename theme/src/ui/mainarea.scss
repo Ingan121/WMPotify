@@ -8,7 +8,8 @@
 }
 
 :root[data-wmpotify-dark-mode] {
-    .Root__main-view {
+    .Root__main-view,
+    #main-view {
         background: #2e2e2e;
 
         .main-topBar-container {
@@ -35,7 +36,8 @@
     }
 }
 
-.Root__main-view {
+.Root__main-view,
+#main-view {
     width: calc(100% + var(--panel-gap));
 
     /* 1.2.55 compatibility */
@@ -44,7 +46,8 @@
     }
 }
 
-body.sidebar-open .Root__main-view {
+body.sidebar-open .Root__main-view,
+body.sidebar-open #main-view {
     width: calc(100% + var(--panel-gap) - 3px);
 }
 
@@ -54,7 +57,8 @@ body[data-hide-libx],
         display: none;
     }
 
-    .Root__main-view {
+    .Root__main-view,
+    #main-view {
         margin-left: calc(var(--panel-gap) * -2);
         width: calc(100% + var(--panel-gap) * 3);
     }
@@ -62,12 +66,14 @@ body[data-hide-libx],
 
 body[data-hide-libx].sidebar-open,
 :root:fullscreen body.sidebar-open {
-    .Root__main-view {
+    .Root__main-view,
+    #main-view {
         width: calc(100% + var(--panel-gap) * 3 - 3px);
     }
 }
 
-.Root__main-view {
+.Root__main-view,
+#main-view {
     border-radius: 0 !important;
 
     .main-topBar-container {
@@ -221,7 +227,8 @@ body.sidebar-open .Root {
 :root[data-wmpotify-style="xp"] {
     /* Add panel gaps again to show frames there */
     /* And extra 8px on the left if LibX is shown */
-    .Root__main-view {
+    .Root__main-view,
+    #main-view {
         margin-left: 0;
         width: 100%;
     }
@@ -233,7 +240,8 @@ body.sidebar-open .Root {
     body.sidebar-open .Root {
         --main-area-right: calc(var(--panel-width, var(--right-sidebar-width)) * 1px + var(--panel-gap) + 3px);
 
-        .Root__main-view {
+        .Root__main-view,
+        #main-view {
             width: calc(100% + var(--panel-gap) - 3px);
         }
     }
@@ -252,23 +260,27 @@ body.sidebar-open .Root {
     }
 
     body[data-hide-libx] {
-        .Root__main-view {
+        .Root__main-view,
+        #main-view {
             margin-left: calc(var(--panel-gap) * -1);
             width: calc(100% + var(--panel-gap) * 1);
         }
 
-        &.sidebar-open .Root__main-view {
+        &.sidebar-open .Root__main-view,
+        &.sidebar-open #main-view {
             width: calc(100% + var(--panel-gap) * 2 - 3px);
         }
     }
 
     &:fullscreen {
-        .Root__main-view {
+        .Root__main-view,
+        #main-view {
             margin-left: calc(var(--panel-gap) * -2) !important;
             width: calc(100% + var(--panel-gap) * 3) !important;
         }
 
-        body.sidebar-open .Root__main-view {
+        body.sidebar-open .Root__main-view,
+        body.sidebar-open #main-view {
             width: calc(100% + var(--panel-gap) * 3 - 3px) !important;
         }
     }
@@ -279,13 +291,15 @@ body.sidebar-open .Root {
         display: none;
     }
 
-    .Root__main-view {
+    .Root__main-view,
+    #main-view {
         margin-left: calc(var(--panel-gap) * -2);
         width: calc(100% + var(--panel-gap) * 3);
     }
 
     body.sidebar-open {
-        .Root__main-view {
+        .Root__main-view,
+        #main-view {
             display: none;
         }
 
@@ -302,7 +316,8 @@ body.sidebar-open .Root {
     }
 
     :root[data-wmpotify-style="xp"] {
-        .Root__main-view {
+        .Root__main-view,
+        #main-view {
             margin-left: calc(var(--panel-gap) * -1);
             width: calc(100% + var(--panel-gap) * 1);
         }

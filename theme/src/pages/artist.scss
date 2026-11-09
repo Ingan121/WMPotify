@@ -72,7 +72,8 @@ section[data-test-uri^="spotify:artist:"] {
     }
 }
 
-:root[data-page^="/artist/"] .Root__main-view {
+:root[data-page^="/artist/"] .Root__main-view,
+:root[data-page^="/artist/"] #main-view {
     header:not(:has(div[data-identifier="discography-topbar"])) {
         width: calc(100% - var(--scrollbar-size)) !important;
 

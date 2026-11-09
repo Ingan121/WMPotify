@@ -31,7 +31,7 @@
 
 /* But exclude collapsed LibraryX sidebar */
 #Desktop_LeftSidebar_Id:not(:has(.main-yourLibraryX-libraryFilter)) {
-  .main-yourLibraryX-libraryContainer,
+  .main-yourLibraryX-libraryContainer, .YourLibraryX,
   [data-overlayscrollbars-initialize],
   [data-overlayscrollbars-viewport] {
     scrollbar-width: none !important;

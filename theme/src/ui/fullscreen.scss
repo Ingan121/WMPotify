@@ -15,6 +15,7 @@
     }
 
     .Root__main-view,
+    #main-view,
     .Root__right-sidebar {
         margin-top: calc(var(--panel-gap) * -2);
         margin-bottom: calc(var(--panel-gap) * -2);
@@ -53,7 +54,8 @@
             }
         }
 
-        .Root__main-view {
+        .Root__main-view,
+        #main-view {
             margin-left: calc(var(--panel-gap) * -3);
             width: calc(100% + var(--panel-gap) * 3);
         }
@@ -67,7 +69,8 @@
         }
 
         body.wmpotify-playerbar-visible {
-            .Root__main-view {
+            .Root__main-view,
+            #main-view {
                 margin-bottom: calc(var(--panel-gap) * -2 + var(--player-bar-height));
             }
         }
@@ -81,7 +84,8 @@
         }
 
         body.wmpotify-playerbar-visible {
-            .Root__main-view {
+            .Root__main-view,
+            #main-view {
                 margin-bottom: calc(var(--panel-gap) * -2 + var(--player-bar-height));
             }
         }

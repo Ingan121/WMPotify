@@ -84,7 +84,7 @@ export function initQueuePanel() {
     topPanel.appendChild(albumArt);
     const songTitle = document.createElement('div');
     songTitle.id = 'wmpotify-queue-song-title';
-    songTitle.textContent = document.querySelector('.main-trackInfo-name')?.textContent || 'No items';
+    songTitle.textContent = document.querySelector('.main-trackInfo-name, .main-watchFeed-contentWrapper')?.textContent || Strings['QUEUE_CURRENT_TRACK_PLACEHOLDER'] || 'No items';
     topPanel.appendChild(songTitle);
     top?.insertAdjacentElement('afterbegin', topPanel);
 

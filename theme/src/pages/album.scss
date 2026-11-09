@@ -71,7 +71,8 @@ section[data-testid="album-page"] {
     }
 }
 
-:root[data-page^="/album/"] .Root__main-view {
+:root[data-page^="/album/"] .Root__main-view,
+:root[data-page^="/album/"] #main-view {
     header {
         width: calc(100% - var(--scrollbar-size)) !important;
 

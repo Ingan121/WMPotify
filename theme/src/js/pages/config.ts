@@ -75,7 +75,7 @@ function init(): void {
     }
 
     const whStatus = WindhawkComm.query();
-    const mainView = document.querySelector('.Root__main-view');
+    const mainView = document.querySelector('.Root__main-view, #main-view');
     if (!mainView) {
         return;
     }

@@ -94,7 +94,7 @@ const PageManager = {
         initTime = Date.now();
         Spicetify.Platform.History.listen((location: Location) => PageManager.onLocChange(location));
         new MutationObserver(PageManager.onMainContentMount).observe(document.querySelector('main')!, { childList: true });
-        new MutationObserver(PageManager.onMainContentMount).observe(document.querySelector('.Root__main-view')!, { childList: true });
+        new MutationObserver(PageManager.onMainContentMount).observe(document.querySelector('.Root__main-view, #main-view')!, { childList: true });
     },
 
     initPlaylistPage

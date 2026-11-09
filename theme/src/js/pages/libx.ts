@@ -67,7 +67,7 @@ const CustomLibX = {
             });
         }
 
-        const libraryContainer = document.querySelector<HTMLElement>('.main-yourLibraryX-libraryContainer')!;
+        const libraryContainer = document.querySelector<HTMLElement>('.main-yourLibraryX-libraryContainer, .YourLibraryX')!;
 
         const header = document.createElement('div');
         header.id = 'wmpotify-libx-header';
